@@ -62,7 +62,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-cssmin");
 	grunt.loadNpmTasks("grunt-contrib-less");
-	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 
 	grunt.registerTask("default", [
@@ -73,16 +72,11 @@ module.exports = function (grunt) {
 		"watch",
 	]);
 
-	grunt.registerTask("build_js_js", [
-		"concat:js_js",
-		"terser:js_js",
-		"copy:js_js",
-	]);
+	grunt.registerTask("build_js_js", ["concat:js_js", "terser:js_js"]);
 
 	grunt.registerTask("build_js_css", [
 		"less:js_css",
 		"concat:js_css",
 		"cssmin:js_css",
-		"copy:js_css",
 	]);
 };
