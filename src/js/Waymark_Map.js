@@ -92,7 +92,6 @@ function Waymark_Map() {
 			map_div_id: "waymark-map",
 			map_options: {
 				show_type_labels: 1,
-				button_position: "bottomright",
 				max_zoom: 0,
 			},
 			map_height: 400,
@@ -524,7 +523,7 @@ function Waymark_Map() {
 		//Zoom Control
 		Waymark_L.control
 			.zoom({
-				position: Waymark.config.map_options.button_position,
+				position: "topleft",
 				zoomInTitle: waymark_js.lang.action_zoom_in,
 				zoomOutTitle: waymark_js.lang.action_zoom_out,
 			})
@@ -548,7 +547,7 @@ function Waymark_Map() {
 		//Fullscreen Control
 		Waymark_L.control
 			.fullscreen({
-				position: Waymark.config.map_options.button_position,
+				position: "topleft",
 				title: {
 					false: waymark_js.lang.action_fullscreen_activate,
 					true: waymark_js.lang.action_fullscreen_deactivate,

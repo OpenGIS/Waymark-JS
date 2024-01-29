@@ -138,7 +138,7 @@ Map options are defined in the `map_options` object. The default options are sho
 
 ```javascript
 const config = {
-  map_options: { show_type_labels: "1", button_position: "topleft" },
+  map_options: { show_type_labels: "1" },
 };
 ```
 
@@ -147,7 +147,6 @@ const config = {
 | Option             | Description                                                                  |
 | ------------------ | ---------------------------------------------------------------------------- |
 | `show_type_labels` | Whether the type labels are displayed in the Marker, Line and Shape editors. |
-| `button_position`  | The position of the Map buttons.                                             |
 
 ### Editor Options
 
