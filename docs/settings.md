@@ -2,24 +2,6 @@
 
 ## Misc
 
-### Editor Options
-
-Editor options are defined in the `editor_options` object. The default options are shown below.
-
-```javascript
-var waymark_settings = {
-  misc: {
-    editor_options: { media_library_uploads: "1" },
-  },
-};
-```
-
-#### Editor Option Options
-
-| Option                  | Description                                                                |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `media_library_uploads` | Whether the Media Library is available for Marker, Line and Shape editors. |
-
 ### Map Options
 
 Map options are defined in the `map_options` object. The default options are shown below.
