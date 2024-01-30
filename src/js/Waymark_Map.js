@@ -110,7 +110,10 @@ function Waymark_Map() {
 
 			viewer_options: {
 				max_zoom: 0,
+				// Elevation
+				elevation_div_id: "waymark-elevation",
 				elevation_units: "metric",
+				elevation_initial: 1,
 			},
 
 			// Editor
@@ -129,11 +132,6 @@ function Waymark_Map() {
 			show_filter: 0,
 			show_elevation: 0,
 			show_cluster: 1,
-
-			// Elevation
-
-			elevation_div_id: "waymark-elevation",
-			elevation_initial: 1,
 
 			// Basemaps
 
@@ -523,8 +521,6 @@ function Waymark_Map() {
 			//Sleep not used, enable
 			map_options.dragging = true;
 		}
-
-		Waymark.debug(Waymark.config.map_options, "alert");
 
 		//Create Map
 
