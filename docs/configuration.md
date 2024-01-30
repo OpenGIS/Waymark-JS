@@ -132,22 +132,6 @@ const config = {
 | `shape_display`    | Whether the Shape is displayed in the Shape selector.                |
 | `shape_submission` | Whether the Shape is available for submission.                       |
 
-### Map Options
-
-Map options are defined in the `map_options` object. The default options are shown below.
-
-```javascript
-const config = {
-  map_options: { show_type_labels: "1" },
-};
-```
-
-#### Map Option Options
-
-| Option             | Description                                                                  |
-| ------------------ | ---------------------------------------------------------------------------- |
-| `show_type_labels` | Whether the type labels are displayed in the Marker, Line and Shape editors. |
-
 ### Editor Options
 
 Editor options are defined in the `editor_options` object. The default options are shown below.

@@ -787,12 +787,6 @@ function Waymark_Map_Editor() {
 			var overlay_preview_wrap = jQuery("<div />")
 				.addClass("waymark-overlay-wrap waymark-" + layer_type + "-wrap")
 				.attr("title", type_title);
-			// //Type labels?
-			// if (Waymark.config.map_options.show_type_labels == "1") {
-			// 	overlay_preview_wrap.append(
-			// 		jQuery("<div />").addClass("waymark-type-title").text(type_title),
-			// 	);
-			// }
 
 			//Append actual preview
 			overlay_preview_wrap.append(overlay_preview);

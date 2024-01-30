@@ -7481,7 +7481,6 @@ function Waymark_Map() {
 		Waymark.config = {
 			map_div_id: "waymark-map",
 			map_options: {
-				show_type_labels: 1,
 				max_zoom: 0,
 			},
 			map_height: 400,
@@ -8322,16 +8321,11 @@ function Waymark_Map() {
 		var text = "";
 
 		//Displaying Type?
-		if (Waymark.config.map_options.show_type_labels == "1") {
-			var type = Waymark.get_type(layer_type, feature.properties.type);
+		var type = Waymark.get_type(layer_type, feature.properties.type);
 
-			if (type) {
-				var title = type[layer_type + "_title"];
-
-				if (title) {
-					text = "[" + title + "] ";
-				}
-			}
+		if (type && typeof type[layer_type + "_title"] !== "undefined") {
+			var title = type[layer_type + "_title"];
+			text = '<span class="waymark-type-label">[' + title + "]</span>";
 		}
 
 		//Title
@@ -9289,10 +9283,6 @@ function Waymark_Map_Viewer() {
 
 					break;
 				case "type":
-					if (Waymark.config.map_options.show_type_labels != "1") {
-						break;
-					}
-
 					//Get type
 					var type = Waymark.get_type(layer_type, feature.properties.type);
 					if (type) {
@@ -10466,12 +10456,6 @@ function Waymark_Map_Editor() {
 			var overlay_preview_wrap = jQuery("<div />")
 				.addClass("waymark-overlay-wrap waymark-" + layer_type + "-wrap")
 				.attr("title", type_title);
-			// //Type labels?
-			// if (Waymark.config.map_options.show_type_labels == "1") {
-			// 	overlay_preview_wrap.append(
-			// 		jQuery("<div />").addClass("waymark-type-title").text(type_title),
-			// 	);
-			// }
 
 			//Append actual preview
 			overlay_preview_wrap.append(overlay_preview);

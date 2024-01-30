@@ -91,7 +91,6 @@ function Waymark_Map() {
 		Waymark.config = {
 			map_div_id: "waymark-map",
 			map_options: {
-				show_type_labels: 1,
 				max_zoom: 0,
 			},
 			map_height: 400,
@@ -932,16 +931,11 @@ function Waymark_Map() {
 		var text = "";
 
 		//Displaying Type?
-		if (Waymark.config.map_options.show_type_labels == "1") {
-			var type = Waymark.get_type(layer_type, feature.properties.type);
+		var type = Waymark.get_type(layer_type, feature.properties.type);
 
-			if (type) {
-				var title = type[layer_type + "_title"];
-
-				if (title) {
-					text = "[" + title + "] ";
-				}
-			}
+		if (type && typeof type[layer_type + "_title"] !== "undefined") {
+			var title = type[layer_type + "_title"];
+			text = '<span class="waymark-type-label">[' + title + "]</span>";
 		}
 
 		//Title

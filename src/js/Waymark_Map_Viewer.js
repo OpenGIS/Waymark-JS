@@ -250,10 +250,6 @@ function Waymark_Map_Viewer() {
 
 					break;
 				case "type":
-					if (Waymark.config.map_options.show_type_labels != "1") {
-						break;
-					}
-
 					//Get type
 					var type = Waymark.get_type(layer_type, feature.properties.type);
 					if (type) {
