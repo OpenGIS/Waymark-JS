@@ -85,30 +85,64 @@ function Waymark_Map() {
 		//Start timer
 		Waymark.start_time = new Date().getTime();
 
+		// TODO
+
+		// Rename? Remove?
 		Waymark.jq_map_container = null;
 
 		//Default config
 		Waymark.config = {
+			// "Container" options?
+
 			map_div_id: "waymark-map",
+
+			map_height: 400,
+			map_width: null,
+
+			// "Leaflet" options?
+
 			map_options: {
 				max_zoom: 0,
 			},
-			map_height: 400,
-			map_width: null,
+
+			// Move to "leaflet" options?
 			map_init_zoom: undefined,
 			map_init_latlng: undefined,
 			map_init_basemap: undefined,
+
+			// Features?
 			show_gallery: 0,
 			show_filter: 0,
 			show_elevation: 0,
 			show_cluster: 1,
+
+			// Elevation
+
 			elevation_div_id: "waymark-elevation",
 			elevation_units: "metric",
 			elevation_initial: 1,
+
+			// Basemaps
+
 			tile_layers: {},
+
+			// Types
+
 			line_types: {},
 			shape_types: {},
 			marker_types: {},
+
+			// Editor
+
+			editor_options: {
+				confirm_delete: 1,
+			},
+
+			// Media Library
+
+			media_library_sizes: ["thumbnail", "medium", "large", "full"],
+
+			// Defaults
 			marker_data_defaults: {
 				title: undefined,
 				type: undefined,
@@ -134,10 +168,6 @@ function Waymark_Map() {
 				image_large_url: undefined,
 				description: undefined,
 			},
-			editor_options: {
-				confirm_delete: 1,
-			},
-			media_library_sizes: ["thumbnail", "medium", "large", "full"],
 		};
 
 		//Load user config
@@ -271,6 +301,9 @@ function Waymark_Map() {
 	};
 
 	//Cyrillic to latin
+
+	// TODO - move to... somewhere
+
 	//Thanks! https://stackoverflow.com/a/11404121
 	this.transliterate = function (word) {
 		var a = {
