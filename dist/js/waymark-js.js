@@ -7489,10 +7489,11 @@ function Waymark_Map() {
 			map_height: 400,
 			map_width: null,
 
-			// "Leaflet" options?
+			// Viewer
 
 			viewer_options: {
 				max_zoom: 0,
+				show_scale: 0,
 			},
 
 			// Editor
@@ -7909,7 +7910,7 @@ function Waymark_Map() {
 			map_options.dragging = true;
 		}
 
-		Waymark.debug(map_options, "alert");
+		Waymark.debug(Waymark.config.viewer_options, "alert");
 
 		//Create Map
 
@@ -7922,14 +7923,7 @@ function Waymark_Map() {
 			.addTo(Waymark.map);
 
 		//Show scale?
-		if (
-			this.get_property(
-				waymark_settings,
-				"misc",
-				"map_options",
-				"show_scale",
-			) == true
-		) {
+		if (Waymark.config.viewer_options.show_scale == true) {
 			Waymark_L.control.scale().addTo(Waymark.map);
 		}
 

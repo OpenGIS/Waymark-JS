@@ -2,24 +2,6 @@
 
 ## Misc
 
-### Map Options
-
-Map options are defined in the `map_options` object. The default options are shown below.
-
-```javascript
-var waymark_settings = {
-  misc: {
-    map_options: { show_scale: "0" },
-  },
-};
-```
-
-#### Map Option Options
-
-| Option       | Description                         |
-| ------------ | ----------------------------------- |
-| `show_scale` | Whether the Map scale is displayed. |
-
 ### Interaction Options
 
 Interaction options are defined in the `interaction_options` object. The default options are shown below.
@@ -113,7 +95,6 @@ var waymark_settings = {
 var waymark_settings = {
   misc: {
     editor_options: { media_library_uploads: "1" },
-    map_options: { show_scale: "0" },
     interaction_options: {
       delay_seconds: "2",
       do_message: "0",
