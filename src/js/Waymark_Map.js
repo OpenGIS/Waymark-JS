@@ -110,6 +110,7 @@ function Waymark_Map() {
 
 			viewer_options: {
 				max_zoom: 0,
+				elevation_units: "metric",
 			},
 
 			// Editor
@@ -132,14 +133,15 @@ function Waymark_Map() {
 			// Elevation
 
 			elevation_div_id: "waymark-elevation",
-			elevation_units: "metric",
 			elevation_initial: 1,
 
 			// Basemaps
 
+			// TODO - default
+
 			tile_layers: {},
 
-			// Types
+			// Types - defaults
 
 			line_types: {},
 			shape_types: {},

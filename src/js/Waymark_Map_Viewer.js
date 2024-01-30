@@ -445,8 +445,8 @@ function Waymark_Map_Viewer() {
 
 		//Units
 		if (
-			typeof Waymark.config.elevation_units !== "undefined" &&
-			Waymark.config.elevation_units == "imperial"
+			typeof Waymark.config.viewer_options.elevation_units !== "undefined" &&
+			Waymark.config.viewer_options.elevation_units == "imperial"
 		) {
 			config.imperial = true;
 		}
