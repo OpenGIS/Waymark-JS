@@ -102,6 +102,7 @@ function Waymark_Map() {
 			// Map (General
 
 			map_options: {
+				debug_mode: 0,
 				show_scale: 0,
 			},
 
@@ -237,12 +238,8 @@ function Waymark_Map() {
 	 *
 	 */
 	this.debug = function (thing, output = "console") {
-		if (
-			this.get_property(waymark_settings, "misc", "advanced", "debug_mode") ==
-			true
-		) {
+		if (this.config.map_options.debug_mode) {
 			//String
-
 			if (typeof thing === "string") {
 				this.message(thing, "debug", output);
 
@@ -525,7 +522,7 @@ function Waymark_Map() {
 			map_options.dragging = true;
 		}
 
-		Waymark.debug(Waymark.config.viewer_options, "alert");
+		Waymark.debug(Waymark.config.map_options, "alert");
 
 		//Create Map
 

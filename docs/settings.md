@@ -50,24 +50,6 @@ var waymark_settings = {
 | `cluster_threshold` | The number of Markers required to form a Cluster. |
 | `cluster_radius`    | The radius of the Cluster.                        |
 
-### Advanced
-
-Advanced options are defined in the `advanced` object. The default options are shown below.
-
-```javascript
-var waymark_settings = {
-  misc: {
-    advanced: { debug_mode: "0" },
-  },
-};
-```
-
-#### Advanced Option Options
-
-| Option       | Description                    |
-| ------------ | ------------------------------ |
-| `debug_mode` | Whether debug mode is enabled. |
-
 ## Overlay
 
 ### Properties
@@ -105,7 +87,6 @@ var waymark_settings = {
       cluster_threshold: "14",
       cluster_radius: "80",
     },
-    advanced: { debug_mode: "0" },
   },
   overlay: {
     properties: { "": { property_key: "", property_title: "" } },
