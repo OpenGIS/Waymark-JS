@@ -101,8 +101,14 @@ function Waymark_Map() {
 
 			// "Leaflet" options?
 
-			map_options: {
+			viewer_options: {
 				max_zoom: 0,
+			},
+
+			// Editor
+
+			editor_options: {
+				confirm_delete: 1,
 			},
 
 			// Move to "leaflet" options?
@@ -131,12 +137,6 @@ function Waymark_Map() {
 			line_types: {},
 			shape_types: {},
 			marker_types: {},
-
-			// Editor
-
-			editor_options: {
-				confirm_delete: 1,
-			},
 
 			// Media Library
 
@@ -501,16 +501,27 @@ function Waymark_Map() {
 			map_options.sleepOpacity = 1;
 			//END Sleep
 
-			//Max Zoom
-			if ((max_zoom = Waymark.config.map_options.max_zoom)) {
-				map_options.maxZoom = max_zoom;
-			}
+			//Merge Viewer options
+			if (typeof Waymark.config.viewer_options !== "undefined") {
+				for (var key in Waymark.config.viewer_options) {
+					switch (key) {
+						// Max Zoom
+						case "max_zoom":
+							map_options.maxZoom = Waymark.config.viewer_options[key];
 
+							break;
+					}
+				}
+			}
 			// === Editor ===
 		} else {
 			//Sleep not used, enable
 			map_options.dragging = true;
 		}
+
+		Waymark.debug(map_options, "alert");
+
+		//Create Map
 
 		Waymark.map = Waymark_L.map(Waymark.config.map_div_id, map_options);
 		Waymark_L.control
