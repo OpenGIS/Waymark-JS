@@ -140,7 +140,7 @@ function Waymark_Map() {
 
 			// Media Library
 
-			media_library_sizes: ["thumbnail", "medium", "large", "full"],
+			image_size_names: ["thumbnail", "medium", "large", "full"],
 
 			// Defaults
 			marker_data_defaults: {
@@ -717,7 +717,7 @@ function Waymark_Map() {
 							feature.properties,
 						);
 
-						//Is this a retangle?
+						//Is this a rectangle?
 						if (feature.properties.rectangle) {
 							//...
 						}
@@ -1032,22 +1032,7 @@ function Waymark_Map() {
 						data_out.description = data_in[key];
 
 						break;
-					// 				case 'photos':
-					// 					waymark_data.type = 'photo';
-					//
-					// 					for(var i in feature.properties[prop]) {
-					// 						//Set thumb
-					// 						if(typeof feature.properties[prop][i]['web_url'] !== 'undefined') {
-					// 							waymark_data.image_thumbnail_url = feature.properties[prop][i]['web_url'];
-					// 						}
-					//
-					// 						//Set large
-					// 						if(typeof feature.properties[prop][i]['web_url'] !== 'undefined') {
-					// 							waymark_data.image_large_url = feature.properties[prop][i]['scaled_url'];
-					// 						}
-					// 					}
-					//
-					// 					break;
+
 					case "radius":
 						data_out[key] = parseFloat(data_in[key]);
 
@@ -1429,11 +1414,6 @@ function Waymark_Map() {
 			"black",
 		];
 
-		//Already hex
-		// 		if(colour.indexOf('#' === 0)) {
-		// 			return colour;
-		// 		}
-
 		//Convert
 		if (old_background_options.includes(colour)) {
 			switch (colour) {
@@ -1518,20 +1498,19 @@ function Waymark_Map() {
 		var image_sizes = {};
 
 		//Grab these
-		for (var i in Waymark.config.media_library_sizes) {
+		for (var i in Waymark.config.image_size_names) {
 			//Use fallback
-			image_sizes["image_" + Waymark.config.media_library_sizes[i] + "_url"] =
+			image_sizes["image_" + Waymark.config.image_size_names[i] + "_url"] =
 				fallback;
 
 			//We have the data we want
 			if (
-				typeof data[Waymark.config.media_library_sizes[i]] !== "undefined" &&
-				typeof data[Waymark.config.media_library_sizes[i]]["url"] !==
-					"undefined"
+				typeof data[Waymark.config.image_size_names[i]] !== "undefined" &&
+				typeof data[Waymark.config.image_size_names[i]]["url"] !== "undefined"
 			) {
 				//Use it
-				image_sizes["image_" + Waymark.config.media_library_sizes[i] + "_url"] =
-					data[Waymark.config.media_library_sizes[i]]["url"];
+				image_sizes["image_" + Waymark.config.image_size_names[i] + "_url"] =
+					data[Waymark.config.image_size_names[i]]["url"];
 			}
 		}
 
