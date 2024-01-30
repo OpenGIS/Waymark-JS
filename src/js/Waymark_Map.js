@@ -99,11 +99,16 @@ function Waymark_Map() {
 			map_height: 400,
 			map_width: null,
 
+			// Map (General
+
+			map_options: {
+				show_scale: 0,
+			},
+
 			// Viewer
 
 			viewer_options: {
 				max_zoom: 0,
-				show_scale: 0,
 			},
 
 			// Editor
@@ -533,7 +538,7 @@ function Waymark_Map() {
 			.addTo(Waymark.map);
 
 		//Show scale?
-		if (Waymark.config.viewer_options.show_scale == true) {
+		if (Waymark.config.map_options.show_scale == true) {
 			Waymark_L.control.scale().addTo(Waymark.map);
 		}
 
