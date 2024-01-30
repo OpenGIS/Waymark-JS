@@ -7501,6 +7501,7 @@ function Waymark_Map() {
 			viewer_options: {
 				max_zoom: 0,
 				// Elevation
+				show_elevation: 0,
 				elevation_div_id: "waymark-elevation",
 				elevation_units: "metric",
 				elevation_initial: 1,
@@ -7520,7 +7521,6 @@ function Waymark_Map() {
 			// Features?
 			show_gallery: 0,
 			show_filter: 0,
-			show_elevation: 0,
 			show_cluster: 1,
 
 			// Basemaps
@@ -9369,10 +9369,8 @@ function Waymark_Map_Viewer() {
 	this.info_window = function (layer_type, feature, layer) {
 		Waymark = this;
 
-		Waymark.debug(Waymark.config.viewer_options);
-
 		//Show elevation for Line?
-		if (Waymark.config.show_elevation && layer_type == "line") {
+		if (Waymark.config.viewer_options.show_elevation && layer_type == "line") {
 			//Has elevation data, but nothing displayed yet
 			if (
 				Waymark.config.viewer_options.elevation_initial &&
@@ -9450,7 +9448,7 @@ function Waymark_Map_Viewer() {
 	this.setup_elevation = function () {
 		Waymark = this;
 
-		if (!Waymark.config.show_elevation) {
+		if (!Waymark.config.viewer_options.show_elevation) {
 			return;
 		}
 

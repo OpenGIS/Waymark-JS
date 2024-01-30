@@ -319,10 +319,8 @@ function Waymark_Map_Viewer() {
 	this.info_window = function (layer_type, feature, layer) {
 		Waymark = this;
 
-		Waymark.debug(Waymark.config.viewer_options);
-
 		//Show elevation for Line?
-		if (Waymark.config.show_elevation && layer_type == "line") {
+		if (Waymark.config.viewer_options.show_elevation && layer_type == "line") {
 			//Has elevation data, but nothing displayed yet
 			if (
 				Waymark.config.viewer_options.elevation_initial &&
@@ -400,7 +398,7 @@ function Waymark_Map_Viewer() {
 	this.setup_elevation = function () {
 		Waymark = this;
 
-		if (!Waymark.config.show_elevation) {
+		if (!Waymark.config.viewer_options.show_elevation) {
 			return;
 		}
 
