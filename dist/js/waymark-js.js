@@ -7501,6 +7501,7 @@ function Waymark_Map() {
 
 				// Features
 				show_gallery: 0,
+				show_filter: 0,
 
 				// Elevation
 				show_elevation: 0,
@@ -7508,6 +7509,8 @@ function Waymark_Map() {
 				elevation_units: "metric",
 				elevation_initial: 1,
 			},
+
+			show_cluster: 1,
 
 			// Editor
 
@@ -7519,9 +7522,6 @@ function Waymark_Map() {
 			map_init_zoom: undefined,
 			map_init_latlng: undefined,
 			map_init_basemap: undefined,
-
-			show_filter: 0,
-			show_cluster: 1,
 
 			// Basemaps
 
@@ -8523,7 +8523,7 @@ function Waymark_Map() {
 			}
 
 			//If Overlay Filter is enabled
-			if (Waymark.config.show_filter && Waymark.mode == "view") {
+			if (Waymark.config.viewer_options.show_filter && Waymark.mode == "view") {
 				//Ensure the control is added
 				Waymark.layer_control.addTo(Waymark.map);
 
