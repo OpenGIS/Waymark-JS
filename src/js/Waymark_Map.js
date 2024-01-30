@@ -85,9 +85,7 @@ function Waymark_Map() {
 		//Start timer
 		Waymark.start_time = new Date().getTime();
 
-		// TODO
-
-		// Rename? Remove?
+		// TODO - Rename? Remove?
 		Waymark.jq_map_container = null;
 
 		//Default config
@@ -110,6 +108,10 @@ function Waymark_Map() {
 
 			viewer_options: {
 				max_zoom: 0,
+
+				// Features
+				show_gallery: 0,
+
 				// Elevation
 				show_elevation: 0,
 				elevation_div_id: "waymark-elevation",
@@ -128,8 +130,6 @@ function Waymark_Map() {
 			map_init_latlng: undefined,
 			map_init_basemap: undefined,
 
-			// Features?
-			show_gallery: 0,
 			show_filter: 0,
 			show_cluster: 1,
 

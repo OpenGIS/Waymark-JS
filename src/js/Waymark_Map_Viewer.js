@@ -488,7 +488,7 @@ function Waymark_Map_Viewer() {
 	this.setup_gallery = function () {
 		Waymark = this;
 
-		if (!Waymark.config.show_gallery) {
+		if (!Waymark.config.viewer_options.show_gallery) {
 			return;
 		}
 
