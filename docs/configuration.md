@@ -54,7 +54,6 @@ const config = {
       marker_colour: "#70af00",
       icon_colour: "#ffffff",
       marker_display: "1",
-      marker_submission: "1",
     },
   ],
 };
@@ -62,17 +61,16 @@ const config = {
 
 ##### Marker Type Options
 
-| Option              | Description                                                            |
-| ------------------- | ---------------------------------------------------------------------- |
-| `marker_title`      | The name of the Marker type. This is displayed in the Marker selector. |
-| `marker_shape`      | The shape of the Marker.                                               |
-| `marker_size`       | The size of the Marker.                                                |
-| `icon_type`         | The type of icon used for the Marker.                                  |
-| `marker_icon`       | The icon used for the Marker.                                          |
-| `marker_colour`     | The colour of the Marker.                                              |
-| `icon_colour`       | The colour of the icon used for the Marker.                            |
-| `marker_display`    | Whether the Marker is displayed in the Marker selector.                |
-| `marker_submission` | Whether the Marker is available for submission.                        |
+| Option           | Description                                                            |
+| ---------------- | ---------------------------------------------------------------------- |
+| `marker_title`   | The name of the Marker type. This is displayed in the Marker selector. |
+| `marker_shape`   | The shape of the Marker.                                               |
+| `marker_size`    | The size of the Marker.                                                |
+| `icon_type`      | The type of icon used for the Marker.                                  |
+| `marker_icon`    | The icon used for the Marker.                                          |
+| `marker_colour`  | The colour of the Marker.                                              |
+| `icon_colour`    | The colour of the icon used for the Marker.                            |
+| `marker_display` | Whether the Marker is displayed in the Marker selector.                |
 
 ### Lines
 
@@ -87,7 +85,6 @@ const config = {
       line_weight: "3",
       line_opacity: "0.7",
       line_display: "1",
-      line_submission: "1",
     },
   ],
 };
@@ -95,14 +92,13 @@ const config = {
 
 #### Line Type Options
 
-| Option            | Description                                                        |
-| ----------------- | ------------------------------------------------------------------ |
-| `line_title`      | The name of the Line type. This is displayed in the Line selector. |
-| `line_colour`     | The colour of the Line.                                            |
-| `line_weight`     | The weight of the Line.                                            |
-| `line_opacity`    | The opacity of the Line.                                           |
-| `line_display`    | Whether the Line is displayed in the Line selector.                |
-| `line_submission` | Whether the Line is available for submission.                      |
+| Option         | Description                                                        |
+| -------------- | ------------------------------------------------------------------ |
+| `line_title`   | The name of the Line type. This is displayed in the Line selector. |
+| `line_colour`  | The colour of the Line.                                            |
+| `line_weight`  | The weight of the Line.                                            |
+| `line_opacity` | The opacity of the Line.                                           |
+| `line_display` | Whether the Line is displayed in the Line selector.                |
 
 ### Shapes
 
@@ -116,7 +112,6 @@ const config = {
       shape_colour: "#d84848",
       fill_opacity: "0.5",
       shape_display: "1",
-      shape_submission: "1",
     },
   ],
 };
@@ -124,13 +119,12 @@ const config = {
 
 #### Shape Type Options
 
-| Option             | Description                                                          |
-| ------------------ | -------------------------------------------------------------------- |
-| `shape_title`      | The name of the Shape type. This is displayed in the Shape selector. |
-| `shape_colour`     | The colour of the Shape.                                             |
-| `fill_opacity`     | The opacity of the Shape.                                            |
-| `shape_display`    | Whether the Shape is displayed in the Shape selector.                |
-| `shape_submission` | Whether the Shape is available for submission.                       |
+| Option          | Description                                                          |
+| --------------- | -------------------------------------------------------------------- |
+| `shape_title`   | The name of the Shape type. This is displayed in the Shape selector. |
+| `shape_colour`  | The colour of the Shape.                                             |
+| `fill_opacity`  | The opacity of the Shape.                                            |
+| `shape_display` | Whether the Shape is displayed in the Shape selector.                |
 
 ### Editor Options
 
