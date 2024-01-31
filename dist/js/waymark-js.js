@@ -7497,11 +7497,14 @@ function Waymark_Map() {
 			// Viewer
 
 			viewer_options: {
-				max_zoom: 0,
+				max_zoom: undefined,
 
 				// Features
-				show_gallery: 0,
-				show_filter: 0,
+				show_gallery: 1,
+				show_filter: 1,
+
+				// Cluster
+				show_cluster: 1,
 
 				// Elevation
 				show_elevation: 0,
@@ -7509,8 +7512,6 @@ function Waymark_Map() {
 				elevation_units: "metric",
 				elevation_initial: 1,
 			},
-
-			show_cluster: 1,
 
 			// Editor
 
@@ -9087,7 +9088,7 @@ function Waymark_Map_Viewer() {
 	};
 
 	this.setupCluster = () => {
-		if (!Waymark.config.show_cluster) {
+		if (!Waymark.config.viewer_options.show_cluster) {
 			return;
 		}
 
@@ -9639,7 +9640,7 @@ function Waymark_Map_Viewer() {
 
 				// If we are clustering
 				if (
-					Waymark.config.show_cluster &&
+					Waymark.config.viewer_options.show_cluster &&
 					typeof Waymark.marker_cluster === "object"
 				) {
 					// Check that
