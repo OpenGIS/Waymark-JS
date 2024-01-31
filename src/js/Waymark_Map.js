@@ -79,7 +79,7 @@ function Waymark_Map() {
 	this.fallback_latlng = [51.38436, -68.74923];
 	this.fallback_zoom = 9;
 
-	this.init = function (user_config) {
+	this.init = function (user_config = {}) {
 		Waymark = this;
 
 		//Start timer
@@ -105,6 +105,16 @@ function Waymark_Map() {
 				map_init_zoom: undefined,
 				map_init_latlng: undefined,
 				map_init_basemap: undefined,
+
+				// Basemaps
+
+				tile_layers: {},
+
+				// Types - defaults
+
+				line_types: {},
+				shape_types: {},
+				marker_types: {},
 
 				// Todo - works in editor?
 				show_scale: 0,
@@ -142,18 +152,6 @@ function Waymark_Map() {
 				confirm_delete: 1,
 			},
 
-			// Basemaps
-
-			// TODO - default
-
-			tile_layers: {},
-
-			// Types - defaults
-
-			line_types: {},
-			shape_types: {},
-			marker_types: {},
-
 			// Media Library
 
 			image_size_names: ["thumbnail", "medium", "large", "full"],
@@ -186,34 +184,53 @@ function Waymark_Map() {
 			},
 		};
 
-		//Load user config
-		for (config_key in Waymark.config) {
-			// Only map/viewer/editor_options
-			if (config_key.indexOf("_options") === -1) {
-				continue;
-			}
+		// Merge config
 
-			Waymark.debug("Loading config: " + config_key);
+		//Iterate over user config (Only map_options, viewer_options, editor_options)
 
-			if (typeof user_config[config_key] !== "undefined") {
-				// Strings & Integers
-				if (
-					typeof user_config[config_key] === "string" || // String
-					typeof user_config[config_key] === "number" // Integer
-				) {
-					// Check key exists
-					if (typeof Waymark.config[config_key] !== "undefined") {
-						// Set
-						Waymark.config[config_key] = user_config[config_key];
-					}
-					// Objects
-				} else {
-					// Iterate
-					for (key in user_config[config_key]) {
-						// Check key exists
-						if (typeof Waymark.config[config_key][key] !== "undefined") {
-							// Set
-							Waymark.config[config_key][key] = user_config[config_key][key];
+		for (key in user_config) {
+			// Only allow the following keys: map_options, viewer_options, editor_options
+			if (
+				["map_options", "viewer_options", "editor_options"].indexOf(key) > -1
+			) {
+				//Iterate over user config
+				for (sub_key in user_config[key]) {
+					//Check key exists
+					if (typeof Waymark.config[key][sub_key] !== "undefined") {
+						// If Object
+						if (typeof user_config[key][sub_key] === "object") {
+							// Keep Arrays	as Arrays
+							if (Array.isArray(user_config[key][sub_key])) {
+								Waymark.config[key][sub_key] = user_config[key][sub_key];
+								// Else, merge
+							} else {
+								Waymark.config[key][sub_key] = Object.assign(
+									{},
+									Waymark.config[key][sub_key],
+									user_config[key][sub_key],
+								);
+							}
+
+							Waymark.debug(
+								"Setting config: " +
+									key +
+									" - " +
+									sub_key +
+									" - " +
+									JSON.stringify(user_config[key][sub_key]),
+							);
+							// Else, set
+						} else {
+							Waymark.config[key][sub_key] = user_config[key][sub_key];
+
+							Waymark.debug(
+								"Setting config: " +
+									key +
+									" - " +
+									sub_key +
+									" - " +
+									user_config[key][sub_key],
+							);
 						}
 					}
 				}
@@ -236,6 +253,11 @@ function Waymark_Map() {
 			default_marker_type.marker_title,
 		);
 		Waymark.config.marker_data_defaults.type = default_marker_type_key;
+
+		// Debug
+		if (typeof Waymark.config !== "undefined" && Waymark.config) {
+			console.log(Waymark.config);
+		}
 
 		//Groups
 		Waymark.marker_parent_group = Waymark_L.layerGroup();
@@ -840,11 +862,11 @@ function Waymark_Map() {
 		//Set by name?
 		if (typeof Waymark.config.map_options.map_init_basemap !== "undefined") {
 			//Search
-			for (var i in Waymark.config.tile_layers) {
+			for (var i in Waymark.config.map_options.tile_layers) {
 				var init_basemap_name =
 					Waymark.config.map_options.map_init_basemap.toUpperCase();
 				var this_basemap_name =
-					Waymark.config.tile_layers[i].layer_name.toUpperCase();
+					Waymark.config.map_options.tile_layers[i].layer_name.toUpperCase();
 
 				//Found
 				if (init_basemap_name === this_basemap_name) {
@@ -855,38 +877,40 @@ function Waymark_Map() {
 		}
 
 		//For each tile layer
-		for (var i in Waymark.config.tile_layers) {
+		for (var i in Waymark.config.map_options.tile_layers) {
 			//Append URL?
-			if (typeof Waymark.config.tile_layers[i].append !== "undefined") {
-				Waymark.config.tile_layers[i].layer_url +=
-					Waymark.config.tile_layers[i].append;
+			if (
+				typeof Waymark.config.map_options.tile_layers[i].append !== "undefined"
+			) {
+				Waymark.config.map_options.tile_layers[i].layer_url +=
+					Waymark.config.map_options.tile_layers[i].append;
 			}
 
 			//Create key
-			var basemap_key = Waymark.config.tile_layers[i].layer_name.replace(
-				/ /g,
-				"",
-			);
+			var basemap_key = Waymark.config.map_options.tile_layers[
+				i
+			].layer_name.replace(/ /g, "");
 
 			//Create tile layer
 			var layer_options = {
 				id: basemap_key,
-				attribution: Waymark.config.tile_layers[i].layer_attribution,
+				attribution:
+					Waymark.config.map_options.tile_layers[i].layer_attribution,
 			};
 
 			//Max zoom?
 			var layer_max_zoom = parseInt(
-				Waymark.config.tile_layers[i].layer_max_zoom,
+				Waymark.config.map_options.tile_layers[i].layer_max_zoom,
 			);
 			if (layer_max_zoom) {
 				layer_options.maxZoom = layer_max_zoom;
 			}
 
 			var basemap = Waymark_L.tileLayer(
-				Waymark.config.tile_layers[i].layer_url,
+				Waymark.config.map_options.tile_layers[i].layer_url,
 				layer_options,
 			);
-			basemaps[Waymark.config.tile_layers[i].layer_name] = basemap;
+			basemaps[Waymark.config.map_options.tile_layers[i].layer_name] = basemap;
 
 			//Set initial basemap
 			if (i == initial_basemap_index) {
@@ -913,21 +937,23 @@ function Waymark_Map() {
 		var type = null;
 
 		//Iterate over all types
-		for (var i in Waymark.config[layer_type + "_types"]) {
+		for (var i in Waymark.config.map_options[layer_type + "_types"]) {
 			//Use first as default
 			if (i == 0) {
-				type = Waymark.config[layer_type + "_types"][i];
+				type = Waymark.config.map_options[layer_type + "_types"][i];
 			}
 
 			//Grab title
 			var type_title =
-				Waymark.config[layer_type + "_types"][i][layer_type + "_title"];
+				Waymark.config.map_options[layer_type + "_types"][i][
+					layer_type + "_title"
+				];
 
 			//Has title
 			if (type_title) {
 				//Found (run both through make_key, just to be on safe side)
 				if (Waymark.make_key(type_key) == Waymark.make_key(type_title)) {
-					type = Waymark.config[layer_type + "_types"][i];
+					type = Waymark.config.map_options[layer_type + "_types"][i];
 				}
 			}
 		}
@@ -1030,7 +1056,10 @@ function Waymark_Map() {
 	};
 
 	this.get_data_defaults = function (layer_type) {
-		return Object.assign({}, Waymark.config[layer_type + "_data_defaults"]);
+		return Object.assign(
+			{},
+			Waymark.config.map_options[layer_type + "_data_defaults"],
+		);
 	};
 
 	this.parse_layer_data = function (layer_type, data_in) {
