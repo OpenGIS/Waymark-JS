@@ -7505,6 +7505,8 @@ function Waymark_Map() {
 
 				// Cluster
 				show_cluster: 1,
+				cluster_radius: 80,
+				cluster_threshold: 14,
 
 				// Elevation
 				show_elevation: 0,
@@ -9105,18 +9107,8 @@ function Waymark_Map_Viewer() {
 			removeOutsideVisibleBounds: true,
 			iconCreateFunction: this.clusterIconFunction,
 			spiderfyOnMaxZoom: false,
-			disableClusteringAtZoom: Waymark.get_property(
-				waymark_settings,
-				"misc",
-				"cluster_options",
-				"cluster_threshold",
-			),
-			maxClusterRadius: Waymark.get_property(
-				waymark_settings,
-				"misc",
-				"cluster_options",
-				"cluster_radius",
-			),
+			disableClusteringAtZoom: Waymark.config.viewer_options.cluster_threshold,
+			maxClusterRadius: Waymark.config.viewer_options.cluster_radius,
 		});
 
 		// Make Marker Cluster the parent group for all markers

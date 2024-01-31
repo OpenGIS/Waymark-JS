@@ -115,6 +115,8 @@ function Waymark_Map() {
 
 				// Cluster
 				show_cluster: 1,
+				cluster_radius: 80,
+				cluster_threshold: 14,
 
 				// Elevation
 				show_elevation: 0,
