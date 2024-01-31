@@ -123,6 +123,11 @@ function Waymark_Map() {
 				elevation_div_id: "waymark-elevation",
 				elevation_units: "metric",
 				elevation_initial: 1,
+
+				// Sleep
+				sleep_delay_seconds: 2,
+				sleep_do_message: 0,
+				sleep_wake_message: waymark_js.lang.action_sleep_wake_message,
 			},
 
 			// Editor
@@ -227,7 +232,7 @@ function Waymark_Map() {
 	/**
 	 *
 	 * Output debugging content
-	 * 	- Only if debug_mode is enabled (Settings > Misc > Advanced)
+	 * 	- Only if config.map_options.debug_mode is enabled
 	 *
 	 * @param  {string} thing  Thing to debug
 	 * @param  {string} output Output method (console|alert)
@@ -475,28 +480,13 @@ function Waymark_Map() {
 			//Sleep
 			map_options.sleep = true;
 			map_options.wakeTime =
-				this.get_property(
-					waymark_settings,
-					"misc",
-					"interaction_options",
-					"delay_seconds",
-				) * 1000;
+				1000 * Waymark.config.viewer_options.sleep_delay_seconds;
 
 			//If Sleep Note
-			var do_message = this.get_property(
-				waymark_settings,
-				"misc",
-				"interaction_options",
-				"do_message",
-			);
-			if (do_message === "1") {
+			if (Waymark.config.viewer_options.sleep_do_message === "1") {
 				map_options.sleepNote = true;
-				map_options.wakeMessage = this.get_property(
-					waymark_settings,
-					"misc",
-					"interaction_options",
-					"wake_message",
-				);
+				map_options.wakeMessage =
+					Waymark.config.viewer_options.sleep_wake_message;
 				//No Sleep Note
 			} else {
 				map_options.sleepNote = false;
