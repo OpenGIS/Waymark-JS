@@ -313,7 +313,7 @@ function Waymark_Map_Viewer() {
 		if (Waymark.config.viewer_options.show_elevation && layer_type == "line") {
 			//Has elevation data, but nothing displayed yet
 			if (
-				Waymark.config.viewer_options.elevation_initial &&
+				parseInt(Waymark.config.viewer_options.elevation_initial) &&
 				Waymark.line_has_elevation_data(feature) &&
 				!Waymark.elevation_container.is(":visible")
 			) {
