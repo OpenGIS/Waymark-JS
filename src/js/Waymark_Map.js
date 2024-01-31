@@ -1126,7 +1126,10 @@ function Waymark_Map() {
 			}
 
 			//If Overlay Filter is enabled
-			if (Waymark.config.viewer_options.show_filter && Waymark.mode == "view") {
+			if (
+				parseInt(Waymark.config.viewer_options.show_filter) &&
+				Waymark.mode == "view"
+			) {
 				//Ensure the control is added
 				Waymark.layer_control.addTo(Waymark.map);
 
