@@ -9083,7 +9083,7 @@ function Waymark_Map_Viewer() {
 	};
 
 	this.setupCluster = () => {
-		if (!Waymark.config.viewer_options.show_cluster) {
+		if (!parseInt(Waymark.config.viewer_options.show_cluster)) {
 			return;
 		}
 
@@ -9626,7 +9626,7 @@ function Waymark_Map_Viewer() {
 
 				// If we are clustering
 				if (
-					Waymark.config.viewer_options.show_cluster &&
+					parseInt(Waymark.config.viewer_options.show_cluster) &&
 					typeof Waymark.marker_cluster === "object"
 				) {
 					// Check that
