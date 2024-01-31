@@ -7483,17 +7483,20 @@ function Waymark_Map() {
 			// "Container" options?
 
 			// TODO - move to map_options
-			map_div_id: "waymark-map",
-			map_height: 400,
-			map_width: null,
-			map_init_zoom: undefined,
-			map_init_latlng: undefined,
-			map_init_basemap: undefined,
 
 			// Map (General
 
 			map_options: {
 				debug_mode: 0,
+
+				map_height: 400,
+				map_div_id: "waymark-map",
+				map_width: null,
+				map_init_zoom: undefined,
+				map_init_latlng: undefined,
+				map_init_basemap: undefined,
+
+				// Todo - works in editor?
 				show_scale: 0,
 			},
 
@@ -7575,8 +7578,35 @@ function Waymark_Map() {
 
 		//Load user config
 		for (config_key in Waymark.config) {
+			// Only map/viewer/editor_options
+			if (config_key.indexOf("_options") === -1) {
+				continue;
+			}
+
+			Waymark.debug("Loading config: " + config_key);
+
 			if (typeof user_config[config_key] !== "undefined") {
-				Waymark.config[config_key] = user_config[config_key];
+				// Strings & Integers
+				if (
+					typeof user_config[config_key] === "string" || // String
+					typeof user_config[config_key] === "number" // Integer
+				) {
+					// Check key exists
+					if (typeof Waymark.config[config_key] !== "undefined") {
+						// Set
+						Waymark.config[config_key] = user_config[config_key];
+					}
+					// Objects
+				} else {
+					// Iterate
+					for (key in user_config[config_key]) {
+						// Check key exists
+						if (typeof Waymark.config[config_key][key] !== "undefined") {
+							// Set
+							Waymark.config[config_key][key] = user_config[config_key][key];
+						}
+					}
+				}
 			}
 		}
 
@@ -7844,9 +7874,14 @@ function Waymark_Map() {
 	this.setup_map = function () {
 		Waymark = this;
 
-		Waymark.jq_map_container = jQuery("#" + Waymark.config.map_div_id);
+		Waymark.jq_map_container = jQuery(
+			"#" + Waymark.config.map_options.map_div_id,
+		);
 		Waymark.jq_map_container.addClass("waymark-map-container");
-		Waymark.jq_map_container.css("height", Waymark.config.map_height + "px");
+		Waymark.jq_map_container.css(
+			"height",
+			Waymark.config.map_options.map_height + "px",
+		);
 
 		//Create Map
 		var map_options = {
@@ -7905,7 +7940,10 @@ function Waymark_Map() {
 
 		//Create Map
 
-		Waymark.map = Waymark_L.map(Waymark.config.map_div_id, map_options);
+		Waymark.map = Waymark_L.map(
+			Waymark.config.map_options.map_div_id,
+			map_options,
+		);
 		Waymark_L.control
 			.attribution({
 				prefix:
@@ -7922,13 +7960,13 @@ function Waymark_Map() {
 		Waymark.jq_map_container.data("Waymark", Waymark);
 
 		//View
-		if (Waymark.config.map_init_latlng !== undefined) {
-			Waymark.map.setView(Waymark.config.map_init_latlng);
+		if (Waymark.config.map_options.map_init_latlng !== undefined) {
+			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 		} else {
 			Waymark.map.setView(Waymark.fallback_latlng);
 		}
-		if (Waymark.config.map_init_zoom !== undefined) {
-			Waymark.map.setZoom(Waymark.config.map_init_zoom);
+		if (Waymark.config.map_options.map_init_zoom !== undefined) {
+			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 		} else {
 			Waymark.map.setZoom(Waymark.fallback_zoom);
 		}
@@ -8190,10 +8228,11 @@ function Waymark_Map() {
 
 		//Determine initial basemap
 		//Set by name?
-		if (typeof Waymark.config.map_init_basemap !== "undefined") {
+		if (typeof Waymark.config.map_options.map_init_basemap !== "undefined") {
 			//Search
 			for (var i in Waymark.config.tile_layers) {
-				var init_basemap_name = Waymark.config.map_init_basemap.toUpperCase();
+				var init_basemap_name =
+					Waymark.config.map_options.map_init_basemap.toUpperCase();
 				var this_basemap_name =
 					Waymark.config.tile_layers[i].layer_name.toUpperCase();
 
@@ -8335,8 +8374,8 @@ function Waymark_Map() {
 		Waymark = this;
 
 		jQuery(window).on("resize", function () {
-			Waymark.config.map_height = Waymark.jq_map_container.height();
-			Waymark.config.map_width = Waymark.jq_map_container.width();
+			Waymark.config.map_options.map_height = Waymark.jq_map_container.height();
+			Waymark.config.map_options.map_width = Waymark.jq_map_container.width();
 
 			if (typeof Waymark.size_gallery === "function") {
 				Waymark.size_gallery();
@@ -8431,6 +8470,8 @@ function Waymark_Map() {
 	};
 
 	this.add_to_group = function (layer_type, layer) {
+		Waymark = this;
+
 		var feature = layer.feature;
 
 		//If we have a type
@@ -8512,6 +8553,8 @@ function Waymark_Map() {
 
 	//Represent Type as text
 	this.type_to_text = function (layer_type = "", type = {}, ele = "span") {
+		Waymark = this;
+
 		var preview_class = "waymark-type-text waymark-" + layer_type + "-type";
 		var preview_style = "";
 
@@ -8552,7 +8595,14 @@ function Waymark_Map() {
 		return Waymark_L.marker(latlng);
 	};
 
-	this.build_icon_data = function (type) {
+	this.build_icon_data = function (type = {}) {
+		Waymark = this;
+
+		// Ensure is a an object with a non-empty type key
+		if (typeof type !== "object" || typeof type.type_key === "undefined") {
+			return false;
+		}
+
 		var icon_data = {
 			className: "waymark-marker waymark-marker-" + type.type_key,
 		};
@@ -8609,6 +8659,14 @@ function Waymark_Map() {
 			'<div class="waymark-marker-background" style="' +
 			background_css +
 			'"></div>';
+
+		// Ensure we have type.marker_icon
+		if (typeof type.marker_icon === "undefined") {
+			Waymark.debug(
+				"No marker_icon for type: " + JSON.stringify(type),
+				"alert",
+			);
+		}
 
 		//Classes
 		var icon_class = "waymark-marker-icon";
@@ -9022,7 +9080,7 @@ function Waymark_Map_Viewer() {
 		//Show!
 		Waymark.jq_map_container.show();
 		Waymark.map.invalidateSize();
-		Waymark.config.map_width = Waymark.jq_map_container.width();
+		Waymark.config.map_options.map_width = Waymark.jq_map_container.width();
 
 		//Gallery
 		Waymark.setup_gallery();
@@ -9174,8 +9232,8 @@ function Waymark_Map_Viewer() {
 
 		//No view specified
 		if (
-			Waymark.config.map_init_latlng === undefined &&
-			Waymark.config.map_init_zoom === undefined
+			Waymark.config.map_options.map_init_latlng === undefined &&
+			Waymark.config.map_options.map_init_zoom === undefined
 		) {
 			//Use data layer bounds (if we have)
 			var bounds = Waymark.map_data.getBounds();
@@ -9186,19 +9244,19 @@ function Waymark_Map_Viewer() {
 			}
 			//Both zoom AND centre specified
 		} else if (
-			Waymark.config.map_init_latlng !== undefined &&
-			Waymark.config.map_init_zoom !== undefined
+			Waymark.config.map_options.map_init_latlng !== undefined &&
+			Waymark.config.map_options.map_init_zoom !== undefined
 		) {
 			//Use them
 			Waymark.map.setView(
-				Waymark.config.map_init_latlng,
-				Waymark.config.map_init_zoom,
+				Waymark.config.map_options.map_init_latlng,
+				Waymark.config.map_options.map_init_zoom,
 			);
 			//Either zoom or centre specified
 		} else {
 			//Centre specified
-			if (Waymark.config.map_init_latlng !== undefined) {
-				Waymark.map.setView(Waymark.config.map_init_latlng);
+			if (Waymark.config.map_options.map_init_latlng !== undefined) {
+				Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 
 				//Use data layer for zoom
 				Waymark.map.setZoom(
@@ -9207,8 +9265,8 @@ function Waymark_Map_Viewer() {
 			}
 
 			//Zoom specified
-			if (Waymark.config.map_init_zoom !== undefined) {
-				Waymark.map.setZoom(Waymark.config.map_init_zoom);
+			if (Waymark.config.map_options.map_init_zoom !== undefined) {
+				Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 
 				//Use data layer for centre
 				Waymark.map.setView(Waymark.map_data.getBounds().getCenter());
@@ -9313,7 +9371,10 @@ function Waymark_Map_Viewer() {
 		Waymark = this;
 
 		//Show elevation for Line?
-		if (Waymark.config.viewer_options.show_elevation && layer_type == "line") {
+		if (
+			parseInt(Waymark.config.viewer_options.show_elevation) &&
+			layer_type == "line"
+		) {
 			//Has elevation data, but nothing displayed yet
 			if (
 				parseInt(Waymark.config.viewer_options.elevation_initial) &&
@@ -9410,8 +9471,10 @@ function Waymark_Map_Viewer() {
 			theme: "magenta-theme",
 			detached: true,
 			followMarker: false,
-			width: Waymark.config.map_width,
+			width: Waymark.config.map_options.map_width,
 		};
+
+		Waymark.debug(Waymark.config.viewer_options.elevation_div_id);
 
 		//Container
 		if (typeof Waymark.config.viewer_options.elevation_div_id !== "undefined") {
@@ -9489,7 +9552,7 @@ function Waymark_Map_Viewer() {
 		//Create gallery
 		Waymark.gallery = jQuery("<div />")
 			.attr("id", Waymark.config.gallery_div_id)
-			.css("width", Waymark.config.map_width)
+			.css("width", Waymark.config.map_options.map_width)
 			.addClass("waymark-gallery-container")
 			.html("");
 
@@ -9531,7 +9594,8 @@ function Waymark_Map_Viewer() {
 		gallery_padding = Waymark.gallery.css("paddingRight");
 		gallery_padding = gallery_padding.replace("px", "");
 		gallery_padding = parseInt(gallery_padding);
-		var gallery_width = Waymark.config.map_width - 2 * gallery_padding;
+		var gallery_width =
+			Waymark.config.map_options.map_width - 2 * gallery_padding;
 
 		Waymark.gallery.css("width", gallery_width);
 	};

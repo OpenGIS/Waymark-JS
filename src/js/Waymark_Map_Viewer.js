@@ -19,7 +19,7 @@ function Waymark_Map_Viewer() {
 		//Show!
 		Waymark.jq_map_container.show();
 		Waymark.map.invalidateSize();
-		Waymark.config.map_width = Waymark.jq_map_container.width();
+		Waymark.config.map_options.map_width = Waymark.jq_map_container.width();
 
 		//Gallery
 		Waymark.setup_gallery();
@@ -171,8 +171,8 @@ function Waymark_Map_Viewer() {
 
 		//No view specified
 		if (
-			Waymark.config.map_init_latlng === undefined &&
-			Waymark.config.map_init_zoom === undefined
+			Waymark.config.map_options.map_init_latlng === undefined &&
+			Waymark.config.map_options.map_init_zoom === undefined
 		) {
 			//Use data layer bounds (if we have)
 			var bounds = Waymark.map_data.getBounds();
@@ -183,19 +183,19 @@ function Waymark_Map_Viewer() {
 			}
 			//Both zoom AND centre specified
 		} else if (
-			Waymark.config.map_init_latlng !== undefined &&
-			Waymark.config.map_init_zoom !== undefined
+			Waymark.config.map_options.map_init_latlng !== undefined &&
+			Waymark.config.map_options.map_init_zoom !== undefined
 		) {
 			//Use them
 			Waymark.map.setView(
-				Waymark.config.map_init_latlng,
-				Waymark.config.map_init_zoom,
+				Waymark.config.map_options.map_init_latlng,
+				Waymark.config.map_options.map_init_zoom,
 			);
 			//Either zoom or centre specified
 		} else {
 			//Centre specified
-			if (Waymark.config.map_init_latlng !== undefined) {
-				Waymark.map.setView(Waymark.config.map_init_latlng);
+			if (Waymark.config.map_options.map_init_latlng !== undefined) {
+				Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 
 				//Use data layer for zoom
 				Waymark.map.setZoom(
@@ -204,8 +204,8 @@ function Waymark_Map_Viewer() {
 			}
 
 			//Zoom specified
-			if (Waymark.config.map_init_zoom !== undefined) {
-				Waymark.map.setZoom(Waymark.config.map_init_zoom);
+			if (Waymark.config.map_options.map_init_zoom !== undefined) {
+				Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 
 				//Use data layer for centre
 				Waymark.map.setView(Waymark.map_data.getBounds().getCenter());
@@ -310,7 +310,10 @@ function Waymark_Map_Viewer() {
 		Waymark = this;
 
 		//Show elevation for Line?
-		if (Waymark.config.viewer_options.show_elevation && layer_type == "line") {
+		if (
+			parseInt(Waymark.config.viewer_options.show_elevation) &&
+			layer_type == "line"
+		) {
 			//Has elevation data, but nothing displayed yet
 			if (
 				parseInt(Waymark.config.viewer_options.elevation_initial) &&
@@ -407,8 +410,10 @@ function Waymark_Map_Viewer() {
 			theme: "magenta-theme",
 			detached: true,
 			followMarker: false,
-			width: Waymark.config.map_width,
+			width: Waymark.config.map_options.map_width,
 		};
+
+		Waymark.debug(Waymark.config.viewer_options.elevation_div_id);
 
 		//Container
 		if (typeof Waymark.config.viewer_options.elevation_div_id !== "undefined") {
@@ -486,7 +491,7 @@ function Waymark_Map_Viewer() {
 		//Create gallery
 		Waymark.gallery = jQuery("<div />")
 			.attr("id", Waymark.config.gallery_div_id)
-			.css("width", Waymark.config.map_width)
+			.css("width", Waymark.config.map_options.map_width)
 			.addClass("waymark-gallery-container")
 			.html("");
 
@@ -528,7 +533,8 @@ function Waymark_Map_Viewer() {
 		gallery_padding = Waymark.gallery.css("paddingRight");
 		gallery_padding = gallery_padding.replace("px", "");
 		gallery_padding = parseInt(gallery_padding);
-		var gallery_width = Waymark.config.map_width - 2 * gallery_padding;
+		var gallery_width =
+			Waymark.config.map_options.map_width - 2 * gallery_padding;
 
 		Waymark.gallery.css("width", gallery_width);
 	};
