@@ -7482,10 +7482,13 @@ function Waymark_Map() {
 		Waymark.config = {
 			// "Container" options?
 
+			// TODO - move to map_options
 			map_div_id: "waymark-map",
-
 			map_height: 400,
 			map_width: null,
+			map_init_zoom: undefined,
+			map_init_latlng: undefined,
+			map_init_basemap: undefined,
 
 			// Map (General
 
@@ -7525,11 +7528,6 @@ function Waymark_Map() {
 			editor_options: {
 				confirm_delete: 1,
 			},
-
-			// Move to "leaflet" options?
-			map_init_zoom: undefined,
-			map_init_latlng: undefined,
-			map_init_basemap: undefined,
 
 			// Basemaps
 
@@ -8426,47 +8424,6 @@ function Waymark_Map() {
 
 						break;
 				}
-			}
-		}
-
-		//Importing Overlay Properties?
-		var overlay_properties = this.get_property(
-			waymark_settings,
-			"overlay",
-			"properties",
-		);
-		var properties_keys = Object.keys(overlay_properties);
-
-		// Valid properties?
-		if (properties_keys.length && properties_keys.pop()) {
-			var properties_html = "";
-
-			for (i in overlay_properties) {
-				var key = overlay_properties[i]["property_key"];
-
-				var title = overlay_properties[i]["property_title"];
-				var value = data_in[key];
-
-				if (typeof value !== "undefined") {
-					properties_html +=
-						'<p class="waymark-property waymark-property-' +
-						key +
-						'"><b>' +
-						title +
-						"</b><br />" +
-						value +
-						"</p>";
-
-					Waymark.debug("Importing " + title + " (" + key + ") ==> " + value);
-				}
-			}
-
-			if (properties_html) {
-				if (typeof data_out.description === "undefined") {
-					data_out.description = "";
-				}
-
-				data_out.description += properties_html;
 			}
 		}
 
