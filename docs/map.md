@@ -1,3 +1,278 @@
+### Map Instances
+
+Maps can either be read-only using the Viewer, or editable using the Editor. Both the Viewer and Editor extend the `Waymark_Map` class.
+
+Multiple maps can be used on a single page, each with their own configuration. A single Map is known as an Instance and is created using the `Waymark_Map_Factory` which is attached to the `window` object.
+
+For example, to create a new (read-only) Instance:
+
+```javascript
+// This Waymark_Map_Viewer Instance extends Waymark_Map class
+const waymark_viewer = window.Waymark_Map_Factory.viewer();
+```
+
+### Configuration
+
+Maps are configured using a JavaScript object. The configuration object is passed to the `init` method of the Map Instance.
+
+For example here is a basic configuration, which sets the height of the map to 800 pixels and enables the Elevation profile:
+
+```javascript
+const waymark_config = {
+	map_options: {
+		map_height: 800,
+	},
+	viewer_options: {
+		show_elevation: "1",
+	},
+};
+```
+
+#### Example Configuration
+
+```javascript
+const user_config = {
+	map_options: {
+		map_height: "800",
+		tile_layers: [
+			{
+				layer_name: "Open Street Map",
+				layer_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
+				layer_attribution:
+					'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				layer_max_zoom: "18",
+			},
+			{
+				layer_name: "Cycle",
+				layer_url:
+					"https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
+				layer_attribution:
+					'Data \u00a9 <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+				layer_max_zoom: "18",
+			},
+		],
+		marker_types: [
+			{
+				marker_title: "Photo",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "text",
+				marker_icon: "\ud83d\uddbc",
+				marker_colour: "#fbfbfb",
+				icon_colour: "#475260",
+			},
+			{
+				marker_title: "Information",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-information-circled",
+				marker_colour: "#fbfbfb",
+				icon_colour: "#0069a5",
+			},
+			{
+				marker_title: "Alert",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-android-alert",
+				marker_colour: "#da3d20",
+				icon_colour: "white",
+			},
+			{
+				marker_title: "Trail Access",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-android-bicycle",
+				marker_colour: "#70af00",
+				icon_colour: "white",
+			},
+			{
+				marker_title: "Food",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-pizza",
+				marker_colour: "#da3d20",
+				icon_colour: "#ffba00",
+			},
+			{
+				marker_title: "Water",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-waterdrop",
+				marker_colour: "#2aabe1",
+				icon_colour: "#fff",
+			},
+			{
+				marker_title: "Shelter",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-home",
+				marker_colour: "#72820d",
+				icon_colour: "white",
+			},
+			{
+				marker_title: "Beer",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-beer",
+				marker_colour: "#fbfbfb",
+				icon_colour: "#754423",
+			},
+			{
+				marker_title: "Start",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-power",
+				marker_colour: "#70af00",
+				icon_colour: "white",
+			},
+			{
+				marker_title: "Finish",
+				marker_shape: "marker",
+				marker_size: "large",
+				icon_type: "icon",
+				marker_icon: "ion-power",
+				marker_colour: "#a43233",
+				icon_colour: "white",
+			},
+		],
+		line_types: [
+			{
+				line_title: "Red",
+				line_colour: "#d84848",
+				line_weight: "3",
+				line_opacity: "0.7",
+			},
+			{
+				line_title: "Green",
+				line_colour: "#3cbc47",
+				line_weight: "3",
+				line_opacity: "0.7",
+			},
+			{
+				line_title: "Blue",
+				line_colour: "#487bd9",
+				line_weight: "3",
+				line_opacity: "0.7",
+			},
+		],
+		shape_types: [
+			{
+				shape_title: "Red",
+				shape_colour: "#d84848",
+				fill_opacity: "0.5",
+			},
+			{
+				shape_title: "Green",
+				shape_colour: "#3cbc47",
+				fill_opacity: "0.5",
+			},
+			{
+				shape_title: "Blue",
+				shape_colour: "#487bd9",
+				fill_opacity: "0.5",
+			},
+		],
+		show_scale: "1",
+		debug_mode: true,
+	},
+	viewer_options: {
+		show_gallery: "0",
+		show_filter: "1",
+		show_cluster: "0",
+		show_elevation: false,
+		cluster_radius: "40",
+		cluster_threshold: "10",
+		elevation_units: "metric",
+		elevation_initial: "1",
+		sleep_delay_seconds: "0",
+		sleep_do_message: "0",
+		sleep_wake_message: "Click to Interact with Map",
+	},
+	editor_options: { confirm_delete: "0" },
+};
+```
+
+The configuration object can be used to set the following options:
+
+#### Map Options
+
+<!-- Display table: option key, type, default, description -->
+
+| Option           | Type    | Default | Description                                                                      |
+| ---------------- | ------- | ------- | -------------------------------------------------------------------------------- |
+| map_div_id       | string  |         | The ID of the HTML element to contain the Map.                                   |
+| map_height       | number  | 400     | The height of the Map in pixels.                                                 |
+| map_width        | number  |         | The width of the Map in pixels.                                                  |
+| map_init_zoom    | number  |         | The initial zoom level of the Map.                                               |
+| map_init_latlng  | array   |         | The initial latitude and longitude of the Map.                                   |
+| map_init_basemap | string  |         | The initial basemap of the Map.                                                  |
+| map_max_zoom     | number  |         | The maximum zoom level of the Map.                                               |
+| debug_mode       | boolean | 0       | Whether to enable debug mode. This will output debug information to the console. |
+| show_scale       | boolean | 0       | Whether to show the scale on the Map.                                            |
+| tile_layers      | array   | []      | The basemaps available to the Map.                                               |
+| marker_types     | array   | []      | The types of Markers available to the Map.                                       |
+| line_types       | array   | []      | The types of Lines available to the Map.                                         |
+| shape_types      | array   | []      | The types of Shapes available to the Map.                                        |
+
+##### Basemaps
+
+Basemaps are added to the Map using the `tile_layers` array, each Basemap is an object with the following options:
+
+| Option            | Type   | Description                            |
+| ----------------- | ------ | -------------------------------------- |
+| layer_name        | string | The name of the basemap.               |
+| layer_url         | string | The URL of the basemap.                |
+| layer_attribution | string | The attribution of the basemap.        |
+| layer_max_zoom    | number | The maximum zoom level of the basemap. |
+
+##### Marker Types
+
+Marker Types are added to the Map using the `marker_types` array, each Marker Type is an object with the following options:
+
+| Option        | Type   | Description                         |
+| ------------- | ------ | ----------------------------------- |
+| marker_title  | string | The title of the Marker Type.       |
+| marker_shape  | string | The shape of the Marker Type.       |
+| marker_size   | string | The size of the Marker Type.        |
+| icon_type     | string | The type of the Marker Type icon.   |
+| marker_icon   | string | The icon of the Marker Type.        |
+| marker_colour | string | The colour of the Marker Type.      |
+| icon_colour   | string | The colour of the Marker Type icon. |
+
+##### Line Types
+
+Line Types are added to the Map using the `line_types` array, each Line Type is an object with the following options:
+
+| Option       | Type   | Description                   |
+| ------------ | ------ | ----------------------------- |
+| line_title   | string | The title of the Line Type.   |
+| line_colour  | string | The colour of the Line Type.  |
+| line_weight  | string | The weight of the Line Type.  |
+| line_opacity | string | The opacity of the Line Type. |
+
+##### Shape Types
+
+Shape Types are added to the Map using the `shape_types` array, each Shape Type is an object with the following options:
+
+| Option       | Type   | Description                    |
+| ------------ | ------ | ------------------------------ |
+| shape_title  | string | The title of the Shape Type.   |
+| shape_colour | string | The colour of the Shape Type.  |
+| fill_opacity | string | The opacity of the Shape Type. |
+
+## Source Code
+
+The Full Waymark_Map Source Code is:
+
+```javascript
 /*
 	==================================
 	========== LOCALIZATION ==========
@@ -1716,3 +1991,4 @@ function Waymark_Map() {
 	this.info_window = function (layer_type, feature, layer) {};
 	this.build_content = function (layer_type, feature) {};
 }
+```

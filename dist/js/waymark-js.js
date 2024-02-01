@@ -7553,6 +7553,7 @@ function Waymark_Map() {
 
 			editor_options: {
 				confirm_delete: 1,
+				data_div_id: "waymark-data",
 			},
 
 			// Media Library
@@ -9765,7 +9766,54 @@ function Waymark_Map_Editor() {
 		Waymark = this;
 
 		//This is the editor
-		jQuery(Waymark.map.getContainer()).addClass("waymark-is-editor");
+		Waymark.jq_map_container.addClass("waymark-is-editor");
+
+		// Set up data container
+		const data_div_id = Waymark.config.editor_options.data_div_id;
+		Waymark.jq_data_container = jQuery("#" + data_div_id);
+
+		//Data container found
+		if (Waymark.jq_data_container.length) {
+			// Get existing data
+			const map_data = Waymark.jq_data_container.val();
+
+			// Ensure is valid GeoJSON
+			try {
+				// Parse
+				const parsed_data = JSON.parse(map_data);
+
+				// Load
+				Waymark.load_json(parsed_data);
+
+				Waymark.debug(
+					`Data container (#${data_div_id}) found, valid GeoJSON added to Map.`,
+				);
+			} catch (error) {
+				Waymark.debug(
+					`Data container (#${data_div_id}) found, but not valid GeoJSON.`,
+				);
+			}
+			// Data container not found
+		} else {
+			// Add to map container
+
+			Waymark.debug(
+				`Data container (#${data_div_id}) not found, adding to DOM.`,
+			);
+
+			Waymark.jq_data_container = jQuery("<textarea />")
+				.attr({
+					id: data_div_id,
+					name: "map_data",
+				})
+				.addClass("waymark-input waymark-input-map_data")
+				.appendTo(Waymark.jq_map_container);
+
+			Waymark.jq_data_container.css({
+				display: "block",
+				border: "6px solid red",
+			});
+		}
 
 		//Add loading
 		Waymark.jq_map_container.append(
@@ -9872,14 +9920,10 @@ function Waymark_Map_Editor() {
 		Waymark = this;
 
 		//Map Data
-
-		// TODO - this needs to be configurable
-
-		var map_data_container = jQuery(".waymark-input-map_data").first();
 		var map_data_string = JSON.stringify(Waymark.map_data.toGeoJSON());
 
 		//Update custom field form
-		map_data_container.html(map_data_string);
+		Waymark.jq_data_container.html(map_data_string);
 	};
 
 	//Something was edited
