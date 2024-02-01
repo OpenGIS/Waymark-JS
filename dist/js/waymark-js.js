@@ -7477,11 +7477,7 @@ function Waymark_Map() {
 
 		//Default config
 		Waymark.config = {
-			// "Container" options?
-
-			// TODO - move to map_options
-
-			// Map (General
+			// Map (Common Options
 
 			map_options: {
 				debug_mode: 0,
@@ -7489,9 +7485,10 @@ function Waymark_Map() {
 				map_height: 400,
 				map_div_id: "waymark-map",
 				map_width: undefined,
-				map_init_zoom: undefined,
-				map_init_latlng: undefined,
-				map_init_basemap: undefined,
+				map_init_zoom: 16,
+				map_init_latlng: [49.4595, -85.038],
+				map_init_basemap: "Open Street Map",
+				map_max_zoom: undefined,
 
 				// Basemaps
 
@@ -7510,8 +7507,6 @@ function Waymark_Map() {
 			// Viewer
 
 			viewer_options: {
-				max_zoom: undefined,
-
 				// Features
 				show_gallery: 1,
 				show_filter: 1,
@@ -7940,12 +7935,12 @@ function Waymark_Map() {
 			//END Sleep
 
 			//Merge Viewer options
-			if (typeof Waymark.config.viewer_options !== "undefined") {
-				for (var key in Waymark.config.viewer_options) {
+			if (typeof Waymark.config.map_options !== "undefined") {
+				for (var key in Waymark.config.map_options) {
 					switch (key) {
 						// Max Zoom
 						case "max_zoom":
-							map_options.maxZoom = Waymark.config.viewer_options[key];
+							map_options.maxZoom = Waymark.config.map_options.max_zoom;
 
 							break;
 					}
@@ -7981,6 +7976,8 @@ function Waymark_Map() {
 		//View
 		if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
 			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
+		} else {
+			alert("No map_init_latlng");
 		}
 		if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
 			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
