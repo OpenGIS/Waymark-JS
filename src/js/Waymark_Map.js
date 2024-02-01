@@ -76,9 +76,6 @@ for (key in waymark_js_localize) {
 */
 
 function Waymark_Map() {
-	this.fallback_latlng = [51.38436, -68.74923];
-	this.fallback_zoom = 9;
-
 	this.init = function (user_config = {}) {
 		Waymark = this;
 
@@ -102,8 +99,8 @@ function Waymark_Map() {
 				map_height: 400,
 				map_div_id: "waymark-map",
 				map_width: null,
-				map_init_zoom: undefined,
-				map_init_latlng: undefined,
+				map_init_zoom: 9,
+				map_init_latlng: [51.38436, -68.74923],
 				map_init_basemap: undefined,
 
 				// Basemaps
@@ -595,12 +592,12 @@ function Waymark_Map() {
 		if (Waymark.config.map_options.map_init_latlng !== undefined) {
 			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 		} else {
-			Waymark.map.setView(Waymark.fallback_latlng);
+			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 		}
 		if (Waymark.config.map_options.map_init_zoom !== undefined) {
 			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 		} else {
-			Waymark.map.setZoom(Waymark.fallback_zoom);
+			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 		}
 
 		//Set default style
