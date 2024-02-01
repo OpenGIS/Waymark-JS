@@ -7488,9 +7488,9 @@ function Waymark_Map() {
 
 				map_height: 400,
 				map_div_id: "waymark-map",
-				map_width: null,
-				map_init_zoom: 9,
-				map_init_latlng: [51.38436, -68.74923],
+				map_width: undefined,
+				map_init_zoom: undefined,
+				map_init_latlng: undefined,
 				map_init_basemap: undefined,
 
 				// Basemaps
@@ -7979,14 +7979,10 @@ function Waymark_Map() {
 		Waymark.jq_map_container.data("Waymark", Waymark);
 
 		//View
-		if (Waymark.config.map_options.map_init_latlng !== undefined) {
-			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
-		} else {
+		if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
 			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 		}
-		if (Waymark.config.map_options.map_init_zoom !== undefined) {
-			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
-		} else {
+		if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
 			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 		}
 
@@ -9255,8 +9251,8 @@ function Waymark_Map_Viewer() {
 
 		//No view specified
 		if (
-			Waymark.config.map_options.map_init_latlng === undefined &&
-			Waymark.config.map_options.map_init_zoom === undefined
+			typeof Waymark.config.map_options.map_init_latlng === "undefined" &&
+			typeof Waymark.config.map_options.map_init_zoom === "undefined"
 		) {
 			//Use data layer bounds (if we have)
 			var bounds = Waymark.map_data.getBounds();
@@ -9267,8 +9263,8 @@ function Waymark_Map_Viewer() {
 			}
 			//Both zoom AND centre specified
 		} else if (
-			Waymark.config.map_options.map_init_latlng !== undefined &&
-			Waymark.config.map_options.map_init_zoom !== undefined
+			typeof Waymark.config.map_options.map_init_latlng !== "undefined" &&
+			typeof Waymark.config.map_options.map_init_zoom !== "undefined"
 		) {
 			//Use them
 			Waymark.map.setView(
@@ -9278,7 +9274,7 @@ function Waymark_Map_Viewer() {
 			//Either zoom or centre specified
 		} else {
 			//Centre specified
-			if (Waymark.config.map_options.map_init_latlng !== undefined) {
+			if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
 				Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 
 				//Use data layer for zoom
@@ -9288,7 +9284,7 @@ function Waymark_Map_Viewer() {
 			}
 
 			//Zoom specified
-			if (Waymark.config.map_options.map_init_zoom !== undefined) {
+			if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
 				Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 
 				//Use data layer for centre

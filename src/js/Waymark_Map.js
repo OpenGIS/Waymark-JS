@@ -98,9 +98,9 @@ function Waymark_Map() {
 
 				map_height: 400,
 				map_div_id: "waymark-map",
-				map_width: null,
-				map_init_zoom: 9,
-				map_init_latlng: [51.38436, -68.74923],
+				map_width: undefined,
+				map_init_zoom: undefined,
+				map_init_latlng: undefined,
 				map_init_basemap: undefined,
 
 				// Basemaps
@@ -589,14 +589,10 @@ function Waymark_Map() {
 		Waymark.jq_map_container.data("Waymark", Waymark);
 
 		//View
-		if (Waymark.config.map_options.map_init_latlng !== undefined) {
-			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
-		} else {
+		if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
 			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
 		}
-		if (Waymark.config.map_options.map_init_zoom !== undefined) {
-			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
-		} else {
+		if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
 			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
 		}
 
