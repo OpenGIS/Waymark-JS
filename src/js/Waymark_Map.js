@@ -76,6 +76,9 @@ for (key in waymark_js_localize) {
 */
 
 function Waymark_Map() {
+	this.fallback_latlng = [51.38436, -68.74923];
+	this.fallback_zoom = 9;
+
 	this.init = function (user_config = {}) {
 		Waymark = this;
 
@@ -94,11 +97,11 @@ function Waymark_Map() {
 
 				map_height: 400,
 				map_div_id: "waymark-map",
-				map_width: undefined,
-				map_init_zoom: 16,
-				// map_init_latlng: [49.4595, -85.038],
-				map_init_basemap: "Open Street Map",
-				map_max_zoom: 18,
+				map_width: null,
+				map_init_zoom: null,
+				map_init_latlng: null,
+				map_init_basemap: null,
+				map_max_zoom: null,
 
 				// Basemaps
 
@@ -550,15 +553,13 @@ function Waymark_Map() {
 			map_options.dragging = true;
 		}
 
-		Waymark.debug(
-			"Map Options: " + JSON.stringify(Waymark.config.map_options),
-			"alert",
-		);
-
 		//Merge Map options
 		if (typeof Waymark.config.map_options !== "undefined") {
 			// If not undefined
-			if (typeof Waymark.config.map_options.map_max_zoom !== "undefined") {
+			if (
+				typeof Waymark.config.map_options.map_max_zoom !== "undefined" &&
+				Waymark.config.map_options.map_max_zoom
+			) {
 				// Set
 				map_options.maxZoom = Waymark.config.map_options.map_max_zoom;
 
@@ -588,11 +589,18 @@ function Waymark_Map() {
 		Waymark.jq_map_container.data("Waymark", Waymark);
 
 		//View
-		if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
-			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
+		const initial_latlng = Waymark.config.map_options.map_init_latlng;
+		if (typeof initial_latlng !== "undefined" && initial_latlng) {
+			Waymark.map.setView(initial_latlng);
+		} else {
+			Waymark.map.setView(Waymark.fallback_latlng);
 		}
-		if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
-			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
+
+		const initial_zoom = Waymark.config.map_options.map_init_zoom;
+		if (typeof initial_zoom !== "undefined" && initial_zoom) {
+			Waymark.map.setZoom(initial_zoom);
+		} else {
+			Waymark.map.setZoom(Waymark.fallback_zoom);
 		}
 
 		//Set default style
@@ -852,7 +860,10 @@ function Waymark_Map() {
 
 		//Determine initial basemap
 		//Set by name?
-		if (typeof Waymark.config.map_options.map_init_basemap !== "undefined") {
+		if (
+			typeof Waymark.config.map_options.map_init_basemap !== "undefined" &&
+			Waymark.config.map_options.map_init_basemap
+		) {
 			//Search
 			for (var i in Waymark.config.map_options.tile_layers) {
 				var init_basemap_name =
