@@ -15,10 +15,37 @@
     <script src="dist/js/waymark-js.js"></script>
   </head>
   <body>
-    <div id="waymark-map-c41e94" class="waymark-map"></div>
+    <div id="waymark-map" class="waymark-map"></div>
 
     <script>
+      // Create a new Map Instance
+      const waymark_viewer = window.Waymark_Map_Factory.viewer();
 
+      // Configure the Map
+      const waymark_config = {
+        map_options: {
+          debug_mode: true,
+          map_height: 800,
+        },
+        viewer_options: {
+          // show_elevation: "1",
+        },
+      };
+
+      // Initialise the Map
+      waymark_viewer.init(waymark_config);
+
+      // Load GeoJSON data
+      waymark_viewer.load_json({
+        type: "FeatureCollection",
+        features: [
+          {
+            geometry: { type: "Point", coordinates: [-85.038, 49.4595] },
+            type: "Feature",
+            properties: { type: "food" },
+          },
+        ],
+      });
     </script>
   </body>
 </html>

@@ -105,13 +105,31 @@ function Waymark_Map() {
 
 				// Basemaps
 
-				tile_layers: {},
+				tile_layers: [
+					{
+						layer_name: "Open Street Map",
+						layer_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
+						layer_attribution:
+							'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+						layer_max_zoom: "18",
+					},
+				],
 
 				// Types - defaults
 
-				line_types: {},
-				shape_types: {},
-				marker_types: {},
+				line_types: [],
+				shape_types: [],
+				marker_types: [
+					{
+						marker_title: "Beer",
+						marker_shape: "marker",
+						marker_size: "large",
+						icon_type: "icon",
+						marker_icon: "ion-beer",
+						marker_colour: "#fbfbfb",
+						icon_colour: "#754423",
+					},
+				],
 
 				// Todo - works in editor?
 				show_scale: 0,
