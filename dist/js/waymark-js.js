@@ -7486,9 +7486,9 @@ function Waymark_Map() {
 				map_div_id: "waymark-map",
 				map_width: undefined,
 				map_init_zoom: 16,
-				map_init_latlng: [49.4595, -85.038],
+				// map_init_latlng: [49.4595, -85.038],
 				map_init_basemap: "Open Street Map",
-				map_max_zoom: undefined,
+				map_max_zoom: 18,
 
 				// Basemaps
 
@@ -7934,22 +7934,26 @@ function Waymark_Map() {
 			map_options.sleepOpacity = 1;
 			//END Sleep
 
-			//Merge Viewer options
-			if (typeof Waymark.config.map_options !== "undefined") {
-				for (var key in Waymark.config.map_options) {
-					switch (key) {
-						// Max Zoom
-						case "max_zoom":
-							map_options.maxZoom = Waymark.config.map_options.max_zoom;
-
-							break;
-					}
-				}
-			}
 			// === Editor ===
 		} else {
 			//Sleep not used, enable
 			map_options.dragging = true;
+		}
+
+		Waymark.debug(
+			"Map Options: " + JSON.stringify(Waymark.config.map_options),
+			"alert",
+		);
+
+		//Merge Map options
+		if (typeof Waymark.config.map_options !== "undefined") {
+			// If not undefined
+			if (typeof Waymark.config.map_options.map_max_zoom !== "undefined") {
+				// Set
+				map_options.maxZoom = Waymark.config.map_options.map_max_zoom;
+
+				console.log("Max Zoom: " + map_options.maxZoom);
+			}
 		}
 
 		//Create Map
@@ -7976,8 +7980,6 @@ function Waymark_Map() {
 		//View
 		if (typeof Waymark.config.map_options.map_init_latlng !== "undefined") {
 			Waymark.map.setView(Waymark.config.map_options.map_init_latlng);
-		} else {
-			alert("No map_init_latlng");
 		}
 		if (typeof Waymark.config.map_options.map_init_zoom !== "undefined") {
 			Waymark.map.setZoom(Waymark.config.map_options.map_init_zoom);
