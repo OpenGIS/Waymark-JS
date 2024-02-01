@@ -1,5 +1,25 @@
 # Waymark JS
 
+## TODO / Milesones
+
+### v1.0.0
+
+-   [ ] Finish documentation
+    -   [ ] Installation
+    -   [ ] Types
+    -   [ ] Basemaps
+    -   [ ] Add more examples
+-   [ ] Create homepage on waymark.dev/js
+
+### v2.0.0
+
+-   Use Vite for bundling
+-   Use ES6 modules
+-   Create NPM package
+-   Tests
+    -   [ ] Unit Tests
+    -   [ ] E2E Tests
+
 Waymark JS is a JavaScript library for viewing, editing and sharing geographical data.
 
 Originally developed as the intuitive and easy to use mapping interface for the [Waymark WordPress plugin](https://wordpress.org/plugins/waymark/), Waymark JS is a standalone library that can be used to add interactive maps to _any website_.

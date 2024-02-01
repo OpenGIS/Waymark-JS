@@ -85,7 +85,7 @@ function Waymark_Map() {
 		//Start timer
 		Waymark.start_time = new Date().getTime();
 
-		// TODO - Rename? Remove?
+		// jQuery Map Container
 		Waymark.jq_map_container = null;
 
 		//Default config
@@ -131,7 +131,7 @@ function Waymark_Map() {
 					},
 				],
 
-				// Todo - works in editor?
+				// Common Features
 				show_scale: 0,
 			},
 
