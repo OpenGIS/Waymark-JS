@@ -222,7 +222,7 @@ function Waymark_Map_Viewer() {
 		);
 
 		//Expected Waymark properties
-		for (key in Waymark.config.map_options[layer_type + "_data_defaults"]) {
+		for (key in Waymark.config[layer_type + "_data_defaults"]) {
 			var ele = null;
 
 			switch (key) {

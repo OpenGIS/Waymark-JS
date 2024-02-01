@@ -255,7 +255,7 @@ function Waymark_Map() {
 		Waymark.config.marker_data_defaults.type = default_marker_type_key;
 
 		// Debug
-		if (typeof Waymark.config !== "undefined" && Waymark.config) {
+		if (Waymark.config.map_options.debug_mode) {
 			console.log(Waymark.config);
 		}
 
@@ -1056,10 +1056,7 @@ function Waymark_Map() {
 	};
 
 	this.get_data_defaults = function (layer_type) {
-		return Object.assign(
-			{},
-			Waymark.config.map_options[layer_type + "_data_defaults"],
-		);
+		return Object.assign({}, Waymark.config[layer_type + "_data_defaults"]);
 	};
 
 	this.parse_layer_data = function (layer_type, data_in) {

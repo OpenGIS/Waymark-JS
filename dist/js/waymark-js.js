@@ -7645,7 +7645,7 @@ function Waymark_Map() {
 		Waymark.config.marker_data_defaults.type = default_marker_type_key;
 
 		// Debug
-		if (typeof Waymark.config !== "undefined" && Waymark.config) {
+		if (Waymark.config.map_options.debug_mode) {
 			console.log(Waymark.config);
 		}
 
@@ -8446,10 +8446,7 @@ function Waymark_Map() {
 	};
 
 	this.get_data_defaults = function (layer_type) {
-		return Object.assign(
-			{},
-			Waymark.config.map_options[layer_type + "_data_defaults"],
-		);
+		return Object.assign({}, Waymark.config[layer_type + "_data_defaults"]);
 	};
 
 	this.parse_layer_data = function (layer_type, data_in) {
@@ -9312,7 +9309,7 @@ function Waymark_Map_Viewer() {
 		);
 
 		//Expected Waymark properties
-		for (key in Waymark.config.map_options[layer_type + "_data_defaults"]) {
+		for (key in Waymark.config[layer_type + "_data_defaults"]) {
 			var ele = null;
 
 			switch (key) {
@@ -10564,7 +10561,7 @@ function Waymark_Map_Editor() {
 		// ============= DATA =============
 		// ================================
 
-		for (key in Waymark.config.map_options[layer_type + "_data_defaults"]) {
+		for (key in Waymark.config[layer_type + "_data_defaults"]) {
 			var ele = null;
 
 			switch (key) {
