@@ -121,7 +121,7 @@ function Waymark_Map() {
 				shape_types: [],
 				marker_types: [
 					{
-						marker_title: "Beer",
+						marker_title: "A Much Longer Title",
 						marker_shape: "marker",
 						marker_size: "large",
 						icon_type: "icon",
