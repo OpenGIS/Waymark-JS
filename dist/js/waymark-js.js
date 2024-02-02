@@ -8010,33 +8010,34 @@ function Waymark_Map() {
 		//Add reference
 		Waymark.jq_map_container.data("Waymark", Waymark);
 
-		// Fall back bounds
-		let fallback_bounds = Waymark.country_code_to_bounds();
-
 		//View
 		let initial_latlng = Waymark.config.map_options.map_init_latlng;
 		if (typeof initial_latlng !== "undefined" && initial_latlng) {
 			Waymark.map.setView(initial_latlng);
 		} else {
-			Waymark.debug("No initial coordinates set. Using fallback.");
+			initial_latlng = false;
+		}
 
-			console.log(fallback_bounds);
+		let initial_zoom = Waymark.config.map_options.map_init_zoom;
+		if (typeof initial_zoom !== "undefined" && initial_zoom) {
+			Waymark.map.setZoom(initial_zoom);
+		} else {
+			initial_zoom = false;
+		}
 
-			debugger;
+		// If no initial latlng or zoom
+		if (!initial_latlng && !initial_zoom) {
+			Waymark.debug("No initial latlng or zoom set! 🌍");
 
-			// Set view to fallback bounds, buffered
-			// Waymark.map.setZoom(9);
+			// Random country bounds
+			let fallback_bounds = Waymark.country_code_to_bounds();
+
+			// Fit
 			Waymark.map.fitBounds(fallback_bounds, {
 				padding: [50, 50],
 			});
 
-			// Waymark.config.map_options.map_init_latlng = Waymark.map.getCenter();
-		}
-
-		const initial_zoom = Waymark.config.map_options.map_init_zoom;
-		if (typeof initial_zoom !== "undefined" && initial_zoom) {
-			Waymark.map.setZoom(initial_zoom);
-		} else {
+			Waymark.config.map_options.map_init_latlng = Waymark.map.getCenter();
 			Waymark.config.map_options.map_init_zoom = Waymark.map.getZoom();
 		}
 
