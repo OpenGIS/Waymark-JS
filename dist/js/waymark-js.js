@@ -7485,7 +7485,7 @@ function Waymark_Map() {
 			map_options: {
 				debug_mode: 0,
 
-				map_height: 400,
+				map_height: null,
 				map_div_id: "waymark-map",
 				map_width: null,
 				map_init_zoom: null,
@@ -7497,7 +7497,7 @@ function Waymark_Map() {
 
 				tile_layers: [
 					{
-						layer_name: "Open Street Map",
+						layer_name: "OpenStreetMap",
 						layer_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
 						layer_attribution:
 							'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -7505,21 +7505,9 @@ function Waymark_Map() {
 					},
 				],
 
-				// Types - defaults
-
 				line_types: [],
 				shape_types: [],
-				marker_types: [
-					{
-						marker_title: "A Much Longer Title",
-						marker_shape: "marker",
-						marker_size: "large",
-						icon_type: "icon",
-						marker_icon: "ion-beer",
-						marker_colour: "#fbfbfb",
-						icon_colour: "#754423",
-					},
-				],
+				marker_types: [],
 
 				// Common Features
 				show_scale: 0,
@@ -7560,7 +7548,33 @@ function Waymark_Map() {
 
 			image_size_names: ["thumbnail", "medium", "large", "full"],
 
-			// Defaults
+			// Type Defaults
+
+			marker_type_defaults: {
+				marker_title: "Marker",
+				marker_shape: "marker",
+				marker_size: "medium",
+				marker_colour: "green",
+				marker_icon: "📍",
+				icon_type: "text",
+				icon_colour: "white",
+			},
+
+			line_type_defaults: {
+				line_title: "Line",
+				line_colour: "blue",
+				line_weight: "2",
+				line_opacity: "0.7",
+			},
+
+			shape_type_defaults: {
+				shape_title: "Shape",
+				shape_colour: "red",
+				fill_opacity: "0.4",
+			},
+
+			// Data Properties
+
 			marker_data_defaults: {
 				title: undefined,
 				type: undefined,
@@ -7914,10 +7928,12 @@ function Waymark_Map() {
 			"#" + Waymark.config.map_options.map_div_id,
 		);
 		Waymark.jq_map_container.addClass("waymark-map-container");
-		Waymark.jq_map_container.css(
-			"height",
-			Waymark.config.map_options.map_height + "px",
-		);
+
+		const map_height = Waymark.config.map_options.map_height
+			? Waymark.config.map_options.map_height + "px"
+			: "100%";
+
+		Waymark.jq_map_container.css("height", map_height);
 
 		//Create Map
 		var map_options = {
@@ -8384,35 +8400,13 @@ function Waymark_Map() {
 			type = {};
 		}
 
-		switch (layer_type) {
-			case "line":
-				//Checks
-				var required = [
-					{
-						key: "line_colour",
-						default: "#b42714",
-					},
-					{
-						key: "line_weight",
-						default: "3",
-					},
-					{
-						key: "line_opacity",
-						default: "0.7",
-					},
-				];
+		// Start with fallbacks
+		var fallback = Waymark.config[layer_type + "_type_defaults"];
 
-				for (var i in required) {
-					//If undefined
-					if (typeof type[required[i]["key"]] !== "string") {
-						//Set default
-						type[required[i]["key"]] = required[i]["default"];
-					}
-				}
+		// Merge
+		type = Object.assign({}, fallback, type);
 
-				break;
-		}
-
+		//Set key
 		type.type_key = Waymark.make_key(type[layer_type + "_title"]);
 
 		return type;

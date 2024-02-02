@@ -235,9 +235,6 @@ const user_config = {
 };
 ```
 
-````
-
-
 ### Types
 
 Customise how Overlays are displayed on the Map. When you add an Overlay (a Marker, Line or Shape) to the Map you may want to style it in a certain way. In the case of Markers, you may want to use certain icons.
@@ -262,7 +259,7 @@ const config = {
     ],
   },
 };
-````
+```
 
 When a Marker is added to the Map, it can be assigned the `pub` type by adding the `type` property to the GeoJSON Feature.
 
