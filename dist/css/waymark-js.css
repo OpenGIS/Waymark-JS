@@ -1186,28 +1186,28 @@
 	=========== ELEVATION ============
 	==================================
 */
-div.waymark-container .waymark-map .circle-lower {
+.waymark-map-container .circle-lower {
   fill: white;
 }
-div.waymark-container .waymark-map .elevation-polyline {
+.waymark-map-container .elevation-polyline {
   stroke: #b42714;
-  stroke-opacity: 0.85;
+  stroke-opacity: 0.7;
 }
-div.waymark-container .waymark-elevation .elevation-control.elevation * {
+.waymark-elevation-container .elevation-control.elevation * {
   max-width: 100%;
 }
-div.waymark-container .waymark-elevation .elevation-control.elevation .elevation-summary {
+.waymark-elevation-container .elevation-control.elevation .elevation-summary {
   margin-left: 10px;
 }
-div.waymark-container .waymark-elevation .elevation-control.elevation .legend-altitude {
+.waymark-elevation-container .elevation-control.elevation .legend-altitude {
   display: none;
 }
-div.waymark-container .waymark-elevation .elevation-control.elevation .area {
+.waymark-elevation-container .elevation-control.elevation .area {
   fill: #b42714;
   stroke: hsla(0, 0%, 0%, 0.85);
   stroke-width: 2.8;
 }
-div.waymark-container .waymark-elevation .waymark-elevation-close {
+.waymark-elevation-container .waymark-elevation-close {
   position: absolute;
   top: 5px;
   right: 14px;

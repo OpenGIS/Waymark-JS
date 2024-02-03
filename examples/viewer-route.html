@@ -21,11 +21,12 @@
 
     <script>
       // Create Editor Instance
-      const viewer = window.Waymark_Map_Factory.editor();
+      const viewer = window.Waymark_Map_Factory.viewer();
 
       // Initialise with our options
       viewer.init({
         map_options: {
+          debug_mode: true,
           marker_types: [
             {
               marker_title: "Photo",
@@ -78,7 +79,7 @@
           ],
         },
         viewer_options: {
-          show_elevation: "1",
+          show_elevation: 1,
         },
       });
 

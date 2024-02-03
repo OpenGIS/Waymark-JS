@@ -422,7 +422,9 @@ function Waymark_Map_Viewer() {
 			config.elevationDiv =
 				"#" + Waymark.config.viewer_options.elevation_div_id;
 			Waymark.elevation_container = jQuery(config.elevationDiv);
-			Waymark.elevation_container.hide();
+			Waymark.elevation_container
+				.addClass("waymark-elevation-container")
+				.hide();
 
 			//Close
 			var elevation_close = jQuery("<span />")
