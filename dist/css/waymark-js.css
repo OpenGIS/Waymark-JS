@@ -1005,6 +1005,7 @@
 	==================================
 */
 .waymark-map-container {
+  min-height: 400px;
   /* Gallery */
   /* Controls */
 }

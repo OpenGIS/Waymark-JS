@@ -1,0 +1,23 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+#waymark-data {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2000;
+  width: 320px;
+  height: 160px;
+  overflow: scroll;
+}
+/* Hover  */
+#waymark-data:hover {
+  width: 33.33%;
+  height: 33.33%;
+  font-size: 150%;
+}

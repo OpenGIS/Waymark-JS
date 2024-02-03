@@ -161,9 +161,9 @@ function Waymark_Map() {
 				marker_title: "Marker",
 				marker_shape: "marker",
 				marker_size: "medium",
-				marker_colour: "green",
-				marker_icon: "📍",
-				icon_type: "text",
+				marker_colour: "white",
+				marker_icon: "ion-android-pin",
+				icon_type: "font",
 				icon_colour: "white",
 			},
 
@@ -646,9 +646,6 @@ function Waymark_Map() {
 			Waymark.map.fitBounds(fallback_bounds, {
 				padding: [50, 50],
 			});
-
-			Waymark.config.map_options.map_init_latlng = Waymark.map.getCenter();
-			Waymark.config.map_options.map_init_zoom = Waymark.map.getZoom();
 		}
 
 		//Set default style
@@ -1058,7 +1055,7 @@ function Waymark_Map() {
 
 		if (type && typeof type[layer_type + "_title"] !== "undefined") {
 			var title = type[layer_type + "_title"];
-			text = '<span class="waymark-type-label">[' + title + "]</span>";
+			text = '<span class="waymark-type-label">[' + title + "]</span> ";
 		}
 
 		//Title
@@ -1697,7 +1694,6 @@ function Waymark_Map() {
 		Waymark.debug(
 			"Waymark Loaded in " + execution_time.toFixed(3) + " seconds",
 		);
-		// Waymark.debug(this);
 
 		// Check for callback waymark_loaded_callback
 		if (typeof waymark_loaded_callback === "function") {

@@ -63,11 +63,6 @@ function Waymark_Map_Editor() {
 				})
 				.addClass("waymark-input waymark-input-map_data")
 				.appendTo(Waymark.jq_map_container);
-
-			Waymark.jq_data_container.css({
-				display: "block",
-				border: "6px solid red",
-			});
 		}
 
 		//Add loading
