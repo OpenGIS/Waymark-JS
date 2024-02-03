@@ -7514,7 +7514,7 @@ function Waymark_Map() {
 
 			viewer_options: {
 				// Features
-				show_gallery: 1,
+				show_gallery: 0,
 				show_filter: 1,
 
 				// Cluster
@@ -7551,15 +7551,15 @@ function Waymark_Map() {
 				marker_title: "Marker",
 				marker_shape: "marker",
 				marker_size: "medium",
-				marker_colour: "white",
-				marker_icon: "ion-android-pin",
+				marker_colour: "#b42714",
+				marker_icon: "fa-star",
 				icon_type: "font",
 				icon_colour: "white",
 			},
 
 			line_type_defaults: {
 				line_title: "Line",
-				line_colour: "blue",
+				line_colour: "#b42714",
 				line_weight: "2",
 				line_opacity: "0.7",
 			},
