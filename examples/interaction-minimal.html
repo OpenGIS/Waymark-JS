@@ -63,6 +63,15 @@
           },
         ],
       });
+
+      // After a slight delay, open the popup
+      setTimeout(() => {
+        // Iterate over the Leaflet data layer
+        viewer.map_data.eachLayer((layer) => {
+          // Open popop
+          layer.openPopup();
+        });
+      }, 500);
     </script>
   </body>
 </html>

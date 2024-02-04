@@ -8032,12 +8032,12 @@ function Waymark_Map() {
 			Waymark.debug("No initial latlng or zoom set! 🌍");
 
 			// Random country bounds
-			let fallback_bounds = Waymark.country_code_to_bounds();
+			// let fallback_bounds = Waymark.country_code_to_bounds();
 
-			// Fit
-			Waymark.map.fitBounds(fallback_bounds, {
-				padding: [50, 50],
-			});
+			// // Fit
+			// Waymark.map.fitBounds(fallback_bounds, {
+			// 	padding: [50, 50],
+			// });
 		}
 
 		//Set default style

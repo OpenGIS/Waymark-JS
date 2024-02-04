@@ -6,26 +6,38 @@
 
 - [ ] Elevation inset styles
 - [ ] Add more examples
-  - Callbacks
-  - Basemaps
 - [ ] Create homepage on waymark.dev/js
 - [ ] Note on Uploads
 
-- [ ] Documentation
-  - [x] Installation
-  - [x] Getting Started
-  - [x] Modes
+Documentation:
+
+- [ ] Getting Started
+  - [ ] Installation
+  - [ ] Modes
   - [ ] Map Instances
-    - [ ] Common
-    - [ ] Viewer
-    - [ ] Editor
-      - [ ] Input/Ouput
-- [ ] Types
-- [ ] Basemaps
-- [ ] Extending Waymark JS
-  - [ ] Callbacks
-  - [ ] Uploads
+- [ ] Map
+  - [ ] Basemaps
+  - [ ] Map Options
+    - [ ] Types
+      - [ ] Marker Types
+      - [ ] Line Types
+      - [ ] Shape Types
   - [ ] Localisation
+- [ ] Viewer
+  - [ ] Options
+  - [ ] Initialisation
+  - [ ] Loading Data
+- [ ] Editor Options
+  - [ ] Options
+  - [ ] Initialisation
+  - [ ] Loading Data
+  - [ ] Retrieving Data
+- [ ] Advanced
+  - [ ] Styling
+  - [ ] Interaction
+    - [ ] Leaflet & jQuery
+    - [ ] Callbacks
+    - [ ] Uploads
 
 ### v1.1.0
 
