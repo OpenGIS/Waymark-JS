@@ -12,8 +12,9 @@
 - [ ] Note on Uploads
 
 - [ ] Documentation
-  - [ ] Installation
-  - [ ] Getting Started
+  - [x] Installation
+  - [x] Getting Started
+  - [x] Modes
   - [ ] Map Instances
     - [ ] Common
     - [ ] Viewer
@@ -28,7 +29,8 @@
 
 ### v1.1.0
 
-- [ ] Upload integration & examples
+- [ ] jQuery check(/auto include?)
+- [ ] Add File/Image Upload integration & examples
 - [ ] Add elevation div to container if not present
 
 # Waymark JS
@@ -59,7 +61,7 @@ Originally developed as the intuitive and easy to use mapping interface for the 
 - Map height and width
 - Localisation
 
-## Installation
+## Development
 
 ```bash
 # Install dependencies
@@ -69,12 +71,15 @@ pnpm install
 grunt
 ```
 
+Pull requests are welcome, however please view the Roadmap below to see where the project is heading. For major changes, please open an issue first to discuss what you would like to change :)
+
 ## Roadmap
 
 ### v2.0.0
 
 - Use Vite for bundling
 - Use ES6 modules
+- Remove Factory
 - Create NPM package
 - Tests
 - [ ] Unit Tests
@@ -82,4 +87,6 @@ grunt
 
 ### v3.0.0
 
-Rewrite using Vue & TypeScript.
+- Rewrite using MapLibre, Vue & TypeScript :)
+- Integrate Leaflet too through an adapter?
+- Modular

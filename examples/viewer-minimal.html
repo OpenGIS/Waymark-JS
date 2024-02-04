@@ -18,17 +18,16 @@
     <div id="waymark-map"></div>
 
     <script>
-      // Create viewer Instance
+      // Create a Viewer Instance
       const viewer = window.Waymark_Map_Factory.viewer();
 
       // Initialise with our options
       viewer.init({
         map_options: {
-
           // Initial Map Zoom
-          map_init_zoom: 14,
+          map_init_zoom: 16,
 
-          // Our Pub Icon
+          // Our Pub Icon 
           marker_types: [
             {
               marker_title: "Pub",
@@ -39,7 +38,7 @@
         },
       });
 
-      // Load GeoJSON
+      // Load a Marker from GeoJSON, with the "pub" Type
       viewer.load_json({
         type: "FeatureCollection",
         features: [
