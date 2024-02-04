@@ -15,6 +15,7 @@
     <script src="../dist/js/waymark-js.js"></script>
   </head>
   <body>
+    <!-- Map Container -->
     <div id="waymark-map"></div>
 
     <script>
@@ -27,9 +28,10 @@
           // Initial Map Zoom
           map_init_zoom: 16,
 
-          // Our Pub Icon 
+          // Our Pub Icon
           marker_types: [
             {
+              // The title is used to create the "pub" Type Key
               marker_title: "Pub",
               marker_icon: "ion-beer",
               marker_colour: "brown",
@@ -38,13 +40,14 @@
         },
       });
 
-      // Load a Marker from GeoJSON, with the "pub" Type
+      // Load a Marker from GeoJSON
       viewer.load_json({
         type: "FeatureCollection",
         features: [
           {
             type: "Feature",
             properties: {
+              // with the "pub" Type Key
               type: "pub",
               title: "The Scarlet Ibis",
               description:

@@ -56,6 +56,7 @@ var waymark_js_localize = {
 	no_direction: "No Direction",
 	show_direction: "Show Direction",
 	reverse_direction: "Reverse Direction",
+	sleep_wake_message: "Click or Hover to Wake",
 };
 
 if (typeof waymark_js === "undefined") {
@@ -137,11 +138,12 @@ function Waymark_Map() {
 				elevation_div_id: "waymark-elevation",
 				elevation_units: "metric",
 				elevation_initial: 1,
+				elevation_colour: "green",
 
 				// Sleep
 				sleep_delay_seconds: 2,
 				sleep_do_message: 0,
-				sleep_wake_message: waymark_js.lang.action_sleep_wake_message,
+				sleep_wake_message: waymark_js.lang.sleep_wake_message,
 			},
 
 			// Editor

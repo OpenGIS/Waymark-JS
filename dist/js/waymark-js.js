@@ -7446,6 +7446,7 @@ var waymark_js_localize = {
 	no_direction: "No Direction",
 	show_direction: "Show Direction",
 	reverse_direction: "Reverse Direction",
+	sleep_wake_message: "Click or Hover to Wake",
 };
 
 if (typeof waymark_js === "undefined") {
@@ -7527,11 +7528,12 @@ function Waymark_Map() {
 				elevation_div_id: "waymark-elevation",
 				elevation_units: "metric",
 				elevation_initial: 1,
+				elevation_colour: "green",
 
 				// Sleep
 				sleep_delay_seconds: 2,
 				sleep_do_message: 0,
-				sleep_wake_message: waymark_js.lang.action_sleep_wake_message,
+				sleep_wake_message: waymark_js.lang.sleep_wake_message,
 			},
 
 			// Editor
@@ -9705,6 +9707,8 @@ function Waymark_Map_Viewer() {
 			return;
 		}
 
+		Waymark.debug("Setting up Elevation Control");
+
 		//Localize
 		Waymark_L.registerLocale("waymark", {
 			"Total Length: ": waymark_js.lang.label_total_length,
@@ -9723,7 +9727,15 @@ function Waymark_Map_Viewer() {
 			width: Waymark.config.map_options.map_width,
 		};
 
-		Waymark.debug(Waymark.config.viewer_options.elevation_div_id);
+		// Add Inline stylsheet for colours
+		// Needs to target both map and elevation divs by ID
+		const elevation_css = `
+			div#${Waymark.config.map_options.map_div_id} .elevation-polyline { stroke: ${Waymark.config.viewer_options.elevation_colour} !important; }
+			div#${Waymark.config.viewer_options.elevation_div_id} .elevation-control.elevation .area { fill: ${Waymark.config.viewer_options.elevation_colour} !important; }
+		`;
+
+		// Append to head
+		jQuery("head").append(`<style type="text/css">${elevation_css}</style>`);
 
 		//Container
 		if (typeof Waymark.config.viewer_options.elevation_div_id !== "undefined") {
