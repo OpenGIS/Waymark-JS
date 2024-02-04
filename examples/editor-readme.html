@@ -2,13 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Minimal Editor</title>
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="../dist/css/waymark-js.css" />
-    <link rel="stylesheet" href="examples.css" />
 
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -18,9 +14,17 @@
     <!-- Map Container -->
     <div id="waymark-map"></div>
 
+    <!-- Map Data -->
+    <textarea id="waymark-data"><!-- Make an edit! --></textarea>
+
     <script>
-      // Creat and initilise the Editor with the default options
-      window.Waymark_Map_Factory.editor().init();
+      // Create the Editor
+      window.Waymark_Map_Factory.editor().init({
+        map_options: {
+          map_init_zoom: 14,
+          map_init_latlng: [50.6539, -128.0094],
+        },
+      });
     </script>
   </body>
 </html>

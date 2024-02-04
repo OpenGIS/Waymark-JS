@@ -32,7 +32,7 @@ Documentation:
   - [ ] Initialisation
   - [ ] Loading Data
   - [ ] Retrieving Data
-- [ ] Advanced
+- [ ] Customising
   - [ ] Styling
   - [ ] Interaction
     - [ ] Leaflet & jQuery
@@ -41,9 +41,11 @@ Documentation:
 
 ### v1.1.0
 
+- [ ] Assign default type key if none provided
 - [ ] jQuery check(/auto include?)
 - [ ] Add File/Image Upload integration & examples
 - [ ] Add elevation div to container if not present
+- [ ] Better handling of no Type provided, or only one Type
 
 # Waymark JS
 
@@ -72,6 +74,99 @@ Originally developed as the intuitive and easy to use mapping interface for the 
 - Colours, icons, and more (using Types)
 - Map height and width
 - Localisation
+
+## Examples
+
+<!-- TODO: list examples -->
+
+See the [examples](./examples) directory for more examples.
+
+### Viewer
+
+The following example will display a Map on the page with a single Marker. Once the Marker is clicked, a popup will display with the Marker's title, image and description. You can see this example in action [here](./examples/viewer-readme.html).
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../dist/css/waymark-js.css" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../dist/js/waymark-js.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
+
+    <script>
+      // Create a Viewer Instance
+      const viewer = window.Waymark_Map_Factory.viewer();
+
+      viewer.init();
+      viewer.load_json({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              title: "The Scarlet Ibis",
+              description:
+                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [-128.0094, 50.6539],
+            },
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
+```
+
+### Editor
+
+The following example will display an empty Map Editor on the page, set to an initial location. Any edits made to the Map are converted to GeoJSON and output into the `#waymark-data` textarea. You can see this example in action [here](./examples/editor-readme.html).
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="dist/css/waymark-js.min.css" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="dist/js/waymark-js.min.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
+
+    <!-- Map Data -->
+    <textarea id="waymark-data"></textarea>
+
+    <script>
+      // Create the Editor
+      window.Waymark_Map_Factory.editor().init({
+        map_options: {
+          // Initial location
+          map_init_latlng: [50.6539, -128.0094],
+          map_init_zoom: 14,
+        },
+      });
+    </script>
+  </body>
+</html>
+```
 
 ## Development
 

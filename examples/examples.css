@@ -15,6 +15,7 @@ body {
   height: 160px;
   overflow: scroll;
 }
+
 /* Hover  */
 #waymark-data:hover {
   width: 33.33%;

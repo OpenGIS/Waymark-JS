@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../dist/css/waymark-js.css" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../dist/js/waymark-js.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
+
+    <script>
+      // Create a Viewer Instance
+      const viewer = window.Waymark_Map_Factory.viewer();
+
+      viewer.init();
+      viewer.load_json({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              title: "The Scarlet Ibis",
+              description:
+                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [-128.0094, 50.6539],
+            },
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
