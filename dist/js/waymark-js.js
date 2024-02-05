@@ -9741,7 +9741,19 @@ function Waymark_Map_Viewer() {
 		if (typeof Waymark.config.viewer_options.elevation_div_id !== "undefined") {
 			config.elevationDiv =
 				"#" + Waymark.config.viewer_options.elevation_div_id;
+
+			// Check if container exists
 			Waymark.elevation_container = jQuery(config.elevationDiv);
+
+			// Create if it doesn't exist
+			if (!Waymark.elevation_container.length) {
+				Waymark.debug("Creating Elevation Container");
+
+				Waymark.elevation_container = jQuery("<div />")
+					.attr("id", Waymark.config.viewer_options.elevation_div_id)
+					.appendTo(Waymark.jq_map_container);
+			}
+
 			Waymark.elevation_container
 				.addClass("waymark-elevation-container")
 				.hide();

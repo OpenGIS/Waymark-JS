@@ -27,6 +27,8 @@
       const config = fetch("./assets/config/route.json")
         .then((response) => response.json())
         .then((data) => {
+          // data.viewer_options.elevation_div_id = "my-elevation-div";
+
           viewer.init(data);
 
           // Load GeoJSON

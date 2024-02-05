@@ -44,7 +44,6 @@ Documentation:
 - [ ] Assign default type key if none provided
 - [ ] jQuery check(/auto include?)
 - [ ] Add File/Image Upload integration & examples
-- [ ] Add elevation div to container if not present
 - [ ] Better handling of no Type provided, or only one Type
 
 # Waymark JS
