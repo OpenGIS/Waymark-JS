@@ -23,19 +23,18 @@
       // Create Editor Instance
       const viewer = window.Waymark_Map_Factory.viewer();
 
-      // Load Configuration
-      const config = fetch("./assets/config/route.json")
+      // Load Configuration from file
+      fetch("./assets/config/route.json")
         .then((response) => response.json())
-        .then((data) => {
-          // data.viewer_options.elevation_div_id = "my-elevation-div";
-
-          viewer.init(data);
+        .then((config) => {
+          // Initialise with our options
+          viewer.init(config);
 
           // Load GeoJSON
-          const geojson = fetch("./assets/geo/route-busy.geojson")
+          fetch("./assets/geo/route-busy.geojson")
             .then((response) => response.json())
-            .then((data) => {
-              viewer.load_json(data);
+            .then((geojson) => {
+              viewer.load_json(geojson);
             });
         });
     </script>

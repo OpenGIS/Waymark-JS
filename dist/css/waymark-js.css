@@ -950,8 +950,8 @@
 }
 .waymark-map-container .waymark-elevation-container {
   position: absolute;
-  bottom: 15px;
-  left: 15px;
+  bottom: 10px;
+  left: 10px;
   z-index: 2000;
   width: 50%;
   max-height: 33.33%;
@@ -961,6 +961,9 @@
 }
 .waymark-map-container .waymark-elevation-container .elevation-control .background {
   background: none;
+}
+.waymark-map-container.waymark-has-gallery .waymark-elevation-container {
+  bottom: 90px;
 }
 .waymark-elevation-container .elevation-control.elevation * {
   max-width: 100%;

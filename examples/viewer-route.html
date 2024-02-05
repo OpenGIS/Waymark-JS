@@ -17,10 +17,8 @@
   <body>
     <div id="waymark-map"></div>
 
-    <div id="waymark-elevation"></div>
-
     <script>
-      // Create Editor Instance
+      // Create Viewer Instance
       const viewer = window.Waymark_Map_Factory.viewer();
 
       // Initialise with our options
@@ -30,16 +28,11 @@
           show_gallery: "1",
           show_filter: "1",
           show_cluster: "1",
-          cluster_radius: "80",
-          cluster_threshold: "14",
           show_elevation: "1",
-          elevation_div_id: "waymark-elevation",
           elevation_units: "imperial",
-          // elevation_colour: "pink", //todo
+          elevation_colour: "#70af00",
           elevation_initial: "1",
-          sleep_delay_seconds: "3600",
           sleep_do_message: "1",
-          sleep_wake_message: "CLICK TO INTERACT",
         },
 
         // General Map Options
@@ -47,7 +40,6 @@
           debug_mode: true,
 
           // Line Types
-
           line_types: [
             {
               line_title: "Route",
@@ -56,7 +48,6 @@
           ],
 
           // Marker Types
-
           marker_types: [
             {
               marker_title: "Photo",
