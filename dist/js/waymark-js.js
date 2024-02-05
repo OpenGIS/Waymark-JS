@@ -9378,20 +9378,20 @@ function Waymark_Map_Viewer() {
 	this.clusterIconFunction = (cluster) => {
 		const clusterTypes = new Map([]);
 
-		//Each Marker
+		// Each Marker
 		cluster.getAllChildMarkers().forEach((marker) => {
-			//Get data
+			// Get data
 			const typeKey = marker.feature.properties.type;
 			const typeData = Waymark.get_type("marker", typeKey);
-			typeData.iconData = Waymark.build_icon_data(typeData);
 
-			//Keep Count
+			// Keep Count
 			if (!clusterTypes.has(typeKey)) {
 				typeData.typeCount = 1;
 			} else {
-				typeData.typeCount++;
+				typeData.typeCount = clusterTypes.get(typeKey).typeCount + 1;
 			}
 
+			typeData.iconData = Waymark.build_icon_data(typeData);
 			clusterTypes.set(typeKey, typeData);
 		});
 
