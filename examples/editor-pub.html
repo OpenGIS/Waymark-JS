@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Waymark | Editor | Pub</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../dist/css/waymark-js.css" />
+    <link rel="stylesheet" href="assets/css/examples.css" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../dist/js/waymark-js.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
+
+    <script>
+      // Creat and initilise the Editor with the default options
+      const editor = window.Waymark_Map_Factory.editor();
+
+      editor.init({
+        // Don't confirm delete
+        editor_options: {
+          confirm_delete: "0",
+        },
+
+        map_options: {
+          // Our Pub Icon
+          marker_types: [
+            {
+              marker_title: "Pub",
+              marker_icon: "ion-beer",
+              marker_colour: "brown",
+            },
+          ],
+        },
+      });
+
+      editor.load_json({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              type: "pub",
+              title: "The Scarlet Ibis",
+              description:
+                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [-128.0094, 50.6539],
+            },
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
