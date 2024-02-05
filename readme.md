@@ -11,10 +11,9 @@
 
 Documentation:
 
-- [ ] Getting Started
-  - [ ] Installation
-  - [ ] Modes
-  - [ ] Map Instances
+- [x] Getting Started
+  - [x] Installation
+  - [x] Usage
 - [ ] Map
   - [ ] Basemaps
   - [ ] Map Options
@@ -22,7 +21,7 @@ Documentation:
       - [ ] Marker Types
       - [ ] Line Types
       - [ ] Shape Types
-  - [ ] Localisation
+  - [x] Instances
 - [ ] Viewer
   - [ ] Options
   - [ ] Initialisation
@@ -38,6 +37,7 @@ Documentation:
     - [ ] Leaflet & jQuery
     - [ ] Callbacks
     - [ ] Uploads
+  - [ ] Localisation
 
 ### v1.1.0
 
