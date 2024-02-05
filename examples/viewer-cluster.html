@@ -15,12 +15,27 @@
     <script src="../dist/js/waymark-js.js"></script>
   </head>
   <body>
-    <!-- Map Container -->
     <div id="waymark-map"></div>
 
+    <div id="waymark-elevation"></div>
+
     <script>
-      // Creat and initilise the Editor with the default options
-      window.Waymark_Map_Factory.editor().init();
+      // Create Editor Instance
+      const viewer = window.Waymark_Map_Factory.viewer();
+
+      // Load Configuration
+      const config = fetch("./assets/config/route.json")
+        .then((response) => response.json())
+        .then((data) => {
+          viewer.init(data);
+
+          // Load GeoJSON
+          const geojson = fetch("./assets/geo/route-busy.geojson")
+            .then((response) => response.json())
+            .then((data) => {
+              viewer.load_json(data);
+            });
+        });
     </script>
   </body>
 </html>

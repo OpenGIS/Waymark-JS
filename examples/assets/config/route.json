@@ -1,0 +1,58 @@
+{
+  "map_options": {
+    "debug_mode": true,
+    "marker_types": [
+      {
+        "marker_title": "Photo",
+        "icon_type": "icon",
+        "marker_icon": "ion-camera",
+        "marker_colour": "#70af00",
+        "icon_colour": "#ffffff"
+      },
+      {
+        "marker_title": "Information",
+        "icon_type": "icon",
+        "marker_icon": "ion-information-circled",
+        "marker_colour": "#fbfbfb",
+        "icon_colour": "#0069a5"
+      },
+      {
+        "marker_title": "Alert",
+        "icon_type": "icon",
+        "marker_icon": "ion-android-alert",
+        "marker_colour": "#da3d20",
+        "icon_colour": "white"
+      },
+      {
+        "marker_title": "Food",
+        "icon_type": "icon",
+        "marker_icon": "ion-pizza",
+        "marker_colour": "#da3d20",
+        "icon_colour": "#ffba00"
+      },
+      {
+        "marker_title": "Beer",
+        "icon_type": "icon",
+        "marker_icon": "ion-beer",
+        "marker_colour": "#fbfbfb",
+        "icon_colour": "#754423"
+      },
+      {
+        "marker_title": "Camp",
+        "icon_type": "icon",
+        "marker_icon": "ion-android-home",
+        "marker_colour": "#a43233",
+        "icon_colour": "#ffffff"
+      }
+    ],
+    "line_types": [
+      {
+        "line_title": "Route",
+        "line_colour": "green"
+      }
+    ]
+  },
+  "viewer_options": {
+    "show_elevation": 1
+  }
+}
