@@ -104,7 +104,12 @@
 				overflow-y: auto;
 				overflow-x: hidden;
 				label {
+					display: block;
+					padding: 3px;
 					font-size: 13px;
+
+					border-bottom: 1px solid #ddd;
+
 					.waymark-type-text {
 						margin-left: 10px;
 					}
@@ -320,52 +325,5 @@
 	.waymark-image img {
 		width: inherit;
 		height: inherit;
-	}
-}
-
-/*
-	==================================
-	=========== ELEVATION ============
-	==================================
-*/
-
-.waymark-map-container {
-	.circle-lower {
-		fill: white;
-	}
-
-	.elevation-polyline {
-		stroke: @waymark-primary;
-		stroke-opacity: 0.7;
-	}
-}
-
-.waymark-elevation-container {
-	.elevation-control.elevation {
-		* {
-			max-width: 100%;
-		}
-		.elevation-summary {
-			margin-left: 10px;
-		}
-		.legend-altitude {
-			display: none;
-		}
-		.area {
-			fill: @waymark-primary;
-			stroke: hsla(60, 0%, 0%, 0.85);
-			stroke-width: 2.8;
-		}
-	}
-	.waymark-elevation-close {
-		position: absolute;
-		top: 5px;
-		right: 14px;
-		padding: 5px 10px;
-		font-weight: bold;
-		font-size: 14px;
-		background: @waymark-grey;
-		cursor: pointer;
-		color: #333;
 	}
 }

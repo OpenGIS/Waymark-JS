@@ -22,12 +22,3 @@ body {
   height: 33.33%;
   font-size: 150%;
 }
-
-.waymark-elevation-container {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  z-index: 2000;
-  width: 320px;
-  height: 160px;
-}

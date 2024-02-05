@@ -9749,6 +9749,9 @@ function Waymark_Map_Viewer() {
 			if (!Waymark.elevation_container.length) {
 				Waymark.debug("Creating Elevation Container");
 
+				// Attached
+				config.width = Waymark.config.map_options.map_width / 2;
+
 				Waymark.elevation_container = jQuery("<div />")
 					.attr("id", Waymark.config.viewer_options.elevation_div_id)
 					.appendTo(Waymark.jq_map_container);

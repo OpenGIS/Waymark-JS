@@ -102,3 +102,70 @@
 		}
 	}
 }
+
+/*
+	==================================
+	=========== ELEVATION ============
+	==================================
+*/
+
+.waymark-map-container {
+	.circle-lower {
+		fill: white;
+	}
+
+	.elevation-polyline {
+		stroke: @waymark-primary;
+		stroke-opacity: 0.7;
+	}
+
+	// Nested Elevation
+	.waymark-elevation-container {
+		position: absolute;
+		bottom: 15px;
+		left: 15px;
+		z-index: 2000;
+		width: 50%;
+		max-height: 33.33%;
+
+		.elevation-control {
+			background: rgba(255, 255, 255, 0.47);
+
+			.background {
+				background: none;
+			}
+		}
+	}
+}
+
+.waymark-elevation-container {
+	.elevation-control.elevation {
+		* {
+			max-width: 100%;
+		}
+		.elevation-summary {
+			margin: 0;
+			text-align: center;
+			padding: 0 10px;
+		}
+		.legend-altitude {
+			display: none;
+		}
+		.area {
+			fill: @waymark-primary;
+			stroke: hsla(60, 0%, 0%, 0.85);
+			stroke-width: 2.8;
+		}
+	}
+	.waymark-elevation-close {
+		position: absolute;
+		top: 5px;
+		right: 14px;
+		padding: 5px 10px;
+		font-weight: bold;
+		font-size: 14px;
+		background: @waymark-grey;
+		cursor: pointer;
+		color: #333;
+	}
+}
