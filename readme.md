@@ -16,28 +16,29 @@ Documentation:
   - [x] Usage
 - [x] Map
   - [x] Instances
-  - [ ] Basemaps
-  - [ ] Map Options
-    - [ ] Types
-      - [ ] Marker Types
-      - [ ] Line Types
-      - [ ] Shape Types
-- [ ] Viewer
-  - [ ] Options
-  - [ ] Initialisation
-  - [ ] Loading Data
-- [ ] Editor Options
-  - [ ] Options
-  - [ ] Initialisation
-  - [ ] Loading Data
-  - [ ] Retrieving Data
+  - [x] Viewer
+  - [x] Editor
+  - [x] Map Options
+- [x] Viewer
+  - [x] Creation
+  - [x] Options
+  - [x] Initialisation
+  - [x] Loading Data
+  - [x] Examples
+- [ ] Editor
+  - [x] Creation
+  - [x] Options
+  - [x] Initialisation
+  - [x] Loading Data
+  - [x] Retrieving Data
+  - [x] Examples
 - [ ] Customising
   - [ ] Styling
   - [ ] Interaction
     - [ ] Leaflet & jQuery
     - [ ] Callbacks
     - [ ] Uploads
-  - [ ] Localisation
+    - [ ] Localisation
 
 ### v1.1.0
 
@@ -50,7 +51,7 @@ Documentation:
 
 Create, share and edit _meaningful_ Maps.
 
-Waymark JS is a JavaScript library for sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications.
+Waymark JS is a JavaScript library for sharing geographical information. It is designed to be easy to use, intuitive suitable for a wide range of applications.
 
 Originally developed for the [Waymark WordPress plugin](https://wordpress.org/plugins/waymark/), Waymark JS is a standalone library that can be used to add interactive Maps to _any website_.
 
