@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Prism from "prismjs";
-import "~/assets/prism-waymark-theme.css";
 
 onMounted(() => {
   Prism.highlightAll();
