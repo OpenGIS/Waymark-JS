@@ -8,9 +8,9 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
-    "@nuxt/content": "^2.9.0",
+    "@nuxt/content": "2.9.0",
     "github-markdown-css": "^5.5.0",
-    "nuxt": "^3.8.2",
+    "nuxt": "3.8.2",
     "prismjs": "^1.29.0",
     "remark-gfm": "3.0.1"
   },
