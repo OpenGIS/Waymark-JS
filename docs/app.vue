@@ -9,7 +9,7 @@ const route = useRoute();
 </script>
 
 <template>
-  <header>Waymark JS</header>
+  <header><Icon /></header>
 
   <main>
     <ContentDoc class="markdown-body">
