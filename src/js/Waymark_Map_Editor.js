@@ -306,7 +306,7 @@ function Waymark_Map_Editor() {
 
 				var button = Waymark_L.DomUtil.create(
 					"a",
-					"waymark-edit-button waymark-edit-upload",
+					"waymark-edit-button waymark-edit-upload waymark-hidden",
 					toolbar,
 				);
 				button.innerHTML =

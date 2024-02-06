@@ -4,10 +4,8 @@
 
 ### v1.0.0
 
-- [ ] Elevation inset styles
 - [ ] Add more examples
 - [ ] Create homepage on waymark.dev/js
-- [ ] Note on Uploads
 
 Documentation:
 
@@ -25,7 +23,7 @@ Documentation:
   - [x] Initialisation
   - [x] Loading Data
   - [x] Examples
-- [ ] Editor
+- [x] Editor
   - [x] Creation
   - [x] Options
   - [x] Initialisation
@@ -34,18 +32,18 @@ Documentation:
   - [x] Examples
 - [ ] Customising
   - [ ] Styling
-  - [ ] Interaction
+  - [ ] Extending
     - [ ] Leaflet & jQuery
     - [ ] Callbacks
     - [ ] Uploads
-    - [ ] Localisation
+  - [ ] Localisation
 
 ### v1.1.0
 
-- [ ] Assign default type key if none provided
+- [ ] Improve file/image upload integration & examples
+- [ ] Assign default Type key if none provided
+- [ ] Better handling of no/one Type provided
 - [ ] jQuery check(/auto include?)
-- [ ] Add File/Image Upload integration & examples
-- [ ] Better handling of no Type provided, or only one Type
 
 # Waymark JS
 
