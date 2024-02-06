@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ["~/assets/main.less", "github-markdown-css/github-markdown-dark.css"],
+  css: ["~/assets/main.less", "github-markdown-css/github-markdown.css"],
 
   imports: {},
 });
