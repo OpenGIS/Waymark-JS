@@ -3,6 +3,8 @@
   "version": "1.0",
   "description": "An Interactive Geographical Information Editor for the Web.",
   "author": "Joe Hawes",
+  "homepage": "https://www.waymark.dev/js/",
+  "license": "GPL-2",
   "main": "Gruntfile.js",
   "devDependencies": {
     "grunt": "^1.5.3",

@@ -86,6 +86,7 @@ module.exports = function (grunt) {
 		"concat",
 		"terser",
 		"cssmin",
+		"copy",
 		"watch",
 	]);
 
