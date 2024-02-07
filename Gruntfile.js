@@ -46,14 +46,30 @@ module.exports = function (grunt) {
 			},
 		},
 
+		copy: {
+			js: {
+				files: [
+					{
+						expand: true,
+						cwd: "dist/",
+						src: ["**"],
+						dest:
+							"docs/public/" +
+							grunt.file.readJSON("package.json").version +
+							"/",
+					},
+				],
+			},
+		},
+
 		watch: {
 			js_js: {
 				files: ["src/js/*.js"],
-				tasks: ["build_js_js"],
+				tasks: ["build_js_js", "copy:js"],
 			},
 			js_css: {
 				files: ["src/less/*.less"],
-				tasks: ["build_js_css"],
+				tasks: ["build_js_css", "copy:js"],
 			},
 		},
 	});
@@ -63,6 +79,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-cssmin");
 	grunt.loadNpmTasks("grunt-contrib-less");
 	grunt.loadNpmTasks("grunt-contrib-watch");
+	grunt.loadNpmTasks("grunt-contrib-copy");
 
 	grunt.registerTask("default", [
 		"less",
