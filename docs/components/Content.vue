@@ -1,5 +1,9 @@
 <template>
   <main>
+    <ClientOnly>
+      <Demo />
+    </ClientOnly>
+
     <ContentDoc class="markdown-body">
       <template #not-found>
         <h1>Not Found</h1>

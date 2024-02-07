@@ -2,7 +2,8 @@ pre[class*="language-"],
 code[class*="language-"],
 pre[class*="language-"] *,
 code[class*="language-"] * {
-	background: #2b2b2b !important;
+	z-index: 0;
+	background: #222 !important;
 }
 pre[class*="language-"],
 code[class*="language-"] {

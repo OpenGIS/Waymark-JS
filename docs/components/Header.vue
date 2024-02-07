@@ -31,13 +31,12 @@ header {
   width: 94%;
   top: 0;
   left: 0;
+  z-index: 100;
   max-height: 60px;
   align-items: center;
   justify-content: space-between;
   padding: 1% 3%;
-  border-bottom: 1px solid #ddd;
   margin-bottom: 2rem;
-  background: #0d1117;
 
   a {
     position: relative;
@@ -49,7 +48,6 @@ header {
       position: absolute;
       bottom: 5px;
       right: -13px;
-      color: #ffbcda;
       font-size: 14px;
       font-family: Monaco, "Andale Mono", "Ubuntu Mono", monospace;
       // font-style: italic;
