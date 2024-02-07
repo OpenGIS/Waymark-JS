@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <header>
     <NuxtLink to="/">

@@ -1,3 +1,5 @@
+Create, Edit and Share Meaningful Maps
+
 Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications.
 
 ## Installation

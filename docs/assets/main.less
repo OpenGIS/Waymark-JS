@@ -10,7 +10,7 @@ body {
   // background: #0d1117;
   // color: @waymark-grey-light;
   font-family: "Noto Sans", Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 18px;
 
   /* Global Styles */
   img {
@@ -36,7 +36,6 @@ body {
 
       option {
         background: @waymark-grey-dark;
-        color: red;
 
         &:hover {
           background: @waymark-grey-light;
@@ -49,6 +48,11 @@ body {
   main {
     .markdown-body {
       font-size: inherit;
+
+      > p:first-child {
+        font-size: 24px;
+        line-height: 1.2em;
+      }
 
       h1,
       h2,
@@ -105,6 +109,8 @@ body {
       color: @waymark-text;
       p {
         overflow: hidden;
+        font-size: 18px !important;
+
         span {
           margin-left: -5px;
           display: block;
@@ -133,7 +139,8 @@ body {
 
       &.middle {
         justify-content: center;
-        .waymark-icon-wrap {
+
+        .waymark-icon-github {
           margin: 0 10px;
         }
       }

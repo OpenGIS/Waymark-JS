@@ -28,7 +28,7 @@ code[class*="language-"] {
 .token.symbol,
 .token.deleted {
 	/* Pink */
-	color: #ffbcda;
+	color: #aad3df;
 }
 .token.selector,
 .token.attr-name,
@@ -57,6 +57,6 @@ code[class*="language-"] {
 .token.important,
 .token.variable,
 .token.function {
-	/* Waymark Red  */
+	/* Pink  */
 	color: #ff8897;
 }

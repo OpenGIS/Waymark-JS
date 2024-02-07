@@ -8000,7 +8000,7 @@ function Waymark_Map() {
 		Waymark_L.control
 			.attribution({
 				prefix:
-					'<a href="https://www.waymark.dev/" title="Share your way">Waymark</a>',
+					'<a href="https://www.waymark.dev/js/" title="Share your way">Waymark</a>',
 			})
 			.addTo(Waymark.map);
 

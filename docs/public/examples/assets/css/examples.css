@@ -6,6 +6,12 @@ body {
   height: 100%;
 }
 
+.waymark-map-container .leaflet-control-locate,
+.waymark-map-container .leaflet-control-fullscreen,
+.waymark-map-container .leaflet-control-zoom {
+  display: none !important;
+}
+
 #waymark-data {
   position: absolute;
   top: 15px;

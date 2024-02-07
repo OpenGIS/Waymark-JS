@@ -19,7 +19,7 @@ const getStyle = () => {
 </script>
 
 <template>
-  <div class="waymark-icon-wrap">
+  <div :class="`waymark-icon-wrap waymark-icon-${props.name}`">
     <div class="waymark-icon" :style="getStyle()" />
 
     <slot />
