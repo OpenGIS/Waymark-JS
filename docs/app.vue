@@ -13,9 +13,5 @@ const route = useRoute();
 
   <Content />
 
-  <footer>
-    <nav>
-      <p>Your are here: {{ route.path }}</p>
-    </nav>
-  </footer>
+  <Footer />
 </template>

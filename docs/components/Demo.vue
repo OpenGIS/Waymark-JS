@@ -7,10 +7,14 @@ const demoURL = computed(() => {
 
   // Load the Waymark Map
   switch (route.path) {
+    // Docs Home
     case "/":
       url += "examples/viewer-pub.html";
 
       break;
+
+    default:
+      url = "";
   }
 
   return url;
@@ -19,6 +23,7 @@ const demoURL = computed(() => {
 
 <template>
   <iframe
+    v-if="demoURL"
     :src="demoURL"
     frameborder="0"
     scrolling="no"

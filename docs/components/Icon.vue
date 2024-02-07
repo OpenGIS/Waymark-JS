@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  name: { default: "logo", type: String },
+  name: { default: "waymark", type: String },
   color: { default: "#fff", type: String },
   width: { default: "30", type: String },
   height: { default: "30", type: String },
@@ -30,11 +30,13 @@ const getStyle = () => {
 .waymark-icon-wrap {
   display: inline-block;
   overflow: hidden;
+  vertical-align: middle;
+
   .waymark-icon {
     display: inline-block;
     mask-repeat: no-repeat;
-    min-width: 32px;
-    min-height: 32px;
+    min-width: 20px;
+    min-height: 20px;
     mask-position: center;
     overflow: hidden;
   }

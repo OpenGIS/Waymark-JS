@@ -117,11 +117,26 @@ body {
   /* Footer */
   footer {
     display: flex;
-    padding: 15px;
-    background: blue;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
 
-    > * {
-      flex-align: center;
+    a {
+      color: @waymark-text;
+      text-decoration: none;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+
+      &.middle {
+        justify-content: center;
+        .waymark-icon-wrap {
+          margin: 0 10px;
+        }
+      }
     }
   }
 }
