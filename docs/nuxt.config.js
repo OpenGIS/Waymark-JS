@@ -16,6 +16,4 @@ export default defineNuxtConfig({
     "prism-theme-github/themes/prism-theme-github-dark.css",
     "~/assets/prism.css",
   ],
-
-  imports: {},
 });

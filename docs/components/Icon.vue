@@ -19,18 +19,18 @@ const getStyle = () => {
 </script>
 
 <template>
-  <div class="mini-icon-wrap">
-    <div class="mini-icon" :style="getStyle()" />
+  <div class="waymark-icon-wrap">
+    <div class="waymark-icon" :style="getStyle()" />
 
     <slot />
   </div>
 </template>
 
 <style lang="less">
-.mini-icon-wrap {
+.waymark-icon-wrap {
   display: inline-block;
   overflow: hidden;
-  .mini-icon {
+  .waymark-icon {
     display: inline-block;
     mask-repeat: no-repeat;
     min-width: 32px;
