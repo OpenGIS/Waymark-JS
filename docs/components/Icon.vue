@@ -10,7 +10,7 @@ const getStyle = () => {
   return `
     background-color: ${props.color};
     color: ${props.color};
-    mask-image: url(/assets/icon/${props.name}.svg);
+    mask-image: url(assets/icon/${props.name}.svg);
     width: ${props.width}px;
     height: ${props.height}px;
     mask-size: ${props.width}px ${props.height}px;

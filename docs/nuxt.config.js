@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ["@nuxt/content"],
   content: {
     markdown: {
@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 
   css: [
     "~/assets/main.less",
-    "github-markdown-css/github-markdown.css",
+    "github-markdown-css/github-markdown-light.css",
     "prism-theme-github/themes/prism-theme-github-dark.css",
     "~/assets/prism.css",
   ],

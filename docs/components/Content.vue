@@ -12,7 +12,6 @@
 
 <style>
 main {
-  margin: 1%;
   margin-top: 80px;
 }
 </style>

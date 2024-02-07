@@ -1,4 +1,9 @@
-/* General */
+pre[class*="language-"],
+code[class*="language-"],
+pre[class*="language-"] *,
+code[class*="language-"] * {
+	background: #2b2b2b !important;
+}
 pre[class*="language-"],
 code[class*="language-"] {
 	/* Light Grey  */
@@ -52,5 +57,5 @@ code[class*="language-"] {
 .token.variable,
 .token.function {
 	/* Waymark Red  */
-	color: #b42714;
+	color: #ff8897;
 }
