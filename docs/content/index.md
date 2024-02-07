@@ -1,9 +1,88 @@
-# Nuxt Content
+Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications.
 
-This page corresponds to the `/` route of your website. You can delete it or create another file in the `content/` directory.
+## Installation
 
-Try to navigate to [/about](/about). These 2 pages are rendered by the `pages/[...slug].vue` component.
+To use Waymark JS, you will need to include the following assets in your page. Here we are adding them to the `<head>` of the document so they are immediately available to the `<body>`:
 
----
+```html
+<!-- jQuery (required) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-Look at the [Content documentation](https://content.nuxtjs.org/) to learn more.
+<!-- Waymark CSS & JavaScript -->
+<link rel="stylesheet" href="dist/css/waymark-js.min.css" />
+<script src="dist/js/waymark-js.min.js"></script>
+```
+
+Alternatively, the `<script>` tags could be placed at the end of the `<body>` to defer loading.
+
+> [!TIP]
+> Waymark JS requires the `jQuery` global to be available before creating a Map. If you are not already using [jQuery](https://jquery.com/), you can include it from a CDN as shown above.
+
+## Usage
+
+To display a Map, place an empty `<div>` in the body of your document. If you plan to display just one Map on the page, you can use the default `id` of `waymark-map`.
+
+```html
+<!-- Map Container -->
+<div id="waymark-map"></div>
+```
+
+To initialise the Map, we need to add a `<script>` tag to the document. This should be placed _after_ the Map Container and JS/CSS assets have been included.
+
+Here we are creating a new Viewer Instance, setting some [options](./2.map.md#options), and adding a Marker to the Map. You can see this example in action [here](../examples/viewer-pub.html).
+
+> [!TIP]
+> For multiple Maps, provide the unique `id` for each using the `map_options.map_div_id` [option](./2.map.md#map-options).
+
+```html
+<!-- Map Initialisation -->
+<script>
+  // Create a Viewer Instance
+  const viewer = window.Waymark_Map_Factory.viewer();
+
+  // Initialise with our options
+  viewer.init({
+    map_options: {
+      // Initial Map Zoom
+      map_init_zoom: 16,
+
+      // Define a new Type
+      marker_types: [
+        {
+          // The title is used to create the "pub" Type Key
+          marker_title: "Pub",
+          marker_icon: "ion-beer",
+          marker_colour: "brown",
+        },
+      ],
+    },
+  });
+
+  // Load a Marker from GeoJSON
+  viewer.load_json({
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          // The "pub" Type Key
+          type: "pub",
+          title: "The Scarlet Ibis",
+          description:
+            "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+          image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [-128.0094, 50.6539],
+        },
+      },
+    ],
+  });
+</script>
+```
+
+The above example creates a Viewer Instance and initialises it with a custom Marker Type, defined in the `map_options` [object](./2.map.md#map-options). The Marker location is loaded from GeoJSON and because the feature has a `type` property of `pub`, it is displayed using the custom Type.
+
+> [!TIP]
+> Each Type has a unique Key that is used to identify it (e.g. `pub` in the above example). This is created from the `marker_title` property, so Type Titles should be unique.
