@@ -8,6 +8,16 @@ const route = useRoute();
 const navigation = computed(() => {
   return navData.value.filter((item) => item._path !== "/");
 });
+
+const goTo = (path) => {
+  navigateTo(path);
+
+  // Scroll to top
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
 </script>
 
 <template>
@@ -23,7 +33,7 @@ const navigation = computed(() => {
         :key="item._path"
         :value="item._path"
         :selected="route.path.startsWith(item._path)"
-        @click="navigateTo(item._path)"
+        @click="goTo(item._path)"
       >
         &ndash; {{ item.title }}
       </option>
