@@ -2,7 +2,16 @@
 const route = useRoute();
 const config = useRuntimeConfig();
 
+const props = defineProps({
+  mapPath: String,
+});
+
 const demoURL = computed(() => {
+  // Use prop if available
+  if (props.mapPath) {
+    return props.mapPath;
+  }
+
   let url = config.app.baseURL;
 
   // Load the Waymark Map
