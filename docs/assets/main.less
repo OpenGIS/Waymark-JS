@@ -94,11 +94,10 @@ body {
       }
     }
 
-    p {
-      color: @waymark-text;
-
-      > code {
-        border: 1px solid @waymark-grey-light !important;
+    p,
+    td {
+      code {
+        border: 1px dashed #ddd;
       }
     }
 
@@ -147,6 +146,30 @@ body {
           margin: 0 10px;
         }
       }
+    }
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  main {
+    table {
+      td {
+        font-size: 12px;
+
+        code {
+          word-break: break-all;
+        }
+      }
+    }
+  }
+
+  footer {
+    .middle {
+      text-align: right;
+    }
+    .right {
+      display: none;
     }
   }
 }

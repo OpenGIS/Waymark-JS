@@ -26,17 +26,17 @@
 header {
   position: fixed;
   display: flex;
-  width: 94%;
+  width: 100%;
   top: 0;
   left: 0;
   z-index: 100;
-  max-height: 60px;
+  height: 80px;
   align-items: center;
   justify-content: space-between;
-  padding: 1% 3%;
   margin-bottom: 2rem;
 
   a {
+    margin: 15px;
     position: relative;
 
     width: 60px;
@@ -50,6 +50,10 @@ header {
       font-family: Monaco, "Andale Mono", "Ubuntu Mono", monospace;
       // font-style: italic;
     }
+  }
+
+  select {
+    margin: 15px;
   }
 }
 </style>

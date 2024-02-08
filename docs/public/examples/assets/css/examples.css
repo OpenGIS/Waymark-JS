@@ -44,3 +44,10 @@ body {
   height: 90%;
   font-size: 120%;
 }
+
+/* Mobile  */
+@media (max-width: 768px) {
+  #waymark-data {
+    display: none;
+  }
+}

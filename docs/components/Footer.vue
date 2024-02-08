@@ -7,17 +7,19 @@ import { version } from "../../package.json";
     <div class="left">
       <!-- WordPress -->
       <a href="https://www.waymark.dev/"
-        >&laquo; <Icon width="20" height="20" color="#b42714" /> WordPress</a
-      >
+        >&laquo;
+        <Icon
+          width="20"
+          height="20"
+          color="#b42714"
+          title="Waymark WordPress Plugin" />
+        + <Icon name="wordpress" width="18" height="18" color="#333"
+      /></a>
     </div>
 
     <div class="middle">
       <!-- Version -->
-      v{{ version }}&nbsp;//&nbsp;<a
-        href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"
-      >
-        GPL v2</a
-      >
+      v{{ version }}
 
       <!-- GitHub -->
       <a href="https://github.com/OpenGIS/Waymark-JS">
@@ -25,7 +27,7 @@ import { version } from "../../package.json";
       </a>
 
       <!-- Joe -->
-      <a href="https://www.morehawes.ca/">by Joe Hawes</a>
+      <a href="https://www.morehawes.ca/">by Joe</a>
     </div>
 
     <div class="right">
