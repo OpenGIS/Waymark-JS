@@ -6,7 +6,7 @@
 
     <ContentDoc class="markdown-body">
       <template #not-found>
-        <Map mapPath="examples/viewer/404.html" />
+        <Map mapPath="/examples/viewer/404.html" />
 
         <h1>Not Found</h1>
 
