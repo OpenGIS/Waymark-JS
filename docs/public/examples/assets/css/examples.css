@@ -35,6 +35,7 @@ body {
   width: 320px;
   height: 160px;
   overflow: scroll;
+  pointer-events: auto !important;
 }
 
 /* Hover  */

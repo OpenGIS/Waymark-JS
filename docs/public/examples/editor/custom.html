@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Waymark JS | Editor | Custom</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../../dist/1.0/css/waymark-js.css" />
+    <link rel="stylesheet" href="../assets/css/examples.css" />
+
+    <style>
+      /* Data Container */
+      #waymark-data {
+        max-height: 120px !important;
+        max-width: 240px !important;
+        font-size: 9px !important;
+      }
+
+      /* Markers  */
+      .waymark-marker .waymark-marker-background {
+        background-color: #ff0000 !important;
+      }
+      .waymark-marker .waymark-icon-text {
+        color: #fff !important;
+      }
+
+      /* Toolbar  */
+      .waymark-edit-toolbar a:not(.waymark-icon) {
+        color: #ffffff !important;
+        background: #ff0000 !important;
+      }
+    </style>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../../dist/1.0/js/waymark-js.js"></script>
+  </head>
+  <body>
+    <div id="waymark-map"></div>
+
+    <script>
+      // Our Custom Configuration
+      const custom_config = {
+        // map_options: {},
+
+        editor_options: {
+          confirm_delete: "0",
+        },
+      };
+
+      // Create Editor Instance
+      const viewer = window.Waymark_Map_Factory.editor();
+
+      // Load Configuration from file
+      fetch("../assets/config/route.json")
+        .then((response) => response.json())
+        .then((config) => {
+          // Deep Merge Custom Config
+          config = Object.assign({}, config, custom_config);
+
+          // Modify config...
+
+          // Iterate over Marker Types
+          config.map_options.marker_types.forEach((marker_type) => {
+            // Change Marker Colour
+            marker_type.icon_type = "text";
+            marker_type.marker_icon = "🇨🇦" + marker_type.marker_title[0];
+          });
+
+          // Iterate over Line Types
+          config.map_options.line_types.forEach((line_type) => {
+            // Change Line Colour
+            line_type.line_colour = "#ff0000";
+          });
+
+          // Initialise with our options
+          viewer.init(config);
+
+          // Load GeoJSON
+          fetch("../assets/geo/route.geojson")
+            .then((response) => response.json())
+            .then((geojson) => {
+              // Modify geojson...
+
+              geojson.features.forEach((feature) => {
+                // Not the pub
+                if (feature.properties.type == "beer") {
+                  return;
+                }
+
+                const flag_url = "../assets/img/canada.svg";
+                feature.properties.image_large_url = flag_url;
+                feature.properties.image_medium_url = flag_url;
+                feature.properties.image_thumbnail_url = flag_url;
+              });
+
+              // Add to Map
+              viewer.load_json(geojson);
+
+              // Once loaded...
+                // Iterate over the Leaflet data layer
+                viewer.map_data.eachLayer((layer) => {
+                  if (layer.feature.properties.title && layer.feature.properties.title.includes("Scarlet")) {
+                    layer.openPopup();
+                  }
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

@@ -16,4 +16,12 @@ export default defineNuxtConfig({
     "prism-theme-github/themes/prism-theme-github-dark.css",
     "~/assets/prism.css",
   ],
+
+  app: {
+    head: {
+      link: [
+        { rel: "icon", type: "image/svg", href: "/assets/icon/waymark.svg" },
+      ],
+    },
+  },
 });
