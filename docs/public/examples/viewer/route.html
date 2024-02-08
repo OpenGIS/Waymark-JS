@@ -18,84 +18,22 @@
     <div id="waymark-map"></div>
 
     <script>
-      // Create Viewer Instance
+      // Create Editor Instance
       const viewer = window.Waymark_Map_Factory.viewer();
 
-      // Initialise with our options
-      viewer.init({
-        // Viewer Specific Options
-        viewer_options: {
-          show_gallery: "1",
-          show_filter: "0",
-          show_cluster: "1",
-          show_elevation: "0",
-        },
-
-        // General Map Options
-        map_options: {
-          debug_mode: true,
-
-          // Line Types
-          line_types: [
-            {
-              line_title: "Route",
-              line_colour: "green",
-            },
-          ],
-
-          // Marker Types
-          marker_types: [
-            {
-              marker_title: "Photo",
-              icon_type: "icon",
-              marker_icon: "ion-camera",
-              marker_colour: "#70af00",
-              icon_colour: "#ffffff",
-            },
-            {
-              marker_title: "Information",
-              icon_type: "icon",
-              marker_icon: "ion-information-circled",
-              marker_colour: "#fbfbfb",
-              icon_colour: "#0069a5",
-            },
-            {
-              marker_title: "Alert",
-              icon_type: "icon",
-              marker_icon: "ion-android-alert",
-              marker_colour: "#da3d20",
-              icon_colour: "white",
-            },
-            {
-              marker_title: "Food",
-              icon_type: "icon",
-              marker_icon: "ion-pizza",
-              marker_colour: "#da3d20",
-              icon_colour: "#ffba00",
-            },
-            {
-              marker_title: "Beer",
-              icon_type: "icon",
-              marker_icon: "ion-beer",
-              marker_colour: "#fbfbfb",
-              icon_colour: "#754423",
-            },
-            {
-              marker_title: "Camp",
-              icon_type: "icon",
-              marker_icon: "ion-android-home",
-              marker_colour: "#a43233",
-              icon_colour: "#ffffff",
-            },
-          ],
-        },
-      });
-
-      // Load GeoJSON asycnhronously from file
-      const geojson = fetch("./../assets/geo/route.geojson")
+      // Load Configuration from file
+      fetch("../assets/config/route.json")
         .then((response) => response.json())
-        .then((data) => {
-          viewer.load_json(data);
+        .then((config) => {
+          // Initialise with our options
+          viewer.init(config);
+
+          // Load GeoJSON
+          fetch("../assets/geo/route.geojson")
+            .then((response) => response.json())
+            .then((geojson) => {
+              viewer.load_json(geojson);
+            });
         });
     </script>
   </body>

@@ -15,7 +15,19 @@ const demoURL = computed(() => {
 
     // Map
     case "/map":
+      url += "examples/viewer/basemap.html";
+
+      break;
+
+    // Viewer
+    case "/viewer":
       url += "examples/viewer/route.html";
+
+      break;
+
+    // Editor
+    case "/editor":
+      url += "examples/editor/pub.html";
 
       break;
 

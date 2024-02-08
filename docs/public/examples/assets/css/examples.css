@@ -6,6 +6,21 @@ body {
   height: 100%;
 }
 
+/* Overlay Filter on Left  */
+.leaflet-top.leaflet-right {
+  right: unset;
+  left: 10px;
+  top: 0;
+}
+
+/* Elevation on Right */
+.waymark-map-container .waymark-elevation-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  left: unset;
+}
+
 .waymark-map-container .leaflet-control-locate,
 .waymark-map-container .leaflet-control-fullscreen,
 .waymark-map-container .leaflet-control-zoom {
