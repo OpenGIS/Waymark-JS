@@ -2,7 +2,7 @@ Create, Edit and Share Meaningful Maps
 
 Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications due to its flexibility and customisation [options](map/#map-options).
 
-Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap.
+Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap. Waymark JS stores data in GeoJSON format, with support for GPX and KML files.
 
 ## Installation
 
@@ -87,6 +87,8 @@ Here we are creating a new Viewer Instance, setting some [options](map/#map-opti
 ```
 
 The above example creates a Viewer Instance and initialises it with a custom Marker Type, defined in the `map_options` [object](map/#map-options). The Marker location is loaded from GeoJSON and because the feature has a `type` property of `pub`, it is displayed using the custom Type.
+
+While the `load_json` method only accepts GeoJSON FeatureCollections, Waymark JS includes a GPX and KML parser to [load data](viewer/#loading-data) from those formats.
 
 > [!TIP]
 > Each Type has a unique Key that is used to identify it (e.g. `pub` in the above example). This is created from the `marker_title` property, so Type Titles should be unique.
