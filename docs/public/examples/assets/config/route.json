@@ -2,8 +2,6 @@
   "map_options": {
     "debug_mode": true,
 
-    "map_height": 400,
-
     "marker_types": [
       {
         "marker_title": "Photo",

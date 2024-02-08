@@ -104,6 +104,7 @@
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info {
   height: 315px;
+  width: 225px;
   position: relative;
   list-style-type: none;
   padding-left: 70px;
@@ -128,16 +129,24 @@
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-description select,
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-title select,
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-type select {
-  width: inherit !important;
+  width: 215px !important;
   max-width: inherit !important;
 }
+.waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-title input {
+  padding: 2px 5px !important;
+  font-size: 18px;
+  border-radius: 4px;
+}
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-description {
+  max-height: 170px;
   margin-bottom: 8px;
   overflow: hidden;
   border: 1px solid #d2d2d2;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-description textarea {
-  height: 105px;
+  padding: 5px;
+  height: 140px;
+  border: none;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-type.waymark-marker-type,
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-type.waymark-line-type,
@@ -148,6 +157,7 @@
   text-align: right;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-image_large_url {
+  min-height: 63px;
   position: relative;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-image_large_url a {
@@ -159,6 +169,7 @@
   border: 1px solid #d2d2d2;
   background-color: #f9f9f9;
   border-radius: 4px;
+  overflow: hidden;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-image_large_url a.waymark-hover {
   left: -2px;
@@ -184,9 +195,10 @@
   border-radius: 4px;
   padding: 5px;
   margin-bottom: 6px;
-  max-width: 167px;
+  max-width: 150px;
 }
 .waymark-map-container.waymark-is-editor ul.waymark-info li.waymark-info-button {
+  margin: 0;
   position: absolute;
   bottom: 0;
   left: 70px;
