@@ -1,6 +1,8 @@
 Create, Edit and Share Meaningful Maps
 
-Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications. Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap.
+Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications due to its flexibility and customisation [options](map/#map-options).
+
+Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap.
 
 ## Installation
 
@@ -31,10 +33,10 @@ To display a Map, place an empty `<div>` in the body of your document. If you pl
 
 To initialise the Map, we need to add a `<script>` tag to the document. This should be placed _after_ the Map Container and JS/CSS assets have been included.
 
-Here we are creating a new Viewer Instance, setting some [options](./2.map.md#options), and adding a Marker to the Map. You can see this example in action [here](../examples/viewer-pub.html).
+Here we are creating a new Viewer Instance, setting some [options](map/#map-options), and adding a Marker to the Map.
 
 > [!TIP]
-> For multiple Maps, provide the unique `id` for each using the `map_options.map_div_id` [option](./2.map.md#map-options).
+> For multiple Maps, provide the unique `id` for each using the `map_options.map_div_id` [option](map/#map-options).
 
 ```html
 <!-- Map Initialisation -->
@@ -84,7 +86,7 @@ Here we are creating a new Viewer Instance, setting some [options](./2.map.md#op
 </script>
 ```
 
-The above example creates a Viewer Instance and initialises it with a custom Marker Type, defined in the `map_options` [object](./2.map.md#map-options). The Marker location is loaded from GeoJSON and because the feature has a `type` property of `pub`, it is displayed using the custom Type.
+The above example creates a Viewer Instance and initialises it with a custom Marker Type, defined in the `map_options` [object](map/#map-options). The Marker location is loaded from GeoJSON and because the feature has a `type` property of `pub`, it is displayed using the custom Type.
 
 > [!TIP]
 > Each Type has a unique Key that is used to identify it (e.g. `pub` in the above example). This is created from the `marker_title` property, so Type Titles should be unique.

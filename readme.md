@@ -81,7 +81,7 @@ See the [examples](./examples) directory for more examples.
 
 ### Viewer
 
-The following example will display a Map on the page with a single Marker. Once the Marker is clicked, a popup will display with the Marker's title, image and description. You can see this example in action [here](./examples/viewer-readme.html).
+The following example will display a Map on the page with a single Marker. Once the Marker is clicked, a popup will display with the Marker's title, image and description.
 
 ```html
 <!doctype html>
@@ -130,7 +130,7 @@ The following example will display a Map on the page with a single Marker. Once 
 
 ### Editor
 
-The following example will display an empty Map Editor on the page, set to an initial location. Any edits made to the Map are converted to GeoJSON and output into the `#waymark-data` textarea. You can see this example in action [here](./examples/editor-readme.html).
+The following example will display an empty Map Editor on the page, set to an initial location. Any edits made to the Map are converted to GeoJSON and output into the `#waymark-data` textarea.
 
 ```html
 <!doctype html>
@@ -169,8 +169,8 @@ The following example will display an empty Map Editor on the page, set to an in
 ## Development
 
 ```bash
-# Install dependencies
-pnpm install
+# Install dependencies (or `pnpm install`)
+npm install
 
 # Build
 grunt
