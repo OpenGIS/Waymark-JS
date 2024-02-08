@@ -1,43 +1,47 @@
 <script setup>
-const { data: navigation } = await useAsyncData("navigation", () =>
-  fetchContentNavigation(),
-);
-
-const route = useRoute();
+const { prev, next } = useContent();
 </script>
 <template>
-  <!-- Navigation -->
-
-  <!--
-  [
-  {
-    "title": "Map",
-    "_path": "/map"
-  },
-  {
-    "title": "Viewer",
-    "_path": "/viewer"
-  },
-  {
-    "title": "Editor",
-    "_path": "/editor"
-  },
-  {
-    "title": "Customise",
-    "_path": "/customise"
-  },
-  {
-    "title": "",
-    "_path": "/"
-  }
-]
--->
-
-  <nav>
-    <ul>
-      <li v-for="item in navigation" :key="item._path">
-        <NuxtLink :to="item._path">{{ item.title }}</NuxtLink>
-      </li>
-    </ul>
-  </nav>
+  <div class="pagination">
+    <NuxtLink v-if="prev" :to="prev._path" class="prev">{{
+      prev.title
+    }}</NuxtLink>
+    <NuxtLink v-if="next" :to="next._path" class="next">{{
+      next.title
+    }}</NuxtLink>
+  </div>
 </template>
+
+<style lang="less">
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  a {
+    display: inline-block;
+    padding: 1rem;
+    border: none;
+    text-decoration: none;
+
+    &.prev {
+      margin-right: auto;
+
+      &:before {
+        content: "←";
+        margin-right: 0.5rem;
+      }
+    }
+
+    &.next {
+      margin-left: auto;
+
+      &:after {
+        content: "→";
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
+</style>

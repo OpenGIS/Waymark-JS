@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@nuxt/content"],
   content: {
+    documentDriven: true,
     markdown: {
       remarkPlugins: {
         "remark-gfm": true,
