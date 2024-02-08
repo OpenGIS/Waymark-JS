@@ -13,11 +13,7 @@
         <p>The content you are looking for can not be found.</p>
       </template>
     </ContentDoc>
+
+    <ContentNav />
   </main>
 </template>
-
-<style>
-main {
-  margin-top: 80px;
-}
-</style>

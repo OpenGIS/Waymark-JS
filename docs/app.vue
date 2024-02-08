@@ -4,6 +4,10 @@ import Prism from "prismjs";
 const route = useRoute();
 const appConfig = useAppConfig();
 
+const { data: navigation } = await useAsyncData("navigation", () =>
+  fetchContentNavigation(),
+);
+
 watch(
   () => route.path,
   () => {
@@ -30,6 +34,12 @@ onMounted(() => {
 
     <pre class="language-json">
       {{ JSON.stringify(route, null, 2) }}
+    </pre>
+
+    <h2>Navigation</h2>
+
+    <pre class="language-json">
+      {{ JSON.stringify(navigation, null, 2) }}
     </pre>
 
     <h2>App Config</h2>
