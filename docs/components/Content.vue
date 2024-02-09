@@ -1,19 +1,23 @@
 <template>
   <main>
-    <ClientOnly>
-      <Map />
-    </ClientOnly>
+    <article>
+      <ClientOnly>
+        <Map />
+      </ClientOnly>
 
-    <ContentDoc class="markdown-body">
-      <template #not-found>
-        <Map mapPath="/examples/viewer/404.html" />
+      <ContentToc />
 
-        <h1>Not Found</h1>
+      <ContentDoc class="markdown-body">
+        <template #not-found>
+          <Map mapPath="/examples/viewer/404.html" />
 
-        <p>The content you are looking for can not be found.</p>
-      </template>
-    </ContentDoc>
+          <h1>Not Found</h1>
 
-    <ContentNav />
+          <p>The content you are looking for can not be found.</p>
+        </template>
+      </ContentDoc>
+
+      <ContentNav />
+    </article>
   </main>
 </template>

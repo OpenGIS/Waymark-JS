@@ -40,6 +40,12 @@ const demoURL = computed(() => {
 
       break;
 
+    // Customise
+    case "/customise":
+      url += "examples/editor/custom.html";
+
+      break;
+
     // None
     default:
       url = "";

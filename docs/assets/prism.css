@@ -2,6 +2,7 @@ pre[class*="language-"],
 code[class*="language-"],
 pre[class*="language-"] *,
 code[class*="language-"] * {
+	margin-bottom: 10px;
 	z-index: 0;
 	background: #222 !important;
 }
