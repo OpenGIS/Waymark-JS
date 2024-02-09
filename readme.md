@@ -19,7 +19,7 @@ Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 To use Waymark JS, you will need to include the following assets in your page. Here we are adding them to the `<head>` of the document so they are immediately available to the `<body>`:
 
 > [!IMPORTANT]
-> The `dist/` directory in the [project root](https://github.com/OpenGIS/Waymark-JS) contains the assets ready for _production_ use. The `src/` directory contains the source files for development which can be modified and built using the instructions in the [Development](#development) section below.
+> The `dist/` [directory](https://github.com/OpenGIS/Waymark-JS/tree/master/dist) in the project root contains the assets ready for _production_ use. The `src/` directory contains the source files for development which can be modified and built using the instructions in the [Development](#development) section below.
 
 ```html
 <!-- jQuery (required) -->
@@ -34,9 +34,6 @@ To use Waymark JS, you will need to include the following assets in your page. H
 > Waymark JS requires the `jQuery` global to be available before creating a Map. If you are not already using [jQuery](https://jquery.com/), you can include it from a CDN as shown above.
 
 ## Quick Start
-
-> [!TIP]
-> View the full documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ### Viewer
 
@@ -124,6 +121,9 @@ The following example will display an empty Map Editor on the page, set to an in
   </body>
 </html>
 ```
+
+> [!TIP]
+> View the full documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Development
 
