@@ -1,6 +1,17 @@
+<script setup>
+const smoothScroll = () => {
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, 100);
+};
+</script>
+
 <template>
   <header>
-    <NuxtLink to="/">
+    <NuxtLink href="/" title="Home" @click="smoothScroll">
       <Icon width="60" height="60"><span>JS</span></Icon>
     </NuxtLink>
 

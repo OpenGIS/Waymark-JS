@@ -1,5 +1,6 @@
 <script setup>
 const { toc, page } = useContent();
+const { route } = useRoute();
 
 const title = computed(() => {
 	if (page.title) {
@@ -16,15 +17,15 @@ const title = computed(() => {
 
 		<ul v-if="toc && toc.links">
 			<li v-for="link in toc.links" :key="link.text">
-				<a :href="`#${link.id}`">
+				<NuxtLink :href="`#${link.id}`">
 					{{ link.text }}
-				</a>
+				</NuxtLink>
 
 				<ul v-if="link.children">
 					<li v-for="child in link.children" :key="child.text">
-						<a :href="`#${child.id}`">
+						<NuxtLink :href="`#${child.id}`">
 							{{ child.text }}
-						</a>
+						</NuxtLink>
 					</li>
 				</ul>
 

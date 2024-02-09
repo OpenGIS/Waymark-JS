@@ -61,7 +61,7 @@ body {
       h3,
       h4 {
         margin: 0 0 10px 0;
-        padding: 100px 0 5px 0;
+        padding: 5px 0;
         border-bottom: 3px solid @waymark-grey-light;
         color: @waymark-primary;
 
@@ -76,6 +76,12 @@ body {
           text-decoration: none;
           border-bottom: none;
         }
+      }
+
+      h1:not(:first-child),
+      h2:not(:first-child),
+      h3:not(:first-child) {
+        padding-top: 100px !important;
       }
 
       h3 {
@@ -103,6 +109,7 @@ body {
     p,
     td {
       code {
+        display: inline-block;
         border: 1px dashed #ddd;
       }
     }

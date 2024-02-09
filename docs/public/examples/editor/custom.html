@@ -11,26 +11,59 @@
     <link rel="stylesheet" href="../assets/css/examples.css" />
 
     <style>
-      /* Data Container */
-      #waymark-data {
-        max-height: 120px !important;
-        max-width: 240px !important;
-        font-size: 9px !important;
+      /* Toggle Button  */
+      #waymark-map button.canada-toggle {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        z-index: 2000000;
+        font-size: 42px;
+        background: red;
+        border: 3px solid #fff;
+        border-radius: 5px;
+      }
+      #waymark-map.oh-canada button.canada-toggle {
+        /* Invert colours  */
+        filter: invert(100%);
+      
+
+      }
+
+
+      /* Canada Styles... */
+      #waymark-map.oh-canada .leaflet-tile-pane {
+        /* Grayscale Basemap */
+        filter: grayscale(100%);
+      }
+
+      /* Target by the "Beer" Type Key  */
+      #waymark-map.oh-canada .waymark-marker.waymark-marker-beer .waymark-marker-background {
+        background-color: white !important;
+      }
+      #waymark-map.oh-canada .waymark-marker.waymark-marker-beer .waymark-icon-text {
+        color: red !important;
       }
 
       /* Markers  */
-      .waymark-marker .waymark-marker-background {
+      #waymark-map.oh-canada .waymark-marker .waymark-marker-background {
         background-color: #ff0000 !important;
       }
-      .waymark-marker .waymark-icon-text {
+      #waymark-map.oh-canada .waymark-marker .waymark-icon-text {
         color: #fff !important;
       }
 
       /* Toolbar  */
-      .waymark-edit-toolbar a:not(.waymark-icon) {
+      #waymark-map.oh-canada .waymark-edit-toolbar a:not(.waymark-icon) {
         color: #ffffff !important;
         background: #ff0000 !important;
       }
+
+      /* Hide */
+      .leaflet-bottom.leaflet-right,
+      #waymark-data {
+        display: none;  
+      }      
     </style>
 
     <!-- JS -->
@@ -41,15 +74,6 @@
     <div id="waymark-map"></div>
 
     <script>
-      // Our Custom Configuration
-      const custom_config = {
-        // map_options: {},
-
-        editor_options: {
-          confirm_delete: "0",
-        },
-      };
-
       // Create Editor Instance
       const viewer = window.Waymark_Map_Factory.editor();
 
@@ -57,10 +81,13 @@
       fetch("../assets/config/route.json")
         .then((response) => response.json())
         .then((config) => {
-          // Deep Merge Custom Config
-          config = Object.assign({}, config, custom_config);
-
           // Modify config...
+
+          // Disable Save Confirmation
+
+          config.editor_options = {
+            confirm_delete: false
+          };
 
           // Iterate over Marker Types
           config.map_options.marker_types.forEach((marker_type) => {
@@ -78,18 +105,40 @@
           // Initialise with our options
           viewer.init(config);
 
+          // Get the container with jQuery
+          const map_container = jQuery("#waymark-map");
+
+          // Add a class to the container
+          map_container.addClass("oh-canada");
+
+          // Create a toggle button
+          const toggle_button = jQuery("<button />")
+            .addClass("canada-toggle")
+            .text("🇨🇦")
+            .on("click", () => {
+              map_container.toggleClass("oh-canada");
+            });
+
+          
+
+          // Append to the container
+          map_container.append(toggle_button);
+
+
+
+
           // Load GeoJSON
           fetch("../assets/geo/route.geojson")
             .then((response) => response.json())
             .then((geojson) => {
               // Modify geojson...
-
               geojson.features.forEach((feature) => {
                 // Not the pub
                 if (feature.properties.type == "beer") {
                   return;
                 }
 
+                // Set all images to the Canadian Flag
                 const flag_url = "../assets/img/canada.svg";
                 feature.properties.image_large_url = flag_url;
                 feature.properties.image_medium_url = flag_url;
@@ -100,12 +149,15 @@
               viewer.load_json(geojson);
 
               // Once loaded...
-                // Iterate over the Leaflet data layer
-                viewer.map_data.eachLayer((layer) => {
-                  if (layer.feature.properties.title && layer.feature.properties.title.includes("Scarlet")) {
-                    layer.openPopup();
-                  }
-                });
+              // Iterate over the Leaflet data layer
+              viewer.map_data.eachLayer((layer) => {
+                if (
+                  layer.feature.properties.title &&
+                  layer.feature.properties.title.includes("Scarlet")
+                ) {
+                  layer.openPopup();
+                }
+              });
             });
         });
     </script>

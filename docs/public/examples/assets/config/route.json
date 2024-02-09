@@ -2,6 +2,21 @@
   "map_options": {
     "debug_mode": true,
 
+    "tile_layers": [
+      {
+        "layer_name": "OpenTopoMap",
+        "layer_url": "https://tile.opentopomap.org/{z}/{x}/{y}.png",
+        "layer_attribution": "© <a href=\"https://openstreetmap.org/copyright\">OSM</a>-Mitwirkende, SRTM | © <a href=\"http://opentopomap.org\" data-moz-translations-id=\"285\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>",
+        "layer_max_zoom": "17"
+      },
+      {
+        "layer_name": "OpenStreetMap",
+        "layer_url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
+        "layer_attribution": "@copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+        "layer_max_zoom": "18"
+      }
+    ],
+
     "marker_types": [
       {
         "marker_title": "Photo",
