@@ -23,13 +23,17 @@
         border: 3px solid #fff;
         border-radius: 5px;
       }
+      #waymark-map button.canada-toggle {
+        font-size: 24px;
+        color: #fff;
+      }
+      #waymark-map button.canada-toggle small {
+        display: block;      
+      }
       #waymark-map.oh-canada button.canada-toggle {
         /* Invert colours  */
         filter: invert(100%);
-      
-
       }
-
 
       /* Canada Styles... */
       #waymark-map.oh-canada .leaflet-tile-pane {
@@ -48,6 +52,9 @@
       /* Markers  */
       #waymark-map.oh-canada .waymark-marker .waymark-marker-background {
         background-color: #ff0000 !important;
+      }
+      #waymark-map.oh-canada .waymark-marker.active .waymark-marker-background {
+        background-color: green !important;
       }
       #waymark-map.oh-canada .waymark-marker .waymark-icon-text {
         color: #fff !important;
@@ -75,7 +82,7 @@
 
     <script>
       // Create Editor Instance
-      const viewer = window.Waymark_Map_Factory.editor();
+      const editor = window.Waymark_Map_Factory.editor();
 
       // Load Configuration from file
       fetch("../assets/config/route.json")
@@ -84,7 +91,6 @@
           // Modify config...
 
           // Disable Save Confirmation
-
           config.editor_options = {
             confirm_delete: false
           };
@@ -103,7 +109,27 @@
           });
 
           // Initialise with our options
-          viewer.init(config);
+          editor.init(config);
+
+          // The Map is ready after initialisation
+          
+          // The Leaflet Map
+          const map = editor.map;
+
+          // Leaflet Popup
+          map.on("popupopen", function (e) {
+            // Remove all active classes
+            jQuery(".waymark-marker").removeClass("active");
+
+            // Get the layer from Leaflet
+            const layer = e.popup._source;
+
+            // Get the container with jQuery
+            const container = jQuery(layer._icon);
+
+            // Add active class
+            container.addClass("active");
+          });
 
           // Get the container with jQuery
           const map_container = jQuery("#waymark-map");
@@ -114,17 +140,13 @@
           // Create a toggle button
           const toggle_button = jQuery("<button />")
             .addClass("canada-toggle")
-            .text("🇨🇦")
+            .html("🇨🇦🇨🇦🇨🇦<small>Click Me!</small>")
             .on("click", () => {
               map_container.toggleClass("oh-canada");
-            });
-
-          
+            });          
 
           // Append to the container
           map_container.append(toggle_button);
-
-
 
 
           // Load GeoJSON
@@ -146,11 +168,11 @@
               });
 
               // Add to Map
-              viewer.load_json(geojson);
+              editor.load_json(geojson);
 
               // Once loaded...
               // Iterate over the Leaflet data layer
-              viewer.map_data.eachLayer((layer) => {
+              editor.map_data.eachLayer((layer) => {
                 if (
                   layer.feature.properties.title &&
                   layer.feature.properties.title.includes("Scarlet")
