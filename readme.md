@@ -8,11 +8,18 @@ Originally developed for the [Waymark WordPress plugin](https://wordpress.org/pl
 
 Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap. Waymark JS stores data in GeoJSON format, with support for GPX and KML files.
 
-> Waymark JS is completely free, [Open-Source](https://github.com/OpenGIS/Waymark-JS) and requries **no API keys**! ❤️
+> Waymark JS is completely free, [Open-Source](https://github.com/OpenGIS/Waymark-JS) and requires **no API keys**! ❤️
+
+## Documentation
+
+Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Installation
 
 To use Waymark JS, you will need to include the following assets in your page. Here we are adding them to the `<head>` of the document so they are immediately available to the `<body>`:
+
+> [!IMPORTANT]
+> The `dist/` directory in the [project root](https://github.com/OpenGIS/Waymark-JS) contains the assets ready for _production_ use. The `src/` directory contains the source files for development which can be modified and built using the instructions in the [Development](#development) section below.
 
 ```html
 <!-- jQuery (required) -->
@@ -27,6 +34,9 @@ To use Waymark JS, you will need to include the following assets in your page. H
 > Waymark JS requires the `jQuery` global to be available before creating a Map. If you are not already using [jQuery](https://jquery.com/), you can include it from a CDN as shown above.
 
 ## Quick Start
+
+> [!TIP]
+> View the full documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ### Viewer
 
@@ -79,7 +89,7 @@ The following example will display a Map on the page with a single Marker. Once 
 
 ### Editor
 
-The following example will display an empty Map Editor on the page, set to an initial location. Any edits made to the Map are converted to GeoJSON and output into the `#waymark-data` textarea.
+The following example will display an empty Map Editor on the page, set to an initial location. Any edits made to the Map are converted to GeoJSON and output into the `<textarea id="waymark-data">` data container.
 
 ```html
 <!doctype html>
@@ -128,7 +138,11 @@ npm install
 grunt
 ```
 
-Pull requests are welcome, however please view the [Roadmap](#roadmap) below to see where the project is heading. For major changes, please open an issue first to discuss what you would like to change :)
+This will run a watch task to rebuild the assets when changes are made to the source files.
+
+Issues / pull requests are [welcome](https://github.com/OpenGIS/Waymark-JS/), however please view the Roadmap below to see where the project is heading.
+
+Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Roadmap / To-Do
 
