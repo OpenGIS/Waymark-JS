@@ -1,83 +1,32 @@
 # Waymark JS
 
-## TODO
-
-### v1.0.0
-
-- [ ] Add more examples
-- [ ] Create homepage on waymark.dev/js
-
-Documentation:
-
-- [x] Getting Started
-  - [x] Installation
-  - [x] Usage
-- [x] Map
-  - [x] Instances
-  - [x] Viewer
-  - [x] Editor
-  - [x] Map Options
-- [x] Viewer
-  - [x] Creation
-  - [x] Options
-  - [x] Initialisation
-  - [x] Loading Data
-  - [x] Examples
-- [x] Editor
-  - [x] Creation
-  - [x] Options
-  - [x] Initialisation
-  - [x] Loading Data
-  - [x] Retrieving Data
-  - [x] Examples
-- [ ] Customising
-  - [ ] Styling
-  - [ ] Extending
-    - [ ] Leaflet & jQuery
-    - [ ] Callbacks
-    - [ ] Uploads
-  - [ ] Localisation
-
-### v1.1.0
-
-- [ ] Improve file/image upload integration & examples
-- [ ] Assign default Type key if none provided
-- [ ] Better handling of no/one Type provided
-- [ ] jQuery check(/auto include?)
-
-# Waymark JS
-
 Create, share and edit _meaningful_ Maps.
 
-Waymark JS is a JavaScript library for sharing geographical information. It is designed to be easy to use, intuitive suitable for a wide range of applications.
+Waymark JS is a JavaScript library for sharing geographical information. It is designed to be easy to use, intuitive and suitable for a wide range of applications.
 
 Originally developed for the [Waymark WordPress plugin](https://wordpress.org/plugins/waymark/), Waymark JS is a standalone library that can be used to add interactive Maps to _any website_.
 
-## Features
+Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www.openstreetmap.org/) as the default Basemap. Waymark JS stores data in GeoJSON format, with support for GPX and KML files.
 
-- View and edit Maps
-- Add and edit Markers, Lines, and Shapes
-- Upload and view Photos (supports location metadata)
-- Import GPX, KML, and GeoJSON files
-- View Elevation profiles
-- Search for locations
-- Fullscreen mode
-- Supports device location
-- Cluster Markers
-- Sleep/Wake options
-  - Click/hover to interact with Map
-  - Set the wake time and message
-- Customisable
-- Basemaps
-- Colours, icons, and more (using Types)
-- Map height and width
-- Localisation
+> Waymark JS is completely free, [Open-Source](https://github.com/OpenGIS/Waymark-JS) and requries **no API keys**! ❤️
 
-## Examples
+## Installation
 
-<!-- TODO: list examples -->
+To use Waymark JS, you will need to include the following assets in your page. Here we are adding them to the `<head>` of the document so they are immediately available to the `<body>`:
 
-See the [examples](./examples) directory for more examples.
+```html
+<!-- jQuery (required) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Waymark CSS & JavaScript -->
+<link rel="stylesheet" href="dist/css/waymark-js.min.css" />
+<script src="dist/js/waymark-js.min.js"></script>
+```
+
+> [!TIP]
+> Waymark JS requires the `jQuery` global to be available before creating a Map. If you are not already using [jQuery](https://jquery.com/), you can include it from a CDN as shown above.
+
+## Quick Start
 
 ### Viewer
 
@@ -90,11 +39,11 @@ The following example will display a Map on the page with a single Marker. Once 
     <meta charset="utf-8" />
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="../dist/css/waymark-js.css" />
+    <link rel="stylesheet" href="dist/css/waymark-js.css" />
 
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="../dist/js/waymark-js.js"></script>
+    <script src="dist/js/waymark-js.js"></script>
   </head>
   <body>
     <!-- Map Container -->
@@ -168,17 +117,31 @@ The following example will display an empty Map Editor on the page, set to an in
 
 ## Development
 
+> [!IMPORTANT]
+> To build Waymark JS from source, you will need [Node and NPM installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
 ```bash
-# Install dependencies (or `pnpm install`)
+# Install dependencies (or pnpm install)
 npm install
 
 # Build
 grunt
 ```
 
-Pull requests are welcome, however please view the Roadmap below to see where the project is heading. For major changes, please open an issue first to discuss what you would like to change :)
+Pull requests are welcome, however please view the [Roadmap](#roadmap) below to see where the project is heading. For major changes, please open an issue first to discuss what you would like to change :)
 
-## Roadmap
+## Roadmap / To-Do
+
+### v1.1.0
+
+- **Language**
+  - Pass localizations through `config.language`
+  - Bundle translations
+  - Docs/Examples (French?)
+- Improve file/image upload integration & examples
+- Assign default Type key if none provided
+- Better handling of no/one Type provided
+- jQuery check(/auto include?)
 
 ### v2.0.0
 
@@ -187,11 +150,10 @@ Pull requests are welcome, however please view the Roadmap below to see where th
 - Remove Factory
 - Create NPM package
 - Tests
-- [ ] Unit Tests
-- [ ] E2E Tests
 
 ### v3.0.0
 
-- Rewrite using MapLibre, Vue & TypeScript :)
+- Rewrite using MapLibre, (Vue/Nuxt?) & TypeScript :)
+- Vector Tile support
 - Integrate Leaflet too through an adapter?
-- Modular
+- Modular (plugins? Nuxt layers?)
