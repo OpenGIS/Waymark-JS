@@ -16,7 +16,7 @@ function Waymark_Map() {
 
 		//Default config
 		Waymark.config = {
-			// Map (Common Options
+			// Map (Common Options)
 
 			map_options: {
 				debug_mode: 0,
@@ -139,6 +139,7 @@ function Waymark_Map() {
 			},
 
 			// Localisation
+
 			language: {
 				//Viewer
 				action_fullscreen_activate: "View Fullscreen",
