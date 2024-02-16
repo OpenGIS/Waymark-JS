@@ -203,7 +203,7 @@ function Waymark_Map_Editor() {
 		var geocoder = Waymark_L.Control.geocoder({
 			position: "bottomright",
 			defaultMarkGeocode: false,
-			placeholder: waymark_js.lang.action_search_placeholder,
+			placeholder: Waymark.config.language.action_search_placeholder,
 		});
 		geocoder.on("markgeocode", function (e) {
 			Waymark.map.fitBounds(e.geocode.bbox);
@@ -227,7 +227,7 @@ function Waymark_Map_Editor() {
 					"waymark-icon waymark-edit-button waymark-edit-line",
 					toolbar,
 				);
-				button.setAttribute("title", waymark_js.lang.add_line_title);
+				button.setAttribute("title", Waymark.config.language.add_line_title);
 				button.onclick = function () {
 					Waymark.map.editTools.startPolyline();
 				};
@@ -239,7 +239,7 @@ function Waymark_Map_Editor() {
 					toolbar,
 				);
 				button.innerHTML = '<i class="ion ion-image"></i>';
-				button.setAttribute("title", waymark_js.lang.add_photo_title);
+				button.setAttribute("title", Waymark.config.language.add_photo_title);
 
 				// Hide initially
 				button.classList.add("waymark-hidden");
@@ -253,7 +253,7 @@ function Waymark_Map_Editor() {
 					toolbar,
 				);
 				button.innerHTML = '<i class="ion ion-location"></i>';
-				button.setAttribute("title", waymark_js.lang.add_marker_title);
+				button.setAttribute("title", Waymark.config.language.add_marker_title);
 				button.onclick = function () {
 					//Create JSON
 					var marker_json = Waymark.create_marker_json(Waymark.map.getCenter());
@@ -273,7 +273,10 @@ function Waymark_Map_Editor() {
 				);
 				button.innerHTML =
 					'<i class="ion ion-android-checkbox-outline-blank"></i>';
-				button.setAttribute("title", waymark_js.lang.add_rectangle_title);
+				button.setAttribute(
+					"title",
+					Waymark.config.language.add_rectangle_title,
+				);
 				button.onclick = function () {
 					Waymark.map.editTools.startRectangle();
 				};
@@ -285,7 +288,7 @@ function Waymark_Map_Editor() {
 					toolbar,
 				);
 				button.innerHTML = '<i class="ion ion-android-star-outline"></i>';
-				button.setAttribute("title", waymark_js.lang.add_polygon_title);
+				button.setAttribute("title", Waymark.config.language.add_polygon_title);
 				button.onclick = function () {
 					Waymark.map.editTools.startPolygon();
 				};
@@ -297,7 +300,7 @@ function Waymark_Map_Editor() {
 					toolbar,
 				);
 				button.innerHTML = '<i class="ion ion-ios-circle-outline"></i>';
-				button.setAttribute("title", waymark_js.lang.add_circle_title);
+				button.setAttribute("title", Waymark.config.language.add_circle_title);
 				button.onclick = function () {
 					Waymark.map.editTools.startCircle();
 				};
@@ -311,7 +314,7 @@ function Waymark_Map_Editor() {
 				);
 				button.innerHTML =
 					'<i class="ion ion-document"></i><i class="ion ion-arrow-up-c"></i>';
-				button.setAttribute("title", waymark_js.lang.upload_file_title);
+				button.setAttribute("title", Waymark.config.language.upload_file_title);
 
 				//Thanks to: https://stackoverflow.com/a/24939229
 				var file_input = jQuery("<input />")
@@ -364,7 +367,7 @@ function Waymark_Map_Editor() {
 
 				//Error?
 				if (response === null) {
-					Waymark.message(waymark_js.lang.error_file_upload, "error");
+					Waymark.message(Waymark.config.language.error_file_upload, "error");
 					Waymark.loading_stop();
 
 					return false;
@@ -473,9 +476,11 @@ function Waymark_Map_Editor() {
 				.addClass("button")
 				.attr(
 					"title",
-					waymark_js.lang.action_edit +
+					Waymark.config.language.action_edit +
 						" " +
-						Waymark.title_case(waymark_js.lang["object_label_" + layer_type]),
+						Waymark.title_case(
+							Waymark.config.language["object_label_" + layer_type],
+						),
 				)
 				.on("click", function (e) {
 					e.preventDefault();
@@ -492,10 +497,10 @@ function Waymark_Map_Editor() {
 						//Change title
 						button.attr(
 							"title",
-							waymark_js.lang.action_edit +
+							Waymark.config.language.action_edit +
 								" " +
 								Waymark.title_case(
-									waymark_js.lang["object_label_" + layer_type],
+									Waymark.config.language["object_label_" + layer_type],
 								),
 						);
 
@@ -510,7 +515,7 @@ function Waymark_Map_Editor() {
 						layer.closePopup();
 
 						//Change title
-						button.attr("title", waymark_js.lang.action_edit_done);
+						button.attr("title", Waymark.config.language.action_edit_done);
 
 						//Change icon
 						icon.attr("class", "ion-android-done");
@@ -535,9 +540,11 @@ function Waymark_Map_Editor() {
 			.addClass("button")
 			.attr(
 				"title",
-				waymark_js.lang.action_duplicate +
+				Waymark.config.language.action_duplicate +
 					" " +
-					Waymark.title_case(waymark_js.lang["object_label_" + layer_type]),
+					Waymark.title_case(
+						Waymark.config.language["object_label_" + layer_type],
+					),
 			)
 			.on("click", function (e) {
 				e.preventDefault();
@@ -565,9 +572,11 @@ function Waymark_Map_Editor() {
 			.addClass("button")
 			.attr(
 				"title",
-				waymark_js.lang.action_delete +
+				Waymark.config.language.action_delete +
 					" " +
-					Waymark.title_case(waymark_js.lang["object_label_" + layer_type]),
+					Waymark.title_case(
+						Waymark.config.language["object_label_" + layer_type],
+					),
 			)
 			.on("click", function (e) {
 				e.preventDefault();
@@ -576,10 +585,10 @@ function Waymark_Map_Editor() {
 				if (Waymark.config.editor_options.confirm_delete == "1") {
 					if (
 						!confirm(
-							waymark_js.lang.action_delete_confirm +
+							Waymark.config.language.action_delete_confirm +
 								" " +
 								Waymark.title_case(
-									waymark_js.lang["object_label_" + layer_type],
+									Waymark.config.language["object_label_" + layer_type],
 								) +
 								"?",
 						)
@@ -622,13 +631,13 @@ function Waymark_Map_Editor() {
 			jq_line_direction_select.append(
 				jQuery("<option />")
 					.val("")
-					.text(Waymark.title_case(waymark_js.lang.no_direction)),
+					.text(Waymark.title_case(Waymark.config.language.no_direction)),
 				jQuery("<option />")
 					.val("default")
-					.text(Waymark.title_case(waymark_js.lang.show_direction)),
+					.text(Waymark.title_case(Waymark.config.language.show_direction)),
 				jQuery("<option />")
 					.val("reverse")
-					.text(Waymark.title_case(waymark_js.lang.reverse_direction)),
+					.text(Waymark.title_case(Waymark.config.language.reverse_direction)),
 			);
 
 			//On change
@@ -679,9 +688,11 @@ function Waymark_Map_Editor() {
 					disabled: "disabled",
 				})
 				.text(
-					Waymark.title_case(waymark_js.lang["object_label_" + layer_type]) +
+					Waymark.title_case(
+						Waymark.config.language["object_label_" + layer_type],
+					) +
 						" " +
-						waymark_js.lang.object_type_label +
+						Waymark.config.language.object_type_label +
 						":",
 				),
 		);
@@ -889,10 +900,10 @@ function Waymark_Map_Editor() {
 							value: feature.properties.title,
 							placeholder:
 								Waymark.title_case(
-									waymark_js.lang["object_label_" + layer_type],
+									Waymark.config.language["object_label_" + layer_type],
 								) +
 								" " +
-								waymark_js.lang.object_title_placeholder,
+								Waymark.config.language.object_title_placeholder,
 						})
 						.on("change", function () {
 							//Update properties
@@ -911,10 +922,10 @@ function Waymark_Map_Editor() {
 							class: "wp-editor",
 							placeholder:
 								Waymark.title_case(
-									waymark_js.lang["object_label_" + layer_type],
+									Waymark.config.language["object_label_" + layer_type],
 								) +
 								" " +
-								waymark_js.lang.object_description_placeholder,
+								Waymark.config.language.object_description_placeholder,
 						})
 						.val(feature.properties.description)
 						.on("change", function () {
@@ -929,7 +940,7 @@ function Waymark_Map_Editor() {
 					var img_input = jQuery("<input />")
 						.attr({
 							value: feature.properties.image_large_url,
-							placeholder: waymark_js.lang.object_image_placeholder,
+							placeholder: Waymark.config.language.object_image_placeholder,
 						})
 						.on("change", function () {
 							//Update properties
@@ -971,7 +982,7 @@ function Waymark_Map_Editor() {
 					//Upload
 
 					const img_upload = jQuery("<div />")
-						.text(waymark_js.lang.action_upload_image)
+						.text(Waymark.config.language.action_upload_image)
 						// Hide initially
 						.addClass("button button-small waymark-hidden");
 
@@ -1008,7 +1019,7 @@ function Waymark_Map_Editor() {
 			//Output
 			ele = jQuery("<small>").html(
 				"<b>" +
-					waymark_js.lang.marker_latlng_label +
+					Waymark.config.language.marker_latlng_label +
 					"</b>: " +
 					lat +
 					"," +
@@ -1034,7 +1045,7 @@ function Waymark_Map_Editor() {
 
 		//Build content
 		var title = Waymark.title_case(
-			waymark_js.lang.action_edit + " " + layer_type,
+			Waymark.config.language.action_edit + " " + layer_type,
 		);
 
 		var content = Waymark.build_content(layer_type, feature, layer);
@@ -1076,7 +1087,7 @@ function Waymark_Map_Editor() {
 
 				break;
 			default:
-				Waymark.message(waymark_js.lang.error_file_type, "error");
+				Waymark.message(Waymark.config.language.error_file_type, "error");
 		}
 
 		//Valid data
@@ -1108,7 +1119,7 @@ function Waymark_Map_Editor() {
 			this.load_json(geo_json);
 			//Invalid data
 		} else {
-			Waymark.message(waymark_js.lang.error_file_conversion, "error");
+			Waymark.message(Waymark.config.language.error_file_conversion, "error");
 		}
 	};
 

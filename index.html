@@ -39,13 +39,11 @@
 
     <script>
       // Set body height to be 100% of the viewport
-      $("body").height($(window).height());
+      jQuery("body").height($(window).height());
 
+      let waymark_instance = window.Waymark_Map_Factory.viewer();
 
-
-      let waymark_viewer = window.Waymark_Map_Factory.editor();
-
-      waymark_viewer.init({
+      waymark_instance.init({
         map_options: {
           // tile_layers: [
           //   {
@@ -229,6 +227,9 @@
           show_scale: "1",
           debug_mode: true,
         },
+        language: {
+          sleep_wake_message: "Fart to wake!",
+        },
         viewer_options: {
           show_gallery: "0",
           show_filter: "1",
@@ -238,12 +239,14 @@
           cluster_threshold: "10",
           elevation_units: "metric",
           elevation_initial: "1",
-          sleep_delay_seconds: "0",
-          sleep_do_message: "0",
-          sleep_wake_message: "Click to Interact with Map",
+          sleep_delay_seconds: "3600",
+          sleep_do_message: "1",
+          // sleep_wake_message: "Click to Interact with Map",
         },
         editor_options: { confirm_delete: "0" },
       });
+
+      waymark_instance.load_json(JSON.parse(jQuery("#waymark-data").val()));
     </script>
   </body>
 </html>

@@ -401,11 +401,11 @@ function Waymark_Map_Viewer() {
 
 		//Localize
 		Waymark_L.registerLocale("waymark", {
-			"Total Length: ": waymark_js.lang.label_total_length,
-			"Max Elevation: ": waymark_js.lang.label_max_elevation,
-			"Min Elevation: ": waymark_js.lang.label_min_elevation,
-			"Total Ascent: ": waymark_js.lang.label_ascent,
-			"Total Descent: ": waymark_js.lang.label_descent,
+			"Total Length: ": Waymark.config.language.label_total_length,
+			"Max Elevation: ": Waymark.config.language.label_max_elevation,
+			"Min Elevation: ": Waymark.config.language.label_min_elevation,
+			"Total Ascent: ": Waymark.config.language.label_ascent,
+			"Total Descent: ": Waymark.config.language.label_descent,
 		});
 		Waymark_L.setLocale("waymark");
 
