@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,7 +28,7 @@
         color: #fff;
       }
       #waymark-map button.canada-toggle small {
-        display: block;      
+        display: block;
       }
       #waymark-map.oh-canada button.canada-toggle {
         /* Invert colours  */
@@ -42,10 +42,14 @@
       }
 
       /* Target by the "Beer" Type Key  */
-      #waymark-map.oh-canada .waymark-marker.waymark-marker-beer .waymark-marker-background {
+      #waymark-map.oh-canada
+        .waymark-marker.waymark-marker-beer
+        .waymark-marker-background {
         background-color: white !important;
       }
-      #waymark-map.oh-canada .waymark-marker.waymark-marker-beer .waymark-icon-text {
+      #waymark-map.oh-canada
+        .waymark-marker.waymark-marker-beer
+        .waymark-icon-text {
         color: red !important;
       }
 
@@ -69,8 +73,8 @@
       /* Hide */
       .leaflet-bottom.leaflet-right,
       #waymark-data {
-        display: none;  
-      }      
+        display: none;
+      }
     </style>
 
     <!-- JS -->
@@ -92,7 +96,7 @@
 
           // Disable Save Confirmation
           config.editor_options = {
-            confirm_delete: false
+            confirm_delete: false,
           };
 
           // Iterate over Marker Types
@@ -108,11 +112,72 @@
             line_type.line_colour = "#ff0000";
           });
 
+          // French Translations
+
+          config.language = {
+            action_fullscreen_activate: "Plein écran",
+            action_fullscreen_deactivate: "Sortir du plein écran",
+            action_locate_activate: "Montre-moi où je suis",
+            action_zoom_in: "Zoomer",
+            action_zoom_out: "Dézoomer",
+            label_total_length: "Longueur totale: ",
+            label_max_elevation: "Altitude max: ",
+            label_min_elevation: "Altitude min: ",
+            label_ascent: "Dénivelé positif: ",
+            label_descent: "Dénivelé négatif: ",
+            //Editor
+            add_line_title: "Dessiner une ligne",
+            add_photo_title: "Télécharger une image",
+            add_marker_title: "Placer un marqueur",
+            add_rectangle_title: "Dessiner un rectangle",
+            add_polygon_title: "Dessiner un polygone",
+            add_circle_title: "Dessiner un cercle",
+            upload_file_title:
+              "Lire des lignes et des marqueurs à partir d'un fichier (GPX/KML/GeoJSON pris en charge, que la plupart des applications devraient exporter)",
+            action_duplicate: "Dupliquer",
+            action_delete: "Supprimer",
+            action_edit: "Modifier",
+            action_edit_done: "Terminer l'édition",
+            action_upload_image: "Télécharger une image",
+            object_title_placeholder: "Titre",
+            object_image_placeholder: "URL de l'image",
+            object_description_placeholder: "Description",
+            object_type_label: "Type",
+            marker_latlng_label: "Lat,Lng",
+            action_delete_confirm: "Êtes-vous sûr de vouloir supprimer ceci",
+            action_search_placeholder: "Rechercher...",
+            object_label_marker: "Marqueur",
+            object_label_line: "Ligne",
+            object_label_shape: "Forme",
+            object_label_marker_plural: "Marqueurs",
+            object_label_line_plural: "Lignes",
+            object_label_shape_plural: "Formes",
+            error_message_prefix: "Erreur Waymark",
+            info_message_prefix: "Info Waymark",
+            debug_message_prefix: "Déboguer Waymark",
+            error_file_type: "Ce type de fichier n'est pas pris en charge.",
+            error_file_conversion:
+              "Impossible de convertir ce fichier en GeoJSON.",
+            error_file_upload: "Erreur de téléchargement de fichier.",
+
+            error_photo_meta:
+              "Impossible de récupérer les métadonnées de l'image.",
+            info_exif_yes:
+              "Métadonnées de localisation de l'image (EXIF) détectées!",
+            info_exif_no:
+              "Métadonnées de localisation de l'image (EXIF) NON détectées.",
+            error_no_wpmedia: "Bibliothèque de médias WordPress introuvable",
+            no_direction: "Pas de direction",
+            show_direction: "Montrer la direction",
+            reverse_direction: "Inverser la direction",
+            sleep_wake_message: "Cliquez ou survolez pour réveiller",
+          };
+
           // Initialise with our options
           editor.init(config);
 
           // The Map is ready after initialisation
-          
+
           // The Leaflet Map
           const map = editor.map;
 
@@ -140,14 +205,13 @@
           // Create a toggle button
           const toggle_button = jQuery("<button />")
             .addClass("canada-toggle")
-            .html("🇨🇦🇨🇦🇨🇦<small>Click Me!</small>")
+            .html("🇨🇦🇨🇦🇨🇦<small>Cliquez sur moi!</small>")
             .on("click", () => {
               map_container.toggleClass("oh-canada");
-            });          
+            });
 
           // Append to the container
           map_container.append(toggle_button);
-
 
           // Load GeoJSON
           fetch("../assets/geo/route.geojson")
