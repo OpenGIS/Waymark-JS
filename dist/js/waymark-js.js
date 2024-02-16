@@ -7388,77 +7388,16 @@ var map = escape.map = {
 },{}]},{},[1])(1)
 });
 
-/*
-	==================================
-	========== LOCALIZATION ==========
-	==================================
-*/
-
-var waymark_js_localize = {
-	//Viewer
-	action_fullscreen_activate: "View Fullscreen",
-	action_fullscreen_deactivate: "Exit Fullscreen",
-	action_locate_activate: "Show me where I am",
-	action_zoom_in: "Zoom in",
-	action_zoom_out: "Zoom out",
-	label_total_length: "Total Length: ",
-	label_max_elevation: "Max. Elevation: ",
-	label_min_elevation: "Min. Elevation: ",
-	label_ascent: "Total Ascent: ",
-	label_descent: "Total Descent: ",
-	//Editor
-	add_line_title: "Draw a Line",
-	add_photo_title: "Upload an Image",
-	add_marker_title: "Place a Marker",
-	add_rectangle_title: "Draw a Rectangle",
-	add_polygon_title: "Draw a Polygon",
-	add_circle_title: "Draw a Circle",
-	upload_file_title:
-		"Read Lines and Markers from file (GPX/KML/GeoJSON supported, which most apps should Export to)",
-	action_duplicate: "Duplicate",
-	action_delete: "Delete",
-	action_edit: "Edit",
-	action_edit_done: "Finish editing",
-	action_upload_image: "Upload Image",
-	object_title_placeholder: "Title",
-	object_image_placeholder: "Image URL",
-	object_description_placeholder: "Description",
-	object_type_label: "Type",
-	marker_latlng_label: "Lat,Lng",
-	action_delete_confirm: "Are you sure you want to delete this",
-	action_search_placeholder: "Search...",
-	object_label_marker: "Marker",
-	object_label_line: "Line",
-	object_label_shape: "Shape",
-	object_label_marker_plural: "Markers",
-	object_label_line_plural: "Lines",
-	object_label_shape_plural: "Shapes",
-	error_message_prefix: "Waymark Error",
-	info_message_prefix: "Waymark Info",
-	debug_message_prefix: "Waymark Debug",
-	error_file_type: "This file type is not supported.",
-	error_file_conversion: "Could not convert this file to GeoJSON.",
-	error_file_upload: "File upload error.",
-	error_photo_meta: "Could not retrieve Image metadata.",
-	info_exif_yes: "Image location metadata (EXIF) detected!",
-	info_exif_no: "Image location metadata (EXIF) NOT detected.",
-	error_no_wpmedia: "WordPress Media Library not found",
-	no_direction: "No Direction",
-	show_direction: "Show Direction",
-	reverse_direction: "Reverse Direction",
-	sleep_wake_message: "Click or Hover to Wake",
-};
-
-if (typeof waymark_js === "undefined") {
-	var waymark_js = {
-		lang: {},
-	};
-}
-for (key in waymark_js_localize) {
-	if (typeof waymark_js.lang[key] === "undefined") {
-		waymark_js.lang[key] = waymark_js_localize[key];
-	}
-}
+// if (typeof waymark_js === "undefined") {
+// 	var waymark_js = {
+// 		lang: {},
+// 	};
+// }
+// for (key in waymark_js_localize) {
+// 	if (typeof waymark_js.lang[key] === "undefined") {
+// 		waymark_js.lang[key] = waymark_js_localize[key];
+// 	}
+// }
 
 /*
 	==================================
@@ -7598,6 +7537,62 @@ function Waymark_Map() {
 				image_medium_url: undefined,
 				image_large_url: undefined,
 				description: undefined,
+			},
+
+			// Localisation
+			language: {
+				//Viewer
+				action_fullscreen_activate: "View Fullscreen",
+				action_fullscreen_deactivate: "Exit Fullscreen",
+				action_locate_activate: "Show me where I am",
+				action_zoom_in: "Zoom in",
+				action_zoom_out: "Zoom out",
+				label_total_length: "Total Length: ",
+				label_max_elevation: "Max. Elevation: ",
+				label_min_elevation: "Min. Elevation: ",
+				label_ascent: "Total Ascent: ",
+				label_descent: "Total Descent: ",
+				//Editor
+				add_line_title: "Draw a Line",
+				add_photo_title: "Upload an Image",
+				add_marker_title: "Place a Marker",
+				add_rectangle_title: "Draw a Rectangle",
+				add_polygon_title: "Draw a Polygon",
+				add_circle_title: "Draw a Circle",
+				upload_file_title:
+					"Read Lines and Markers from file (GPX/KML/GeoJSON supported, which most apps should Export to)",
+				action_duplicate: "Duplicate",
+				action_delete: "Delete",
+				action_edit: "Edit",
+				action_edit_done: "Finish editing",
+				action_upload_image: "Upload Image",
+				object_title_placeholder: "Title",
+				object_image_placeholder: "Image URL",
+				object_description_placeholder: "Description",
+				object_type_label: "Type",
+				marker_latlng_label: "Lat,Lng",
+				action_delete_confirm: "Are you sure you want to delete this",
+				action_search_placeholder: "Search...",
+				object_label_marker: "Marker",
+				object_label_line: "Line",
+				object_label_shape: "Shape",
+				object_label_marker_plural: "Markers",
+				object_label_line_plural: "Lines",
+				object_label_shape_plural: "Shapes",
+				error_message_prefix: "Waymark Error",
+				info_message_prefix: "Waymark Info",
+				debug_message_prefix: "Waymark Debug",
+				error_file_type: "This file type is not supported.",
+				error_file_conversion: "Could not convert this file to GeoJSON.",
+				error_file_upload: "File upload error.",
+				error_photo_meta: "Could not retrieve Image metadata.",
+				info_exif_yes: "Image location metadata (EXIF) detected!",
+				info_exif_no: "Image location metadata (EXIF) NOT detected.",
+				error_no_wpmedia: "WordPress Media Library not found",
+				no_direction: "No Direction",
+				show_direction: "Show Direction",
+				reverse_direction: "Reverse Direction",
+				sleep_wake_message: "Click or Hover to Wake",
 			},
 		};
 
