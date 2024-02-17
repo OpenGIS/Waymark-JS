@@ -146,17 +146,15 @@ Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Roadmap / To-Do
 
-- Fix Docs navigation/content bug
 - Change Dist /1.0/ to /latest/
 
-### v1.1.0
+### v1.2.0
 
-- **Language**
-  - Pass localizations through `config.language`
 - Improve file/image upload integration & examples
 - Assign default Type key if none provided
 - Better handling of no/one Type provided
 - jQuery check(/auto include?)
+- Fix Docs navigation/content bug
 
 ### v2.0.0
 

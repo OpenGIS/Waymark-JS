@@ -53,10 +53,7 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: "dist/",
 						src: ["**"],
-						dest:
-							"docs/public/dist/" +
-							grunt.file.readJSON("package.json").version +
-							"/",
+						dest: "docs/public/dist/latest/",
 					},
 				],
 			},
