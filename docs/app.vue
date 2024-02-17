@@ -2,18 +2,13 @@
 import Prism from "prismjs";
 
 const route = useRoute();
-const appConfig = useAppConfig();
-
-const { data: navigation } = await useAsyncData("navigation", () =>
-  fetchContentNavigation(),
-);
 
 watch(
   () => route.path,
   () => {
     setTimeout(() => {
       Prism.highlightAll();
-    }, 100);
+    }, 200);
   },
 );
 
