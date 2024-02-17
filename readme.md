@@ -146,7 +146,7 @@ Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Roadmap / To-Do
 
-- Change Dist /1.0/ to /latest/
+- Fix Docs navigation/content bug
 
 ### v1.2.0
 
@@ -154,7 +154,6 @@ Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 - Assign default Type key if none provided
 - Better handling of no/one Type provided
 - jQuery check(/auto include?)
-- Fix Docs navigation/content bug
 
 ### v2.0.0
 

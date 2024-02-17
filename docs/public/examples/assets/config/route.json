@@ -6,7 +6,7 @@
       {
         "layer_name": "OpenTopoMap",
         "layer_url": "https://tile.opentopomap.org/{z}/{x}/{y}.png",
-        "layer_attribution": "© <a href=\"https://openstreetmap.org/copyright\">OSM</a>-Mitwirkende, SRTM | © <a href=\"http://opentopomap.org\" data-moz-translations-id=\"285\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>",
+        "layer_attribution": "© <a href=\"https://openstreetmap.org/copyright\">OSM</a>-Mitwirkende, SRTM | © <a href=\"http://opentopomap.org\" data-moz-translations-id=\"285\">OpenTopoMap</a>",
         "layer_max_zoom": "17"
       },
       {
