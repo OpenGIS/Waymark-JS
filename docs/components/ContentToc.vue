@@ -12,7 +12,7 @@ const title = computed(() => {
 </script>
 
 <template>
-	<nav class="toc">
+	<nav class="toc" v-if="page">
 		<h4 v-if="title">{{ title }}</h4>
 
 		<ul v-if="toc && toc.links">
