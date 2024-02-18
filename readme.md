@@ -146,8 +146,6 @@ Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Roadmap / To-Do
 
-- Fix Docs navigation/content bug
-
 ### v1.2.0
 
 - Improve file/image upload integration & examples
