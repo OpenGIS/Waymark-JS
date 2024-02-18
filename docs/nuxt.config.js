@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     markdown: {
       remarkPlugins: {
         "remark-gfm": true,
+        "remark-prism": true,
       },
     },
   },
@@ -15,7 +16,7 @@ export default defineNuxtConfig({
     "~/assets/main.less",
     "github-markdown-css/github-markdown-light.css",
     // "prism-theme-github/themes/prism-theme-github-dark.css",
-    // "~/assets/prism.css",
+    "~/assets/prism.css",
   ],
 
   app: {

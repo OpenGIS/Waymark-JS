@@ -1,3 +1,15 @@
+<script setup>
+onMounted(() => {
+  setTimeout(() => {
+    //Iterate over each .remark-highlight .token.comment element
+    document.querySelectorAll("span.token.comment").forEach((el) => {
+      // Add newline
+      el.innerHTML += "\n";
+    });
+  }, 200);
+});
+</script>
+
 <template>
   <main>
     <article>
