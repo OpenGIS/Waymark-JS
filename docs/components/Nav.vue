@@ -22,18 +22,15 @@ const goTo = (path) => {
 
 <template>
   <nav>
-    <select>
+    <select @change="goTo($event.target.value)">
       <!-- Home -->
-      <option value="/" :selected="route.path === '/'" @click="navigateTo('/')">
-        Docs:
-      </option>
+      <option value="/" :selected="route.path === '/'">Docs:</option>
 
       <option
         v-for="item in navigation"
         :key="item._path"
         :value="item._path"
         :selected="route.path.startsWith(item._path)"
-        @click="goTo(item._path)"
       >
         &ndash; {{ item.title }}
       </option>
