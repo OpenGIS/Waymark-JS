@@ -9628,23 +9628,24 @@ function Waymark_Map_Viewer() {
 				Waymark.elevation_control.loadData(feature);
 			}
 
-			layer.on("click", function (e) {
+			jQuery(layer).on("click", { W: Waymark }, function (e) {
+				var W = e.data.W;
 				var feature = e.target.feature;
 
 				//Clear chart
-				Waymark.elevation_control.clear();
+				W.elevation_control.clear();
 
 				//Clear Map layer
-				if (typeof Waymark.elevation_control.layer !== "undefined") {
-					Waymark.elevation_control.layer.removeFrom(Waymark.map);
+				if (typeof W.elevation_control.layer !== "undefined") {
+					W.elevation_control.layer.removeFrom(W.map);
 				}
 
 				//Feature has elevation data
-				Waymark.elevation_container.hide();
-				if (Waymark.line_has_elevation_data(feature)) {
-					Waymark.elevation_container.show();
+				W.elevation_container.hide();
+				if (W.line_has_elevation_data(feature)) {
+					W.elevation_container.show();
 
-					Waymark.elevation_control.loadData(feature);
+					W.elevation_control.loadData(feature);
 				}
 			});
 		}
