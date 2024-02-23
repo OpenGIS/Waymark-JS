@@ -224,27 +224,9 @@ function Waymark_Map() {
 									user_config[key][sub_key],
 								);
 							}
-
-							Waymark.debug(
-								"Setting config: " +
-									key +
-									" - " +
-									sub_key +
-									" - " +
-									JSON.stringify(user_config[key][sub_key]),
-							);
 							// Else, set
 						} else {
 							Waymark.config[key][sub_key] = user_config[key][sub_key];
-
-							Waymark.debug(
-								"Setting config: " +
-									key +
-									" - " +
-									sub_key +
-									" - " +
-									user_config[key][sub_key],
-							);
 						}
 					}
 				}
