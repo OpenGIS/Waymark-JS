@@ -10,9 +10,9 @@ Powered by [Leaflet JS](https://leafletjs.com/) with [OpenStreetMap](https://www
 
 > Waymark JS is completely free, [Open-Source](https://github.com/OpenGIS/Waymark-JS) and requires **no API keys**! ❤️
 
-## Documentation
+## Documentation / Demo
 
-Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
+Demo and and documentation [waymark.dev/js](https://www.waymark.dev/js)
 
 ## Installation
 
