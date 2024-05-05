@@ -444,21 +444,32 @@ function Waymark_Map() {
 			.join("");
 	};
 
-	this.make_key = function (str) {
-		if (!str) {
-			return str;
+	this.make_key = function (str_in) {
+		if (!str_in) {
+			return str_in;
 		}
 
 		//No cyrillic
-		str = this.transliterate(str);
+		str_out = this.transliterate(str_in);
 
 		//No underscores
-		str = str.replace(/[^a-z0-9+]+/gi, "");
+		str_out = str_out.replace(/[^a-z0-9+]+/gi, "");
 
 		//Lower
-		str = str.toLowerCase();
+		str_out = str_out.toLowerCase();
 
-		return str;
+		// Check for empty str_out
+		if (!str_out) {
+			// Convert to hex
+			str_out = str_in
+				.split("")
+				.map(function (char) {
+					return char.charCodeAt(0).toString(16);
+				})
+				.join("");
+		}
+
+		return str_out;
 	};
 
 	this.get_feature_overlay_type = function (feature) {
