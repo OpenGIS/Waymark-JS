@@ -1,3 +1,5 @@
 <template>
   <Map />
+
+  <MapControl />
 </template>

@@ -2,24 +2,14 @@
 import * as lib from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export function useMaplibre(options) {
+export function useMaplibre() {
 	// Default values
-	const id = options.id || "map";
+	const id = "map";
 
-	const lng = options.lng || -1.826252;
-	const lat = options.lat || 51.179026;
-	const zoom = options.zoom || 16;
+	const { lng, lat, zoom } = storeToRefs(useMapStore());
 
 	const state = ref({
 		map: null,
-	});
-
-	// Watch options and update map
-	watch(options, (newOptions, oldOptions) => {
-		if (state.value.map) {
-			state.value.map.setCenter([newOptions.lng, newOptions.lat]);
-			state.value.map.setZoom(newOptions.zoom);
-		}
 	});
 
 	onMounted(() => {
@@ -45,11 +35,37 @@ export function useMaplibre(options) {
 					},
 				],
 			},
-			center: [lng, lat],
-			zoom: zoom,
+			center: [lng.value, lat.value],
+			zoom: zoom.value,
+		});
+
+		// Sync Map Store when Map view changes
+		map.on("move", () => {
+			lng.value = map.getCenter().lng;
+			lat.value = map.getCenter().lat;
+			zoom.value = map.getZoom();
 		});
 
 		state.value.map = ref(map);
+	});
+
+	//Watchers
+	watch(lng, (value) => {
+		if (state.value.map) {
+			state.value.map.setCenter([value, lat.value]);
+		}
+	});
+
+	watch(lat, (value) => {
+		if (state.value.map) {
+			state.value.map.setCenter([lng.value, value]);
+		}
+	});
+
+	watch(zoom, (value) => {
+		if (state.value.map) {
+			state.value.map.setZoom(value);
+		}
 	});
 
 	return {
