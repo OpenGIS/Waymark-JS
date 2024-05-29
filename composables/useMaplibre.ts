@@ -2,13 +2,24 @@
 import * as lib from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export function useMaplibre(id = "map") {
-	const lng = ref(-1.826252);
-	const lat = ref(51.179026);
-	const zoom = ref(16);
+export function useMaplibre(options) {
+	// Default values
+	const id = options.id || "map";
+
+	const lng = options.lng || -1.826252;
+	const lat = options.lat || 51.179026;
+	const zoom = options.zoom || 16;
 
 	const state = ref({
 		map: null,
+	});
+
+	// Watch options and update map
+	watch(options, (newOptions, oldOptions) => {
+		if (state.value.map) {
+			state.value.map.setCenter([newOptions.lng, newOptions.lat]);
+			state.value.map.setZoom(newOptions.zoom);
+		}
 	});
 
 	onMounted(() => {
@@ -34,8 +45,8 @@ export function useMaplibre(id = "map") {
 					},
 				],
 			},
-			center: [lng.value, lat.value],
-			zoom: zoom.value,
+			center: [lng, lat],
+			zoom: zoom,
 		});
 
 		state.value.map = ref(map);
