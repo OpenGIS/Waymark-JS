@@ -1,14 +1,3 @@
-<script setup>
-const { state } = useMaplibre("map");
-</script>
-
 <template>
-  <div class="map" id="map"></div>
+  <Map />
 </template>
-
-<style>
-.map {
-  height: 100vh;
-  width: 100vw;
-}
-</style>
