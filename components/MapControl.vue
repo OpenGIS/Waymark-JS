@@ -1,5 +1,5 @@
 <script setup>
-const { lng, lat, zoom } = storeToRefs(useMapStore());
+const { lng, lat, zoom, data } = storeToRefs(useMapStore());
 </script>
 
 <template>
@@ -21,6 +21,9 @@ const { lng, lat, zoom } = storeToRefs(useMapStore());
 
 	<!-- Debug Output -->
 	<pre>{{ { lng, lat, zoom } }}</pre>
+
+	<!-- Data Output -->
+	<pre>{{ data }}</pre>
 </template>
 
 <style>
@@ -38,5 +41,9 @@ pre {
 	left: 0;
 	background-color: white;
 	padding: 1em;
+}
+pre:last-child {
+	right: 0;
+	left: auto;
 }
 </style>

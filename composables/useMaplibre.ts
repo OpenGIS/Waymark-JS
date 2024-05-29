@@ -6,7 +6,7 @@ export function useMaplibre() {
 	// Default values
 	const id = "map";
 
-	const { lng, lat, zoom } = storeToRefs(useMapStore());
+	const { lng, lat, zoom, data } = storeToRefs(useMapStore());
 
 	const state = ref({
 		map: null,
@@ -37,6 +37,24 @@ export function useMaplibre() {
 			},
 			center: [lng.value, lat.value],
 			zoom: zoom.value,
+		});
+
+		// Add data to Map
+		map.on("load", () => {
+			map.addSource("data", {
+				type: "geojson",
+				data: data.value,
+			});
+
+			map.addLayer({
+				id: "data",
+				type: "circle",
+				source: "data",
+				paint: {
+					"circle-radius": 10,
+					"circle-color": "#007cbf",
+				},
+			});
 		});
 
 		// Sync Map Store when Map view changes
