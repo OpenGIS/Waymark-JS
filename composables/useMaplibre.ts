@@ -41,20 +41,23 @@ export function useMaplibre() {
 
 		// Add data to Map
 		map.on("load", () => {
-			map.addSource("data", {
-				type: "geojson",
-				data: data.value,
-			});
+			// If we have data
+			if (data.value.features) {
+				map.addSource("data", {
+					type: "geojson",
+					data: data.value,
+				});
 
-			map.addLayer({
-				id: "data",
-				type: "circle",
-				source: "data",
-				paint: {
-					"circle-radius": 10,
-					"circle-color": "#007cbf",
-				},
-			});
+				map.addLayer({
+					id: "data",
+					type: "circle",
+					source: "data",
+					paint: {
+						"circle-radius": 10,
+						"circle-color": "#007cbf",
+					},
+				});
+			}
 		});
 
 		// Sync Map Store when Map view changes
