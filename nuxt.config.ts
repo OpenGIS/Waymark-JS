@@ -8,4 +8,6 @@ export default defineNuxtConfig({
     // "~/assets/main.less",
     // "maplibre-gl/dist/maplibre-gl.css",
   ],
+
+  modules: ["@pinia/nuxt"],
 });

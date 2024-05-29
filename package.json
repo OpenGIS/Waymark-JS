@@ -12,10 +12,12 @@
   "dependencies": {
     "maplibre-gl": "^4.3.2",
     "nuxt": "^3.11.2",
+    "pinia": "^2.1.7",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "prettier": "^3.2.5"
   }
 }
