@@ -1,3 +1,6 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+
 export const useMapStore = defineStore("map", () => {
 	const lng = ref(-128.0094);
 	const lat = ref(50.6539);

@@ -1,4 +1,8 @@
 <script setup>
+import { onMounted } from "vue";
+import { useMaplibre } from "@/composables/useMaplibre";
+import { useMapStore } from "@/stores/useMapStore";
+
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 

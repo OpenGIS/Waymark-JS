@@ -1,3 +1,7 @@
+import { ref, onMounted, watch } from "vue";
+import { useMapStore } from "@/stores/useMapStore";
+import { storeToRefs } from "pinia";
+
 // Import MapLibre
 import * as lib from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";

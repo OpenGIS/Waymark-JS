@@ -1,4 +1,7 @@
 <script setup>
+import { useMapStore } from "@/stores/useMapStore";
+import { storeToRefs } from "pinia";
+
 const { lng, lat, zoom, data } = storeToRefs(useMapStore());
 </script>
 
