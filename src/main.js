@@ -1,18 +1,16 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
+// import { createApp } from "vue";
+// import { createPinia } from "pinia";
+
 import Editor from "./components/Editor.vue";
 
-// import './style.css'
-import App from "./App.vue";
+// // Create App
+// const editor = createApp(Editor);
 
-// Create App
-const app = createApp(App);
+// //Pinia
+// const pinia = createPinia();
+// editor.use(pinia);
 
-//Pinia
-const pinia = createPinia();
-app.use(pinia);
-
-//Mount
-app.mount("#app");
+// //Mount
+// editor.mount("#app");
 
 export { Editor };

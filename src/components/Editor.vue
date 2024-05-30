@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted } from "vue";
+
 import { useMaplibre } from "../composables/useMaplibre";
-import { useMapStore } from "../stores/useMapStore";
+// import { useMapStore } from "../stores/useMapStore";
+// import MapControl from "../components/MapControl.vue";
 
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
@@ -11,7 +13,7 @@ MapboxDraw.constants.classes.CONTROL_PREFIX = "maplibregl-ctrl-";
 MapboxDraw.constants.classes.CONTROL_GROUP = "maplibregl-ctrl-group";
 
 const { state } = useMaplibre();
-const { setData } = useMapStore();
+// const { setData } = useMapStore();
 
 onMounted(() => {
 	const draw = new MapboxDraw({
@@ -28,7 +30,7 @@ onMounted(() => {
 		const data = draw.getAll();
 
 		if (data.features.length > 0) {
-			setData(data);
+			// setData(data);
 		}
 	};
 
@@ -40,6 +42,8 @@ onMounted(() => {
 
 <template>
 	<div class="map" id="map"></div>
+
+	<!-- <MapControl /> -->
 </template>
 
 <style>
