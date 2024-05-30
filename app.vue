@@ -1,5 +1,0 @@
-<template>
-  <Editor />
-
-  <MapControl />
-</template>
