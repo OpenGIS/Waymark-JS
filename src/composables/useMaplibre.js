@@ -1,5 +1,5 @@
 import { ref, onMounted, watch } from "vue";
-import { useMapStore } from "@/stores/useMapStore";
+import { useMapStore } from "../stores/useMapStore";
 import { storeToRefs } from "pinia";
 
 // Import MapLibre
