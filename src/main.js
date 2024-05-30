@@ -1,7 +1,7 @@
 // import { createApp } from "vue";
 // import { createPinia } from "pinia";
 
-import Editor from "./components/Editor.vue";
+import Map from "./components/Map.vue";
 
 // // Create App
 // const editor = createApp(Editor);
@@ -13,4 +13,4 @@ import Editor from "./components/Editor.vue";
 // //Mount
 // editor.mount("#app");
 
-export { Editor };
+export { Map };
