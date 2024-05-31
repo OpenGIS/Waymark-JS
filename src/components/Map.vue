@@ -79,6 +79,40 @@ onMounted(() => {
 					"circle-color": "#B42222",
 				},
 			});
+
+			// Draw Lines
+			map.addLayer({
+				id: "data-lines",
+				type: "line",
+				source: "data",
+				layout: {
+					"line-join": "round",
+					"line-cap": "round",
+				},
+				paint: {
+					"line-color": "#B42222",
+					"line-width": 2,
+				},
+			});
+		});
+
+		// Get Bounds
+		const bounds = data.value.features.reduce(
+			(bounds, feature) => {
+				return bounds.extend(feature.geometry.coordinates);
+			},
+			new lib.LngLatBounds(
+				data.value.features[0].geometry.coordinates,
+				data.value.features[0].geometry.coordinates,
+			),
+		);
+
+		// Fit to bounds
+		map.on("load", () => {
+			map.fitBounds(bounds, {
+				padding: 20,
+				linear: true,
+			});
 		});
 	}
 
