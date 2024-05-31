@@ -8,7 +8,7 @@ export default defineConfig({
 
   build: {
     lib: {
-      entry: resolve(__dirname, "src/main.js"),
+      entry: resolve(__dirname, "src/export.js"),
       name: "WaymarkJS",
       fileName: "waymark-js",
     },

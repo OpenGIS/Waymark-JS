@@ -50,22 +50,22 @@ onMounted(() => {
 	});
 
 	// Sync Map Store when Map view changes
-	map.on("move", () => {
-		lng.value = map.getCenter().lng.toFixed(4);
+	// map.on("move", () => {
+	// 	lng.value = map.getCenter().lng.toFixed(4);
 
-		lat.value = map.getCenter().lat.toFixed(4);
-		zoom.value = parseInt(map.getZoom());
-	});
+	// 	lat.value = map.getCenter().lat.toFixed(4);
+	// 	zoom.value = parseInt(map.getZoom());
+	// });
 
 	// Watch all Props
-	watch(props, (newProps) => {
-		console.log(newProps);
+	// watch(props, (newProps) => {
+	// 	console.log(newProps);
 
-		// Update Map
-		map.setCenter([newProps.lng, newProps.lat]);
+	// 	// Update Map
+	// 	map.setCenter([newProps.lng, newProps.lat]);
 
-		map.setZoom(newProps.zoom);
-	});
+	// 	map.setZoom(newProps.zoom);
+	// });
 });
 </script>
 
@@ -77,5 +77,6 @@ onMounted(() => {
 #map {
 	width: 100%;
 	height: 100%;
+	min-height: 100vh;
 }
 </style>
