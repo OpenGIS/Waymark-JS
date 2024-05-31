@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { onMounted, watch } from "vue";
 // import { useMapStore } from "../stores/useMapStore";
 // import { storeToRefs } from "pinia";
 
@@ -7,19 +7,19 @@ import { ref, onMounted, watch } from "vue";
 import * as lib from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const props = defineProps({
-	lng: {
-		type: Number,
-		default: -128.0094,
-	},
-	lat: {
-		type: Number,
-		default: 50.6539,
-	},
-	zoom: {
-		type: Number,
-		default: 16,
-	},
+const lng = defineModel("lng", {
+	type: Number,
+	default: -128.0094,
+});
+
+const lat = defineModel("lat", {
+	type: Number,
+	default: 50.6539,
+});
+
+const zoom = defineModel("zoom", {
+	type: Number,
+	default: 16,
 });
 
 onMounted(() => {
@@ -45,27 +45,22 @@ onMounted(() => {
 				},
 			],
 		},
-		center: [props.lng, props.lat],
-		zoom: props.zoom,
+		center: [lng.value, lat.value],
+		zoom: zoom.value,
 	});
 
 	// Sync Map Store when Map view changes
-	// map.on("move", () => {
-	// 	lng.value = map.getCenter().lng.toFixed(4);
-
-	// 	lat.value = map.getCenter().lat.toFixed(4);
-	// 	zoom.value = parseInt(map.getZoom());
-	// });
+	map.on("move", () => {
+		lng.value = map.getCenter().lng.toFixed(4);
+		lat.value = map.getCenter().lat.toFixed(4);
+		zoom.value = parseInt(map.getZoom());
+	});
 
 	// Watch all Props
-	// watch(props, (newProps) => {
-	// 	console.log(newProps);
-
-	// 	// Update Map
-	// 	map.setCenter([newProps.lng, newProps.lat]);
-
-	// 	map.setZoom(newProps.zoom);
-	// });
+	watch([lng, lat, zoom], ([lng, lat, zoom]) => {
+		map.setCenter([lng, lat]);
+		map.setZoom(zoom);
+	});
 });
 </script>
 
