@@ -7,6 +7,11 @@ import { onMounted, watch } from "vue";
 import * as lib from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+const id = defineModel("id", {
+	type: String,
+	default: "map",
+});
+
 const lng = defineModel("lng", {
 	type: Number,
 	default: -128.0094,
@@ -25,7 +30,7 @@ const zoom = defineModel("zoom", {
 onMounted(() => {
 	// Create Map
 	const map = new lib.Map({
-		container: "map",
+		container: id.value,
 		style: {
 			version: 8,
 			sources: {
@@ -57,21 +62,33 @@ onMounted(() => {
 	});
 
 	// Watch all Props
-	watch([lng, lat, zoom], ([lng, lat, zoom]) => {
-		map.setCenter([lng, lat]);
-		map.setZoom(zoom);
-	});
+	// watch([lng, lat, zoom], ([lng, lat, zoom]) => {
+	// 	map.setCenter([lng, lat]);
+	// 	map.setZoom(zoom);
+	// });
 });
 </script>
 
 <template>
-	<div class="map" id="map"></div>
+	<div class="map" :id="id">
+		<!-- Debug -->
+		<pre>{{ { lng, lat, zoom } }}</pre>
+	</div>
 </template>
 
 <style>
-#map {
+.map {
 	width: 100%;
 	height: 100%;
-	min-height: 100vh;
+	min-height: 400px;
+}
+
+pre {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	padding: 1em;
+	z-index: 1000;
 }
 </style>
