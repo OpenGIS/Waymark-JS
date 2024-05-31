@@ -24,7 +24,12 @@ const lat = defineModel("lat", {
 
 const zoom = defineModel("zoom", {
 	type: Number,
-	default: 16,
+	default: 18,
+});
+
+const data = defineModel("data", {
+	type: Object,
+	default: null,
 });
 
 onMounted(() => {
@@ -54,6 +59,29 @@ onMounted(() => {
 		zoom: zoom.value,
 	});
 
+	// Data provided?
+	if (data.value) {
+		map.on("load", () => {
+			console.log(data.value);
+
+			map.addSource("data", {
+				type: "geojson",
+				data: data.value,
+			});
+
+			// Draw Points
+			map.addLayer({
+				id: "data-points",
+				type: "circle",
+				source: "data",
+				paint: {
+					"circle-radius": 6,
+					"circle-color": "#B42222",
+				},
+			});
+		});
+	}
+
 	// Sync Map Store when Map view changes
 	map.on("move", () => {
 		lng.value = map.getCenter().lng.toFixed(4);
@@ -71,24 +99,37 @@ onMounted(() => {
 
 <template>
 	<div class="map" :id="id">
-		<!-- Debug -->
-		<pre>{{ { lng, lat, zoom } }}</pre>
+		<div class="debug">
+			<pre>{{ { lng, lat, zoom } }}</pre>
+
+			<pre>{{ data }}</pre>
+		</div>
 	</div>
 </template>
 
-<style>
+<style lang="less">
 .map {
 	width: 100%;
 	height: 100%;
 	min-height: 400px;
-}
 
-pre {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	background-color: white;
-	padding: 1em;
-	z-index: 1000;
+	.debug {
+		pre {
+			position: absolute;
+			bottom: 0;
+			background-color: rgba(255, 255, 255, 0.6);
+			padding: 1em;
+			z-index: 1000;
+
+			&:first-child {
+				left: 0;
+			}
+
+			&:last-child {
+				right: 0;
+				left: auto;
+			}
+		}
+	}
 }
 </style>
