@@ -4,7 +4,10 @@ import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
+
 import Marker from "@/components/Marker.vue";
+import Bar from "@/components/Bar.vue";
+import Detail from "@/components/Detail.vue";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
@@ -230,13 +233,14 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="map" :id="id">
-		<div class="debug">
-			<pre>{{ { lng, lat, zoom } }}</pre>
+	<!-- Map -->
+	<div class="map" :id="id"></div>
 
-			<pre>{{ data }}</pre>
-		</div>
-	</div>
+	<!-- Detail -->
+	<Detail />
+
+	<!-- Bar -->
+	<Bar />
 </template>
 
 <style lang="less">
