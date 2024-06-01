@@ -28,6 +28,10 @@ export const useMapStore = defineStore("map", () => {
 		map.value = m;
 	}
 
+	function setGeoJSON(data) {
+		geoJSON.value = data;
+	}
+
 	function toggleBar() {
 		barOpen.value = !barOpen.value;
 	}
@@ -105,5 +109,6 @@ export const useMapStore = defineStore("map", () => {
 		addMarker,
 		toggleBar,
 		setFocus,
+		setGeoJSON,
 	};
 });

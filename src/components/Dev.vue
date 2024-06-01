@@ -18,7 +18,7 @@ const route = JSON.parse(
 </script>
 
 <template>
-  <h1>Default</h1>
+  <!--   <h1>Default</h1>
 
   <Map />
 
@@ -28,7 +28,7 @@ const route = JSON.parse(
 
   <h1>Point</h1>
 
-  <Map id="point" :data="point" />
+  <Map id="point" :data="point" /> -->
 
   <h1>Route</h1>
 

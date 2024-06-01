@@ -20,12 +20,28 @@ const dataBounds = new MapLibreGL.LngLatBounds();
 // ==== Computed ====
 
 const pointsFeatures = computed(() => {
+	// Ensure is valid Array
+	if (
+		typeof geoJSON.value.features === "undefined" ||
+		!Array.isArray(geoJSON.value.features)
+	) {
+		return [];
+	}
+
 	return geoJSON.value.features.filter((feature) => {
 		return feature.geometry.type === "Point";
 	});
 });
 
 const linesFeatures = computed(() => {
+	// Ensure is valid Array
+	if (
+		typeof geoJSON.value.features === "undefined" ||
+		!Array.isArray(geoJSON.value.features)
+	) {
+		return [];
+	}
+
 	return geoJSON.value.features.filter((feature) => {
 		return (
 			["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
@@ -93,6 +109,11 @@ const data = defineModel("data", {
 	default: null,
 });
 
+// Set GeoJSON
+if (data.value) {
+	mapStore.setGeoJSON(data.value);
+}
+
 onMounted(() => {
 	// Create Map
 	const map = new MapLibreGL.Map({
@@ -120,85 +141,88 @@ onMounted(() => {
 		zoom: zoom.value,
 	});
 
-	//Markers
-	pointsFeatures.value.forEach((feature) => {
-		const typeData = getTypeData(
-			getFeatureType(feature),
-			makeKey(feature.properties.type),
-		);
-		const iconData = getIconData(typeData);
+	// Once the Map has loaded
+	map.on("load", () => {
+		//Markers
+		pointsFeatures.value.forEach((feature) => {
+			const typeData = getTypeData(
+				getFeatureType(feature),
+				makeKey(feature.properties.type),
+			);
+			const iconData = getIconData(typeData);
 
-		// create a DOM element for the marker
-		const el = document.createElement("div");
-		el.className = iconData.className;
-		el.innerHTML = iconData.html;
-		el.style.width = `${iconData.iconSize[0]}px`;
-		el.style.height = `${iconData.iconSize[1]}px`;
+			// create a DOM element for the marker
+			const el = document.createElement("div");
+			el.className = iconData.className;
+			el.innerHTML = iconData.html;
+			el.style.width = `${iconData.iconSize[0]}px`;
+			el.style.height = `${iconData.iconSize[1]}px`;
 
-		// add marker to map
-		const marker = new MapLibreGL.Marker({
-			element: el,
-			offset: iconData.iconAnchor,
+			// add marker to map
+			const marker = new MapLibreGL.Marker({
+				element: el,
+				offset: iconData.iconAnchor,
+			});
+
+			marker.setLngLat(feature.geometry.coordinates);
+			marker.addTo(map);
+
+			//Extend bounds
+			dataBounds.extend(feature.geometry.coordinates);
+
+			const overlay = mapStore.addMarker(marker, feature);
+
+			el.addEventListener("click", () => {
+				mapStore.setActiveOverlay(overlay);
+			});
+
+			el.addEventListener("mouseenter", () => {
+				mapStore.toggleHoverOverlay(overlay);
+			});
+
+			el.addEventListener("mouseleave", () => {
+				mapStore.toggleHoverOverlay(overlay);
+			});
 		});
 
-		marker.setLngLat(feature.geometry.coordinates);
-		marker.addTo(map);
+		//Lines
+		const dataSource = map.addSource("geoJSON", {
+			type: "geojson",
+			data: geoJSON.value,
+		});
+
+		const dataLayer = map.addLayer({
+			id: "geoJSON",
+			type: "line",
+			source: "geoJSON",
+			paint: {
+				"line-color": "#088",
+				"line-width": 2,
+			},
+		});
 
 		//Extend bounds
-		dataBounds.extend(feature.geometry.coordinates);
-
-		const overlay = mapStore.addMarker(marker, feature);
-
-		el.addEventListener("click", () => {
-			mapStore.setActiveOverlay(overlay);
+		linesFeatures.value.forEach((feature) => {
+			for (let i in feature.geometry.coordinates) {
+				dataBounds.extend(feature.geometry.coordinates[i]);
+			}
 		});
 
-		el.addEventListener("mouseenter", () => {
-			mapStore.toggleHoverOverlay(overlay);
+		//Update Visible whenever view changes
+		//map.on('zoomend', updateVisibleOverlays).on('moveend', updateVisibleOverlays)
+
+		//Set initial centre and zoom to it
+		map.setCenter(dataBounds.getCenter());
+		map.fitBounds(dataBounds, { padding: 80 });
+
+		map.once("moveend", () => {
+			//Set Max bounds
+			map.setMaxBounds(map.getBounds());
+
+			lng.value = map.getCenter().lng.toFixed(4);
+			lat.value = map.getCenter().lat.toFixed(4);
+			zoom.value = parseInt(map.getZoom());
 		});
-
-		el.addEventListener("mouseleave", () => {
-			mapStore.toggleHoverOverlay(overlay);
-		});
-	});
-
-	//Lines
-	const dataSource = map.addSource("geoJSON", {
-		type: "geojson",
-		data: geoJSON.value,
-	});
-
-	const dataLayer = map.addLayer({
-		id: "geoJSON",
-		type: "line",
-		source: "geoJSON",
-		paint: {
-			"line-color": "#088",
-			"line-width": 2,
-		},
-	});
-
-	//Extend bounds
-	linesFeatures.value.forEach((feature) => {
-		for (let i in feature.geometry.coordinates) {
-			dataBounds.extend(feature.geometry.coordinates[i]);
-		}
-	});
-
-	//Update Visible whenever view changes
-	//map.on('zoomend', updateVisibleOverlays).on('moveend', updateVisibleOverlays)
-
-	//Set initial centre and zoom to it
-	map.setCenter(dataBounds.getCenter());
-	map.fitBounds(dataBounds, { padding: 80 });
-
-	map.once("moveend", () => {
-		//Set Max bounds
-		map.setMaxBounds(map.getBounds());
-
-		lng.value = map.getCenter().lng.toFixed(4);
-		lat.value = map.getCenter().lat.toFixed(4);
-		zoom.value = parseInt(map.getZoom());
 	});
 
 	mapStore.setMap(map);
