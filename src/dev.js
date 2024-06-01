@@ -1,7 +1,16 @@
 import { createApp } from "vue";
-// import { createPinia } from "pinia";
+import { createPinia } from "pinia";
 
 import Dev from "./components/Dev.vue";
 
-// Create & Mount App
-createApp(Dev).mount("#dev");
+// Create App
+const app = createApp(Dev);
+
+// Create Pinia Store
+const pinia = createPinia();
+
+// Use Pinia Store
+app.use(pinia);
+
+// Mount App
+app.mount("#dev");

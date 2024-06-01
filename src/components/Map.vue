@@ -1,11 +1,72 @@
 <script setup>
-import { onMounted, watch } from "vue";
-// import { useMapStore } from "../stores/useMapStore";
-// import { storeToRefs } from "pinia";
+import { onMounted, ref, watch, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useMapStore } from "@/stores/mapStore.js";
+import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
+import Marker from "@/components/Marker.vue";
 
 // Import MapLibre
-import * as lib from "maplibre-gl";
+import * as MapLibreGL from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+
+const mapStore = useMapStore();
+const { geoJSON, visibleOverlays, overlays } = storeToRefs(mapStore);
+
+let map = null;
+
+const dataBounds = new MapLibreGL.LngLatBounds();
+
+// ==== Computed ====
+
+const pointsFeatures = computed(() => {
+	return geoJSON.value.features.filter((feature) => {
+		return feature.geometry.type === "Point";
+	});
+});
+
+const linesFeatures = computed(() => {
+	return geoJSON.value.features.filter((feature) => {
+		return (
+			["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
+		);
+	});
+});
+
+const updateVisibleOverlays = () => {
+	const mapBounds = map.getBounds();
+
+	//Check if overlay is visible
+	visibleOverlays.value = overlays.value.filter((overlay) => {
+		let contains = false;
+
+		switch (overlay.featureType) {
+			case "marker":
+				//In view
+				contains = mapBounds.contains(overlay.marker.getLngLat());
+
+				break;
+			// case 'line':
+			//   if (contains) break
+
+			//   overlay.layer.getLatLngs().forEach((element) => {
+			//     if (mapBounds.contains(element)) {
+			//       contains = true
+			//     }
+			//   })
+
+			//   break
+			//In view
+			// return mapBounds.contains()
+
+			// case 'shape':
+			//In view
+			// return mapBounds.contains(overlay.layer.getLatLng())
+		}
+
+		return contains;
+	});
+};
 
 const id = defineModel("id", {
 	type: String,
@@ -34,7 +95,7 @@ const data = defineModel("data", {
 
 onMounted(() => {
 	// Create Map
-	const map = new lib.Map({
+	const map = new MapLibreGL.Map({
 		container: id.value,
 		style: {
 			version: 8,
@@ -59,75 +120,88 @@ onMounted(() => {
 		zoom: zoom.value,
 	});
 
-	// Data provided?
-	if (data.value) {
-		map.on("load", () => {
-			console.log(data.value);
-
-			map.addSource("data", {
-				type: "geojson",
-				data: data.value,
-			});
-
-			// Draw Points
-			map.addLayer({
-				id: "data-points",
-				type: "circle",
-				source: "data",
-				paint: {
-					"circle-radius": 6,
-					"circle-color": "#B42222",
-				},
-			});
-
-			// Draw Lines
-			map.addLayer({
-				id: "data-lines",
-				type: "line",
-				source: "data",
-				layout: {
-					"line-join": "round",
-					"line-cap": "round",
-				},
-				paint: {
-					"line-color": "#B42222",
-					"line-width": 2,
-				},
-			});
-		});
-
-		// Get Bounds
-		const bounds = data.value.features.reduce(
-			(bounds, feature) => {
-				return bounds.extend(feature.geometry.coordinates);
-			},
-			new lib.LngLatBounds(
-				data.value.features[0].geometry.coordinates,
-				data.value.features[0].geometry.coordinates,
-			),
+	//Markers
+	pointsFeatures.value.forEach((feature) => {
+		const typeData = getTypeData(
+			getFeatureType(feature),
+			makeKey(feature.properties.type),
 		);
+		const iconData = getIconData(typeData);
 
-		// Fit to bounds
-		map.on("load", () => {
-			map.fitBounds(bounds, {
-				padding: 20,
-				linear: true,
-			});
+		// create a DOM element for the marker
+		const el = document.createElement("div");
+		el.className = iconData.className;
+		el.innerHTML = iconData.html;
+		el.style.width = `${iconData.iconSize[0]}px`;
+		el.style.height = `${iconData.iconSize[1]}px`;
+
+		// add marker to map
+		const marker = new MapLibreGL.Marker({
+			element: el,
+			offset: iconData.iconAnchor,
 		});
-	}
 
-	// Sync Map Store when Map view changes
-	map.on("move", () => {
+		marker.setLngLat(feature.geometry.coordinates);
+		marker.addTo(map);
+
+		//Extend bounds
+		dataBounds.extend(feature.geometry.coordinates);
+
+		const overlay = mapStore.addMarker(marker, feature);
+
+		el.addEventListener("click", () => {
+			mapStore.setActiveOverlay(overlay);
+		});
+
+		el.addEventListener("mouseenter", () => {
+			mapStore.toggleHoverOverlay(overlay);
+		});
+
+		el.addEventListener("mouseleave", () => {
+			mapStore.toggleHoverOverlay(overlay);
+		});
+	});
+
+	//Lines
+	const dataSource = map.addSource("geoJSON", {
+		type: "geojson",
+		data: geoJSON.value,
+	});
+
+	const dataLayer = map.addLayer({
+		id: "geoJSON",
+		type: "line",
+		source: "geoJSON",
+		paint: {
+			"line-color": "#088",
+			"line-width": 2,
+		},
+	});
+
+	//Extend bounds
+	linesFeatures.value.forEach((feature) => {
+		for (let i in feature.geometry.coordinates) {
+			dataBounds.extend(feature.geometry.coordinates[i]);
+		}
+	});
+
+	//Update Visible whenever view changes
+	//map.on('zoomend', updateVisibleOverlays).on('moveend', updateVisibleOverlays)
+
+	//Set initial centre and zoom to it
+	map.setCenter(dataBounds.getCenter());
+	map.fitBounds(dataBounds, { padding: 80 });
+
+	map.once("moveend", () => {
+		//Set Max bounds
+		map.setMaxBounds(map.getBounds());
+
 		lng.value = map.getCenter().lng.toFixed(4);
 		lat.value = map.getCenter().lat.toFixed(4);
 		zoom.value = parseInt(map.getZoom());
 	});
 
-	// Watch all Props
-	// watch([lng, lat, zoom], ([lng, lat, zoom]) => {
-	// 	map.setCenter([lng, lat]);
-	// 	map.setZoom(zoom);
-	// });
+	mapStore.setMap(map);
 });
 </script>
 
