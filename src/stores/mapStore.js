@@ -13,6 +13,7 @@ export const useMapStore = defineStore("map", () => {
 	const lng = ref(-128.0094);
 	const lat = ref(50.6539);
 	const zoom = ref(16);
+	const id = ref("map");
 
 	const geoJSON = ref({});
 	const mapConfig = ref(waymarkConfig);
@@ -28,8 +29,26 @@ export const useMapStore = defineStore("map", () => {
 		map.value = m;
 	}
 
-	function setGeoJSON(data) {
-		geoJSON.value = data;
+	function init(data = {}) {
+		if (data.id) {
+			id.value = data.id.value + "-map";
+		}
+
+		if (data.lng) {
+			lng.value = data.lng.value;
+		}
+
+		if (data.lat) {
+			lat.value = data.lat.value;
+		}
+
+		if (data.zoom) {
+			zoom.value = data.zoom.value;
+		}
+
+		if (data.data) {
+			geoJSON.value = data.data.value;
+		}
 	}
 
 	function toggleBar() {
@@ -94,6 +113,7 @@ export const useMapStore = defineStore("map", () => {
 		lng,
 		lat,
 		zoom,
+		id,
 		overlays,
 		geoJSON,
 		map,
@@ -109,6 +129,6 @@ export const useMapStore = defineStore("map", () => {
 		addMarker,
 		toggleBar,
 		setFocus,
-		setGeoJSON,
+		init,
 	};
 });

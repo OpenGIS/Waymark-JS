@@ -14,7 +14,8 @@ import * as MapLibreGL from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 const mapStore = useMapStore();
-const { geoJSON, visibleOverlays, overlays } = storeToRefs(mapStore);
+const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =
+	storeToRefs(mapStore);
 
 let map = null;
 
@@ -86,36 +87,6 @@ const updateVisibleOverlays = () => {
 		return contains;
 	});
 };
-
-const id = defineModel("id", {
-	type: String,
-	default: "map",
-});
-
-const lng = defineModel("lng", {
-	type: Number,
-	default: -128.0094,
-});
-
-const lat = defineModel("lat", {
-	type: Number,
-	default: 50.6539,
-});
-
-const zoom = defineModel("zoom", {
-	type: Number,
-	default: 18,
-});
-
-const data = defineModel("data", {
-	type: Object,
-	default: null,
-});
-
-// Set GeoJSON
-if (data.value) {
-	mapStore.setGeoJSON(data.value);
-}
 
 onMounted(() => {
 	// Create Map
@@ -235,12 +206,6 @@ onMounted(() => {
 <template>
 	<!-- Map -->
 	<div class="map" :id="id"></div>
-
-	<!-- Detail -->
-	<Detail />
-
-	<!-- Bar -->
-	<Bar />
 </template>
 
 <style lang="less">

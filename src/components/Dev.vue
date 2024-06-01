@@ -1,5 +1,5 @@
 <script setup>
-import Map from "./Map.vue";
+import App from "@/components/App.vue";
 
 const point = {
   type: "FeatureCollection",
@@ -32,7 +32,7 @@ const route = JSON.parse(
 
   <h1>Route</h1>
 
-  <Map id="route" :data="route" />
+  <App id="route" :data="route" />
 </template>
 
 <style scoped>
