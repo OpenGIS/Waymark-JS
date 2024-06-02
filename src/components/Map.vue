@@ -7,9 +7,9 @@ import { makeKey } from "@/helpers/Common.js";
 import { useMaplibre } from "@/composables/useMaplibre.js";
 import * as MapLibreGL from "maplibre-gl";
 
-import Marker from "@/components/Marker.vue";
-import Bar from "@/components/Bar.vue";
-import Detail from "@/components/Detail.vue";
+import Marker from "@/components/UI/Marker.vue";
+import Bar from "@/components/UI/Bar.vue";
+import Detail from "@/components/UI/Detail.vue";
 
 const mapStore = useMapStore();
 const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =

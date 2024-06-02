@@ -1,7 +1,7 @@
 <script setup>
 import Map from "@/components/Map.vue";
-import Bar from "@/components/Bar.vue";
-import Detail from "@/components/Detail.vue";
+import Bar from "@/components/UI/Bar.vue";
+import Detail from "@/components/UI/Detail.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
 

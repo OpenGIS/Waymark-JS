@@ -1,36 +1,36 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMapStore } from '@/stores/mapStore.js'
+import { computed, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useMapStore } from "@/stores/mapStore.js";
 
-const mapStore = useMapStore()
-const { activeOverlay, detailExpanded } = storeToRefs(mapStore)
+const mapStore = useMapStore();
+const { activeOverlay, detailExpanded } = storeToRefs(mapStore);
 
-import { expandedIcon } from '@/helpers/Common.js'
+import { expandedIcon } from "@/helpers/Common.js";
 
-import Button from '@/components/Button.vue'
-import Content from '@/components/Content.vue'
-import Marker from '@/components/Marker.vue'
+import Button from "@/components/UI/Button.vue";
+import Content from "@/components/UI/Content.vue";
+import Marker from "@/components/UI/Marker.vue";
 
 const detailHeight = computed(() => {
   //Closed
   if (!activeOverlay.value) {
-    return '0px'
+    return "0px";
   }
 
   //Open
   if (!detailExpanded.value) {
-    return '60px'
+    return "60px";
   }
-})
+});
 
 const detailClass = computed(() => {
   if (Object.keys(activeOverlay.value.imageURLs).length) {
-    return 'has-image'
+    return "has-image";
   }
-})
+});
 
-watch(activeOverlay, () => {})
+watch(activeOverlay, () => {});
 </script>
 
 <template>
@@ -44,7 +44,10 @@ watch(activeOverlay, () => {})
       <tr class="item" @click="setActive">
         <!-- Image -->
         <td class="image">
-          <Marker :typeData="activeOverlay.typeData" :featureType="activeOverlay.featureType" />
+          <Marker
+            :typeData="activeOverlay.typeData"
+            :featureType="activeOverlay.featureType"
+          />
         </td>
 
         <!-- Title -->

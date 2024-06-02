@@ -1,9 +1,9 @@
 <script setup>
-import OverlayList from '@/components/OverlayList.vue'
+import OverlayList from "@/components/UI/OverlayList.vue";
 
 defineProps({
-  overlaysByType: Object
-})
+  overlaysByType: Object,
+});
 </script>
 
 <template>

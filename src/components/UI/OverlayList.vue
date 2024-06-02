@@ -1,81 +1,89 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-import { visibleIcon, expandedIcon } from '@/helpers/Common.js'
+import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
-import ListRow from '@/components/ListRow.vue'
-import Marker from '@/components/Marker.vue'
-import Button from '@/components/Button.vue'
+import ListRow from "@/components/UI/ListRow.vue";
+import Marker from "@/components/UI/Marker.vue";
+import Button from "@/components/UI/Button.vue";
 
 const props = defineProps({
-  byType: Object
-})
+  byType: Object,
+});
 
-let expanded = ref(false)
-let visible = ref(true)
+let expanded = ref(false);
+let visible = ref(true);
 
 const toggleHighlight = (overlay) => {
-  return
-  const element = overlay.layer.getElement()
+  return;
+  const element = overlay.layer.getElement();
 
-  element.classList.toggle('overlay-highlight')
-}
+  element.classList.toggle("overlay-highlight");
+};
 
 const toggleExpanded = () => {
-  expanded.value = !expanded.value
-}
+  expanded.value = !expanded.value;
+};
 
 const toggleVisible = () => {
-  visible.value = !visible.value
+  visible.value = !visible.value;
 
   //Close Type if hiding all
   if (!visible.value) {
-    expanded.value = false
+    expanded.value = false;
   }
 
-  const overlays = props.byType.overlays
+  const overlays = props.byType.overlays;
 
   for (let i in overlays) {
-    const element = overlays[i].element
+    const element = overlays[i].element;
 
     if (!visible.value) {
-      element.classList.add('overlay-hidden')
+      element.classList.add("overlay-hidden");
     } else {
-      element.classList.remove('overlay-hidden')
+      element.classList.remove("overlay-hidden");
     }
 
     // expanded.value = !element.classList.contains('overlay-hidden')
   }
-}
+};
 
 const overlayStyle = () => {
   switch (props.byType.featureType) {
-    case 'marker':
-      return `color:${props.byType.typeData.icon_colour};border-color:${props.byType.typeData.marker_colour}`
+    case "marker":
+      return `color:${props.byType.typeData.icon_colour};border-color:${props.byType.typeData.marker_colour}`;
 
-      break
+      break;
 
-    case 'line':
-      return `color:#fff;background-color:${props.byType.typeData.line_colour}`
+    case "line":
+      return `color:#fff;background-color:${props.byType.typeData.line_colour}`;
 
-      break
+      break;
   }
-}
+};
 </script>
 
 <template>
   <div class="type">
     <table>
       <!-- Heading -->
-      <tr class="heading" :style="overlayStyle()" @click.stop="toggleExpanded()">
+      <tr
+        class="heading"
+        :style="overlayStyle()"
+        @click.stop="toggleExpanded()"
+      >
         <!-- Image -->
         <td class="image">
-          <Marker :typeData="byType.typeData" :featureType="byType.featureType" />
+          <Marker
+            :typeData="byType.typeData"
+            :featureType="byType.featureType"
+          />
         </td>
 
         <!-- Title -->
         <td class="title">
-          {{ byType.title }} <span class="count">{{ byType.overlays.length }}</span>
+          {{ byType.title }}
+          <span class="count">{{ byType.overlays.length }}</span>
         </td>
 
         <!-- Expand -->
@@ -85,7 +93,10 @@ const overlayStyle = () => {
 
         <!-- Visible -->
         <td class="action visible">
-          <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()"></Button>
+          <Button
+            :icon="visibleIcon(visible)"
+            @click.stop="toggleVisible()"
+          ></Button>
         </td>
       </tr>
 
@@ -145,7 +156,7 @@ const overlayStyle = () => {
             opacity: 0.5;
             font-size: 80%;
             &::before {
-              content: 'x';
+              content: "x";
             }
           }
         }

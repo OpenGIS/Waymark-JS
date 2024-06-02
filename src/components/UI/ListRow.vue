@@ -1,48 +1,53 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMapStore } from '@/stores/mapStore.js'
+import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useMapStore } from "@/stores/mapStore.js";
 
-const mapStore = useMapStore()
+const mapStore = useMapStore();
 
-import { visibleIcon } from '@/helpers/Common.js'
-import Button from '@/components/Button.vue'
+import { visibleIcon } from "@/helpers/Common.js";
+import Button from "@/components/UI/Button.vue";
 
 const props = defineProps({
-  overlay: Object
-})
+  overlay: Object,
+});
 
-const feature_props = props.overlay.feature.properties
+const feature_props = props.overlay.feature.properties;
 
-let visible = ref(true)
+let visible = ref(true);
 
 const toggleVisible = () => {
-  visible.value = !visible.value
+  visible.value = !visible.value;
 
-  const element = props.overlay.element
+  const element = props.overlay.element;
 
   if (!visible.value) {
-    element.classList.add('overlay-hidden')
+    element.classList.add("overlay-hidden");
   } else {
-    element.classList.remove('overlay-hidden')
+    element.classList.remove("overlay-hidden");
   }
-}
+};
 
 const centerOn = () => {
-  mapStore.setFocus(props.overlay.feature.geometry.coordinates)
-}
+  mapStore.setFocus(props.overlay.feature.geometry.coordinates);
+};
 
 const setActive = () => {
-  mapStore.setActiveOverlay(props.overlay)
-}
+  mapStore.setActiveOverlay(props.overlay);
+};
 
 const toggleHover = () => {
-  mapStore.toggleHoverOverlay(props.overlay)
-}
+  mapStore.toggleHoverOverlay(props.overlay);
+};
 </script>
 
 <template>
-  <tr class="item" @click="setActive" @mouseenter="toggleHover" @mouseleave="toggleHover">
+  <tr
+    class="item"
+    @click="setActive"
+    @mouseenter="toggleHover"
+    @mouseleave="toggleHover"
+  >
     <!-- Image -->
     <td class="image">
       <img

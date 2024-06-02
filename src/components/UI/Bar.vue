@@ -1,21 +1,21 @@
 <script setup>
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMapStore } from '@/stores/mapStore.js'
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useMapStore } from "@/stores/mapStore.js";
 
-const mapStore = useMapStore()
-const { visibleOverlays, barOpen } = storeToRefs(mapStore)
-import List from '@/components/List.vue'
-import Button from '@/components/Button.vue'
-import Content from '@/components/Content.vue'
+const mapStore = useMapStore();
+const { visibleOverlays, barOpen } = storeToRefs(mapStore);
+import List from "@/components/UI/List.vue";
+import Button from "@/components/UI/Button.vue";
+import Content from "@/components/UI/Content.vue";
 
 const barHeight = computed(() => {
   if (!barOpen.value) {
-    return '0'
+    return "0";
   }
 
-  return '33.33%'
-})
+  return "33.33%";
+});
 </script>
 
 <template>
@@ -30,7 +30,11 @@ const barHeight = computed(() => {
       <!-- fa-location-arrow -->
       <!-- Layers -->
       <div class="nav-item">
-        <Button :active="barOpen" icon="ion-social-buffer" @click="mapStore.toggleBar()" />
+        <Button
+          :active="barOpen"
+          icon="ion-social-buffer"
+          @click="mapStore.toggleBar()"
+        />
       </div>
       <!-- fa-map-o -->
 

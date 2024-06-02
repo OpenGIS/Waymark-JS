@@ -1,25 +1,25 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import TypeList from '@/components/TypeList.vue'
-import { overlaysByType } from '@/helpers/Overlay.js'
+import { ref, computed, onMounted, watch } from "vue";
+import TypeList from "@/components/UI/TypeList.vue";
+import { overlaysByType } from "@/helpers/Overlay.js";
 
-import { storeToRefs } from 'pinia'
-import { useMapStore } from '@/stores/mapStore.js'
+import { storeToRefs } from "pinia";
+import { useMapStore } from "@/stores/mapStore.js";
 
-const mapStore = useMapStore()
-const { overlays, visibleOverlays } = storeToRefs(mapStore)
+const mapStore = useMapStore();
+const { overlays, visibleOverlays } = storeToRefs(mapStore);
 
-import Button from '@/components/Button.vue'
+import Button from "@/components/UI/Button.vue";
 
-const activeType = ref('marker')
+const activeType = ref("marker");
 
 const activeOverlays = computed(() => {
   return overlaysByType(
     visibleOverlays.value.filter((o) => {
-      return o.featureType === activeType.value
-    })
-  )
-})
+      return o.featureType === activeType.value;
+    }),
+  );
+});
 </script>
 
 <template>
