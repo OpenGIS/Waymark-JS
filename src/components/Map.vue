@@ -16,75 +16,9 @@ const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =
 	storeToRefs(mapStore);
 
 const { map, init } = useMaplibre();
+mapStore.setMap(map);
 
 const dataBounds = new MapLibreGL.LngLatBounds();
-
-// ==== Computed ====
-
-const pointsFeatures = computed(() => {
-	// Ensure is valid Array
-	if (
-		typeof geoJSON.value.features === "undefined" ||
-		!Array.isArray(geoJSON.value.features)
-	) {
-		return [];
-	}
-
-	return geoJSON.value.features.filter((feature) => {
-		return feature.geometry.type === "Point";
-	});
-});
-
-const linesFeatures = computed(() => {
-	// Ensure is valid Array
-	if (
-		typeof geoJSON.value.features === "undefined" ||
-		!Array.isArray(geoJSON.value.features)
-	) {
-		return [];
-	}
-
-	return geoJSON.value.features.filter((feature) => {
-		return (
-			["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
-		);
-	});
-});
-
-const updateVisibleOverlays = () => {
-	const mapBounds = map.getBounds();
-
-	//Check if overlay is visible
-	visibleOverlays.value = overlays.value.filter((overlay) => {
-		let contains = false;
-
-		switch (overlay.featureType) {
-			case "marker":
-				//In view
-				contains = mapBounds.contains(overlay.marker.getLngLat());
-
-				break;
-			// case 'line':
-			//   if (contains) break
-
-			//   overlay.layer.getLatLngs().forEach((element) => {
-			//     if (mapBounds.contains(element)) {
-			//       contains = true
-			//     }
-			//   })
-
-			//   break
-			//In view
-			// return mapBounds.contains()
-
-			// case 'shape':
-			//In view
-			// return mapBounds.contains(overlay.layer.getLatLng())
-		}
-
-		return contains;
-	});
-};
 
 onMounted(() => {
 	init({
@@ -159,9 +93,6 @@ onMounted(() => {
 				dataBounds.extend(feature.geometry.coordinates[i]);
 			}
 		});
-
-		//Update Visible whenever view changes
-		//map.on('zoomend', updateVisibleOverlays).on('moveend', updateVisibleOverlays)
 
 		//Set initial centre and zoom to it
 		map.setCenter(dataBounds.getCenter());
