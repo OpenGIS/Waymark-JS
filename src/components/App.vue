@@ -5,7 +5,7 @@ import Detail from "@/components/UI/Detail.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
 
-const { init } = useMapStore();
+const { createStore } = useMapStore();
 
 const id = defineModel("id", {
 	type: String,
@@ -32,7 +32,7 @@ const data = defineModel("data", {
 	default: null,
 });
 
-init({
+createStore({
 	id,
 	lng,
 	lat,

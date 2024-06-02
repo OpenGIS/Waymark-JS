@@ -1,4 +1,4 @@
-import { onMounted, unref } from "vue";
+import { onMounted } from "vue";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
@@ -13,23 +13,23 @@ export function useMaplibre() {
 
 	let map = null;
 
-	const init = (config) => {
-		console.log(config);
+	const createMap = (config) => {
+		console.log("createMap", config);
 
 		if (config.id) {
-			id = unref(config.id);
+			id = config.id;
 		}
 
 		if (config.lng) {
-			lng = unref(config.lng);
+			lng = config.lng;
 		}
 
 		if (config.lat) {
-			lat = unref(config.lat);
+			lat = config.lat;
 		}
 
 		if (config.zoom) {
-			zoom = unref(config.zoom);
+			zoom = config.zoom;
 		}
 
 		// Create Map
@@ -57,10 +57,12 @@ export function useMaplibre() {
 			center: [lng, lat],
 			zoom: zoom,
 		});
+
+		return map;
 	};
 
 	return {
 		map,
-		init,
+		createMap,
 	};
 }

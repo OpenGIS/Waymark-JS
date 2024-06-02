@@ -4,7 +4,6 @@ import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
-import { useMaplibre } from "@/composables/useMaplibre.js";
 import * as MapLibreGL from "maplibre-gl";
 
 import Marker from "@/components/UI/Marker.vue";
@@ -12,21 +11,16 @@ import Bar from "@/components/UI/Bar.vue";
 import Detail from "@/components/UI/Detail.vue";
 
 const mapStore = useMapStore();
+
+const { initMap } = mapStore;
+
 const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =
 	storeToRefs(mapStore);
-
-const { map, init } = useMaplibre();
-mapStore.setMap(map);
 
 const dataBounds = new MapLibreGL.LngLatBounds();
 
 onMounted(() => {
-	init({
-		id: id.value + "-map",
-		lng,
-		lat,
-		zoom,
-	});
+	const map = initMap();
 
 	map.on("load", () => {
 		//Markers

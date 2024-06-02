@@ -1,5 +1,8 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { useMaplibre } from "@/composables/useMaplibre.js";
+
+import * as MapLibreGL from "maplibre-gl";
 import { waymarkConfig } from "@/data/waymark.js";
 
 import {
@@ -9,27 +12,25 @@ import {
 } from "@/helpers/Overlay.js";
 
 export const useMapStore = defineStore("map", () => {
+	const { createMap } = useMaplibre();
+
 	//State
 	const lng = ref(-128.0094);
 	const lat = ref(50.6539);
 	const zoom = ref(16);
 	const id = ref("map");
 
+	let map = null;
+
 	const geoJSON = ref({});
 	const mapConfig = ref(waymarkConfig);
-	const map = ref({});
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
 	const barOpen = ref(false);
 	const detailExpanded = ref(false);
 
-	//Actions
-	function setMap(m) {
-		map.value = m;
-	}
-
-	function init(data = {}) {
+	function createStore(data = {}) {
 		if (data.id) {
 			id.value = data.id.value;
 		}
@@ -49,6 +50,22 @@ export const useMapStore = defineStore("map", () => {
 		if (data.data) {
 			geoJSON.value = data.data.value;
 		}
+	}
+
+	function initMap() {
+		map = createMap({
+			id: id.value + "-map",
+			lng: lng.value,
+			lat: lat.value,
+			zoom: zoom.value,
+		});
+
+		//Update Visible whenever view changes
+		map
+			.on("zoomend", updateVisibleOverlays)
+			.on("moveend", updateVisibleOverlays);
+
+		return map;
 	}
 
 	function toggleBar() {
@@ -101,8 +118,8 @@ export const useMapStore = defineStore("map", () => {
 	}
 
 	function setFocus(coords) {
-		map.value.setZoom(14);
-		map.value.setCenter(coords);
+		map.setZoom(14);
+		map.setCenter(coords);
 	}
 
 	//Getters
@@ -178,6 +195,8 @@ export const useMapStore = defineStore("map", () => {
 	};
 
 	return {
+		createStore,
+		initMap,
 		lng,
 		lat,
 		zoom,
@@ -185,7 +204,6 @@ export const useMapStore = defineStore("map", () => {
 		overlays,
 		geoJSON,
 		map,
-		setMap,
 		mapConfig,
 		visibleOverlays,
 		activeOverlay,
@@ -197,6 +215,5 @@ export const useMapStore = defineStore("map", () => {
 		addMarker,
 		toggleBar,
 		setFocus,
-		init,
 	};
 });
