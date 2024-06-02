@@ -31,7 +31,7 @@ export const useMapStore = defineStore("map", () => {
 
 	function init(data = {}) {
 		if (data.id) {
-			id.value = data.id.value + "-map";
+			id.value = data.id.value;
 		}
 
 		if (data.lng) {

@@ -4,20 +4,18 @@ import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
+import { useMaplibre } from "@/composables/useMaplibre.js";
+import * as MapLibreGL from "maplibre-gl";
 
 import Marker from "@/components/Marker.vue";
 import Bar from "@/components/Bar.vue";
 import Detail from "@/components/Detail.vue";
 
-// Import MapLibre
-import * as MapLibreGL from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-
 const mapStore = useMapStore();
 const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =
 	storeToRefs(mapStore);
 
-let map = null;
+const { map, init } = useMaplibre();
 
 const dataBounds = new MapLibreGL.LngLatBounds();
 
@@ -89,33 +87,13 @@ const updateVisibleOverlays = () => {
 };
 
 onMounted(() => {
-	// Create Map
-	const map = new MapLibreGL.Map({
-		container: id.value,
-		style: {
-			version: 8,
-			sources: {
-				"osm-tiles": {
-					type: "raster",
-					tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-					tileSize: 256,
-					attribution:
-						'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-				},
-			},
-			layers: [
-				{
-					id: "osm-tiles",
-					type: "raster",
-					source: "osm-tiles",
-				},
-			],
-		},
-		center: [lng.value, lat.value],
-		zoom: zoom.value,
+	init({
+		id: id.value + "-map",
+		lng,
+		lat,
+		zoom,
 	});
 
-	// Once the Map has loaded
 	map.on("load", () => {
 		//Markers
 		pointsFeatures.value.forEach((feature) => {
@@ -198,14 +176,12 @@ onMounted(() => {
 			zoom.value = parseInt(map.getZoom());
 		});
 	});
-
-	mapStore.setMap(map);
 });
 </script>
 
 <template>
 	<!-- Map -->
-	<div class="map" :id="id"></div>
+	<div class="map" :id="`${id}-map`"></div>
 </template>
 
 <style lang="less">
