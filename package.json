@@ -15,9 +15,11 @@
     }
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build --watch",
-    "preview": "vite preview"
+    "dev": "vite --config vite.site.config.ts",
+    "build": "npm run build:web && npm run build:lib",
+    "build:lib": "vue-tsc && vite build --watch",
+    "build:web": "vue-tsc && vite build --config vite.site.config.ts",
+    "preview": "vite preview --config vite.site.config.ts"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.4.3",
