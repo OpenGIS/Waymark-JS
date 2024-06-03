@@ -19,10 +19,10 @@ export const useMapStore = defineStore("map", () => {
 	const lat = ref(50.6539);
 	const zoom = ref(16);
 	const id = ref("map");
+	const geoJSON = ref({});
 
 	let map = null;
 
-	const geoJSON = ref({});
 	const mapConfig = ref(waymarkConfig);
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
@@ -47,8 +47,8 @@ export const useMapStore = defineStore("map", () => {
 			zoom.value = data.zoom.value;
 		}
 
-		if (data.data) {
-			geoJSON.value = data.data.value;
+		if (data.geoJSON) {
+			geoJSON.value = data.geoJSON.value;
 		}
 	}
 
@@ -58,6 +58,7 @@ export const useMapStore = defineStore("map", () => {
 			lng: lng.value,
 			lat: lat.value,
 			zoom: zoom.value,
+			data: geoJSON.value,
 		});
 
 		//Update Visible whenever view changes
@@ -125,38 +126,6 @@ export const useMapStore = defineStore("map", () => {
 	//Getters
 	const getActiveOverlay = computed(() => {
 		return activeOverlay.value;
-	});
-
-	// ==== Computed ====
-
-	const pointsFeatures = computed(() => {
-		// Ensure is valid Array
-		if (
-			typeof geoJSON.value.features === "undefined" ||
-			!Array.isArray(geoJSON.value.features)
-		) {
-			return [];
-		}
-
-		return geoJSON.value.features.filter((feature) => {
-			return feature.geometry.type === "Point";
-		});
-	});
-
-	const linesFeatures = computed(() => {
-		// Ensure is valid Array
-		if (
-			typeof geoJSON.value.features === "undefined" ||
-			!Array.isArray(geoJSON.value.features)
-		) {
-			return [];
-		}
-
-		return geoJSON.value.features.filter((feature) => {
-			return (
-				["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
-			);
-		});
 	});
 
 	const updateVisibleOverlays = () => {

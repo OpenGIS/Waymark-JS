@@ -1,4 +1,4 @@
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
@@ -10,6 +10,7 @@ export function useMaplibre() {
 	let lng = -128.0094;
 	let lat = 50.6539;
 	let zoom = 16;
+	let geoJSON = {};
 
 	let map = null;
 
@@ -58,8 +59,123 @@ export function useMaplibre() {
 			zoom: zoom,
 		});
 
+		// Add GeoJSON
+		if (config.geoJSON) {
+			geoJSON = config.geoJSON;
+
+			map.on("load", () => {
+				//Markers
+				pointsFeatures.value.forEach((feature) => {
+					const typeData = getTypeData(
+						getFeatureType(feature),
+						makeKey(feature.properties.type),
+					);
+					const iconData = getIconData(typeData);
+
+					// create a DOM element for the marker
+					const el = document.createElement("div");
+					el.className = iconData.className;
+					el.innerHTML = iconData.html;
+					el.style.width = `${iconData.iconSize[0]}px`;
+					el.style.height = `${iconData.iconSize[1]}px`;
+
+					// add marker to map
+					const marker = new MapLibreGL.Marker({
+						element: el,
+						offset: iconData.iconAnchor,
+					});
+
+					marker.setLngLat(feature.geometry.coordinates);
+					marker.addTo(map);
+
+					//Extend bounds
+					dataBounds.extend(feature.geometry.coordinates);
+
+					const overlay = mapStore.addMarker(marker, feature);
+
+					el.addEventListener("click", () => {
+						mapStore.setActiveOverlay(overlay);
+					});
+
+					el.addEventListener("mouseenter", () => {
+						mapStore.toggleHoverOverlay(overlay);
+					});
+
+					el.addEventListener("mouseleave", () => {
+						mapStore.toggleHoverOverlay(overlay);
+					});
+				});
+
+				//Lines
+				const dataSource = map.addSource("geoJSON", {
+					type: "geojson",
+					data: geoJSON.value,
+				});
+
+				const dataLayer = map.addLayer({
+					id: "geoJSON",
+					type: "line",
+					source: "geoJSON",
+					paint: {
+						"line-color": "#088",
+						"line-width": 2,
+					},
+				});
+
+				//Extend bounds
+				linesFeatures.value.forEach((feature) => {
+					for (let i in feature.geometry.coordinates) {
+						dataBounds.extend(feature.geometry.coordinates[i]);
+					}
+				});
+
+				//Set initial centre and zoom to it
+				map.setCenter(dataBounds.getCenter());
+				map.fitBounds(dataBounds, { padding: 80 });
+
+				map.once("moveend", () => {
+					//Set Max bounds
+					map.setMaxBounds(map.getBounds());
+
+					lng.value = map.getCenter().lng.toFixed(4);
+					lat.value = map.getCenter().lat.toFixed(4);
+					zoom.value = parseInt(map.getZoom());
+				});
+			});
+		}
+
 		return map;
 	};
+
+	const pointsFeatures = computed(() => {
+		// Ensure is valid Array
+		if (
+			typeof geoJSON.value.features === "undefined" ||
+			!Array.isArray(geoJSON.value.features)
+		) {
+			return [];
+		}
+
+		return geoJSON.value.features.filter((feature) => {
+			return feature.geometry.type === "Point";
+		});
+	});
+
+	const linesFeatures = computed(() => {
+		// Ensure is valid Array
+		if (
+			typeof geoJSON.value.features === "undefined" ||
+			!Array.isArray(geoJSON.value.features)
+		) {
+			return [];
+		}
+
+		return geoJSON.value.features.filter((feature) => {
+			return (
+				["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
+			);
+		});
+	});
 
 	return {
 		map,

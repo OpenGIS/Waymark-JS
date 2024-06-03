@@ -27,9 +27,9 @@ const zoom = defineModel("zoom", {
 	default: 18,
 });
 
-const data = defineModel("data", {
+const geoJSON = defineModel("geoJSON", {
 	type: Object,
-	default: null,
+	default: {},
 });
 
 createStore({
@@ -37,7 +37,7 @@ createStore({
 	lng,
 	lat,
 	zoom,
-	data,
+	geoJSON,
 });
 </script>
 

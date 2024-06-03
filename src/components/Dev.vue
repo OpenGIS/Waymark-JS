@@ -32,7 +32,7 @@ const route = JSON.parse(
 
   <h1>Route</h1>
 
-  <App id="route" :data="route" />
+  <App id="route" :geoJSON="route" />
 </template>
 
 <style scoped>
