@@ -4,7 +4,16 @@ import { onMounted, computed } from "vue";
 import * as MapLibreGL from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+// Import MapStore
+import { useMapStore } from "@/stores/mapStore.js";
+
+// Import Helpers
+import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
+
 export function useMaplibre() {
+	const mapStore = useMapStore();
+
 	let id = "map";
 
 	let lng = -128.0094;
@@ -13,6 +22,8 @@ export function useMaplibre() {
 	let geoJSON = {};
 
 	let map = null;
+
+	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
 		if (config.id) {
@@ -61,11 +72,7 @@ export function useMaplibre() {
 		if (config.geoJSON) {
 			geoJSON = config.geoJSON;
 
-			const dataBounds = new MapLibreGL.LngLatBounds();
-
 			map.on("load", () => {
-				alert("joe");
-
 				//Markers
 				pointsFeatures.value.forEach((feature) => {
 					const typeData = getTypeData(
@@ -111,7 +118,7 @@ export function useMaplibre() {
 				//Lines
 				const dataSource = map.addSource("geoJSON", {
 					type: "geojson",
-					data: geoJSON.value,
+					data: geoJSON,
 				});
 
 				const dataLayer = map.addLayer({
@@ -139,9 +146,9 @@ export function useMaplibre() {
 					//Set Max bounds
 					map.setMaxBounds(map.getBounds());
 
-					lng.value = map.getCenter().lng.toFixed(4);
-					lat.value = map.getCenter().lat.toFixed(4);
-					zoom.value = parseInt(map.getZoom());
+					lng = map.getCenter().lng.toFixed(4);
+					lat = map.getCenter().lat.toFixed(4);
+					zoom = parseInt(map.getZoom());
 				});
 			});
 		}
@@ -152,13 +159,13 @@ export function useMaplibre() {
 	const pointsFeatures = computed(() => {
 		// Ensure is valid Array
 		if (
-			typeof geoJSON.value.features === "undefined" ||
-			!Array.isArray(geoJSON.value.features)
+			typeof geoJSON.features === "undefined" ||
+			!Array.isArray(geoJSON.features)
 		) {
 			return [];
 		}
 
-		return geoJSON.value.features.filter((feature) => {
+		return geoJSON.features.filter((feature) => {
 			return feature.geometry.type === "Point";
 		});
 	});
@@ -166,13 +173,13 @@ export function useMaplibre() {
 	const linesFeatures = computed(() => {
 		// Ensure is valid Array
 		if (
-			typeof geoJSON.value.features === "undefined" ||
-			!Array.isArray(geoJSON.value.features)
+			typeof geoJSON.features === "undefined" ||
+			!Array.isArray(geoJSON.features)
 		) {
 			return [];
 		}
 
-		return geoJSON.value.features.filter((feature) => {
+		return geoJSON.features.filter((feature) => {
 			return (
 				["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
 			);

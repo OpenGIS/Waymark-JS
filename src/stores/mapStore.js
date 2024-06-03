@@ -1,7 +1,12 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { useMaplibre } from "@/composables/useMaplibre.js";
-import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import {
+	getTypeData,
+	getFeatureType,
+	getIconData,
+	getImageURLs,
+} from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 import * as MapLibreGL from "maplibre-gl";
