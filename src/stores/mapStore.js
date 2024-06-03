@@ -1,15 +1,11 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { useMaplibre } from "@/composables/useMaplibre.js";
+import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
 
 import * as MapLibreGL from "maplibre-gl";
 import { waymarkConfig } from "@/data/waymark.js";
-
-import {
-	getTypeData,
-	getFeatureType,
-	getImageURLs,
-} from "@/helpers/Overlay.js";
 
 export const useMapStore = defineStore("map", () => {
 	const { createMap } = useMaplibre();
@@ -58,7 +54,7 @@ export const useMapStore = defineStore("map", () => {
 			lng: lng.value,
 			lat: lat.value,
 			zoom: zoom.value,
-			data: geoJSON.value,
+			geoJSON: geoJSON.value,
 		});
 
 		//Update Visible whenever view changes

@@ -15,8 +15,6 @@ export function useMaplibre() {
 	let map = null;
 
 	const createMap = (config) => {
-		console.log("createMap", config);
-
 		if (config.id) {
 			id = config.id;
 		}
@@ -63,7 +61,11 @@ export function useMaplibre() {
 		if (config.geoJSON) {
 			geoJSON = config.geoJSON;
 
+			const dataBounds = new MapLibreGL.LngLatBounds();
+
 			map.on("load", () => {
+				alert("joe");
+
 				//Markers
 				pointsFeatures.value.forEach((feature) => {
 					const typeData = getTypeData(

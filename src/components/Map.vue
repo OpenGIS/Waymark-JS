@@ -1,23 +1,11 @@
 <script setup>
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
-import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
-import * as MapLibreGL from "maplibre-gl";
-
-import Marker from "@/components/UI/Marker.vue";
-import Bar from "@/components/UI/Bar.vue";
-import Detail from "@/components/UI/Detail.vue";
-
 const mapStore = useMapStore();
+const { id } = storeToRefs(mapStore);
 
 const { initMap } = mapStore;
-
-const { geoJSON, visibleOverlays, overlays, lng, lat, zoom, id } =
-	storeToRefs(mapStore);
-
-const dataBounds = new MapLibreGL.LngLatBounds();
 
 onMounted(() => {
 	const map = initMap();
