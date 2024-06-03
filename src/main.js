@@ -7,10 +7,18 @@ import "font-awesome/css/font-awesome.css";
 
 import "@/assets/css/index.css";
 
-import Dev from "@/components/Dev.vue";
+import App from "@/components/App.vue";
 
-// Create App
-const app = createApp(Dev);
+// Get App Element
+const appElement = document.getElementById("app");
+
+// Get App Data
+const appData = appElement.dataset;
+
+console.log(appData);
+
+// Pass props to App
+const app = createApp(App, appData);
 
 // Create Pinia Store
 const pinia = createPinia();
@@ -19,4 +27,4 @@ const pinia = createPinia();
 app.use(pinia);
 
 // Mount App
-app.mount("#dev");
+app.mount("#app");

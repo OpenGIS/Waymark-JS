@@ -54,8 +54,7 @@ createStore({
 
 <style lang="less">
 .app {
-	width: 100%;
-	height: 100%;
-	border: 1px solid red;
+	width: inherit;
+	height: inherit;
 }
 </style>

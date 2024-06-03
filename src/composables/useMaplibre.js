@@ -72,6 +72,14 @@ export function useMaplibre() {
 		if (config.geoJSON) {
 			geoJSON = config.geoJSON;
 
+			// Ensure we have features
+			if (
+				typeof geoJSON.features === "undefined" ||
+				!Array.isArray(geoJSON.features)
+			) {
+				return map;
+			}
+
 			map.on("load", () => {
 				//Markers
 				pointsFeatures.value.forEach((feature) => {
