@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from "vue";
+
 import UI from "@/components/UI.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
