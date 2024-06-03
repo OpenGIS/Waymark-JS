@@ -15,6 +15,8 @@ export default defineConfig({
   plugins: [vue()],
 
   build: {
+    outDir: resolve(__dirname, "dist/library"),
+    emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, "library/export.js"),
       name: "Waymark",
