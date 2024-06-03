@@ -1,3 +1,3 @@
-import App from "./components/App.vue";
+import Map from "./components/Map.vue";
 
-export { App };
+export { Map };
