@@ -28,7 +28,7 @@ export const useMapStore = defineStore("map", () => {
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
-	const barOpen = ref(false);
+	const barOpen = ref(true);
 	const detailExpanded = ref(false);
 
 	function createStore(data = {}) {

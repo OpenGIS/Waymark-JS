@@ -35,10 +35,9 @@ watch(activeOverlay, () => {});
 
 <template>
   <div
-    id="detail"
     v-if="activeOverlay.feature"
     :style="`height:${detailHeight}`"
-    :class="detailClass"
+    :class="`detail ${detailClass}`"
   >
     <table>
       <tr class="item" @click="setActive">
@@ -88,7 +87,7 @@ watch(activeOverlay, () => {});
 </template>
 
 <style lang="less">
-#detail {
+.detail {
   position: absolute;
   top: 0;
   left: 0;

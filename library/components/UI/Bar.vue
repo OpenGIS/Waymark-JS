@@ -19,9 +19,9 @@ const barHeight = computed(() => {
 </script>
 
 <template>
-  <div id="bar" :style="`height:${barHeight}`">
+  <div class="bar" :style="`height:${barHeight}`">
     <!-- Nav -->
-    <nav id="bar-nav" :style="`bottom:${barHeight}`">
+    <nav class="bar-nav" :style="`bottom:${barHeight}`">
       <!-- fa-compass -->
       <!-- fa-crosshairs -->
       <!-- fa-leanpub -->
@@ -60,7 +60,7 @@ const barHeight = computed(() => {
 </template>
 
 <style lang="less">
-#bar {
+.bar {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -71,8 +71,9 @@ const barHeight = computed(() => {
   overflow: auto;
   background: rgba(249, 249, 249, 0.9);
   transition: height 0.1s jump-start;
-  #bar-nav {
-    position: fixed;
+
+  .bar-nav {
+    // position: fixed;
     left: 0;
     width: 100%;
     height: 65px;
