@@ -1,3 +1,6 @@
-@import './reset.css';
-@import './typography.css';
-@import './app.less';
+@import "ionicons-npm/css/ionicons.css";
+@import "font-awesome/css/font-awesome.css";
+
+@import "./reset.css";
+@import "./typography.css";
+@import "./ui.less";

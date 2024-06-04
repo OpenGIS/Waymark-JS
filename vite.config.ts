@@ -6,6 +6,8 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   base: "./",
 
+  define: { "process.env.NODE_ENV": '"production"' },
+
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./library", import.meta.url)),

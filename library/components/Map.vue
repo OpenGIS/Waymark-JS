@@ -1,7 +1,10 @@
 <script setup>
 import { onMounted } from "vue";
 
-import UI from "@/components/UI.vue";
+import "@/assets/css/index.css";
+
+import Detail from "@/components/UI/Detail.vue";
+import Bar from "@/components/UI/Bar.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
 const { createStore, initMap } = useMapStore();
@@ -45,21 +48,27 @@ onMounted(() => {
 </script>
 
 <template>
-	<!-- Map -->
-	<div :class="`wrap ${id}-wrap`">
+	<!-- Instance -->
+	<div class="instance" :id="`${id}-instance`">
 		<!-- Map -->
 		<div class="map" :id="`${id}-map`"></div>
 
 		<!-- UI -->
-		<UI />
+		<Detail />
+
+		<Bar />
 	</div>
 </template>
 
 <style lang="less">
-.wrap,
+.instance,
 .map {
-	width: inherit;
-	height: inherit;
-	border: 1px solid black;
+	width: 100%;
+	height: 100%;
+}
+
+.instance {
+	position: relative;
+	border: 1px solid orange;
 }
 </style>
