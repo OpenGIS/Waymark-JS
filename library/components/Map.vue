@@ -46,7 +46,7 @@ onMounted(() => {
 
 <template>
 	<!-- Map -->
-	<div class="map" :id="id">
+	<div :class="`wrap ${id}-wrap`">
 		<!-- Map -->
 		<div class="map" :id="`${id}-map`"></div>
 
@@ -56,8 +56,10 @@ onMounted(() => {
 </template>
 
 <style lang="less">
+.wrap,
 .map {
 	width: inherit;
 	height: inherit;
+	border: 1px solid black;
 }
 </style>
