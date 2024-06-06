@@ -140,6 +140,4 @@ grunt
 
 This will run a watch task to rebuild the assets when changes are made to the source files.
 
-Issues / pull requests are [welcome](https://github.com/OpenGIS/Waymark-JS/), however please view the Roadmap below to see where the project is heading.
-
 Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
