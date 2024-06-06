@@ -143,27 +143,3 @@ This will run a watch task to rebuild the assets when changes are made to the so
 Issues / pull requests are [welcome](https://github.com/OpenGIS/Waymark-JS/), however please view the Roadmap below to see where the project is heading.
 
 Documentation and examples at [waymark.dev/js](https://www.waymark.dev/js)
-
-## Roadmap / To-Do
-
-### v1.2.0
-
-- Improve file/image upload integration & examples
-- Assign default Type key if none provided
-- Better handling of no/one Type provided
-- jQuery check(/auto include?)
-
-### v2.0.0
-
-- Use Vite for bundling
-- Use ES6 modules
-- Remove Factory
-- Create NPM package
-- Tests
-
-### v3.0.0
-
-- Rewrite using MapLibre, (Vue/Nuxt?) & TypeScript :)
-- Vector Tile support
-- Integrate Leaflet too through an adapter?
-- Modular (plugins? Nuxt layers?)
