@@ -8462,30 +8462,15 @@ function Waymark_Map() {
 	};
 
 	this.parse_layer_data = function (layer_type, data_in) {
-		Waymark = this;
+		let data_out = {};
 
-		//Start with defaults
-		var data_out = Waymark.get_data_defaults(layer_type);
-
-		//Check for stored properties
-		if (typeof data_in === "object") {
-			//Iterate
-			for (key in data_out) {
-				//If we have something
-				if (typeof data_in[key] != "undefined" && data_in[key]) {
-					//Use it
-					data_out[key] = data_in[key];
-				}
-			}
-		}
-
-		//Migrate some parameters
-
-		//Iterate
+		// Iterate over input data
 		for (key in data_in) {
-			//Has value
+			// Has value
 			if (data_in[key]) {
 				switch (key) {
+					// Migrate some keys
+
 					case "name":
 						data_out.title = data_in[key];
 
@@ -8497,7 +8482,14 @@ function Waymark_Map() {
 						break;
 
 					case "radius":
-						data_out[key] = parseFloat(data_in[key]);
+						data_out.radius = parseFloat(data_in[key]);
+
+						break;
+
+					// Store all other properties!
+
+					default:
+						data_out[key] = data_in[key];
 
 						break;
 				}
