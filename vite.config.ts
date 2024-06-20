@@ -1,3 +1,7 @@
+/**
+ * This Vite
+ *
+ **/
 import { fileURLToPath, URL } from "node:url";
 import { resolve } from "path";
 import { defineConfig } from "vite";
@@ -18,7 +22,7 @@ export default defineConfig({
 
   build: {
     outDir: resolve(__dirname, "dist/library"),
-    emptyOutDir: true,
+    emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "library/export.js"),
       name: "Waymark",

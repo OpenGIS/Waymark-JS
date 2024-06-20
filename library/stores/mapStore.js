@@ -129,6 +129,10 @@ export const useMapStore = defineStore("map", () => {
 		return activeOverlay.value;
 	});
 
+	const overlayCount = computed(() => {
+		return overlays.value.length;
+	});
+
 	const updateVisibleOverlays = () => {
 		const mapBounds = map.getBounds();
 
@@ -175,6 +179,7 @@ export const useMapStore = defineStore("map", () => {
 		geoJSON,
 		map,
 		mapConfig,
+		overlayCount,
 		visibleOverlays,
 		activeOverlay,
 		setActiveOverlay,

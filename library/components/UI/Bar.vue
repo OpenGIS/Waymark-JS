@@ -4,13 +4,13 @@ import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
 
 const mapStore = useMapStore();
-const { visibleOverlays, barOpen } = storeToRefs(mapStore);
+const { visibleOverlays, barOpen, overlayCount } = storeToRefs(mapStore);
 import List from "@/components/UI/List.vue";
 import Button from "@/components/UI/Button.vue";
 import Content from "@/components/UI/Content.vue";
 
 const barHeight = computed(() => {
-  if (!barOpen.value) {
+  if (!barOpen.value || !overlayCount.value) {
     return "0";
   }
 

@@ -63,7 +63,6 @@ onMounted(() => {
 <style lang="less">
 .instance {
 	position: relative;
-	border: 1px solid orange;
 	height: 100%;
 	width: 100%;
 
