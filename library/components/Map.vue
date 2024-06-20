@@ -61,14 +61,18 @@ onMounted(() => {
 </template>
 
 <style lang="less">
-.instance,
-.map {
-	width: 100%;
-	height: 100%;
-}
-
 .instance {
 	position: relative;
 	border: 1px solid orange;
+	height: 100%;
+	width: 100%;
+
+	min-height: 480px !important;
+	min-width: 320px !important;
+
+	.map {
+		width: 100%;
+		height: 100%;
+	}
 }
 </style>

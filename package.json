@@ -23,15 +23,15 @@
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.4.3",
-    "less": "^4.2.0",
+    "font-awesome": "^4.7.0",
+    "ionicons-npm": "^2.0.1",
     "maplibre-gl": "^4.3.2",
     "pinia": "^2.1.7",
-    "vue": "^3.4.21",
-    "font-awesome": "^4.7.0",
-    "ionicons-npm": "^2.0.1"
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "less": "^4.2.0",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
