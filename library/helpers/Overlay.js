@@ -1,26 +1,30 @@
-import { waymarkConfig } from "@/data/waymark.js";
+import { useMapStore } from "@/stores/mapStore.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export function getTypeData(featureType, typeKey) {
+  const { mapConfig } = useMapStore();
+
+  alert(JSON.stringify(mapConfig));
+
   var type = {};
 
   //Iterate over all types
-  for (var i in waymarkConfig[featureType + "_types"]) {
+  for (var i in mapConfig[featureType + "_types"]) {
     //Use first as default
     if (i == 0) {
-      type = waymarkConfig[featureType + "_types"][i];
+      type = mapConfig[featureType + "_types"][i];
     }
 
     //Grab title
     var type_title =
-      waymarkConfig[featureType + "_types"][i][featureType + "_title"];
+      mapConfig[featureType + "_types"][i][featureType + "_title"];
 
     //Has title
     if (type_title) {
       //Found (run both through make_key, just to be on safe side)
       if (makeKey(typeKey) == makeKey(type_title)) {
         // console.log('Found=' + typeKey)
-        type = waymarkConfig[featureType + "_types"][i];
+        type = mapConfig[featureType + "_types"][i];
       } else {
         // console.log('Not found=' + typeKey)
       }

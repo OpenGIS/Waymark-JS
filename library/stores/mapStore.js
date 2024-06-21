@@ -10,7 +10,6 @@ import {
 import { makeKey } from "@/helpers/Common.js";
 
 import * as MapLibreGL from "maplibre-gl";
-import { waymarkConfig } from "@/data/waymark.js";
 
 export const useMapStore = defineStore("map", () => {
 	const { createMap } = useMaplibre();
@@ -24,7 +23,7 @@ export const useMapStore = defineStore("map", () => {
 
 	let map = null;
 
-	const mapConfig = ref(waymarkConfig);
+	const mapConfig = ref({});
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
@@ -50,6 +49,10 @@ export const useMapStore = defineStore("map", () => {
 
 		if (data.geoJSON) {
 			geoJSON.value = data.geoJSON.value;
+		}
+
+		if (data.mapConfig) {
+			mapConfig.value = data.mapConfig.value;
 		}
 	}
 
