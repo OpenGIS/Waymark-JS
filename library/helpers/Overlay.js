@@ -4,8 +4,6 @@ import { makeKey } from "@/helpers/Common.js";
 export function getTypeData(featureType, typeKey) {
   const { mapConfig } = useMapStore();
 
-  alert(JSON.stringify(mapConfig));
-
   var type = {};
 
   //Iterate over all types

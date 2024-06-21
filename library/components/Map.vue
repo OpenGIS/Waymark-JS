@@ -34,12 +34,45 @@ const geoJSON = defineModel("geoJSON", {
 	default: {},
 });
 
+const mapConfig = defineModel("mapConfig", {
+	type: Object,
+	default: {
+		marker_types: [
+			{
+				marker_title: "Marker",
+				marker_shape: "marker",
+				marker_size: "small",
+				icon_type: "icon",
+				marker_icon: "ion-star",
+				marker_colour: "#b42714",
+				icon_colour: "#ffffff",
+			},
+		],
+		line_types: [
+			{
+				line_title: "Line",
+				line_colour: "#b42714",
+				line_weight: "5",
+				line_opacity: "0.75",
+			},
+		],
+		shape_types: [
+			{
+				shape_title: "Shape",
+				shape_colour: "#b42714",
+				fill_opacity: "0.75",
+			},
+		],
+	},
+});
+
 createStore({
 	id,
 	lng,
 	lat,
 	zoom,
 	geoJSON,
+	mapConfig,
 });
 
 onMounted(() => {
