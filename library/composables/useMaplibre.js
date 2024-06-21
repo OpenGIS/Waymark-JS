@@ -1,4 +1,6 @@
+import { storeToRefs } from "pinia";
 import { onMounted, computed } from "vue";
+import { createMapStyle } from "@/helpers/Map.js";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
@@ -12,8 +14,6 @@ import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export function useMaplibre() {
-	const mapStore = useMapStore();
-
 	let id = "map";
 
 	let lng = -128.0094;
@@ -26,6 +26,9 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
+		const mapStore = useMapStore();
+		const { mapConfig } = storeToRefs(mapStore);
+
 		if (config.id) {
 			id = config.id;
 		}
@@ -42,28 +45,16 @@ export function useMaplibre() {
 			zoom = config.zoom;
 		}
 
+		// Use Config Tile Layer
+		let mapStyle = createMapStyle();
+		if (Array.isArray(mapConfig.value.tile_layers)) {
+			mapStyle = createMapStyle(mapConfig.value.tile_layers[0]);
+		}
+
 		// Create Map
 		map = new MapLibreGL.Map({
 			container: id,
-			style: {
-				version: 8,
-				sources: {
-					"osm-tiles": {
-						type: "raster",
-						tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-						tileSize: 256,
-						attribution:
-							'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-					},
-				},
-				layers: [
-					{
-						id: "osm-tiles",
-						type: "raster",
-						source: "osm-tiles",
-					},
-				],
-			},
+			style: mapStyle,
 			center: [lng, lat],
 			zoom: zoom,
 		});
