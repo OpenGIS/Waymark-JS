@@ -21,19 +21,19 @@ export default defineConfig({
   plugins: [vue()],
 
   build: {
-    outDir: resolve(__dirname, "dist/library"),
-    emptyOutDir: false,
+    outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, "library/export.js"),
       name: "Waymark",
       fileName: "waymark-js",
     },
     rollupOptions: {
-      external: ["vue"],
+      // external: ["vue"],
       output: {
-        globals: {
-          vue: "Vue",
-        },
+        // globals: {
+        //   vue: "Vue",
+        // },
         assetFileNames: "waymark-js.[ext]",
       },
     },

@@ -11,7 +11,4 @@ npm install
 
 # Build the library (and watch for changes)
 npm run build
-
-# Start the development server (in a new terminal)
-npm run dev
 ```
