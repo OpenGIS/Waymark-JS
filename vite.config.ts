@@ -29,6 +29,9 @@ export default defineConfig({
       fileName: "waymark-js",
     },
     rollupOptions: {
+      input: {
+        app: "./dev/index.html",
+      },
       // external: ["vue"],
       output: {
         // globals: {
@@ -37,5 +40,9 @@ export default defineConfig({
         assetFileNames: "waymark-js.[ext]",
       },
     },
+  },
+
+  server: {
+    open: "/dev/index.html",
   },
 });
