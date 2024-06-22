@@ -15,7 +15,8 @@
     }
   },
   "scripts": {
-    "build": "vue-tsc && vite build --watch"
+    "build": "vue-tsc && vite build --watch",
+    "dev": "vite"
   },
   "dependencies": {
     "font-awesome": "^4.7.0",
