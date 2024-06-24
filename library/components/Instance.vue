@@ -4,8 +4,7 @@ import { onMounted } from "vue";
 import "@/assets/css/index.css";
 
 import Map from "@/components/Map/Map.vue";
-import Detail from "@/components/UI/Detail.vue";
-import Bar from "@/components/UI/Bar.vue";
+import UI from "@/components/UI/UI.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
 const { createStore } = useMapStore();
@@ -82,9 +81,7 @@ createStore({
 	<div class="instance" :id="`${id}-instance`">
 		<Map />
 
-		<Detail />
-
-		<Bar />
+		<UI />
 	</div>
 </template>
 

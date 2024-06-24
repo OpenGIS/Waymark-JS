@@ -1,5 +1,5 @@
 <script setup>
-import OverlayList from "@/components/UI/OverlayList.vue";
+import ListTypesGroup from "@/components/UI/Overlay/ListTypesGroup.vue";
 
 defineProps({
   overlaysByType: Object,
@@ -12,6 +12,6 @@ defineProps({
     v-for="(byType, typeKey, index) in overlaysByType"
     :key="`${byType.featureType}-${typeKey}-${index}`"
   >
-    <OverlayList :byType="byType" />
+    <ListTypesGroup :byType="byType" />
   </div>
 </template>

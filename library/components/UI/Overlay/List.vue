@@ -1,10 +1,11 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import TypeList from "@/components/UI/TypeList.vue";
 import { overlaysByType } from "@/helpers/Overlay.js";
 
 import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
+
+import ListTypes from "@/components/UI/Overlay/ListTypes.vue";
 
 const mapStore = useMapStore();
 const { overlays, visibleOverlays } = storeToRefs(mapStore);
@@ -32,7 +33,7 @@ const activeOverlays = computed(() => {
     </nav> -->
 
     <!-- Overlays (by Type) -->
-    <TypeList :overlaysByType="overlaysByType(overlays)" />
+    <ListTypes :overlaysByType="overlaysByType(overlays)" />
   </div>
 </template>
 
