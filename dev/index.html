@@ -13,27 +13,27 @@
     <title>Waymark JS</title>
 
     <style type="text/css">
-      #app {
+      #instance {
         width: 100%;
         height: 100vh;
       }
     </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="instance"></div>
 
     <script type="module">
       import { createApp } from "vue";
       import { createPinia } from "pinia";
 
-      import Map from "../library/components/Map.vue";
+      import Instance from "../library/components/Instance.vue";
 
-      const app = createApp(Map);
+      const instance = createApp(Instance);
 
       const pinia = createPinia();
-      app.use(pinia);
+      instance.use(pinia);
 
-      app.mount("#app");
+      instance.mount("#instance");
     </script>
   </body>
 </html>

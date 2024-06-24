@@ -3,11 +3,12 @@ import { onMounted } from "vue";
 
 import "@/assets/css/index.css";
 
+import Map from "@/components/Map/Map.vue";
 import Detail from "@/components/UI/Detail.vue";
 import Bar from "@/components/UI/Bar.vue";
 
 import { useMapStore } from "@/stores/mapStore.js";
-const { createStore, initMap } = useMapStore();
+const { createStore } = useMapStore();
 
 const id = defineModel("id", {
 	type: String,
@@ -74,19 +75,13 @@ createStore({
 	geoJSON,
 	mapConfig,
 });
-
-onMounted(() => {
-	const map = initMap();
-});
 </script>
 
 <template>
 	<!-- Instance -->
 	<div class="instance" :id="`${id}-instance`">
-		<!-- Map -->
-		<div class="map" :id="`${id}-map`"></div>
+		<Map />
 
-		<!-- UI -->
 		<Detail />
 
 		<Bar />
@@ -101,10 +96,5 @@ onMounted(() => {
 
 	min-height: 480px !important;
 	min-width: 320px !important;
-
-	.map {
-		width: 100%;
-		height: 100%;
-	}
 }
 </style>
