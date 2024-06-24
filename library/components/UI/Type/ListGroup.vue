@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
-import ListTypesItem from "@/components/UI/Overlay/ListTypesItem.vue";
+import ListItem from "@/components/UI/Type/ListItem.vue";
 import Marker from "@/components/UI/Marker.vue";
 import Button from "@/components/UI/Button.vue";
 
@@ -101,7 +101,7 @@ const overlayStyle = () => {
       </tr>
 
       <!-- List -->
-      <ListTypesItem
+      <ListItem
         class="content"
         v-show="expanded"
         v-for="(overlay, typeKey, index) in byType.overlays"

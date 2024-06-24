@@ -5,12 +5,11 @@ import { overlaysByType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 import { useMapStore } from "@/stores/mapStore.js";
 
-import ListTypes from "@/components/UI/Overlay/ListTypes.vue";
+import List from "@/components/UI/Type/List.vue";
+import Button from "@/components/UI/Button.vue";
 
 const mapStore = useMapStore();
 const { overlays, visibleOverlays } = storeToRefs(mapStore);
-
-import Button from "@/components/UI/Button.vue";
 
 const activeType = ref("marker");
 
@@ -33,7 +32,7 @@ const activeOverlays = computed(() => {
     </nav> -->
 
     <!-- Overlays (by Type) -->
-    <ListTypes :overlaysByType="overlaysByType(overlays)" />
+    <List :overlaysByType="overlaysByType(overlays)" />
   </div>
 </template>
 
