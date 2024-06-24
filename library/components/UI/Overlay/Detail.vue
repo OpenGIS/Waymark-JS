@@ -88,10 +88,6 @@ watch(activeOverlay, () => {});
 
 <style lang="less">
 .detail {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 98%;
   padding: 1%;
   max-height: 31.33%;
   overflow-y: scroll;

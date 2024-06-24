@@ -15,7 +15,7 @@ onMounted(() => {
 
 <style lang="less">
 .map {
-	width: 100%;
+	width: 50%;
 	height: 100%;
 }
 </style>

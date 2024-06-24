@@ -91,7 +91,6 @@ createStore({
 	height: 100%;
 	width: 100%;
 
-	min-height: 480px !important;
-	min-width: 320px !important;
+	display: flex;
 }
 </style>

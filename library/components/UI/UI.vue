@@ -21,17 +21,13 @@ const barHeight = computed(() => {
 </script>
 
 <template>
-	<Detail />
+	<!-- <div class="ui" :style="`height:${barHeight}`"> -->
+	<div class="ui">
+		<Detail />
 
-	<div class="bar" :style="`height:${barHeight}`">
 		<!-- Nav -->
-		<nav class="bar-nav" :style="`bottom:${barHeight}`">
-			<!-- fa-compass -->
-			<!-- fa-crosshairs -->
-			<!-- fa-leanpub -->
-			<!-- fa-line-chart -->
-
-			<!-- fa-location-arrow -->
+		<nav class="bar-nav">
+			<!-- <nav class="bar-nav" :style="`bottom:${barHeight}`"> -->
 			<!-- Layers -->
 			<div class="nav-item">
 				<Button
@@ -64,11 +60,9 @@ const barHeight = computed(() => {
 </template>
 
 <style lang="less">
-.bar {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 98%;
+.ui {
+	width: 50%;
+	height: 100%;
 	padding: 0 1%;
 	// padding-top: 60px;
 	max-height: 100%;
