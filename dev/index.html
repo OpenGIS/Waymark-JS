@@ -13,27 +13,37 @@
     <title>Waymark JS</title>
 
     <style type="text/css">
-      #instance {
+      #dev {
         width: 100%;
         height: 100vh;
       }
     </style>
   </head>
   <body>
-    <div id="instance"></div>
+    <div id="dev"></div>
 
     <script type="module">
-      import { createApp } from "vue";
-      import { createPinia } from "pinia";
+      import { useWaymark } from "../library/export.js";
+      const { createInstance } = useWaymark();
 
-      import Instance from "../library/components/Instance.vue";
-
-      const instance = createApp(Instance);
-
-      const pinia = createPinia();
-      instance.use(pinia);
-
-      instance.mount("#instance");
+      // Read config (JSON)
+      const testConfig = await fetch("./data/devConfig.json").then((res) =>
+        res.json(),
+      );
+      // Read test data (JSON)
+      const testData = await fetch("./data/devData.json").then((res) =>
+        res.json(),
+      );
+      
+      // Create Waymark instance
+      createInstance({
+        id: "dev",
+        lat: 37.7749,
+        lng: -122.4194,
+        zoom: 18,
+        mapConfig: testConfig,
+        geoJSON: testData,
+      });
     </script>
   </body>
 </html>
