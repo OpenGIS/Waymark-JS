@@ -26,24 +26,29 @@
       import { useWaymark } from "../library/export.js";
       const { createInstance } = useWaymark();
 
-      // Read config (JSON)
-      const testConfig = await fetch("./data/devConfig.json").then((res) =>
-        res.json(),
-      );
-      // Read test data (JSON)
-      const testData = await fetch("./data/devData.json").then((res) =>
-        res.json(),
-      );
-      
-      // Create Waymark instance
-      createInstance({
-        id: "dev",
-        lat: 37.7749,
-        lng: -122.4194,
-        zoom: 18,
-        mapConfig: testConfig,
-        geoJSON: testData,
-      });
+      const init = async () => {
+        // Read config (JSON)
+        const testConfig = await fetch("./data/devConfig.json").then((res) =>
+          res.json(),
+        );
+        // Read test data (JSON)
+        const testData = await fetch("./data/devData.json").then((res) =>
+          res.json(),
+        );
+
+        // Create Waymark instance
+        createInstance({
+          id: "dev",
+          lat: 37.7749,
+          lng: -122.4194,
+          zoom: 18,
+          mapConfig: testConfig,
+          geoJSON: testData,
+        });
+      };
+
+
+      init();
     </script>
   </body>
 </html>
