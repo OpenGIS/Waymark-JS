@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted } from "vue";
 
-import { useMapStore } from "@/stores/mapStore.js";
-const { id, initMap } = useMapStore();
+import { useInstanceStore } from "@/stores/instanceStore.js";
+const { id, initMap } = useInstanceStore();
 
 onMounted(() => {
 	const map = initMap();

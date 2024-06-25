@@ -1,8 +1,8 @@
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export function getTypeData(featureType, typeKey) {
-  const { mapConfig } = useMapStore();
+  const { mapConfig } = useInstanceStore();
 
   var type = {};
 

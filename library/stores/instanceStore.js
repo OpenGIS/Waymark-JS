@@ -9,21 +9,19 @@ import {
 } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-import * as MapLibreGL from "maplibre-gl";
-
-export const useMapStore = defineStore("map", () => {
+export const useInstanceStore = defineStore("instance", () => {
 	const { createMap } = useMaplibre();
 
 	//State
+	const id = ref("map");
 	const lng = ref(-128.0094);
 	const lat = ref(50.6539);
 	const zoom = ref(16);
-	const id = ref("map");
+	const mapConfig = ref({});
 	const geoJSON = ref({});
 
 	let map = null;
 
-	const mapConfig = ref({});
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
@@ -90,8 +88,6 @@ export const useMapStore = defineStore("map", () => {
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
 			//Focus On
 			setFocus(overlay.marker.getLngLat());
-
-			console.log(activeOverlay.value.id);
 
 			//Increase info
 			detailExpanded.value = true;

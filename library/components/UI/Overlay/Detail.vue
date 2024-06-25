@@ -1,9 +1,9 @@
 <script setup>
 import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useMapStore();
+const mapStore = useInstanceStore();
 const { activeOverlay, detailExpanded } = storeToRefs(mapStore);
 
 import { expandedIcon } from "@/helpers/Common.js";

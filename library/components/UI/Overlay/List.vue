@@ -3,12 +3,12 @@ import { ref, computed } from "vue";
 import { overlaysByType } from "@/helpers/Overlay.js";
 
 import { storeToRefs } from "pinia";
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import List from "@/components/UI/Type/List.vue";
 import Button from "@/components/UI/Button.vue";
 
-const mapStore = useMapStore();
+const mapStore = useInstanceStore();
 const { overlays, visibleOverlays } = storeToRefs(mapStore);
 
 const activeType = ref("marker");

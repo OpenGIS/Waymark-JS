@@ -9,6 +9,9 @@
 # Install dependencies
 npm install
 
-# Build the library (and watch for changes)
+# Run the development server
+npm run dev
+
+# Build for production
 npm run build
 ```

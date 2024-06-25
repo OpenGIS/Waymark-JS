@@ -7,7 +7,7 @@ import * as MapLibreGL from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 // Import MapStore
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
@@ -26,7 +26,7 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
-		const mapStore = useMapStore();
+		const mapStore = useInstanceStore();
 		const { mapConfig } = storeToRefs(mapStore);
 
 		if (config.id) {

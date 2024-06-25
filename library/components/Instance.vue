@@ -4,8 +4,8 @@ import "@/assets/css/index.css";
 import Map from "@/components/Map/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
-import { useMapStore } from "@/stores/mapStore.js";
-const { createStore } = useMapStore();
+import { useInstanceStore } from "@/stores/instanceStore.js";
+const { createStore } = useInstanceStore();
 
 const id = defineModel("id", {
 	type: String,

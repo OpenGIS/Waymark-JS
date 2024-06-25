@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useMapStore();
-const { visibleOverlays, barOpen, overlayCount } = storeToRefs(mapStore);
+const mapStore = useInstanceStore();
+const { barOpen, overlayCount } = storeToRefs(mapStore);
 
 import Detail from "@/components/UI/Overlay/Detail.vue";
 import List from "@/components/UI/Overlay/List.vue";

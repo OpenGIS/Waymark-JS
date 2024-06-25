@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import { useMapStore } from "@/stores/mapStore.js";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useMapStore();
+const mapStore = useInstanceStore();
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Button.vue";
