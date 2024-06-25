@@ -43,8 +43,6 @@ const toggleVisible = () => {
     } else {
       element.classList.remove("overlay-hidden");
     }
-
-    // expanded.value = !element.classList.contains('overlay-hidden')
   }
 };
 
@@ -127,16 +125,15 @@ const overlayStyle = () => {
 
         &.image {
           position: relative;
+
           .waymark-marker {
             display: flex;
             flex-direction: row;
+
             .waymark-marker-icon::before {
               padding-top: 0 !important;
               font-size: 24px !important;
             }
-            // .waymark-marker-background {
-            //   display: none !important;
-            // }
           }
 
           .count {

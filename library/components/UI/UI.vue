@@ -27,24 +27,6 @@ const barHeight = computed(() => {
 
 		<!-- Nav -->
 		<nav class="bar-nav">
-			<!-- <nav class="bar-nav" :style="`bottom:${barHeight}`"> -->
-			<!-- Layers -->
-			<div class="nav-item">
-				<Button
-					:active="barOpen"
-					icon="ion-social-buffer"
-					@click="mapStore.toggleBar()"
-				/>
-			</div>
-			<!-- fa-map-o -->
-
-			<!-- Layers -->
-			<div class="nav-item"></div>
-
-			<!-- Layers -->
-			<div class="nav-item"></div>
-			<!-- fa-map-o -->
-
 			<!-- Layers -->
 			<div class="nav-item">
 				<Button icon="fa-location-arrow" @click="mapStore.toggleBar()" />
@@ -64,14 +46,12 @@ const barHeight = computed(() => {
 	width: 50%;
 	height: 100%;
 	padding: 0 1%;
-	// padding-top: 60px;
 	max-height: 100%;
 	overflow: auto;
 	background: rgba(249, 249, 249, 0.9);
 	transition: height 0.1s jump-start;
 
 	.bar-nav {
-		// position: fixed;
 		left: 0;
 		width: 100%;
 		height: 65px;
@@ -80,9 +60,6 @@ const barHeight = computed(() => {
 		border-bottom: 2px solid #eee;
 		.nav-item {
 			width: 25%;
-			// position: absolute;
-			// top: 1%;
-			// right: 1%;
 			&:first-child {
 				.button {
 					margin-left: 14px;

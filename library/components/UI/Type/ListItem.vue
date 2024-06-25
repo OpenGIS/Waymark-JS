@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
-import { storeToRefs } from "pinia";
+import { ref } from "vue";
 import { useMapStore } from "@/stores/mapStore.js";
 
 const mapStore = useMapStore();

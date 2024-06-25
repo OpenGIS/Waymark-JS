@@ -1,24 +1,24 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   icon: {
     type: String,
-    default: ''
+    default: "",
   },
   active: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 const iconClass = computed(() => {
-  if (typeof props.icon == 'string' && props.icon.indexOf('ion') === 0) {
-    return `ion ${props.icon}`
+  if (typeof props.icon == "string" && props.icon.indexOf("ion") === 0) {
+    return `ion ${props.icon}`;
   } else {
-    return `fa ${props.icon}`
+    return `fa ${props.icon}`;
   }
-})
+});
 </script>
 
 <template>
@@ -35,7 +35,6 @@ const iconClass = computed(() => {
   padding: 12px;
   width: 15px;
   font-size: 150%;
-  /*  line-height: 1;*/
   color: #444;
   background: #fff;
   border: 1px solid #ddd;

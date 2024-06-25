@@ -1,6 +1,4 @@
 <script setup>
-import { onMounted } from "vue";
-
 import "@/assets/css/index.css";
 
 import Map from "@/components/Map/Map.vue";

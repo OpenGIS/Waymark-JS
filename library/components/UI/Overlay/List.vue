@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
 import { overlaysByType } from "@/helpers/Overlay.js";
 
 import { storeToRefs } from "pinia";
