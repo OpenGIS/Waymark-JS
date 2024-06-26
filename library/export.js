@@ -19,7 +19,7 @@ export function useWaymark() {
 		const config = { ...defaultConfig, ...userConfig };
 
 		// Create Instance
-		const instance = createApp(Instance, config);
+		const instance = createApp(Instance);
 
 		// Add Pinia
 		const pinia = createPinia();

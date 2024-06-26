@@ -12,12 +12,18 @@ import { makeKey } from "@/helpers/Common.js";
 export const useInstanceStore = defineStore("instance", () => {
 	const { createMap } = useMaplibre();
 
-	//State
+	// DOM Target
 	const id = ref("map");
+
+	// View
 	const lng = ref(-128.0094);
 	const lat = ref(50.6539);
 	const zoom = ref(16);
+
+	// Config
 	const mapConfig = ref({});
+
+	// Data
 	const geoJSON = ref({});
 
 	let map = null;

@@ -16,9 +16,12 @@ import { makeKey } from "@/helpers/Common.js";
 export function useMaplibre() {
 	let id = "map";
 
+	// View
 	let lng = -128.0094;
 	let lat = 50.6539;
 	let zoom = 16;
+
+	// Data
 	let geoJSON = {};
 
 	let map = null;
