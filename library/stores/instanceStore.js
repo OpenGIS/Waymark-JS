@@ -30,27 +30,27 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function createStore(data = {}) {
 		if (data.id) {
-			id.value = data.id.value;
+			id.value = data.id;
 		}
 
 		if (data.lng) {
-			lng.value = data.lng.value;
+			lng.value = data.lng;
 		}
 
 		if (data.lat) {
-			lat.value = data.lat.value;
+			lat.value = data.lat;
 		}
 
 		if (data.zoom) {
-			zoom.value = data.zoom.value;
+			zoom.value = data.zoom;
 		}
 
 		if (data.geoJSON) {
-			geoJSON.value = data.geoJSON.value;
+			geoJSON.value = data.geoJSON;
 		}
 
 		if (data.mapConfig) {
-			mapConfig.value = data.mapConfig.value;
+			mapConfig.value = data.mapConfig;
 		}
 	}
 
