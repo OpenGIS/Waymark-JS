@@ -27,7 +27,7 @@ export function useMaplibre() {
 	const createMap = (config) => {
 		const instanceStore = useInstanceStore();
 		const { mapConfig } = storeToRefs(instanceStore);
-		const { addMarker } = instanceStore;
+		const { storeMarker } = instanceStore;
 
 		if (config.id) {
 			id = config.id;
@@ -83,7 +83,8 @@ export function useMaplibre() {
 					// Add Marker to Map
 					marker.addTo(map);
 
-					addMarker(marker, feature);
+					// Add Marker to Store
+					storeMarker(marker, feature);
 				});
 
 				//Lines

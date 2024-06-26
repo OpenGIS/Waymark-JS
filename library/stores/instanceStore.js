@@ -104,9 +104,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		}
 	}
 
-	function addMarker(marker, feature) {
-		console.log(marker, feature);
-
+	function storeMarker(marker, feature) {
 		let featureType = "marker";
 		let typeKey = feature.properties.type;
 
@@ -209,7 +207,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		toggleDetailExpanded,
 		detailExpanded,
 		barOpen,
-		addMarker,
+		storeMarker,
 		toggleBar,
 		setFocus,
 	};
