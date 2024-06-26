@@ -1,10 +1,21 @@
+import { storeToRefs } from "pinia";
 import * as MapLibreGL from "maplibre-gl";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-export function createMapStyle(tile_data = {}) {
+export function getMapStyle() {
+  const { mapConfig } = storeToRefs(useInstanceStore());
+
+  let tile_data = {};
+
+  // Use Config Tile Layer
+  if (Array.isArray(mapConfig.value.tile_layers)) {
+    tile_data = mapConfig.value.tile_layers[0];
+  }
+
   const style = {
     version: 8,
     sources: {},

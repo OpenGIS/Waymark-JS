@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 import { onMounted, computed } from "vue";
-import { createMapStyle, createMarker } from "@/helpers/Map.js";
+import { getMapStyle, createMarker } from "@/helpers/Map.js";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
@@ -25,9 +25,7 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
-		const instanceStore = useInstanceStore();
-		const { mapConfig } = storeToRefs(instanceStore);
-		const { storeMarker } = instanceStore;
+		const { storeMarker } = useInstanceStore();
 
 		if (config.id) {
 			id = config.id;
@@ -45,16 +43,10 @@ export function useMaplibre() {
 			zoom = config.zoom;
 		}
 
-		// Use Config Tile Layer
-		let mapStyle = createMapStyle();
-		if (Array.isArray(mapConfig.value.tile_layers)) {
-			mapStyle = createMapStyle(mapConfig.value.tile_layers[0]);
-		}
-
 		// Create Map
 		map = new MapLibreGL.Map({
 			container: id,
-			style: mapStyle,
+			style: getMapStyle(),
 			center: [lng, lat],
 			zoom: zoom,
 		});
