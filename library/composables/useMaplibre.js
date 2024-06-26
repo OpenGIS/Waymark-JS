@@ -1,17 +1,13 @@
 import { storeToRefs } from "pinia";
 import { onMounted, computed } from "vue";
-import { createMapStyle } from "@/helpers/Map.js";
+import { createMapStyle, createMarker } from "@/helpers/Map.js";
 
 // Import MapLibre
 import * as MapLibreGL from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// Import MapStore
+// Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
-
-// Import Helpers
-import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
 
 export function useMaplibre() {
 	let id = "map";
@@ -29,8 +25,8 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
-		const mapStore = useInstanceStore();
-		const { mapConfig } = storeToRefs(mapStore);
+		const instanceStore = useInstanceStore();
+		const { mapConfig } = storeToRefs(instanceStore);
 
 		if (config.id) {
 			id = config.id;
@@ -77,43 +73,27 @@ export function useMaplibre() {
 			map.on("load", () => {
 				//Markers
 				pointsFeatures.value.forEach((feature) => {
-					const typeData = getTypeData(
-						getFeatureType(feature),
-						makeKey(feature.properties.type),
-					);
-					const iconData = getIconData(typeData);
-
-					// create a DOM element for the marker
-					const el = document.createElement("div");
-					el.className = iconData.className;
-					el.innerHTML = iconData.html;
-					el.style.width = `${iconData.iconSize[0]}px`;
-					el.style.height = `${iconData.iconSize[1]}px`;
-
-					// add marker to map
-					const marker = new MapLibreGL.Marker({
-						element: el,
-						offset: iconData.iconAnchor,
-					});
-
-					marker.setLngLat(feature.geometry.coordinates);
-					marker.addTo(map);
-
 					//Extend bounds
 					dataBounds.extend(feature.geometry.coordinates);
 
-					const overlay = mapStore.addMarker(marker, feature);
+					// Create the Marker
+					const marker = createMarker(feature);
 
-					el.addEventListener("click", () => {
-						mapStore.setActiveOverlay(overlay);
+					// Add Marker to Map
+					marker.addTo(map);
+
+					const overlay = instanceStore.addMarker(marker, feature);
+
+					overlay.element.addEventListener("click", () => {
+						instanceStore.setActiveOverlay(overlay);
 					});
 
-					el.addEventListener("mouseenter", () => {
-						mapStore.toggleHoverOverlay(overlay);
+					overlay.element.addEventListener("mouseenter", () => {
+						instanceStore.toggleHoverOverlay(overlay);
 					});
 
-					el.addEventListener("mouseleave", () => {
-						mapStore.toggleHoverOverlay(overlay);
+					overlay.element.addEventListener("mouseleave", () => {
+						instanceStore.toggleHoverOverlay(overlay);
 					});
 				});
 

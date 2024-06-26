@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
 import { useMaplibre } from "@/composables/useMaplibre.js";
 import {
@@ -21,10 +21,10 @@ export const useInstanceStore = defineStore("instance", () => {
 	const zoom = ref(16);
 
 	// Config
-	const mapConfig = ref({});
+	const mapConfig = shallowRef({});
 
 	// Data
-	const geoJSON = ref({});
+	const geoJSON = shallowRef({});
 
 	let map = null;
 

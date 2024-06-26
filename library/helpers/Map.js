@@ -1,3 +1,9 @@
+import * as MapLibreGL from "maplibre-gl";
+
+// Import Helpers
+import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
+
 export function createMapStyle(tile_data = {}) {
   const style = {
     version: 8,
@@ -39,4 +45,34 @@ export function createMapStyle(tile_data = {}) {
   });
 
   return style;
+}
+
+export function createMarker(feature = {}) {
+  // Ensure is Marker with coordinates
+  if (getFeatureType(feature) !== "marker" || !feature.geometry.coordinates) {
+    return null;
+  }
+
+  console.log("Creating Marker", feature);
+
+  const typeKey = makeKey(feature.properties.type);
+  const typeData = getTypeData("marker", typeKey);
+  const iconData = getIconData(typeData);
+
+  // Create a DOM element for the marker
+  const el = document.createElement("div");
+  el.className = iconData.className;
+  el.innerHTML = iconData.html;
+  el.style.width = `${iconData.iconSize[0]}px`;
+  el.style.height = `${iconData.iconSize[1]}px`;
+
+  // Create Marker
+  const marker = new MapLibreGL.Marker({
+    element: el,
+    offset: iconData.iconAnchor,
+  });
+
+  marker.setLngLat(feature.geometry.coordinates);
+
+  return marker;
 }
