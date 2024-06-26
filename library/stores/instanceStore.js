@@ -105,8 +105,12 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function addMarker(marker, feature) {
+		console.log(marker, feature);
+
 		let featureType = "marker";
 		let typeKey = feature.properties.type;
+
+		const markerElement = marker.getElement();
 
 		let overlay = {
 			id: overlays.value.length + 1,
@@ -115,9 +119,22 @@ export const useInstanceStore = defineStore("instance", () => {
 			feature: feature,
 			marker: marker,
 			featureType: featureType,
-			element: marker.getElement(),
+			element: markerElement,
 			imageURLs: getImageURLs(feature.properties),
 		};
+
+		//Add Events
+		markerElement.addEventListener("click", () => {
+			setActiveOverlay(overlay);
+		});
+
+		markerElement.addEventListener("mouseenter", () => {
+			toggleHoverOverlay(overlay);
+		});
+
+		markerElement.addEventListener("mouseleave", () => {
+			toggleHoverOverlay(overlay);
+		});
 
 		overlays.value.push(overlay);
 

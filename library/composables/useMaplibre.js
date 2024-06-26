@@ -27,6 +27,7 @@ export function useMaplibre() {
 	const createMap = (config) => {
 		const instanceStore = useInstanceStore();
 		const { mapConfig } = storeToRefs(instanceStore);
+		const { addMarker } = instanceStore;
 
 		if (config.id) {
 			id = config.id;
@@ -82,19 +83,7 @@ export function useMaplibre() {
 					// Add Marker to Map
 					marker.addTo(map);
 
-					const overlay = instanceStore.addMarker(marker, feature);
-
-					overlay.element.addEventListener("click", () => {
-						instanceStore.setActiveOverlay(overlay);
-					});
-
-					overlay.element.addEventListener("mouseenter", () => {
-						instanceStore.toggleHoverOverlay(overlay);
-					});
-
-					overlay.element.addEventListener("mouseleave", () => {
-						instanceStore.toggleHoverOverlay(overlay);
-					});
+					addMarker(marker, feature);
 				});
 
 				//Lines
