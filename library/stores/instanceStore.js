@@ -12,11 +12,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	// DOM Target
 	let id = null;
 
-	// View
-	const lng = ref(null);
-	const lat = ref(null);
-	const zoom = ref(null);
-
 	// Config
 	const mapConfig = shallowRef({});
 
@@ -34,18 +29,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	function createStore(data = {}) {
 		if (data.id) {
 			id = data.id;
-		}
-
-		if (data.lng) {
-			lng.value = data.lng;
-		}
-
-		if (data.lat) {
-			lat.value = data.lat;
-		}
-
-		if (data.zoom) {
-			zoom.value = data.zoom;
 		}
 
 		if (data.geoJSON) {
@@ -179,9 +162,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	return {
 		createStore,
 		storeMap,
-		lng,
-		lat,
-		zoom,
 		id,
 		overlays,
 		geoJSON,
