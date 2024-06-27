@@ -1,11 +1,42 @@
 <script setup>
+import { onMounted } from "vue";
+
 import "@/assets/css/index.css";
 
 import Map from "@/components/Map/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { id, geoJSON } = useInstanceStore();
+const { createStore } = useInstanceStore();
+
+const props = defineProps({
+	id: {
+		type: String,
+		default: "ogis",
+	},
+	lng: {
+		type: Number,
+		default: -128.0094,
+	},
+	lat: {
+		type: Number,
+		default: 50.6539,
+	},
+	zoom: {
+		type: Number,
+		default: 16,
+	},
+	geoJSON: {
+		type: Object,
+		default: {},
+	},
+	mapConfig: {
+		type: Object,
+		default: {},
+	},
+});
+
+createStore(props);
 </script>
 
 <template>

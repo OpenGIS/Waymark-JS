@@ -5,7 +5,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 const { id, initMap } = useInstanceStore();
 
 onMounted(() => {
-	const map = initMap();
+	initMap();
 });
 </script>
 

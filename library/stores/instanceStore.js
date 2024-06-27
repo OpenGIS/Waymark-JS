@@ -13,12 +13,12 @@ export const useInstanceStore = defineStore("instance", () => {
 	const { createMap } = useMaplibre();
 
 	// DOM Target
-	const id = ref("map");
+	let id = null;
 
 	// View
-	const lng = ref(-128.0094);
-	const lat = ref(50.6539);
-	const zoom = ref(16);
+	const lng = ref(null);
+	const lat = ref(null);
+	const zoom = ref(null);
 
 	// Config
 	const mapConfig = shallowRef({});
@@ -62,7 +62,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function initMap() {
 		map = createMap({
-			id: id.value + "-map",
+			id: id + "-map",
 			lng: lng.value,
 			lat: lat.value,
 			zoom: zoom.value,
