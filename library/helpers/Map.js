@@ -1,6 +1,7 @@
 import { storeToRefs } from "pinia";
 import * as MapLibreGL from "maplibre-gl";
 import { useInstanceStore } from "@/stores/instanceStore.js";
+import Marker from "@/components/Common/Marker.vue";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";

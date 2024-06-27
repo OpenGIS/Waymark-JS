@@ -6,7 +6,6 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import List from "@/components/UI/Type/List.vue";
-import Button from "@/components/UI/Button.vue";
 
 const mapStore = useInstanceStore();
 const { overlays, visibleOverlays } = storeToRefs(mapStore);

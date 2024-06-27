@@ -3,8 +3,8 @@ import { ref } from "vue";
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
+import Marker from "@/components/Common/Marker.vue";
 import ListItem from "@/components/UI/Type/ListItem.vue";
-import Marker from "@/components/UI/Marker.vue";
 import Button from "@/components/UI/Button.vue";
 
 const props = defineProps({
@@ -72,10 +72,7 @@ const overlayStyle = () => {
       >
         <!-- Image -->
         <td class="image">
-          <Marker
-            :typeData="byType.typeData"
-            :featureType="byType.featureType"
-          />
+          <Marker :typeData="byType.typeData" />
         </td>
 
         <!-- Title -->

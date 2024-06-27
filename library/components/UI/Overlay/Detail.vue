@@ -8,9 +8,9 @@ const { activeOverlay, detailExpanded } = storeToRefs(mapStore);
 
 import { expandedIcon } from "@/helpers/Common.js";
 
+import Marker from "@/components/Common/Marker.vue";
 import Button from "@/components/UI/Button.vue";
 import Content from "@/components/UI/Content.vue";
-import Marker from "@/components/UI/Marker.vue";
 
 const detailHeight = computed(() => {
   //Closed

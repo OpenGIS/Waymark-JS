@@ -1,14 +1,12 @@
 <script setup>
 defineProps({
   typeData: Object,
-  featureType: String
-})
+});
 </script>
 
 <template>
   <!-- Icon -->
   <div
-    v-if="featureType == 'marker'"
     class="waymark-marker"
     :class="typeData.iconData.className"
     v-html="typeData.iconData.html"
