@@ -57,7 +57,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		}
 	}
 
-	function setMap(mapInstance) {
+	function storeMap(mapInstance) {
 		map = mapInstance;
 
 		map
@@ -178,7 +178,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	return {
 		createStore,
-		setMap,
+		storeMap,
 		lng,
 		lat,
 		zoom,

@@ -1,5 +1,4 @@
-import { storeToRefs } from "pinia";
-import { onMounted, computed } from "vue";
+import { computed } from "vue";
 import { getMapStyle, createMarker } from "@/helpers/Map.js";
 
 // Import MapLibre
@@ -25,7 +24,7 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
-		const { storeMarker, setMap } = useInstanceStore();
+		const { storeMarker, storeMap } = useInstanceStore();
 
 		if (config.id) {
 			id = config.id;
@@ -50,10 +49,6 @@ export function useMaplibre() {
 			center: [lng, lat],
 			zoom: zoom,
 		});
-
-		// map
-		// 	.on("zoomend", updateVisibleOverlays)
-		// 	.on("moveend", updateVisibleOverlays);
 
 		// Add GeoJSON
 		if (config.geoJSON) {
@@ -121,7 +116,7 @@ export function useMaplibre() {
 			});
 		}
 
-		setMap(map);
+		storeMap(map);
 	};
 
 	const pointsFeatures = computed(() => {
