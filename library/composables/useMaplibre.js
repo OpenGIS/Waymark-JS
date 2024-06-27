@@ -2,7 +2,7 @@ import { computed } from "vue";
 import { getMapStyle, createMarker } from "@/helpers/Map.js";
 
 // Import MapLibre
-import * as MapLibreGL from "maplibre-gl";
+import { Map, LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 // Import instanceStore
@@ -21,7 +21,7 @@ export function useMaplibre() {
 
 	let map = null;
 
-	const dataBounds = new MapLibreGL.LngLatBounds();
+	const dataBounds = new LngLatBounds();
 
 	const createMap = (config) => {
 		const { storeMarker, storeMap } = useInstanceStore();
@@ -43,7 +43,7 @@ export function useMaplibre() {
 		}
 
 		// Create Map
-		map = new MapLibreGL.Map({
+		map = new Map({
 			container: id,
 			style: getMapStyle(),
 			center: [lng, lat],

@@ -1,20 +1,18 @@
-import { storeToRefs } from "pinia";
-import * as MapLibreGL from "maplibre-gl";
+import { Marker } from "maplibre-gl";
 import { useInstanceStore } from "@/stores/instanceStore.js";
-import Marker from "@/components/Common/Marker.vue";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export function getMapStyle() {
-  const { mapConfig } = storeToRefs(useInstanceStore());
+  const { mapConfig } = useInstanceStore();
 
   let tile_data = {};
 
   // Use Config Tile Layer
-  if (Array.isArray(mapConfig.value.tile_layers)) {
-    tile_data = mapConfig.value.tile_layers[0];
+  if (Array.isArray(mapConfig.tile_layers)) {
+    tile_data = mapConfig.tile_layers[0];
   }
 
   const style = {
@@ -77,7 +75,7 @@ export function createMarker(feature = {}) {
   el.style.height = `${iconData.iconSize[1]}px`;
 
   // Create Marker
-  const marker = new MapLibreGL.Marker({
+  const marker = new Marker({
     element: el,
     offset: iconData.iconAnchor,
   });
