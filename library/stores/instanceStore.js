@@ -1,6 +1,5 @@
 import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
-import { useMaplibre } from "@/composables/useMaplibre.js";
 import {
 	getTypeData,
 	getFeatureType,
@@ -10,8 +9,6 @@ import {
 import { makeKey } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
-	const { createMap } = useMaplibre();
-
 	// DOM Target
 	let id = null;
 
@@ -36,7 +33,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function createStore(data = {}) {
 		if (data.id) {
-			id.value = data.id;
+			id = data.id;
 		}
 
 		if (data.lng) {
@@ -60,21 +57,12 @@ export const useInstanceStore = defineStore("instance", () => {
 		}
 	}
 
-	function initMap() {
-		map = createMap({
-			id: id + "-map",
-			lng: lng.value,
-			lat: lat.value,
-			zoom: zoom.value,
-			geoJSON: geoJSON.value,
-		});
+	function setMap(mapInstance) {
+		map = mapInstance;
 
-		//Update Visible whenever view changes
 		map
 			.on("zoomend", updateVisibleOverlays)
 			.on("moveend", updateVisibleOverlays);
-
-		return map;
 	}
 
 	function toggleBar() {
@@ -190,7 +178,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	return {
 		createStore,
-		initMap,
+		setMap,
 		lng,
 		lat,
 		zoom,

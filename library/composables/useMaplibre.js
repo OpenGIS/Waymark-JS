@@ -25,7 +25,7 @@ export function useMaplibre() {
 	const dataBounds = new MapLibreGL.LngLatBounds();
 
 	const createMap = (config) => {
-		const { storeMarker } = useInstanceStore();
+		const { storeMarker, setMap } = useInstanceStore();
 
 		if (config.id) {
 			id = config.id;
@@ -50,6 +50,10 @@ export function useMaplibre() {
 			center: [lng, lat],
 			zoom: zoom,
 		});
+
+		// map
+		// 	.on("zoomend", updateVisibleOverlays)
+		// 	.on("moveend", updateVisibleOverlays);
 
 		// Add GeoJSON
 		if (config.geoJSON) {
@@ -117,7 +121,7 @@ export function useMaplibre() {
 			});
 		}
 
-		return map;
+		setMap(map);
 	};
 
 	const pointsFeatures = computed(() => {

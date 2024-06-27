@@ -65,8 +65,6 @@ export function createMarker(feature = {}) {
     return null;
   }
 
-  console.log("Creating Marker", feature);
-
   const typeKey = makeKey(feature.properties.type);
   const typeData = getTypeData("marker", typeKey);
   const iconData = getIconData(typeData);
