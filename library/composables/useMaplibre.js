@@ -12,9 +12,13 @@ export function useMaplibre() {
 	let id = "map";
 
 	// View
-	let lng = -128.0094;
-	let lat = 50.6539;
-	let zoom = 16;
+	let lng = null;
+	let lat = null;
+	let zoom = null;
+
+	// Dimensions
+	let width = null;
+	let height = null;
 
 	// Data
 	let geoJSON = {};
@@ -28,6 +32,13 @@ export function useMaplibre() {
 
 		if (config.id) {
 			id = config.id;
+
+			// Get DOM Element
+			const element = document.getElementById(id);
+
+			// Calculate pixel dimensions
+			width = element.offsetWidth;
+			height = element.offsetHeight;
 		}
 
 		if (config.lng) {

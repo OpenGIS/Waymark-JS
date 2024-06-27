@@ -5,7 +5,7 @@ import { useMaplibre } from "@/composables/useMaplibre.js";
 const { createMap } = useMaplibre();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { createStore, setMap } = useInstanceStore();
+const { createStore } = useInstanceStore();
 
 import "@/assets/css/index.css";
 
