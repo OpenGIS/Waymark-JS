@@ -1,14 +1,17 @@
 <script setup>
 import { onMounted } from "vue";
 
-import "@/assets/css/index.css";
-
-import Map from "@/components/Map/Map.vue";
-import UI from "@/components/UI/UI.vue";
+import { useMaplibre } from "@/composables/useMaplibre.js";
+const { createMap } = useMaplibre();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { createStore } = useInstanceStore();
 
+import "@/assets/css/index.css";
+
+import UI from "@/components/UI/UI.vue";
+
+// Config Definition!
 const props = defineProps({
 	id: {
 		type: String,
@@ -36,13 +39,23 @@ const props = defineProps({
 	},
 });
 
-createStore(props);
+onMounted(() => {
+	createStore(props);
+
+	createMap({
+		id: `${props.id}-map`,
+		lng: props.lng,
+		lat: props.lat,
+		zoom: props.zoom,
+		geoJSON: props.geoJSON,
+	});
+});
 </script>
 
 <template>
 	<!-- Instance -->
 	<div class="instance" :id="`${id}-instance`">
-		<Map />
+		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
 		<UI />
 
@@ -54,11 +67,16 @@ createStore(props);
 
 <style lang="less">
 .instance {
-	position: relative;
 	height: 100%;
 	width: 100%;
 
 	display: flex;
+
+	.map {
+		width: 33%;
+		height: 600px !important;
+		border: 1px solid red;
+	}
 
 	.debug {
 		width: 33%;

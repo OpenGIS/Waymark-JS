@@ -43,7 +43,7 @@ const barHeight = computed(() => {
 
 <style lang="less">
 .ui {
-	width: 50%;
+	width: 33%;
 	height: 100%;
 	padding: 0 1%;
 	max-height: 100%;
