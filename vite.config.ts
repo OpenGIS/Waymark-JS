@@ -24,7 +24,7 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
     lib: {
-      entry: resolve(__dirname, "library/export.js"),
+      entry: resolve(__dirname, "library/useWaymark.js"),
       name: "Waymark",
       fileName: "waymark-js",
     },
