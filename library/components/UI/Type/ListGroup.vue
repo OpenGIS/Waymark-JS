@@ -15,7 +15,7 @@ let expanded = ref(false);
 let visible = ref(true);
 
 const toggleHighlight = (overlay) => {
-  return;
+  // return;
   const element = overlay.layer.getElement();
 
   element.classList.toggle("overlay-highlight");
@@ -51,12 +51,8 @@ const overlayStyle = () => {
     case "marker":
       return `color:${props.byType.typeData.icon_colour};border-color:${props.byType.typeData.marker_colour}`;
 
-      break;
-
     case "line":
       return `color:#fff;background-color:${props.byType.typeData.line_colour}`;
-
-      break;
   }
 };
 </script>

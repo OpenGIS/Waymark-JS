@@ -120,9 +120,6 @@ export function getIconData(type) {
     case "html":
       icon_class += " waymark-icon-html";
 
-      //Decode HTML entities using jQuery
-      // var icon_html = jQuery('<div/>').html(type.marker_icon).text()
-
       var icon_html = "<div>" + type.marker_icon + "</div>";
 
       icon_data.html +=

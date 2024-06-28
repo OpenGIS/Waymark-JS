@@ -15,7 +15,7 @@ import UI from "@/components/UI/UI.vue";
 const props = defineProps({
 	id: {
 		type: String,
-		default: "ogis",
+		required: true,
 	},
 	lng: {
 		type: Number,
