@@ -32,13 +32,6 @@ export function useMaplibre() {
 
 		if (config.id) {
 			id = config.id;
-
-			// Get DOM Element
-			const element = document.getElementById(id);
-
-			// Calculate pixel dimensions
-			width = element.offsetWidth;
-			height = element.offsetHeight;
 		}
 
 		if (config.lng) {
@@ -61,17 +54,11 @@ export function useMaplibre() {
 			zoom: zoom,
 		});
 
-		// Add GeoJSON
-		if (config.geoJSON) {
-			geoJSON = config.geoJSON;
+		storeMap(map);
 
-			// Ensure we have features
-			if (
-				typeof geoJSON.features === "undefined" ||
-				!Array.isArray(geoJSON.features)
-			) {
-				return map;
-			}
+		// Add GeoJSON
+		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
+			geoJSON = config.geoJSON;
 
 			map.on("load", () => {
 				//Markers
@@ -126,8 +113,6 @@ export function useMaplibre() {
 				});
 			});
 		}
-
-		storeMap(map);
 	};
 
 	const pointsFeatures = computed(() => {

@@ -11,6 +11,7 @@ import { makeKey } from "@/helpers/Common.js";
 export const useInstanceStore = defineStore("instance", () => {
 	// DOM Target
 	let id = null;
+	let container = null;
 
 	// Config
 	const mapConfig = shallowRef({});
@@ -29,6 +30,9 @@ export const useInstanceStore = defineStore("instance", () => {
 	function createStore(data = {}) {
 		if (data.id) {
 			id = data.id;
+
+			// Get DOM Element
+			container = document.getElementById(id);
 		}
 
 		if (data.geoJSON) {
