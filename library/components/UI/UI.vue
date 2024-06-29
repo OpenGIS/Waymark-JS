@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useInstanceStore();
-const { barOpen, overlayCount } = storeToRefs(mapStore);
+const instanceStore = useInstanceStore();
+const { barOpen, overlayCount } = storeToRefs(instanceStore);
 
 import Detail from "@/components/UI/Overlay/Detail.vue";
 import List from "@/components/UI/Overlay/List.vue";
@@ -29,12 +29,12 @@ const barHeight = computed(() => {
 		<nav class="bar-nav">
 			<!-- Layers -->
 			<div class="nav-item">
-				<Button icon="fa-location-arrow" @click="mapStore.toggleBar()" />
+				<Button icon="fa-location-arrow" @click="instanceStore.toggleBar()" />
 			</div>
 
 			<!-- Layers -->
 			<div class="nav-item">
-				<Button icon="fa-gear" @click="mapStore.toggleDebug()" />
+				<Button icon="fa-gear" @click="instanceStore.toggleDebug()" />
 			</div>
 		</nav>
 
@@ -48,7 +48,7 @@ const barHeight = computed(() => {
 
 <style lang="less">
 .ui {
-	width: 33%;
+	width: 50%;
 	height: 100%;
 	padding: 0 1%;
 	max-height: 100%;

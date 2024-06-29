@@ -3,8 +3,8 @@ import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useInstanceStore();
-const { activeOverlay, detailExpanded } = storeToRefs(mapStore);
+const instanceStore = useInstanceStore();
+const { activeOverlay, detailExpanded } = storeToRefs(instanceStore);
 
 import { expandedIcon } from "@/helpers/Common.js";
 
@@ -56,7 +56,7 @@ watch(activeOverlay, () => {});
         <td class="action expand">
           <Button
             :icon="expandedIcon(detailExpanded)"
-            @click.stop="mapStore.toggleDetailExpanded()"
+            @click.stop="instanceStore.toggleDetailExpanded()"
           />
         </td>
 

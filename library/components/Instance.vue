@@ -6,8 +6,9 @@ import { useMaplibre } from "@/composables/useMaplibre.js";
 const { createMap } = useMaplibre();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { createStore } = useInstanceStore();
-const { debugOpen } = storeToRefs(mapStore);
+const instanceStore = useInstanceStore();
+const { createStore } = instanceStore;
+const { debugOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -75,13 +76,15 @@ onMounted(() => {
 	display: flex;
 
 	.map {
-		width: 33%;
+		width: 50%;
 		height: 600px !important;
-		border: 1px solid red;
 	}
 
 	.debug {
-		width: 33%;
+		position: absolute;
+		width: 50%;
+		left: 0;
+		top: 50%;
 		height: 100%;
 		overflow: auto;
 		font-size: 8px;

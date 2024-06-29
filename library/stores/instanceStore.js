@@ -187,6 +187,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		debugOpen,
 		storeMarker,
 		toggleBar,
+		toggleDebug,
 		setFocus,
 	};
 });

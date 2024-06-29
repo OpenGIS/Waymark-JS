@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const mapStore = useInstanceStore();
+const instanceStore = useInstanceStore();
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Button.vue";
@@ -28,15 +28,15 @@ const toggleVisible = () => {
 };
 
 const centerOn = () => {
-  mapStore.setFocus(props.overlay.feature.geometry.coordinates);
+  instanceStore.setFocus(props.overlay.feature.geometry.coordinates);
 };
 
 const setActive = () => {
-  mapStore.setActiveOverlay(props.overlay);
+  instanceStore.setActiveOverlay(props.overlay);
 };
 
 const toggleHover = () => {
-  mapStore.toggleHoverOverlay(props.overlay);
+  instanceStore.toggleHoverOverlay(props.overlay);
 };
 </script>
 

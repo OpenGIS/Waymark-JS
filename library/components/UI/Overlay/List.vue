@@ -7,8 +7,8 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import List from "@/components/UI/Type/List.vue";
 
-const mapStore = useInstanceStore();
-const { overlays, visibleOverlays } = storeToRefs(mapStore);
+const instanceStore = useInstanceStore();
+const { overlays, visibleOverlays } = storeToRefs(instanceStore);
 
 const activeType = ref("marker");
 
