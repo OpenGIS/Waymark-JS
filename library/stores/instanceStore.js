@@ -26,6 +26,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeOverlay = ref({});
 	const barOpen = ref(true);
 	const detailExpanded = ref(false);
+	const debugOpen = ref(false);
 
 	function createStore(data = {}) {
 		if (data.id) {
@@ -54,6 +55,10 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function toggleBar() {
 		barOpen.value = !barOpen.value;
+	}
+
+	function toggleDebug() {
+		debugOpen.value = !debugOpen.value;
 	}
 
 	function toggleDetailExpanded() {
@@ -179,6 +184,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		toggleDetailExpanded,
 		detailExpanded,
 		barOpen,
+		debugOpen,
 		storeMarker,
 		toggleBar,
 		setFocus,

@@ -31,6 +31,11 @@ const barHeight = computed(() => {
 			<div class="nav-item">
 				<Button icon="fa-location-arrow" @click="mapStore.toggleBar()" />
 			</div>
+
+			<!-- Layers -->
+			<div class="nav-item">
+				<Button icon="fa-gear" @click="mapStore.toggleDebug()" />
+			</div>
 		</nav>
 
 		<!-- Content -->

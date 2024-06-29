@@ -1,4 +1,5 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 
 import { useMaplibre } from "@/composables/useMaplibre.js";
@@ -6,6 +7,7 @@ const { createMap } = useMaplibre();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { createStore } = useInstanceStore();
+const { debugOpen } = storeToRefs(mapStore);
 
 import "@/assets/css/index.css";
 
@@ -59,7 +61,7 @@ onMounted(() => {
 
 		<UI />
 
-		<div class="debug" :id="`${id}-debug`">
+		<div class="debug" :id="`${id}-debug`" v-show="debugOpen">
 			<pre>{{ geoJSON }}</pre>
 		</div>
 	</div>
