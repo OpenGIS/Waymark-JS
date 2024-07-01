@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
-import List from "@/components/UI/Panel/Overlay/List.vue";
+import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
 
 const instanceStore = useInstanceStore();
 const { overlays, visibleOverlays } = storeToRefs(instanceStore);
@@ -35,7 +35,7 @@ const activeOverlays = computed(() => {
     </nav> -->
 
 			<!-- Overlays (by Type) -->
-			<List :overlaysByType="overlaysByType(overlays)" />
+			<Feature :overlaysByType="overlaysByType(overlays)" />
 		</div>
 	</div>
 </template>

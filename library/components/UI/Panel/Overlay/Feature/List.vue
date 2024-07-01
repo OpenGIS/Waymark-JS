@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
 import Marker from "@/components/Common/Marker.vue";
-import Item from "@/components/UI/Panel/Overlay/List/Item.vue";
+import Item from "@/components/UI/Panel/Overlay/Feature/Item.vue";
 import Button from "@/components/UI/Button.vue";
 
 const props = defineProps({
