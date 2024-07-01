@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { barOpen, overlayCount } = storeToRefs(instanceStore);
+const { barOpen, debugOpen, overlayCount } = storeToRefs(instanceStore);
 
 import Detail from "@/components/UI/Overlay/Detail.vue";
 import List from "@/components/UI/Overlay/List.vue";
@@ -23,26 +23,41 @@ const barHeight = computed(() => {
 <template>
 	<!-- <div class="ui" :style="`height:${barHeight}`"> -->
 	<div class="ui">
-		<Detail />
+		<!-- START Panels -->
+		<div class="panels">
+			<!-- START Panel Nav -->
+			<nav class="panel-nav">
+				<!-- Layers -->
+				<div class="nav-item">
+					<Button icon="fa-navicon" @click="instanceStore.toggleBar()" />
+				</div>
 
-		<!-- Nav -->
-		<nav class="bar-nav">
-			<!-- Layers -->
-			<div class="nav-item">
-				<Button icon="fa-navicon" @click="instanceStore.toggleBar()" />
+				<!-- Layers -->
+				<div class="nav-item">
+					<Button icon="fa-gear" @click="instanceStore.toggleDebug()" />
+				</div>
+			</nav>
+			<!-- END Panel Nav -->
+
+			<!-- START Overlays Panel -->
+			<div class="panel overlay" v-show="barOpen">
+				<!-- START Overlays Panel Content -->
+				<Content class="panel-content">
+					<List />
+				</Content>
+				<!-- END Overlays Panel Content -->
 			</div>
+			<!-- END Overlays Panel -->
 
-			<!-- Layers -->
-			<div class="nav-item">
-				<Button icon="fa-gear" @click="instanceStore.toggleDebug()" />
+			<!-- START Debug Panel -->
+			<div class="panel debug" v-show="debugOpen">
+				<Content class="panel-content">
+					<pre>{{ geoJSON }}</pre>
+				</Content>
 			</div>
-		</nav>
-
-		<!-- Content -->
-		<Content v-show="barOpen">
-			<!-- List -->
-			<List />
-		</Content>
+			<!-- END Debug Panel -->
+		</div>
+		<!-- END Panels -->
 	</div>
 </template>
 
@@ -56,7 +71,7 @@ const barHeight = computed(() => {
 	background: rgba(249, 249, 249, 0.9);
 	transition: height 0.1s jump-start;
 
-	.bar-nav {
+	.panel-nav {
 		left: 0;
 		width: 100%;
 		height: 65px;

@@ -8,7 +8,6 @@ const { createMap } = useMaplibre();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
-const { debugOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -61,10 +60,6 @@ onMounted(() => {
 		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
 		<UI />
-
-		<div class="debug" :id="`${id}-debug`" v-show="debugOpen">
-			<pre>{{ geoJSON }}</pre>
-		</div>
 	</div>
 </template>
 
@@ -78,17 +73,6 @@ onMounted(() => {
 	.map {
 		width: 50%;
 		height: 600px !important;
-	}
-
-	.debug {
-		position: absolute;
-		width: 50%;
-		left: 0;
-		top: 50%;
-		height: 100%;
-		overflow: auto;
-		font-size: 8px;
-		background: rgba(249, 249, 249, 0.5);
 	}
 }
 </style>
