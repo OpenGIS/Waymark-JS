@@ -1,23 +1,23 @@
 <script setup>
-import { computed } from "vue";
+// import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
 const { barOpen, debugOpen, overlayCount } = storeToRefs(instanceStore);
 
-import Detail from "@/components/UI/Overlay/Detail.vue";
-import List from "@/components/UI/Overlay/List.vue";
+import Overlay from "@/components/UI/Panel/Overlay.vue";
+import Debug from "@/components/UI/Panel/Debug.vue";
+
 import Button from "@/components/UI/Button.vue";
-import Content from "@/components/UI/Content.vue";
 
-const barHeight = computed(() => {
-	if (!barOpen.value || !overlayCount.value) {
-		return "0";
-	}
+// const barHeight = computed(() => {
+// 	if (!barOpen.value || !overlayCount.value) {
+// 		return "0";
+// 	}
 
-	return "33.33%";
-});
+// 	return "33.33%";
+// });
 </script>
 
 <template>
@@ -40,20 +40,14 @@ const barHeight = computed(() => {
 			<!-- END Panel Nav -->
 
 			<!-- START Overlays Panel -->
-			<div class="panel overlay" v-show="barOpen">
-				<!-- START Overlays Panel Content -->
-				<Content class="panel-content">
-					<List />
-				</Content>
-				<!-- END Overlays Panel Content -->
+			<div class="panel-hug overlay" v-show="barOpen">
+				<Overlay />
 			</div>
 			<!-- END Overlays Panel -->
 
 			<!-- START Debug Panel -->
-			<div class="panel debug" v-show="debugOpen">
-				<Content class="panel-content">
-					<pre>{{ geoJSON }}</pre>
-				</Content>
+			<div class="panel-hug debug" v-show="debugOpen">
+				<Debug />
 			</div>
 			<!-- END Debug Panel -->
 		</div>
@@ -94,6 +88,10 @@ const barHeight = computed(() => {
 				background: #333;
 			}
 		}
+	}
+
+	.panel-hug {
+		border: 2px solid #eee;
 	}
 }
 </style>
