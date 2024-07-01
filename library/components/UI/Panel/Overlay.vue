@@ -7,6 +7,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
+import Button from "@/components/UI/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { overlays, visibleOverlays } = storeToRefs(instanceStore);
@@ -28,14 +29,20 @@ const activeOverlays = computed(() => {
 			<Detail />
 
 			<!-- Type Nav -->
-			<!-- <nav id="type-nav" :value="activeType">
-      <Button icon="fa-location-arrow" @click="activeType = 'marker'" />
-      <Button icon="fa-location-arrow" @click="activeType = 'line'" />
-      <Button icon="fa-location-arrow" @click="activeType = 'shape'" />
-    </nav> -->
+			<nav id="type-nav" :value="activeType">
+				<Button
+					icon="ion-ios-location-outline"
+					@click="activeType = 'marker'"
+				/>
+				<Button icon="ion-arrow-graph-up-right" @click="activeType = 'line'" />
+				<Button
+					icon="ion-android-checkbox-outline-blank"
+					@click="activeType = 'shape'"
+				/>
+			</nav>
 
 			<!-- Overlays (by Type) -->
-			<Feature :overlaysByType="overlaysByType(overlays)" />
+			<Feature :overlaysByType="activeOverlays" />
 		</div>
 	</div>
 </template>
@@ -43,5 +50,9 @@ const activeOverlays = computed(() => {
 <style>
 .panel.overlay {
 	background: red;
+
+	nav {
+		display: flex;
+	}
 }
 </style>
