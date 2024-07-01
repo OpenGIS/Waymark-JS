@@ -1,48 +1,17 @@
 <script setup>
-import { ref, computed } from "vue";
-import { overlaysByType } from "@/helpers/Overlay.js";
+import Group from "@/components/UI/Panel/Overlay/List/Group.vue";
 
-import { storeToRefs } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
-
-import List from "@/components/UI/Type/List.vue";
-
-const instanceStore = useInstanceStore();
-const { overlays, visibleOverlays } = storeToRefs(instanceStore);
-
-const activeType = ref("marker");
-
-const activeOverlays = computed(() => {
-  return overlaysByType(
-    visibleOverlays.value.filter((o) => {
-      return o.featureType === activeType.value;
-    }),
-  );
+defineProps({
+  overlaysByType: Object,
 });
 </script>
 
 <template>
-  <div id="list">
-    <!-- Type Nav -->
-    <!-- <nav id="type-nav" :value="activeType">
-      <Button icon="fa-location-arrow" @click="activeType = 'marker'" />
-      <Button icon="fa-location-arrow" @click="activeType = 'line'" />
-      <Button icon="fa-location-arrow" @click="activeType = 'shape'" />
-    </nav> -->
-
-    <!-- Overlays (by Type) -->
-    <List :overlaysByType="overlaysByType(overlays)" />
+  <div
+    class="type-list"
+    v-for="(byType, typeKey, index) in overlaysByType"
+    :key="`${byType.featureType}-${typeKey}-${index}`"
+  >
+    <Group :byType="byType" />
   </div>
 </template>
-
-<style lang="less">
-#list {
-  clear: both;
-  overflow: hidden;
-  overflow-y: scroll;
-
-  #type-nav {
-    display: flex;
-  }
-}
-</style>
