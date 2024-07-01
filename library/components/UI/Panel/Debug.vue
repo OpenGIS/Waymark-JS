@@ -8,12 +8,14 @@ const { geoJSON } = storeToRefs(instanceStore);
 
 <template>
 	<div class="panel debug">
-		<!-- START Debug Panel Content -->
-		<Content class="panel-content">
+		<div class="panel-content">
 			<pre>{{ geoJSON }}</pre>
-		</Content>
-		<!-- END Debug Panel Content -->
+		</div>
 	</div>
 </template>
 
-<style></style>
+<style>
+.panel.debug {
+	background: blue;
+}
+</style>

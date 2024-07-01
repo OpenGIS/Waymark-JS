@@ -5,13 +5,11 @@ import List from "@/components/UI/Panel/Overlay/List.vue";
 
 <template>
 	<div class="panel overlay">
-		<!-- START Overlays Panel Content -->
-		<Content class="panel-content">
+		<div class="panel-content">
 			<Detail />
 
 			<List />
-		</Content>
-		<!-- END Overlays Panel Content -->
+		</div>
 	</div>
 </template>
 

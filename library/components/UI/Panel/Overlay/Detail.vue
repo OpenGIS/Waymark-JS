@@ -10,7 +10,6 @@ import { expandedIcon } from "@/helpers/Common.js";
 
 import Marker from "@/components/Common/Marker.vue";
 import Button from "@/components/UI/Button.vue";
-import Content from "@/components/UI/Content.vue";
 
 const detailHeight = computed(() => {
   //Closed
@@ -67,7 +66,7 @@ watch(activeOverlay, () => {});
       </tr>
     </table>
 
-    <Content v-show="detailExpanded" :class="getImageUrls">
+    <div v-show="detailExpanded" :class="getImageUrls">
       <!-- Image -->
       <div class="image">
         <img
@@ -82,7 +81,7 @@ watch(activeOverlay, () => {});
         v-if="activeOverlay.feature.properties.description"
         v-html="activeOverlay.feature.properties.description"
       />
-    </Content>
+    </div>
   </div>
 </template>
 
