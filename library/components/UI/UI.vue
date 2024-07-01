@@ -57,41 +57,32 @@ import Button from "@/components/UI/Button.vue";
 
 <style lang="less">
 .ui {
-	width: 50%;
 	height: 100%;
-	padding: 0 1%;
 	max-height: 100%;
 	overflow: auto;
 	background: rgba(249, 249, 249, 0.9);
 	transition: height 0.1s jump-start;
 
-	.panel-nav {
-		left: 0;
-		width: 100%;
-		height: 65px;
-		display: flex;
-		background: rgba(249, 249, 249, 0.9);
-		border-bottom: 2px solid #eee;
-		.nav-item {
-			width: 25%;
-			&:first-child {
-				.button {
-					margin-left: 14px;
-				}
-			}
-			&:last-child {
-				.button {
-					margin-right: 14px;
-				}
-			}
-			&.active {
-				background: #333;
+	.panels {
+		position: relative;
+		padding-right: 75px;
+
+		.panel-nav {
+			position: absolute;
+			right: 0;
+			width: 65px;
+			height: 100%;
+			// display: flex;
+			background: rgba(249, 249, 249, 0.9);
+			border-left: 2px solid #eee;
+
+			.nav-item {
 			}
 		}
-	}
 
-	.panel-hug {
-		border: 2px solid #eee;
+		.panel-hug {
+			border: 2px solid #eee;
+		}
 	}
 }
 </style>

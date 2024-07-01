@@ -13,14 +13,17 @@
     <title>Waymark JS</title>
 
     <style type="text/css">
+      /* Fullscreen!  */
+      html,
+      body,
       #dev {
         width: 100%;
-        height: 100vh;
+        height: 100%;
       }
     </style>
   </head>
   <body>
-    <div id="joetest"></div>
+    <div id="dev"></div>
 
     <script type="module">
       import { useWaymark } from "../library/useWaymark.js";
@@ -39,7 +42,7 @@
 
         // Create Waymark instance
         createInstance({
-          id: "joetest",
+          id: "dev",
           lat: 37.7749,
           lng: -122.4194,
           zoom: 18,

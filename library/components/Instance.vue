@@ -72,7 +72,10 @@ onMounted(() => {
 
 	.map {
 		width: 50%;
-		height: 600px !important;
+	}
+
+	.ui {
+		width: 50%;
 	}
 }
 </style>
