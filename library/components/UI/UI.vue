@@ -4,20 +4,24 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { barOpen, debugOpen, overlayCount } = storeToRefs(instanceStore);
+const { activePanel, panelOpen, overlayCount } = storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
 import Debug from "@/components/UI/Panel/Debug.vue";
 
 import Button from "@/components/UI/Button.vue";
 
-// const barHeight = computed(() => {
-// 	if (!barOpen.value || !overlayCount.value) {
-// 		return "0";
-// 	}
+const handleNavClick = (panel = "overlay") => {
+	// If the panel is already open, close it
+	if (panel === activePanel.value) {
+		instanceStore.setActivePanel(null);
 
-// 	return "33.33%";
-// });
+		return;
+	}
+
+	// Open the panel
+	instanceStore.setActivePanel(panel);
+};
 </script>
 
 <template>
@@ -29,24 +33,24 @@ import Button from "@/components/UI/Button.vue";
 			<nav class="panel-nav">
 				<!-- Layers -->
 				<div class="nav-item">
-					<Button icon="fa-navicon" @click="instanceStore.toggleBar()" />
+					<Button icon="fa-navicon" @click="handleNavClick('overlay')" />
 				</div>
 
 				<!-- Layers -->
 				<div class="nav-item">
-					<Button icon="fa-gear" @click="instanceStore.toggleDebug()" />
+					<Button icon="fa-gear" @click="handleNavClick('debug')" />
 				</div>
 			</nav>
 			<!-- END Panel Nav -->
 
 			<!-- START Overlays Panel -->
-			<div class="panel-hug overlay" v-show="barOpen">
+			<div class="panel-hug overlay" v-show="activePanel === 'overlay'">
 				<Overlay />
 			</div>
 			<!-- END Overlays Panel -->
 
 			<!-- START Debug Panel -->
-			<div class="panel-hug debug" v-show="debugOpen">
+			<div class="panel-hug debug" v-show="activePanel === 'debug'">
 				<Debug />
 			</div>
 			<!-- END Debug Panel -->

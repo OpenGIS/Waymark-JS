@@ -92,7 +92,7 @@ const overlayStyle = () => {
       </tr>
 
       <!-- List -->
-      <ListItem
+      <Item
         class="content"
         v-show="expanded"
         v-for="(overlay, typeKey, index) in byType.overlays"

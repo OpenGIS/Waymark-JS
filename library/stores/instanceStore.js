@@ -24,9 +24,11 @@ export const useInstanceStore = defineStore("instance", () => {
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
-	const barOpen = ref(true);
+
 	const detailExpanded = ref(false);
-	const debugOpen = ref(false);
+
+	const activePanel = ref("overlay");
+	const panelOpen = ref(false);
 
 	function createStore(data = {}) {
 		if (data.id) {
@@ -53,12 +55,13 @@ export const useInstanceStore = defineStore("instance", () => {
 			.on("moveend", updateVisibleOverlays);
 	}
 
-	function toggleBar() {
-		barOpen.value = !barOpen.value;
+	function togglePanel() {
+		panelOpen.value = !panelOpen.value;
 	}
 
-	function toggleDebug() {
-		debugOpen.value = !debugOpen.value;
+	function setActivePanel(panel = "overlay") {
+		activePanel.value = panel;
+		panelOpen.value = true;
 	}
 
 	function toggleDetailExpanded() {
@@ -183,11 +186,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		toggleHoverOverlay,
 		toggleDetailExpanded,
 		detailExpanded,
-		barOpen,
-		debugOpen,
+		activePanel,
+		panelOpen,
 		storeMarker,
-		toggleBar,
-		toggleDebug,
+		togglePanel,
+		setActivePanel,
 		setFocus,
 	};
 });
