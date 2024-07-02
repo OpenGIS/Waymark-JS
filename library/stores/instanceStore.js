@@ -76,7 +76,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 			case "line":
 				// Go to bounds
-				map.fitBounds(overlay.layer.getBounds());
+				// map.fitBounds(overlay.layer.getBounds());
 				break;
 		}
 	}
@@ -85,7 +85,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
 			//Focus On
-			setFocus(overlay.layer.getLngLat());
+			setFocus(overlay);
 
 			//Increase info
 			detailExpanded.value = true;
@@ -142,6 +142,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			feature: feature,
 			layer: line,
 			featureType: featureType,
+			imageURLs: getImageURLs(feature.properties),
 		};
 
 		overlays.value.push(overlay);
@@ -149,9 +150,26 @@ export const useInstanceStore = defineStore("instance", () => {
 		return overlay;
 	}
 
-	function setFocus(coords) {
-		map.setZoom(14);
-		map.setCenter(coords);
+	function setFocus(overlay = {}) {
+		switch (overlay.featureType) {
+			case "marker":
+				map.flyTo({
+					center: overlay.layer.getLngLat(),
+					zoom: 15,
+				});
+				break;
+
+			case "line":
+				const bounds = overlay.layer.getBounds();
+
+				// Fly to center of line
+				map.flyTo({
+					center: bounds.getCenter(),
+					zoom: 15,
+				});
+
+				break;
+		}
 	}
 
 	//Getters

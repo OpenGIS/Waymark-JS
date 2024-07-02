@@ -28,7 +28,7 @@ const toggleVisible = () => {
 };
 
 const centerOn = () => {
-  instanceStore.setFocus(props.overlay.feature.geometry.coordinates);
+  instanceStore.setFocus(props.overlay);
 };
 
 const setActive = () => {

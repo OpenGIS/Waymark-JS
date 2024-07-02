@@ -24,10 +24,7 @@ const detailHeight = computed(() => {
 });
 
 const detailClass = computed(() => {
-  if (
-    activeOverlay.value &&
-    Object.keys(activeOverlay.value.imageURLs).length
-  ) {
+  if (Object.keys(activeOverlay.value.imageURLs).length) {
     return "has-image";
   }
 });
