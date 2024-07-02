@@ -8,7 +8,7 @@ const { activeOverlay, detailExpanded } = storeToRefs(instanceStore);
 
 import { expandedIcon } from "@/helpers/Common.js";
 
-import Marker from "@/components/Common/Marker.vue";
+import Preview from "@/components/UI/Panel/Overlay/Preview.vue";
 import Button from "@/components/UI/Button.vue";
 
 const detailHeight = computed(() => {
@@ -24,7 +24,10 @@ const detailHeight = computed(() => {
 });
 
 const detailClass = computed(() => {
-  if (Object.keys(activeOverlay.value.imageURLs).length) {
+  if (
+    activeOverlay.value &&
+    Object.keys(activeOverlay.value.imageURLs).length
+  ) {
     return "has-image";
   }
 });
@@ -42,7 +45,7 @@ watch(activeOverlay, () => {});
       <tr class="item" @click="setActive">
         <!-- Image -->
         <td class="image">
-          <Marker
+          <Preview
             :typeData="activeOverlay.typeData"
             :featureType="activeOverlay.featureType"
           />

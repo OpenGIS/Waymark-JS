@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
-import Marker from "@/components/Common/Marker.vue";
+import Preview from "@/components/UI/Panel/Overlay/Preview.vue";
 import Item from "@/components/UI/Panel/Overlay/Feature/Item.vue";
 import Button from "@/components/UI/Button.vue";
 
@@ -15,10 +15,22 @@ let expanded = ref(false);
 let visible = ref(true);
 
 const toggleHighlight = (overlay) => {
-  // return;
-  const element = overlay.layer.getElement();
+  switch (props.byType.featureType) {
+    case "marker":
+      if (!overlay.element) {
+        return;
+      }
 
-  element.classList.toggle("overlay-highlight");
+      overlay.element.classList.toggle("overlay-highlight");
+
+      break;
+
+    case "line":
+      // if (!overlay.layer || !overlay.layer.getElement()) {
+      //   return;
+      // }
+      break;
+  }
 };
 
 const toggleExpanded = () => {
@@ -68,7 +80,10 @@ const overlayStyle = () => {
       >
         <!-- Image -->
         <td class="image">
-          <Marker :typeData="byType.typeData" />
+          <Preview
+            :featureType="byType.featureType"
+            :typeData="byType.typeData"
+          />
         </td>
 
         <!-- Title -->
@@ -99,6 +114,7 @@ const overlayStyle = () => {
         :overlay="overlay"
         @mouseenter="toggleHighlight(overlay)"
         @mouseleave="toggleHighlight(overlay)"
+        @click="toggleHighlight(overlay)"
         :key="`${byType.featureType}-${typeKey}-${index}`"
       />
     </table>

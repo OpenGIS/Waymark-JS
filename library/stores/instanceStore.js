@@ -69,14 +69,23 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function toggleHoverOverlay(overlay) {
-		overlay.element.classList.toggle("overlay-highlight");
+		switch (overlay.featureType) {
+			case "marker":
+				overlay.element.classList.toggle("overlay-highlight");
+				break;
+
+			case "line":
+				// Go to bounds
+				map.fitBounds(overlay.layer.getBounds());
+				break;
+		}
 	}
 
 	function setActiveOverlay(overlay) {
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
 			//Focus On
-			setFocus(overlay.marker.getLngLat());
+			setFocus(overlay.layer.getLngLat());
 
 			//Increase info
 			detailExpanded.value = true;
@@ -98,7 +107,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			typeKey: typeKey,
 			typeData: getTypeData(featureType, typeKey),
 			feature: feature,
-			marker: marker,
+			layer: marker,
 			featureType: featureType,
 			element: markerElement,
 			imageURLs: getImageURLs(feature.properties),
@@ -164,7 +173,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			switch (overlay.featureType) {
 				case "marker":
 					//In view
-					contains = mapBounds.contains(overlay.marker.getLngLat());
+					contains = mapBounds.contains(overlay.layer.getLngLat());
 
 					break;
 				case "line":
