@@ -57,6 +57,35 @@ export function getMapStyle() {
   return style;
 }
 
+export function createLineStyle(feature = {}, id = "") {
+  // Ensure is LineString with coordinates
+  if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+    return null;
+  }
+
+  // Ensure we have an ID
+  if (!id) {
+    return null;
+  }
+
+  const typeKey = makeKey(feature.properties.type);
+  const typeData = getTypeData("line", typeKey);
+
+  return {
+    id: id,
+    type: "line",
+    source: id,
+    layout: {
+      "line-join": "round",
+      "line-cap": "round",
+    },
+    paint: {
+      "line-color": typeData.line_colour,
+      "line-width": parseFloat(typeData.line_weight),
+    },
+  };
+}
+
 export function createMarker(feature = {}) {
   // Ensure is Marker with coordinates
   if (getFeatureType(feature) !== "marker" || !feature.geometry.coordinates) {

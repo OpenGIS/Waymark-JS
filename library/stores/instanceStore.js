@@ -27,7 +27,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const detailExpanded = ref(false);
 
-	const activePanel = ref("debug");
+	const activePanel = ref("overlay");
 	const panelOpen = ref(false);
 
 	function createStore(data = {}) {
@@ -89,7 +89,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function storeMarker(marker, feature) {
 		let featureType = "marker";
-		let typeKey = feature.properties.type;
+		let typeKey = makeKey(feature.properties.type);
 
 		const markerElement = marker.getElement();
 
@@ -124,12 +124,12 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function storeLine(line, feature) {
 		let featureType = "line";
-		let typeKey = feature.properties.type;
+		let typeKey = makeKey(feature.properties.type);
 
 		let overlay = {
 			id: overlays.value.length + 1,
 			typeKey: typeKey,
-			// typeData: getTypeData(featureType, typeKey),
+			typeData: getTypeData(featureType, typeKey),
 			feature: feature,
 			layer: line,
 			featureType: featureType,

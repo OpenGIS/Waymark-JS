@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { getMapStyle, createMarker } from "@/helpers/Map.js";
+import { getMapStyle, createMarker, createLineStyle } from "@/helpers/Map.js";
 
 // Import MapLibre
 import { Map, LngLatBounds } from "maplibre-gl";
@@ -84,25 +84,19 @@ export function useMaplibre() {
 						dataBounds.extend(coords);
 					});
 
-					// Add Line to Map
-					map.addSource(`line-${count++}`, {
+					const id = `line-${count++}`;
+
+					// Create Source
+					map.addSource(id, {
 						type: "geojson",
 						data: feature,
 					});
 
-					const line = map.addLayer({
-						id: `line-${count}`,
-						type: "line",
-						source: `line-${count - 1}`,
-						layout: {
-							"line-join": "round",
-							"line-cap": "round",
-						},
-						paint: {
-							"line-color": "#888",
-							"line-width": 8,
-						},
-					});
+					// Create Line Style
+					const lineStyle = createLineStyle(feature, id);
+
+					// Add Line to Map
+					const line = map.addLayer(lineStyle);
 
 					// Add Line to Store
 					storeLine(line, feature);
