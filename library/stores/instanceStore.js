@@ -96,7 +96,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		let overlay = {
 			id: overlays.value.length + 1,
 			typeKey: typeKey,
-			typeData: getTypeData("marker", typeKey),
+			typeData: getTypeData(featureType, typeKey),
 			feature: feature,
 			marker: marker,
 			featureType: featureType,
@@ -116,6 +116,24 @@ export const useInstanceStore = defineStore("instance", () => {
 		markerElement.addEventListener("mouseleave", () => {
 			toggleHoverOverlay(overlay);
 		});
+
+		overlays.value.push(overlay);
+
+		return overlay;
+	}
+
+	function storeLine(line, feature) {
+		let featureType = "line";
+		let typeKey = feature.properties.type;
+
+		let overlay = {
+			id: overlays.value.length + 1,
+			typeKey: typeKey,
+			// typeData: getTypeData(featureType, typeKey),
+			feature: feature,
+			layer: line,
+			featureType: featureType,
+		};
 
 		overlays.value.push(overlay);
 
@@ -149,16 +167,15 @@ export const useInstanceStore = defineStore("instance", () => {
 					contains = mapBounds.contains(overlay.marker.getLngLat());
 
 					break;
-				// case 'line':
-				//   if (contains) break
+				case "line":
+					// Check if coords are in view
+					overlay.feature.geometry.coordinates.forEach((coords) => {
+						if (!contains && mapBounds.contains(coords)) {
+							contains = true;
+						}
+					});
 
-				//   overlay.layer.getLatLngs().forEach((element) => {
-				//     if (mapBounds.contains(element)) {
-				//       contains = true
-				//     }
-				//   })
-
-				//   break
+					break;
 				//In view
 				// return mapBounds.contains()
 
@@ -174,6 +191,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	return {
 		createStore,
 		storeMap,
+		storeLine,
 		id,
 		overlays,
 		geoJSON,

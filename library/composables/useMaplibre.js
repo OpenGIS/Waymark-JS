@@ -28,7 +28,7 @@ export function useMaplibre() {
 	const dataBounds = new LngLatBounds();
 
 	const createMap = (config) => {
-		const { storeMarker, storeMap } = useInstanceStore();
+		const { storeMarker, storeMap, storeLine } = useInstanceStore();
 
 		if (config.id) {
 			id = config.id;
@@ -61,7 +61,7 @@ export function useMaplibre() {
 			geoJSON = config.geoJSON;
 
 			map.on("load", () => {
-				//Markers
+				// Markers
 				pointsFeatures.value.forEach((feature) => {
 					//Extend bounds
 					dataBounds.extend(feature.geometry.coordinates);
@@ -76,27 +76,36 @@ export function useMaplibre() {
 					storeMarker(marker, feature);
 				});
 
-				//Lines
-				const dataSource = map.addSource("geoJSON", {
-					type: "geojson",
-					data: geoJSON,
-				});
-
-				const dataLayer = map.addLayer({
-					id: "geoJSON",
-					type: "line",
-					source: "geoJSON",
-					paint: {
-						"line-color": "#088",
-						"line-width": 2,
-					},
-				});
-
-				//Extend bounds
+				// Lines
+				let count = 0;
 				linesFeatures.value.forEach((feature) => {
-					for (let i in feature.geometry.coordinates) {
-						dataBounds.extend(feature.geometry.coordinates[i]);
-					}
+					//Extend bounds
+					feature.geometry.coordinates.forEach((coords) => {
+						dataBounds.extend(coords);
+					});
+
+					// Add Line to Map
+					map.addSource(`line-${count++}`, {
+						type: "geojson",
+						data: feature,
+					});
+
+					const line = map.addLayer({
+						id: `line-${count}`,
+						type: "line",
+						source: `line-${count - 1}`,
+						layout: {
+							"line-join": "round",
+							"line-cap": "round",
+						},
+						paint: {
+							"line-color": "#888",
+							"line-width": 8,
+						},
+					});
+
+					// Add Line to Store
+					storeLine(line, feature);
 				});
 
 				//Set initial centre and zoom to it
