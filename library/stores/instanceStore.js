@@ -27,7 +27,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const detailExpanded = ref(false);
 
-	const activePanel = ref("overlay");
+	const activePanel = ref("debug");
 	const panelOpen = ref(false);
 
 	function createStore(data = {}) {
