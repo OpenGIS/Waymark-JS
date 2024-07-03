@@ -93,10 +93,10 @@ export function useMaplibre() {
 					});
 
 					// Create Line Style
-					const lineStyle = createLineStyle(feature, id);
+					const line = createLineStyle(feature, id);
 
 					// Add Line to Map
-					const line = map.addLayer(lineStyle);
+					map.addLayer(line);
 
 					// Add Line to Store
 					storeLine(line, feature);

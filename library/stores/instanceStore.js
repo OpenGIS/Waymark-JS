@@ -75,8 +75,19 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
-				// Go to bounds
-				// map.fitBounds(overlay.layer.getBounds());
+				const colour = map.getPaintProperty(overlay.layer.id, "line-color");
+
+				// Invert HEX colour
+				const hex = colour.replace("#", "");
+
+				const r = 255 - parseInt(hex.substring(0, 2), 16);
+				const g = 255 - parseInt(hex.substring(2, 4), 16);
+				const b = 255 - parseInt(hex.substring(4, 6), 16);
+
+				const newColour = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
+
+				map.setPaintProperty(overlay.layer.id, "line-color", newColour);
+
 				break;
 		}
 	}
