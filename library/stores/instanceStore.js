@@ -27,7 +27,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const detailExpanded = ref(false);
 
-	const activePanel = ref("overlay");
+	const activePanel = ref("debug");
 	const panelOpen = ref(false);
 
 	function createStore(data = {}) {
@@ -226,6 +226,18 @@ export const useInstanceStore = defineStore("instance", () => {
 		});
 	};
 
+	const markers = computed(() => {
+		return overlays.value.filter((overlay) => overlay.featureType == "marker");
+	});
+
+	const lines = computed(() => {
+		return overlays.value.filter((overlay) => overlay.featureType == "line");
+	});
+
+	const shapes = computed(() => {
+		return overlays.value.filter((overlay) => overlay.featureType == "shape");
+	});
+
 	return {
 		createStore,
 		storeMap,
@@ -248,5 +260,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		togglePanel,
 		setActivePanel,
 		setFocus,
+		markers,
+		lines,
+		shapes,
 	};
 });

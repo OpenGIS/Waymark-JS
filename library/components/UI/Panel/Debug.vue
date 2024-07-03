@@ -1,52 +1,33 @@
 <script setup>
-import { ref, computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
-
-const instanceStore = useInstanceStore();
-const { visibleOverlays } = storeToRefs(instanceStore);
-
-const activeType = ref("line");
-
-const debugContent = computed(() => {
-	// Visible Overlays filtered by activeType
-	return visibleOverlays.value
-		.filter((o) => {
-			return o.featureType === activeType.value;
-		})
-		.map((o) => {
-			return {
-				id: o.id,
-				typeKey: o.typeKey,
-				typeData: o.typeData,
-				feature: o.feature,
-				// marker: o.marker,
-				featureType: o.featureType,
-				// element: o.element,
-				imageURLs: o.imageURLs,
-			};
-		});
-});
+import Overlay from "@/components/UI/Panel/Debug/Overlay.vue";
+import Config from "@/components/UI/Panel/Debug/Config.vue";
 </script>
 
 <template>
 	<div class="panel debug">
-		<!-- Filter by featureType -->
-		<nav>
-			<select v-model="activeType">
-				<option value="marker">Marker</option>
-				<option value="line">Line</option>
-				<option value="shape">Shape</option>
-			</select>
-		</nav>
-
-		<div class="panel-content">
-			<pre>{{ debugContent }}</pre>
-		</div>
+		<!-- START Accordian -->
+		<details>
+			<summary>Overlays</summary>
+			<Overlay />
+		</details>
+		<details>
+			<summary>Config</summary>
+			<Config />
+		</details>
+		<!-- END Accordian -->
 	</div>
 </template>
 
-<style>
+<style lang="less">
 .panel.debug {
+	details {
+		margin-bottom: 1rem;
+
+		summary {
+			padding: 0.5rem;
+			background-color: #f0f0f0;
+			cursor: pointer;
+		}
+	}
 }
 </style>
