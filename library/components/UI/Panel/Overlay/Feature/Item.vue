@@ -5,7 +5,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 
 import { visibleIcon } from "@/helpers/Common.js";
-import Button from "@/components/UI/Button.vue";
+import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
   overlay: Object,

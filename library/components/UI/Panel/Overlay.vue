@@ -7,7 +7,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
-import Button from "@/components/UI/Button.vue";
+import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { visibleOverlays } = storeToRefs(instanceStore);
@@ -33,13 +33,19 @@ const activeOverlays = computed(() => {
 				<Button
 					icon="ion-ios-location-outline"
 					@click="activeType = 'marker'"
+					:active="activeType === 'marker'"
 				/>
 
-				<Button icon="ion-arrow-graph-up-right" @click="activeType = 'line'" />
+				<Button
+					icon="ion-arrow-graph-up-right"
+					@click="activeType = 'line'"
+					:active="activeType === 'line'"
+				/>
 
 				<Button
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeType = 'shape'"
+					:active="activeType === 'shape'"
 				/>
 			</nav>
 

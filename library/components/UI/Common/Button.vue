@@ -49,7 +49,7 @@ const iconClass = computed(() => {
 
   &.active&:hover {
     color: #444;
-    background: #fff;
+    background: red;
   }
 }
 </style>

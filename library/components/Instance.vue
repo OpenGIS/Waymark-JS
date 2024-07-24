@@ -83,10 +83,13 @@ onMounted(() => {
 
 	.map {
 		width: 100%;
+		/* Transition */
+		transition: width 0.25s circular;
 	}
 
 	.ui {
-		width: 60px;
+		/* Transition */
+		transition: width 0.25s circular;
 	}
 
 	&.panel-open {

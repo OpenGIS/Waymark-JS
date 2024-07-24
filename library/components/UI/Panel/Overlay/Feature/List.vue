@@ -5,7 +5,7 @@ import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
 import Preview from "@/components/UI/Panel/Overlay/Preview.vue";
 import Item from "@/components/UI/Panel/Overlay/Feature/Item.vue";
-import Button from "@/components/UI/Button.vue";
+import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
   byType: Object,

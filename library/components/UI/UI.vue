@@ -4,12 +4,12 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activePanel, panelOpen, overlayCount } = storeToRefs(instanceStore);
+const { activePanel } = storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
 import Debug from "@/components/UI/Panel/Debug.vue";
 
-import Button from "@/components/UI/Button.vue";
+import Button from "@/components/UI/Common/Button.vue";
 
 const handleNavClick = (panel = "overlay") => {
 	// If the panel is already open, close it
@@ -25,7 +25,6 @@ const handleNavClick = (panel = "overlay") => {
 </script>
 
 <template>
-	<!-- <div class="ui" :style="`height:${barHeight}`"> -->
 	<div class="ui">
 		<!-- START Panels -->
 		<div class="panels">
@@ -33,12 +32,20 @@ const handleNavClick = (panel = "overlay") => {
 			<nav class="panel-nav">
 				<!-- Layers -->
 				<div class="nav-item">
-					<Button icon="fa-navicon" @click="handleNavClick('overlay')" />
+					<Button
+						icon="fa-navicon"
+						@click="handleNavClick('overlay')"
+						:active="activePanel === 'overlay'"
+					/>
 				</div>
 
 				<!-- Layers -->
 				<div class="nav-item">
-					<Button icon="fa-gear" @click="handleNavClick('debug')" />
+					<Button
+						icon="fa-gear"
+						@click="handleNavClick('debug')"
+						:active="activePanel === 'debug'"
+					/>
 				</div>
 			</nav>
 			<!-- END Panel Nav -->
@@ -69,19 +76,15 @@ const handleNavClick = (panel = "overlay") => {
 
 	.panels {
 		position: relative;
-		padding-right: 75px;
-
+		padding: 0;
+		padding-right: 60px;
 		.panel-nav {
 			position: absolute;
 			right: 0;
-			width: 65px;
+			width: 60px;
 			height: 100%;
-			// display: flex;
 			background: rgba(249, 249, 249, 0.9);
 			border-left: 2px solid #eee;
-
-			.nav-item {
-			}
 		}
 
 		.panel-hug {
