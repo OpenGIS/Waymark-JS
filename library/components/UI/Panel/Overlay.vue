@@ -12,7 +12,7 @@ import Button from "@/components/UI/Common/Button.vue";
 const instanceStore = useInstanceStore();
 const { visibleOverlays } = storeToRefs(instanceStore);
 
-const activeType = ref("line");
+const activeType = ref("marker");
 
 const activeOverlays = computed(() => {
 	return overlaysByType(
