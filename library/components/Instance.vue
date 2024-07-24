@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 
 import { useMaplibre } from "@/composables/useMaplibre.js";
 const { createMap } = useMaplibre();
@@ -8,6 +8,7 @@ const { createMap } = useMaplibre();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
+const { activePanel, panelOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -41,6 +42,16 @@ const props = defineProps({
 	},
 });
 
+const instanceClass = computed(() => {
+	let classes = ["instance"];
+
+	if (panelOpen.value && activePanel.value) {
+		classes.push("panel-open");
+	}
+
+	return classes.join(" ");
+});
+
 onMounted(() => {
 	createStore(props);
 
@@ -56,7 +67,7 @@ onMounted(() => {
 
 <template>
 	<!-- Instance -->
-	<div class="instance" :id="`${id}-instance`">
+	<div :class="instanceClass" :id="`${id}-instance`">
 		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
 		<UI />
@@ -71,11 +82,20 @@ onMounted(() => {
 	display: flex;
 
 	.map {
-		width: 50%;
+		width: 100%;
 	}
 
 	.ui {
-		width: 50%;
+		width: 60px;
+	}
+
+	&.panel-open {
+		.map {
+			width: 50%;
+		}
+		.ui {
+			width: 50%;
+		}
 	}
 }
 </style>
