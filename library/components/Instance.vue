@@ -45,7 +45,7 @@ const props = defineProps({
 const instanceClass = computed(() => {
 	let classes = ["instance"];
 
-	if (panelOpen.value && activePanel.value) {
+	if (panelOpen.value) {
 		classes.push("panel-open");
 	}
 

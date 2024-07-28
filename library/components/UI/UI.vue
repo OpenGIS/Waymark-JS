@@ -4,23 +4,25 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activePanel } = storeToRefs(instanceStore);
+const { activePanel, panelOpen } = storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
 import Debug from "@/components/UI/Panel/Debug.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
 
+const showPanel = (panel) => {
+	return activePanel.value === panel && panelOpen.value;
+};
+
 const handleNavClick = (panel = "overlay") => {
-	// If the panel is already open, close it
+	// Toggle existing panel
 	if (panel === activePanel.value) {
-		instanceStore.setActivePanel(null);
-
-		return;
+		instanceStore.togglePanel();
+		// Switch to a different panel
+	} else {
+		instanceStore.setActivePanel(panel);
 	}
-
-	// Open the panel
-	instanceStore.setActivePanel(panel);
 };
 </script>
 
@@ -51,13 +53,13 @@ const handleNavClick = (panel = "overlay") => {
 			<!-- END Panel Nav -->
 
 			<!-- START Overlays Panel -->
-			<div class="panel-hug overlay" v-show="activePanel === 'overlay'">
+			<div class="panel-hug overlay" v-show="showPanel('overlay')">
 				<Overlay />
 			</div>
 			<!-- END Overlays Panel -->
 
 			<!-- START Debug Panel -->
-			<div class="panel-hug debug" v-show="activePanel === 'debug'">
+			<div class="panel-hug debug" v-show="showPanel('debug')">
 				<Debug />
 			</div>
 			<!-- END Debug Panel -->
