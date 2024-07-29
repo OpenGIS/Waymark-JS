@@ -104,7 +104,10 @@ export function useMaplibre() {
 
 				//Set initial centre and zoom to it
 				map.setCenter(dataBounds.getCenter());
-				map.fitBounds(dataBounds, { padding: 80 });
+				map.fitBounds(dataBounds, {
+					// padding: 80,
+					animate: false,
+				});
 
 				map.once("moveend", () => {
 					//Set Max bounds
