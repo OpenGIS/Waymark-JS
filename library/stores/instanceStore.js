@@ -93,6 +93,8 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setActiveOverlay(overlay) {
+		setActivePanel("overlay");
+
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
 			//Focus On

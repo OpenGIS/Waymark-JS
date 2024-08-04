@@ -111,7 +111,7 @@ export function useMaplibre() {
 
 				map.once("moveend", () => {
 					//Set Max bounds
-					map.setMaxBounds(map.getBounds());
+					// map.setMaxBounds(map.getBounds());
 
 					lng = map.getCenter().lng.toFixed(4);
 					lat = map.getCenter().lat.toFixed(4);
