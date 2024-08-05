@@ -52,6 +52,7 @@ export function useMaplibre() {
 			style: getMapStyle(),
 			center: [lng, lat],
 			zoom: zoom,
+			attributionControl: false,
 		});
 
 		storeMap(map);

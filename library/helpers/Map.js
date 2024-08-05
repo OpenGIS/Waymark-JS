@@ -57,6 +57,23 @@ export function getMapStyle() {
   return style;
 }
 
+export function getMapAttribution() {
+  const { mapConfig } = useInstanceStore();
+
+  let attrString = "Powered by MapLibre";
+
+  // Use Config Tile Layers
+  if (Array.isArray(mapConfig.tile_layers)) {
+    const attrArray = mapConfig.tile_layers.map((layer) => {
+      return layer.layer_attribution;
+    });
+
+    attrString += attrArray.join(", ");
+  }
+
+  return attrString;
+}
+
 export function createLineStyle(feature = {}, id = "") {
   // Ensure is LineString with coordinates
   if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {

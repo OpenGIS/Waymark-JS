@@ -8,6 +8,7 @@ const { activePanel, panelOpen } = storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
 import Debug from "@/components/UI/Panel/Debug.vue";
+import Info from "@/components/UI/Panel/Info.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
 
@@ -41,12 +42,21 @@ const handleNavClick = (panel = "overlay") => {
 					/>
 				</div>
 
-				<!-- Layers -->
+				<!-- Debug -->
 				<div class="nav-item">
 					<Button
 						icon="fa-gear"
 						@click="handleNavClick('debug')"
 						:active="activePanel === 'debug'"
+					/>
+				</div>
+
+				<!-- Info -->
+				<div class="nav-item">
+					<Button
+						icon="fa-info"
+						@click="handleNavClick('info')"
+						:active="activePanel === 'info'"
 					/>
 				</div>
 			</nav>
@@ -63,6 +73,12 @@ const handleNavClick = (panel = "overlay") => {
 				<Debug />
 			</div>
 			<!-- END Debug Panel -->
+
+			<!-- START Info Panel -->
+			<div class="panel-hug info" v-show="showPanel('info')">
+				<Info />
+			</div>
+			<!-- END Info Panel -->
 		</div>
 		<!-- END Panels -->
 	</div>
