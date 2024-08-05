@@ -42,6 +42,8 @@ const props = defineProps({
 	},
 });
 
+let instanceElement = null;
+
 const instanceWidth = ref(null);
 const instanceHeight = ref(null);
 
@@ -73,27 +75,17 @@ onMounted(() => {
 		geoJSON: props.geoJSON,
 	});
 
-	// Inital Dimensions
-	instanceWidth.value = document.getElementById(
-		`${props.id}-instance`,
-	).clientWidth;
-	instanceHeight.value = document.getElementById(
-		`${props.id}-instance`,
-	).clientHeight;
+	// Instance Element
+	instanceElement = document.getElementById(`${props.id}-instance`);
 
-	console.log(instanceWidth.value, instanceHeight.value);
+	// Inital Dimensions
+	const getDimensions = () => {
+		instanceWidth.value = instanceElement.clientWidth;
+		instanceHeight.value = instanceElement.clientHeight;
+	};
 
 	// Resize Event
-	window.addEventListener("resize", () => {
-		instanceWidth.value = document.getElementById(
-			`${props.id}-instance`,
-		).clientWidth;
-		instanceHeight.value = document.getElementById(
-			`${props.id}-instance`,
-		).clientHeight;
-
-		console.log(instanceWidth.value, instanceHeight.value);
-	});
+	window.addEventListener("resize", getDimensions);
 });
 </script>
 
@@ -112,6 +104,10 @@ onMounted(() => {
 	width: 100%;
 
 	display: flex;
+
+	&.portrait {
+		flex-direction: column;
+	}
 
 	.map {
 		width: 100%;
