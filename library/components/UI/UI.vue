@@ -62,23 +62,15 @@ const handleNavClick = (panel = "overlay") => {
 			</nav>
 			<!-- END Panel Nav -->
 
-			<!-- START Overlays Panel -->
-			<div class="panel-hug overlay" v-show="showPanel('overlay')">
-				<Overlay />
-			</div>
-			<!-- END Overlays Panel -->
+			<!-- START Panel Content -->
+			<div class="panel-content">
+				<Overlay v-show="showPanel('overlay')" />
 
-			<!-- START Debug Panel -->
-			<div class="panel-hug debug" v-show="showPanel('debug')">
-				<Debug />
-			</div>
-			<!-- END Debug Panel -->
+				<Debug v-show="showPanel('debug')" />
 
-			<!-- START Info Panel -->
-			<div class="panel-hug info" v-show="showPanel('info')">
-				<Info />
+				<Info v-show="showPanel('info')" />
 			</div>
-			<!-- END Info Panel -->
+			<!-- END Panel Content -->
 		</div>
 		<!-- END Panels -->
 	</div>
@@ -87,26 +79,75 @@ const handleNavClick = (panel = "overlay") => {
 <style lang="less">
 .ui {
 	.panels {
-		// height: 100%;
+		height: 100%;
 		// max-height: 100%;
 		min-width: 60px;
 		min-height: 60px;
+		background: green;
 
 		// overflow: auto;
-		background: rgba(249, 249, 249, 0.9);
+		// background: rgba(249, 249, 249, 0.9);
 		transition: height 0.1s jump-start;
 
+		/* Nav */
+		.panel-nav {
+			position: fixed;
+			// background: red;
+			// opacity: 0.1;
+
+			.nav-item {
+				padding: 0 10px;
+				// height: 60px;
+				// width: 100%;
+				// display: flex;
+				// justify-content: center;
+				// align-items: center;
+				// background: blue;
+			}
+		}
+
+		/* Content */
+		.panel-content {
+			height: 100%;
+			min-width: 60px;
+		}
+
 		&.portrait {
+			padding-right: 60px;
+
+			/* Nav */
+
+			/* Open */
+			// &.panel-open {
 			.panel-nav {
-				width: 100%;
+				right: 0;
+				width: 60px;
+				height: 100%;
+				// width: 100%;
 				display: flex;
-				flex-direction: row;
-				justify-content: right;
-				direction: rtl;
+				flex-direction: column;
+			}
+			// }
+
+			/* Closed */
+			&.panel-closed {
+				.panel-nav {
+					height: 60px;
+					width: 100%;
+					flex-direction: row;
+					justify-content: right;
+					direction: rtl;
+				}
+			}
+
+			/* Content */
+			.panel-content {
+				overflow: auto;
 			}
 		}
 
 		&.landscape {
+			/* Landscape Nav */
 			.panel-nav {
 				height: 100%;
 				display: flex;

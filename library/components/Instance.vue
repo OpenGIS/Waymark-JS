@@ -86,6 +86,7 @@ onMounted(() => {
 
 			.ui {
 				height: 33%;
+				min-height: 33%;
 			}
 		}
 	}
