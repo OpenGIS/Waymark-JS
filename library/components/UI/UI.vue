@@ -89,9 +89,21 @@ const handleNavClick = (panel = "overlay") => {
 		// background: rgba(249, 249, 249, 0.9);
 		transition: height 0.1s jump-start;
 
+		/* Open */
+		&.panel-open {
+			padding-right: 60px;
+		}
+
 		/* Nav */
 		.panel-nav {
 			position: fixed;
+			right: 0;
+			width: 60px;
+			height: 100%;
+			// width: 100%;
+			display: flex;
+			flex-direction: column;
+
 			// background: red;
 			// opacity: 0.1;
 
@@ -108,26 +120,24 @@ const handleNavClick = (panel = "overlay") => {
 
 		/* Content */
 		.panel-content {
+			width: 100%;
 			height: 100%;
 			min-width: 60px;
+			overflow-x: hidden;
 		}
 
 		&.portrait {
-			padding-right: 60px;
-
 			/* Nav */
 
 			/* Open */
-			// &.panel-open {
 			.panel-nav {
-				right: 0;
-				width: 60px;
-				height: 100%;
-				// width: 100%;
-				display: flex;
-				flex-direction: column;
+				// right: 0;
+				// width: 60px;
+				// height: 100%;
+				// // width: 100%;
+				// display: flex;
+				// flex-direction: column;
 			}
-			// }
 
 			/* Closed */
 			&.panel-closed {
@@ -147,12 +157,14 @@ const handleNavClick = (panel = "overlay") => {
 		}
 
 		&.landscape {
-			/* Landscape Nav */
+			/* Nav */
+
+			/* Open */
 			.panel-nav {
 				height: 100%;
 				display: flex;
 				flex-direction: column;
-				justify-content: center;
+				// justify-content: center;
 			}
 		}
 	}

@@ -153,6 +153,7 @@ const overlayStyle = () => {
         }
 
         &.title {
+          overflow: hidden;
           font-size: 130%;
           color: #000;
           text-shadow: 1px 1px 1px #fff;
