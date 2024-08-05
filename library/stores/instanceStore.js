@@ -30,12 +30,24 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activePanel = ref("overlay");
 	const panelOpen = ref(false);
 
+	const instanceWidth = ref(0);
+	const instanceHeight = ref(0);
+
 	function createStore(data = {}) {
 		if (data.id) {
 			id = data.id;
 
 			// Get DOM Element
 			container = document.getElementById(id);
+
+			// Inital Dimensions
+			const getDimensions = () => {
+				instanceWidth.value = container.clientWidth;
+				instanceHeight.value = container.clientHeight;
+			};
+
+			// Resize Event
+			window.addEventListener("resize", getDimensions);
 		}
 
 		if (data.geoJSON) {
@@ -265,5 +277,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		markers,
 		lines,
 		shapes,
+		instanceWidth,
+		instanceHeight,
 	};
 });

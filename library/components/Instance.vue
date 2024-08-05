@@ -8,7 +8,7 @@ const { createMap } = useMaplibre();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
-const { activePanel, panelOpen } = storeToRefs(instanceStore);
+const { instanceWidth, instanceHeight, panelOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -42,11 +42,6 @@ const props = defineProps({
 	},
 });
 
-let instanceElement = null;
-
-const instanceWidth = ref(null);
-const instanceHeight = ref(null);
-
 const instanceClass = computed(() => {
 	let classes = ["instance"];
 
@@ -74,18 +69,6 @@ onMounted(() => {
 		zoom: props.zoom,
 		geoJSON: props.geoJSON,
 	});
-
-	// Instance Element
-	instanceElement = document.getElementById(`${props.id}-instance`);
-
-	// Inital Dimensions
-	const getDimensions = () => {
-		instanceWidth.value = instanceElement.clientWidth;
-		instanceHeight.value = instanceElement.clientHeight;
-	};
-
-	// Resize Event
-	window.addEventListener("resize", getDimensions);
 });
 </script>
 
