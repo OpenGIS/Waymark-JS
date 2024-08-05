@@ -26,7 +26,9 @@ const activeOverlays = computed(() => {
 <template>
 	<div class="panel overlay">
 		<div class="panel-content">
-			<Detail />
+			<header>
+				<Detail />
+			</header>
 
 			<!-- Feature Nav -->
 			<nav id="type-nav" :value="activeType">
@@ -57,6 +59,9 @@ const activeOverlays = computed(() => {
 
 <style>
 .panel.overlay {
+	header {
+		position: fixed;
+	}
 	nav {
 		display: flex;
 	}

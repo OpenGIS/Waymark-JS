@@ -257,6 +257,18 @@ export const useInstanceStore = defineStore("instance", () => {
 		return width.value > height.value ? "landscape" : "portrait";
 	});
 
+	const classAppend = computed(() => {
+		let classes = [""];
+
+		if (panelOpen.value) {
+			classes.push("panel-open");
+		}
+
+		classes.push(orientation.value);
+
+		return classes.join(" ");
+	});
+
 	return {
 		createStore,
 		storeMap,
@@ -285,5 +297,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		width,
 		height,
 		orientation,
+		classAppend,
 	};
 });

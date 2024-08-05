@@ -8,7 +8,7 @@ const { createMap } = useMaplibre();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
-const { orientation, panelOpen } = storeToRefs(instanceStore);
+const { classAppend } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -42,18 +42,6 @@ const props = defineProps({
 	},
 });
 
-const instanceClass = computed(() => {
-	let classes = ["instance"];
-
-	if (panelOpen.value) {
-		classes.push("panel-open");
-	}
-
-	classes.push(orientation.value);
-
-	return classes.join(" ");
-});
-
 onMounted(() => {
 	createStore(props);
 
@@ -69,7 +57,7 @@ onMounted(() => {
 
 <template>
 	<!-- Instance -->
-	<div :class="instanceClass" :id="`${id}-instance`">
+	<div :class="`instance ${classAppend}`" :id="`${id}-instance`">
 		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
 		<UI />

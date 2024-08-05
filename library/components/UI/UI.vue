@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activePanel, panelOpen } = storeToRefs(instanceStore);
+const { activePanel, panelOpen, classAppend } = storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
 import Debug from "@/components/UI/Panel/Debug.vue";
@@ -28,7 +28,7 @@ const handleNavClick = (panel = "overlay") => {
 </script>
 
 <template>
-	<div class="ui">
+	<div :class="`ui ${classAppend}`">
 		<!-- START Panels -->
 		<div class="panels">
 			<!-- START Panel Nav -->
@@ -107,6 +107,8 @@ const handleNavClick = (panel = "overlay") => {
 			height: 100%;
 			background: rgba(249, 249, 249, 0.9);
 			border-left: 2px solid #eee;
+			background: blue;
+			position: fixed;
 		}
 
 		.panel-hug {
