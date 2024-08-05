@@ -70,8 +70,11 @@ const handleNavClick = (panel = "overlay") => {
 
 <style lang="less">
 .ui {
-	height: 100%;
-	max-height: 100%;
+	// height: 100%;
+	// max-height: 100%;
+	min-width: 60px;
+	min-height: 60px;
+
 	overflow: auto;
 	background: rgba(249, 249, 249, 0.9);
 	transition: height 0.1s jump-start;
@@ -80,6 +83,7 @@ const handleNavClick = (panel = "overlay") => {
 		position: relative;
 		padding: 0;
 		padding-right: 60px;
+
 		.panel-nav {
 			position: absolute;
 			right: 0;

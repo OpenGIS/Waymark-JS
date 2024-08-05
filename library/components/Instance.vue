@@ -105,28 +105,48 @@ onMounted(() => {
 
 	display: flex;
 
+	/* Portrait */
 	&.portrait {
 		flex-direction: column;
-	}
 
-	.map {
-		width: 100%;
-		/* Transition */
-		transition: width 0.25s circular;
-	}
-
-	.ui {
-		/* Transition */
-		transition: width 0.25s circular;
-	}
-
-	&.panel-open {
 		.map {
-			width: 50%;
+			height: 100%;
 		}
-		.ui {
-			width: 50%;
+
+		&.panel-open {
+			.map {
+				height: 50%;
+			}
+
+			.ui {
+				height: 50%;
+			}
 		}
+	}
+
+	/* Landscape */
+	&.landscape {
+		flex-direction: row;
+
+		.map {
+			width: 100%;
+		}
+
+		&.panel-open {
+			.map {
+				width: 50%;
+			}
+
+			.ui {
+				width: 50%;
+			}
+		}
+	}
+
+	/* Transitions */
+	.map,
+	.ui {
+		transition: width 0.25s circular;
 	}
 }
 </style>
