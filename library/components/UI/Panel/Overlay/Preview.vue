@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  console.log("featureType", props);
+  // console.log("featureType", props);
 });
 </script>
 

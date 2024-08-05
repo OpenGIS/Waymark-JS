@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 import { useMaplibre } from "@/composables/useMaplibre.js";
 const { createMap } = useMaplibre();
@@ -42,11 +42,21 @@ const props = defineProps({
 	},
 });
 
+const instanceWidth = ref(null);
+const instanceHeight = ref(null);
+
 const instanceClass = computed(() => {
 	let classes = ["instance"];
 
 	if (panelOpen.value) {
 		classes.push("panel-open");
+	}
+
+	// Portrait or Landscape?
+	if (instanceWidth.value < instanceHeight.value) {
+		classes.push("portrait");
+	} else {
+		classes.push("landscape");
 	}
 
 	return classes.join(" ");
@@ -61,6 +71,28 @@ onMounted(() => {
 		lat: props.lat,
 		zoom: props.zoom,
 		geoJSON: props.geoJSON,
+	});
+
+	// Inital Dimensions
+	instanceWidth.value = document.getElementById(
+		`${props.id}-instance`,
+	).clientWidth;
+	instanceHeight.value = document.getElementById(
+		`${props.id}-instance`,
+	).clientHeight;
+
+	console.log(instanceWidth.value, instanceHeight.value);
+
+	// Resize Event
+	window.addEventListener("resize", () => {
+		instanceWidth.value = document.getElementById(
+			`${props.id}-instance`,
+		).clientWidth;
+		instanceHeight.value = document.getElementById(
+			`${props.id}-instance`,
+		).clientHeight;
+
+		console.log(instanceWidth.value, instanceHeight.value);
 	});
 });
 </script>
