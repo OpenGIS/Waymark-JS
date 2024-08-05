@@ -260,8 +260,11 @@ export const useInstanceStore = defineStore("instance", () => {
 	const classAppend = computed(() => {
 		let classes = [""];
 
+		// Panels
 		if (panelOpen.value) {
 			classes.push("panel-open");
+		} else {
+			classes.push("panel-closed");
 		}
 
 		classes.push(orientation.value);
