@@ -8,7 +8,7 @@ const { createMap } = useMaplibre();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
-const { instanceWidth, instanceHeight, panelOpen } = storeToRefs(instanceStore);
+const { orientation, panelOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -49,12 +49,7 @@ const instanceClass = computed(() => {
 		classes.push("panel-open");
 	}
 
-	// Portrait or Landscape?
-	if (instanceWidth.value < instanceHeight.value) {
-		classes.push("portrait");
-	} else {
-		classes.push("landscape");
-	}
+	classes.push(orientation.value);
 
 	return classes.join(" ");
 });

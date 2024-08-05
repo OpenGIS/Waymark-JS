@@ -30,8 +30,8 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activePanel = ref("overlay");
 	const panelOpen = ref(false);
 
-	const instanceWidth = ref(0);
-	const instanceHeight = ref(0);
+	const width = ref(0);
+	const height = ref(0);
 
 	function createStore(data = {}) {
 		if (data.id) {
@@ -42,9 +42,10 @@ export const useInstanceStore = defineStore("instance", () => {
 
 			// Inital Dimensions
 			const getDimensions = () => {
-				instanceWidth.value = container.clientWidth;
-				instanceHeight.value = container.clientHeight;
+				width.value = container.clientWidth;
+				height.value = container.clientHeight;
 			};
+			getDimensions();
 
 			// Resize Event
 			window.addEventListener("resize", getDimensions);
@@ -252,6 +253,10 @@ export const useInstanceStore = defineStore("instance", () => {
 		return overlays.value.filter((overlay) => overlay.featureType == "shape");
 	});
 
+	const orientation = computed(() => {
+		return width.value > height.value ? "landscape" : "portrait";
+	});
+
 	return {
 		createStore,
 		storeMap,
@@ -277,7 +282,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		markers,
 		lines,
 		shapes,
-		instanceWidth,
-		instanceHeight,
+		width,
+		height,
+		orientation,
 	};
 });
