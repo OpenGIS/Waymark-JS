@@ -34,21 +34,21 @@ const handleNavClick = (panel = "overlay") => {
 		<div :class="`panels ${classAppend}`">
 			<!-- START Panel Nav -->
 			<nav class="panel-nav">
+				<!-- Detail -->
+				<div v-show="activeOverlay" class="nav-item nav-detail">
+					<Button
+						icon="fa-gear"
+						@click="handleNavClick('detail')"
+						:active="activePanel === 'detail'"
+					/>
+				</div>
+
 				<!-- Overlay -->
 				<div class="nav-item nav-overlay">
 					<Button
 						icon="fa-navicon"
 						@click="handleNavClick('overlay')"
 						:active="activePanel === 'overlay'"
-					/>
-				</div>
-
-				<!-- Detail -->
-				<div class="nav-item nav-detail">
-					<Button
-						icon="fa-gear"
-						@click="handleNavClick('detail')"
-						:active="activePanel === 'detail'"
 					/>
 				</div>
 
