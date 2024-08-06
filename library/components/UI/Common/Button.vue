@@ -31,7 +31,7 @@ const iconClass = computed(() => {
 <style lang="less">
 .button {
   display: flex;
-  margin: 10px auto;
+  margin: 10px;
   padding: 12px;
   width: 15px;
   font-size: 150%;

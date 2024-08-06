@@ -9,7 +9,7 @@ import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { visibleOverlays } = storeToRefs(instanceStore);
+const { visibleOverlays, markers, lines, shapes } = storeToRefs(instanceStore);
 
 const activeType = ref("marker");
 
@@ -20,26 +20,33 @@ const activeOverlays = computed(() => {
 		}),
 	);
 });
+
+const doFeatureTypes = computed(() => {
+	return markers.value.length + lines.value.length + shapes.value.length > 1;
+});
 </script>
 
 <template>
 	<div class="panel overlay">
 		<div class="panel-content">
 			<!-- Feature Nav -->
-			<nav id="type-nav" :value="activeType">
+			<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
 				<Button
+					v-if="markers.length"
 					icon="ion-ios-location-outline"
 					@click="activeType = 'marker'"
 					:active="activeType === 'marker'"
 				/>
 
 				<Button
+					v-if="lines.length"
 					icon="ion-arrow-graph-up-right"
 					@click="activeType = 'line'"
 					:active="activeType === 'line'"
 				/>
 
 				<Button
+					v-if="shapes.length"
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeType = 'shape'"
 					:active="activeType === 'shape'"
@@ -54,8 +61,9 @@ const activeOverlays = computed(() => {
 
 <style>
 .panel.overlay {
-	nav {
+	.type-nav {
 		display: flex;
+		justify-content: space-around;
 	}
 }
 </style>
