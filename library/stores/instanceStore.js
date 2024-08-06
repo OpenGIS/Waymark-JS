@@ -77,10 +77,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen.value = true;
 	}
 
-	function toggleDetailExpanded() {
-		detailExpanded.value = !detailExpanded.value;
-	}
-
 	function toggleHoverOverlay(overlay) {
 		switch (overlay.featureType) {
 			case "marker":
@@ -106,15 +102,12 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setActiveOverlay(overlay) {
-		setActivePanel("overlay");
+		setActivePanel("detail");
 
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
 			//Focus On
 			setFocus(overlay);
-
-			//Increase info
-			detailExpanded.value = true;
 
 			//Switching Overlay
 		} else {
@@ -286,8 +279,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		activeOverlay,
 		setActiveOverlay,
 		toggleHoverOverlay,
-		toggleDetailExpanded,
-		detailExpanded,
+		// toggleDetailExpanded,
+		// detailExpanded,
 		activePanel,
 		panelOpen,
 		storeMarker,

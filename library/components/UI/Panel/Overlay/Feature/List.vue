@@ -11,7 +11,7 @@ const props = defineProps({
   byType: Object,
 });
 
-let expanded = ref(false);
+let expanded = ref(true);
 let visible = ref(true);
 
 const toggleHighlight = (overlay) => {

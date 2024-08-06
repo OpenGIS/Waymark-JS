@@ -37,7 +37,7 @@ const handleNavClick = (panel = "overlay") => {
 				<!-- Detail -->
 				<div v-show="activeOverlay" class="nav-item nav-detail">
 					<Button
-						icon="fa-gear"
+						icon="fa-question-circle-o"
 						@click="handleNavClick('detail')"
 						:active="activePanel === 'detail'"
 					/>
@@ -133,6 +133,7 @@ const handleNavClick = (panel = "overlay") => {
 
 			/* Content */
 			.panel-content {
+				padding: 10px;
 				overflow: auto;
 			}
 		}

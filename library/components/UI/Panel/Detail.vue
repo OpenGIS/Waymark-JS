@@ -49,6 +49,18 @@ const detailClass = computed(() => {
 </template>
 
 <style lang="less">
-.detail {
+.panel.detail {
+  > div {
+    margin-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .type {
+    display: inline-block;
+  }
 }
 </style>
