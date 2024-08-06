@@ -80,13 +80,8 @@ const handleNavClick = (panel = "overlay") => {
 .ui {
 	.panels {
 		height: 100%;
-		// max-height: 100%;
 		min-width: 60px;
 		min-height: 60px;
-		background: green;
-
-		// overflow: auto;
-		// background: rgba(249, 249, 249, 0.9);
 		transition: height 0.1s jump-start;
 
 		/* Open */
@@ -100,21 +95,11 @@ const handleNavClick = (panel = "overlay") => {
 			right: 0;
 			width: 60px;
 			height: 100%;
-			// width: 100%;
 			display: flex;
 			flex-direction: column;
 
-			// background: red;
-			// opacity: 0.1;
-
 			.nav-item {
 				padding: 0 10px;
-				// height: 60px;
-				// width: 100%;
-				// display: flex;
-				// justify-content: center;
-				// align-items: center;
-				// background: blue;
 			}
 		}
 
@@ -127,18 +112,6 @@ const handleNavClick = (panel = "overlay") => {
 		}
 
 		&.portrait {
-			/* Nav */
-
-			/* Open */
-			.panel-nav {
-				// right: 0;
-				// width: 60px;
-				// height: 100%;
-				// // width: 100%;
-				// display: flex;
-				// flex-direction: column;
-			}
-
 			/* Closed */
 			&.panel-closed {
 				.panel-nav {
@@ -157,14 +130,11 @@ const handleNavClick = (panel = "overlay") => {
 		}
 
 		&.landscape {
-			/* Nav */
-
 			/* Open */
 			.panel-nav {
 				height: 100%;
 				display: flex;
 				flex-direction: column;
-				// justify-content: center;
 			}
 		}
 	}

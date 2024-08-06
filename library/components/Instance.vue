@@ -81,12 +81,12 @@ onMounted(() => {
 
 		&.panel-open {
 			.map {
-				height: 66%;
+				height: 60%;
 			}
 
 			.ui {
-				height: 33%;
-				min-height: 33%;
+				height: 40%;
+				min-height: 40%;
 			}
 		}
 	}
@@ -101,11 +101,11 @@ onMounted(() => {
 
 		&.panel-open {
 			.map {
-				width: 66%;
+				width: 60%;
 			}
 
 			.ui {
-				width: 33%;
+				width: 40%;
 			}
 		}
 	}
