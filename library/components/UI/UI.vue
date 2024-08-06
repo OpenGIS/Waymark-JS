@@ -4,10 +4,11 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activePanel, panelOpen, classAppend } = storeToRefs(instanceStore);
+const { activePanel, panelOpen, classAppend, activeOverlay } =
+	storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
-import Debug from "@/components/UI/Panel/Debug.vue";
+import Detail from "@/components/UI/Panel/Detail.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
@@ -33,8 +34,8 @@ const handleNavClick = (panel = "overlay") => {
 		<div :class="`panels ${classAppend}`">
 			<!-- START Panel Nav -->
 			<nav class="panel-nav">
-				<!-- Layers -->
-				<div class="nav-item">
+				<!-- Overlay -->
+				<div class="nav-item nav-overlay">
 					<Button
 						icon="fa-navicon"
 						@click="handleNavClick('overlay')"
@@ -42,17 +43,17 @@ const handleNavClick = (panel = "overlay") => {
 					/>
 				</div>
 
-				<!-- Debug -->
-				<div class="nav-item">
+				<!-- Detail -->
+				<div class="nav-item nav-detail">
 					<Button
 						icon="fa-gear"
-						@click="handleNavClick('debug')"
-						:active="activePanel === 'debug'"
+						@click="handleNavClick('detail')"
+						:active="activePanel === 'detail'"
 					/>
 				</div>
 
 				<!-- Info -->
-				<div class="nav-item">
+				<div class="nav-item nav-info">
 					<Button
 						icon="fa-info"
 						@click="handleNavClick('info')"
@@ -64,9 +65,9 @@ const handleNavClick = (panel = "overlay") => {
 
 			<!-- START Panel Content -->
 			<div class="panel-content">
-				<Overlay v-show="showPanel('overlay')" />
+				<Detail v-show="showPanel('detail') && activeOverlay" />
 
-				<Debug v-show="showPanel('debug')" />
+				<Overlay v-show="showPanel('overlay')" />
 
 				<Info v-show="showPanel('info')" />
 			</div>
@@ -97,9 +98,16 @@ const handleNavClick = (panel = "overlay") => {
 			height: 100%;
 			display: flex;
 			flex-direction: column;
+			background: pink;
 
 			.nav-item {
 				padding: 0 10px;
+
+				&.nav-info {
+					// position: absolute;
+					// bottom: 0;
+					// right: 0;
+				}
 			}
 		}
 

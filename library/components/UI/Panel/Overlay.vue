@@ -5,7 +5,6 @@ import { overlaysByType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
@@ -26,10 +25,6 @@ const activeOverlays = computed(() => {
 <template>
 	<div class="panel overlay">
 		<div class="panel-content">
-			<header>
-				<Detail />
-			</header>
-
 			<!-- Feature Nav -->
 			<nav id="type-nav" :value="activeType">
 				<Button
@@ -59,9 +54,6 @@ const activeOverlays = computed(() => {
 
 <style>
 .panel.overlay {
-	header {
-		position: fixed;
-	}
 	nav {
 		display: flex;
 	}

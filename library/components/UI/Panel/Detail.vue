@@ -33,6 +33,7 @@ watch(activeOverlay, () => {});
 </script>
 
 <template>
+  hh
   <div
     v-if="activeOverlay.feature"
     :style="`height:${detailHeight}`"
