@@ -35,7 +35,7 @@ const handleNavClick = (panel = "overlay") => {
 			<!-- START Panel Nav -->
 			<nav class="panel-nav">
 				<!-- Detail -->
-				<div v-show="activeOverlay" class="nav-item nav-detail">
+				<div v-show="activeOverlay.id" class="nav-item nav-detail">
 					<Button
 						icon="fa-question-circle-o"
 						@click="handleNavClick('detail')"
@@ -87,7 +87,7 @@ const handleNavClick = (panel = "overlay") => {
 
 		/* Open */
 		&.panel-open {
-			padding-right: 60px;
+			padding-right: 80px;
 		}
 
 		/* Nav */
@@ -101,12 +101,7 @@ const handleNavClick = (panel = "overlay") => {
 			background: pink;
 
 			.nav-item {
-				padding: 0 10px;
-
 				&.nav-info {
-					// position: absolute;
-					// bottom: 0;
-					// right: 0;
 				}
 			}
 		}
@@ -115,6 +110,7 @@ const handleNavClick = (panel = "overlay") => {
 		.panel-content {
 			width: 100%;
 			height: 100%;
+			padding: 10px;
 			min-width: 60px;
 			overflow-x: hidden;
 		}
@@ -133,7 +129,6 @@ const handleNavClick = (panel = "overlay") => {
 
 			/* Content */
 			.panel-content {
-				padding: 10px;
 				overflow: auto;
 			}
 		}

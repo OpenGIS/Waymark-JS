@@ -14,12 +14,14 @@ import Button from "@/components/UI/Common/Button.vue";
 const detailClass = computed(() => {
   if (Object.keys(activeOverlay.value.imageURLs).length) {
     return "has-image";
+  } else {
+    return "";
   }
 });
 </script>
 
 <template>
-  <div v-if="activeOverlay.feature" :class="`detail ${detailClass}`">
+  <div v-if="activeOverlay.feature" :class="`panel detail ${detailClass}`">
     <!-- Type -->
     <div class="type">
       <Preview
@@ -54,13 +56,18 @@ const detailClass = computed(() => {
     margin-bottom: 1rem;
   }
 
+  .type {
+    width: 40px;
+    height: 40px;
+  }
+
   .title {
-    font-size: 1.5rem;
+    font-size: 18px;
     font-weight: bold;
   }
 
-  .type {
-    display: inline-block;
+  .description {
+    font-size: 14px;
   }
 }
 </style>

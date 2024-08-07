@@ -9,49 +9,77 @@ import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { visibleOverlays, markers, lines, shapes } = storeToRefs(instanceStore);
+const { visibleOverlays, overlays, markers, lines, shapes } =
+	storeToRefs(instanceStore);
 
 const activeType = ref("marker");
+const filterVisible = ref(true);
 
 const activeOverlays = computed(() => {
-	return overlaysByType(
-		visibleOverlays.value.filter((o) => {
-			return o.featureType === activeType.value;
-		}),
-	);
+	// All Overlays
+	if (!filterVisible.value) {
+		return overlaysByType(
+			overlays.value.filter((o) => {
+				return o.featureType === activeType.value;
+			}),
+		);
+		// Only show visible overlays
+	} else {
+		return overlaysByType(
+			visibleOverlays.value.filter((o) => {
+				return o.featureType === activeType.value;
+			}),
+		);
+	}
 });
 
 const doFeatureTypes = computed(() => {
 	return markers.value.length + lines.value.length + shapes.value.length > 1;
 });
+
+const toggleFilterVisible = () => {
+	filterVisible.value = !filterVisible.value;
+};
 </script>
 
 <template>
 	<div class="panel overlay">
 		<div class="panel-content">
-			<!-- Feature Nav -->
-			<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
-				<Button
-					v-if="markers.length"
-					icon="ion-ios-location-outline"
-					@click="activeType = 'marker'"
-					:active="activeType === 'marker'"
-				/>
+			<header>
+				<!-- Feature Nav -->
+				<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
+					<Button
+						v-if="markers.length"
+						icon="ion-ios-location-outline"
+						@click="activeType = 'marker'"
+						:active="activeType === 'marker'"
+					/>
 
-				<Button
-					v-if="lines.length"
-					icon="ion-arrow-graph-up-right"
-					@click="activeType = 'line'"
-					:active="activeType === 'line'"
-				/>
+					<Button
+						v-if="lines.length"
+						icon="ion-arrow-graph-up-right"
+						@click="activeType = 'line'"
+						:active="activeType === 'line'"
+					/>
 
-				<Button
-					v-if="shapes.length"
-					icon="ion-android-checkbox-outline-blank"
-					@click="activeType = 'shape'"
-					:active="activeType === 'shape'"
-				/>
-			</nav>
+					<Button
+						v-if="shapes.length"
+						icon="ion-android-checkbox-outline-blank"
+						@click="activeType = 'shape'"
+						:active="activeType === 'shape'"
+					/>
+				</nav>
+
+				<nav class="feature-nav">
+					<Button
+						icon="fa-eye"
+						@click="toggleFilterVisible"
+						:active="filterVisible"
+					/>
+
+					<!-- <Button icon="fa-expand" @click="toggleExpanded" :active="expanded" /> -->
+				</nav>
+			</header>
 
 			<!-- Features (by Type) -->
 			<Feature :overlaysByType="activeOverlays" />
@@ -61,9 +89,9 @@ const doFeatureTypes = computed(() => {
 
 <style>
 .panel.overlay {
-	.type-nav {
+	header,
+	nav {
 		display: flex;
-		justify-content: space-around;
 	}
 }
 </style>
