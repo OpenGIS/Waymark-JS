@@ -14,23 +14,42 @@ const { visibleOverlays, overlays, markers, lines, shapes } =
 
 const activeType = ref("marker");
 const filterVisible = ref(true);
+const filterText = ref("");
 
-const activeOverlays = computed(() => {
+const filteredOverlays = computed(() => {
+	let filtered = [];
+
 	// All Overlays
 	if (!filterVisible.value) {
-		return overlaysByType(
-			overlays.value.filter((o) => {
-				return o.featureType === activeType.value;
-			}),
-		);
+		filtered = filtered.filter((o) => {
+			return o.featureType === activeType.value;
+		});
+
 		// Only show visible overlays
 	} else {
-		return overlaysByType(
-			visibleOverlays.value.filter((o) => {
-				return o.featureType === activeType.value;
-			}),
-		);
+		filtered = visibleOverlays.value.filter((o) => {
+			return o.featureType === activeType.value;
+		});
 	}
+
+	// Filter by Search
+	if (filterText.value !== "") {
+		filtered = filtered.filter((o) => {
+			// Check all GeoJSON properties for existence of filterText
+			const properties = Object.values(o.feature.properties);
+
+			console.log(properties);
+
+			return properties.some((p) => {
+				return p
+					.toString()
+					.toLowerCase()
+					.includes(filterText.value.toLowerCase());
+			});
+		});
+	}
+
+	return overlaysByType(filtered);
 });
 
 const doFeatureTypes = computed(() => {
@@ -77,12 +96,12 @@ const toggleFilterVisible = () => {
 						:active="filterVisible"
 					/>
 
-					<!-- <Button icon="fa-expand" @click="toggleExpanded" :active="expanded" /> -->
+					<input type="search" placeholder="Search" v-model="filterText" />
 				</nav>
 			</header>
 
 			<!-- Features (by Type) -->
-			<Feature :overlaysByType="activeOverlays" />
+			<Feature :overlaysByType="filteredOverlays" />
 		</div>
 	</div>
 </template>

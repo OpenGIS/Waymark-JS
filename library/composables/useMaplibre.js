@@ -106,7 +106,7 @@ export function useMaplibre() {
 				//Set initial centre and zoom to it
 				map.setCenter(dataBounds.getCenter());
 				map.fitBounds(dataBounds, {
-					// padding: 80,
+					padding: 30,
 					animate: false,
 				});
 

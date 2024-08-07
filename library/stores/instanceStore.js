@@ -102,7 +102,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setActiveOverlay(overlay) {
-		setActivePanel("detail");
+		setActivePanel("overlay");
 
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
