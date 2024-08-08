@@ -28,7 +28,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const detailExpanded = ref(false);
 
 	const activePanel = ref("overlay");
-	const panelOpen = ref(false);
+	const panelOpen = ref(true);
 
 	const width = ref(0);
 	const height = ref(0);

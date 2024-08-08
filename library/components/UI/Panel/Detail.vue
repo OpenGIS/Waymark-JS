@@ -6,10 +6,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { activeOverlay, detailExpanded } = storeToRefs(instanceStore);
 
-import { expandedIcon } from "@/helpers/Common.js";
-
-import Preview from "@/components/UI/Panel/Overlay/Preview.vue";
-import Button from "@/components/UI/Common/Button.vue";
+import Preview from "@/components/UI/Common/Overlay/Preview.vue";
 
 const detailClass = computed(() => {
   if (Object.keys(activeOverlay.value.imageURLs).length) {
