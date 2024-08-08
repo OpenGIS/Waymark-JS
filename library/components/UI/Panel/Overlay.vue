@@ -5,7 +5,7 @@ import { overlaysByType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-import Feature from "@/components/UI/Panel/Overlay/Feature.vue";
+import Features from "@/components/UI/Panel/Overlay/Features.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
@@ -101,7 +101,7 @@ const toggleFilterVisible = () => {
 			</header>
 
 			<!-- Features (by Type) -->
-			<Feature :overlaysByType="filteredOverlays" />
+			<Features :overlaysByType="filteredOverlays" />
 		</div>
 	</div>
 </template>
