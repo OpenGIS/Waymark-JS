@@ -41,41 +41,55 @@ const toggleHover = () => {
 </script>
 
 <template>
-  <tr
+  <div
     class="item"
     @click="setActive"
     @mouseenter="toggleHover"
     @mouseleave="toggleHover"
   >
     <!-- Image -->
-    <td class="image">
+    <div class="image">
       <img
         v-if="feature_props.image_thumbnail_url"
         :alt="feature_props.title"
         :src="feature_props.image_thumbnail_url"
       />
-    </td>
+    </div>
 
     <!-- Title -->
-    <td class="title">{{ feature_props.title }}</td>
+    <div class="title">{{ feature_props.title }}</div>
 
     <!-- Go To -->
-    <td class="action go">
+    <div class="action go">
       <Button icon="ion-android-search" @click.stop="centerOn()" />
-    </td>
+    </div>
 
     <!-- Visible -->
-    <td class="action visible">
+    <div class="action visible">
       <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()" />
-    </td>
-  </tr>
+    </div>
+  </div>
 </template>
 
 <style lang="less">
 .item {
+  display: flex;
+  align-items: center;
+
   height: 60px;
+
   &:nth-of-type(odd) {
-    background: rgba(255, 255, 255, 0.7);
+    background: #f9f9f9;
+  }
+
+  > div {
+    flex: 1;
+    max-width: 60px;
+
+    &.title {
+      max-width: unset;
+      flex: auto;
+    }
   }
 }
 </style>

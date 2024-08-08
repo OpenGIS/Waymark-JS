@@ -145,8 +145,9 @@ const overlayStyle = () => {
       &.icon {
         position: relative;
         .waymark-marker {
-          display: flex;
-          flex-direction: row;
+          .waymark-marker-background {
+            display: none;
+          }
 
           .waymark-marker-icon::before {
             padding-top: 0 !important;
