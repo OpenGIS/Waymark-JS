@@ -8,7 +8,6 @@ const { activePanel, panelOpen, classAppend, activeOverlay } =
 	storeToRefs(instanceStore);
 
 import Overlay from "@/components/UI/Panel/Overlay.vue";
-import Detail from "@/components/UI/Panel/Detail.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
@@ -34,15 +33,6 @@ const handleNavClick = (panel = "overlay") => {
 		<div :class="`panels ${classAppend}`">
 			<!-- START Panel Nav -->
 			<nav class="panel-nav">
-				<!-- Detail -->
-				<div v-show="activeOverlay.id" class="nav-item nav-detail">
-					<Button
-						icon="fa-question-circle-o"
-						@click="handleNavClick('detail')"
-						:active="activePanel === 'detail'"
-					/>
-				</div>
-
 				<!-- Overlay -->
 				<div class="nav-item nav-overlay">
 					<Button
@@ -65,8 +55,6 @@ const handleNavClick = (panel = "overlay") => {
 
 			<!-- START Panel Content -->
 			<div class="panels-content">
-				<Detail v-show="showPanel('detail') && activeOverlay" />
-
 				<Overlay v-show="showPanel('overlay')" />
 
 				<Info v-show="showPanel('info')" />
