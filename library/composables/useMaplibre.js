@@ -120,6 +120,8 @@ export function useMaplibre() {
 				});
 			});
 		}
+
+		return map;
 	};
 
 	const pointsFeatures = computed(() => {

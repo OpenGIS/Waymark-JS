@@ -42,16 +42,20 @@ const props = defineProps({
 	},
 });
 
+const map = ref(null);
+
 onMounted(() => {
 	createStore(props);
 
-	createMap({
+	map.value = createMap({
 		id: `${props.id}-map`,
 		lng: props.lng,
 		lat: props.lat,
 		zoom: props.zoom,
 		geoJSON: props.geoJSON,
 	});
+
+	// Add UI
 });
 </script>
 
@@ -60,7 +64,7 @@ onMounted(() => {
 	<div :class="`instance ${classAppend}`" :id="`${id}-instance`">
 		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
-		<UI />
+		<UI v-if="map" />
 	</div>
 </template>
 
