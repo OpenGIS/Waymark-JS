@@ -94,6 +94,11 @@ export const useInstanceStore = defineStore("instance", () => {
 				const g = 255 - parseInt(hex.substring(2, 4), 16);
 				const b = 255 - parseInt(hex.substring(4, 6), 16);
 
+				// Ensure each is 2 characters & numeric
+				const pad = (str) => {
+					return str.length == 1 ? `0${str}` : str;
+				};
+
 				const newColour = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
 
 				map.setPaintProperty(overlay.layer.id, "line-color", newColour);

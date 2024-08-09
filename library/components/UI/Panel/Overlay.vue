@@ -12,8 +12,8 @@ const instanceStore = useInstanceStore();
 const { visibleOverlays, overlays, markers, lines, shapes } =
 	storeToRefs(instanceStore);
 
-const activeType = ref("marker");
-const filterVisible = ref(true);
+const activeType = ref("line");
+const filterVisible = ref(false);
 const filterText = ref("");
 
 const filteredOverlays = computed(() => {
@@ -21,7 +21,7 @@ const filteredOverlays = computed(() => {
 
 	// All Overlays
 	if (!filterVisible.value) {
-		filtered = filtered.filter((o) => {
+		filtered = overlays.value.filter((o) => {
 			return o.featureType === activeType.value;
 		});
 
@@ -37,8 +37,6 @@ const filteredOverlays = computed(() => {
 		filtered = filtered.filter((o) => {
 			// Check all GeoJSON properties for existence of filterText
 			const properties = Object.values(o.feature.properties);
-
-			console.log(properties);
 
 			return properties.some((p) => {
 				return p
