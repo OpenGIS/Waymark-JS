@@ -1,5 +1,6 @@
 import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
+import { LngLatBounds } from "maplibre-gl";
 import {
 	getTypeData,
 	getFeatureType,
@@ -179,12 +180,20 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
-				const bounds = overlay.layer.getBounds();
+				// Get coords
+				const coords = overlay.feature.geometry.coordinates;
 
-				// Fly to center of line
-				map.flyTo({
-					center: bounds.getCenter(),
-					zoom: 15,
+				// Get bounds extent
+				const bounds = coords.reduce(
+					(bounds, coord) => {
+						return bounds.extend(coord);
+					},
+					new LngLatBounds(coords[0], coords[0]),
+				);
+
+				// Fit to bounds
+				map.fitBounds(bounds, {
+					padding: 30,
 				});
 
 				break;
