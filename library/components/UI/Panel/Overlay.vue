@@ -61,43 +61,46 @@ const toggleFilterVisible = () => {
 
 <template>
 	<div class="panel overlay">
+		<!-- START Panel Nav -->
+		<header class="panel-nav">
+			<!-- Feature Nav -->
+			<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
+				<Button
+					v-if="markers.length"
+					icon="ion-ios-location-outline"
+					@click="activeType = 'marker'"
+					:active="activeType === 'marker'"
+				/>
+
+				<Button
+					v-if="lines.length"
+					icon="ion-arrow-graph-up-right"
+					@click="activeType = 'line'"
+					:active="activeType === 'line'"
+				/>
+
+				<Button
+					v-if="shapes.length"
+					icon="ion-android-checkbox-outline-blank"
+					@click="activeType = 'shape'"
+					:active="activeType === 'shape'"
+				/>
+			</nav>
+
+			<nav class="feature-nav">
+				<Button
+					icon="fa-eye"
+					@click="toggleFilterVisible"
+					:active="filterVisible"
+				/>
+
+				<input type="search" placeholder="Search" v-model="filterText" />
+			</nav>
+		</header>
+		<!-- END Panel Nav -->
+
+		<!-- Panel Content -->
 		<div class="panel-content">
-			<header>
-				<!-- Feature Nav -->
-				<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
-					<Button
-						v-if="markers.length"
-						icon="ion-ios-location-outline"
-						@click="activeType = 'marker'"
-						:active="activeType === 'marker'"
-					/>
-
-					<Button
-						v-if="lines.length"
-						icon="ion-arrow-graph-up-right"
-						@click="activeType = 'line'"
-						:active="activeType === 'line'"
-					/>
-
-					<Button
-						v-if="shapes.length"
-						icon="ion-android-checkbox-outline-blank"
-						@click="activeType = 'shape'"
-						:active="activeType === 'shape'"
-					/>
-				</nav>
-
-				<nav class="feature-nav">
-					<Button
-						icon="fa-eye"
-						@click="toggleFilterVisible"
-						:active="filterVisible"
-					/>
-
-					<input type="search" placeholder="Search" v-model="filterText" />
-				</nav>
-			</header>
-
 			<!-- Features (by Type) -->
 			<Features :overlaysByType="filteredOverlays" />
 		</div>
@@ -106,9 +109,34 @@ const toggleFilterVisible = () => {
 
 <style>
 .panel.overlay {
-	header,
-	nav {
-		display: flex;
+	.panel-nav {
+		position: sticky;
+		top: 0;
+		right: 0;
+		background-color: #fff;
+		border-bottom: 1px solid #999;
+		z-index: 100;
+
+		nav {
+			display: inline-block;
+
+			.button {
+				display: inline-block;
+				margin: 3px;
+			}
+		}
+
+		.feature-nav {
+			input {
+				height: 30px;
+				width: 80px;
+			}
+		}
+	}
+
+	.panel-content {
+		/*		padding-top: 60px;*/
+		overflow-y: auto;
 	}
 }
 </style>

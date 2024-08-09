@@ -167,7 +167,7 @@ const overlayStyle = () => {
         flex: auto;
         overflow: hidden;
         max-width: unset;
-        font-size: 18px;
+        font-size: 16px;
         // color: #000;
         // text-shadow: 1px 1px 1px #fff;
 

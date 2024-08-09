@@ -31,10 +31,10 @@ const iconClass = computed(() => {
 <style lang="less">
 .button {
   display: flex;
-  margin: 10px;
-  padding: 12px;
-  width: 15px;
-  font-size: 150%;
+  margin: 4px;
+  padding: 8px 10px;
+  width: 12px;
+  font-size: 16px;
   color: #444;
   background: #fff;
   border: 1px solid #ddd;

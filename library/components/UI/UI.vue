@@ -32,7 +32,7 @@ const handleNavClick = (panel = "overlay") => {
 		<!-- START Panels -->
 		<div :class="`panels ${classAppend}`">
 			<!-- START Panel Nav -->
-			<nav class="panel-nav">
+			<nav class="panels-nav">
 				<!-- Overlay -->
 				<div class="nav-item nav-overlay">
 					<Button
@@ -69,20 +69,20 @@ const handleNavClick = (panel = "overlay") => {
 .ui {
 	.panels {
 		height: 100%;
-		min-width: 60px;
-		min-height: 60px;
+		min-width: 44px;
+		min-height: 44px;
 		transition: height 0.1s jump-start;
 
 		/* Open */
 		&.panel-open {
-			padding-right: 60px;
+			padding-right: 50px;
 		}
 
 		/* Nav */
-		.panel-nav {
+		.panels-nav {
 			position: fixed;
 			right: 0;
-			width: 60px;
+			width: 44px;
 			height: 100%;
 			display: flex;
 			flex-direction: column;
@@ -98,15 +98,15 @@ const handleNavClick = (panel = "overlay") => {
 		.panels-content {
 			width: 100%;
 			height: 100%;
-			min-width: 60px;
+			min-width: 44px;
 			overflow-x: hidden;
 		}
 
 		&.portrait {
 			/* Closed */
 			&.panel-closed {
-				.panel-nav {
-					height: 60px;
+				.panels-nav {
+					height: 44px;
 					width: 100%;
 					flex-direction: row;
 					justify-content: right;
@@ -122,7 +122,7 @@ const handleNavClick = (panel = "overlay") => {
 
 		&.landscape {
 			/* Open */
-			.panel-nav {
+			.panels-nav {
 				height: 100%;
 				display: flex;
 				flex-direction: column;
