@@ -91,7 +91,7 @@ const toggleHover = () => {
     }
 
     &.title {
-      max-width: unset;
+      max-width: 200px;
       flex: auto;
     }
   }
