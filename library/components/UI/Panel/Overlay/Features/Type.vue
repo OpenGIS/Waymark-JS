@@ -143,6 +143,7 @@ const overlayStyle = () => {
       vertical-align: middle;
 
       &.icon {
+        width: 60px;
         position: relative;
         .waymark-marker {
           .waymark-marker-background {

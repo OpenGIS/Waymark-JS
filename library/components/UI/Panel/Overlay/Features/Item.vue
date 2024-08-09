@@ -86,6 +86,10 @@ const toggleHover = () => {
     flex: 1;
     max-width: 60px;
 
+    &.image {
+      min-width: 60px;
+    }
+
     &.title {
       max-width: unset;
       flex: auto;

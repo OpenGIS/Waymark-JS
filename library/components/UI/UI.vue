@@ -64,7 +64,7 @@ const handleNavClick = (panel = "overlay") => {
 			<!-- END Panel Nav -->
 
 			<!-- START Panel Content -->
-			<div class="panel-content">
+			<div class="panels-content">
 				<Detail v-show="showPanel('detail') && activeOverlay" />
 
 				<Overlay v-show="showPanel('overlay')" />
@@ -87,7 +87,7 @@ const handleNavClick = (panel = "overlay") => {
 
 		/* Open */
 		&.panel-open {
-			padding-right: 80px;
+			padding-right: 60px;
 		}
 
 		/* Nav */
@@ -107,10 +107,9 @@ const handleNavClick = (panel = "overlay") => {
 		}
 
 		/* Content */
-		.panel-content {
+		.panels-content {
 			width: 100%;
 			height: 100%;
-			padding: 10px;
 			min-width: 60px;
 			overflow-x: hidden;
 		}
