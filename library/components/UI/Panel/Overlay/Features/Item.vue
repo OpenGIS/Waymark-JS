@@ -85,13 +85,19 @@ const toggleHover = () => {
   > div {
     flex: 1;
     max-width: 60px;
+    padding-right: 5px;
 
     &.image {
       min-width: 60px;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
     }
 
     &.title {
-      max-width: 200px;
+      width: 200px;
       flex: auto;
     }
   }

@@ -104,11 +104,12 @@ onMounted(() => {
 		}
 
 		&.panel-open {
-			.map {
-				width: 60%;
-			}
+			// .map {
+			// 	width: 60%;
+			// }
 
 			.ui {
+				max-width: 320px;
 				width: 40%;
 			}
 		}
