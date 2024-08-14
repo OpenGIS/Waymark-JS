@@ -4,67 +4,117 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activeOverlay, detailExpanded } = storeToRefs(instanceStore);
+const { activeOverlay, panelExpanded } = storeToRefs(instanceStore);
 
-import Preview from "@/components/UI/Common/Overlay/Preview.vue";
+import { expandedIcon } from "@/helpers/Common.js";
+
+import Button from "@/components/UI/Common/Button.vue";
+
+const detailHeight = computed(() => {
+  //Closed
+  if (!activeOverlay.value) {
+    return "0px";
+  }
+
+  //Open
+  if (!panelExpanded.value) {
+    return "60px";
+  }
+});
 
 const detailClass = computed(() => {
   if (Object.keys(activeOverlay.value.imageURLs).length) {
     return "has-image";
-  } else {
-    return "";
   }
 });
 </script>
 
 <template>
-  <div v-if="activeOverlay.feature" :class="`panel detail ${detailClass}`">
-    <!-- Type -->
-    <div class="type">
-      <Preview
-        :typeData="activeOverlay.typeData"
-        :featureType="activeOverlay.featureType"
+  <div
+    v-if="activeOverlay.feature"
+    :style="`height:${detailHeight}`"
+    :class="`detail ${detailClass}`"
+  >
+    <table>
+      <tr class="item" @click="setActive">
+        <!-- Image -->
+        <td class="image">
+          <Preview
+            :typeData="activeOverlay.typeData"
+            :featureType="activeOverlay.featureType"
+          />
+        </td>
+
+        <!-- Title -->
+        <td class="title">{{ activeOverlay.feature.properties.title }}</td>
+
+        <!-- Expand -->
+        <td class="action expand">
+          <Button
+            :icon="expandedIcon(panelExpanded)"
+            @click.stop="instanceStore.togglePanelExpanded()"
+          />
+        </td>
+
+        <!-- Close -->
+        <td class="action close">
+          <Button icon="ion-close" @click.stop="activeOverlay = {}" />
+        </td>
+      </tr>
+    </table>
+
+    <div v-show="panelExpanded" :class="getImageUrls">
+      <!-- Image -->
+      <div class="image">
+        <img
+          v-if="activeOverlay.feature.properties.image_medium_url"
+          :src="activeOverlay.feature.properties.image_medium_url"
+        />
+      </div>
+
+      <!-- Description -->
+      <div
+        class="description"
+        v-if="activeOverlay.feature.properties.description"
+        v-html="activeOverlay.feature.properties.description"
       />
     </div>
-
-    <!-- Title -->
-    <div class="title">{{ activeOverlay.feature.properties.title }}</div>
-
-    <!-- Image -->
-    <div class="image">
-      <img
-        v-if="activeOverlay.feature.properties.image_medium_url"
-        :src="activeOverlay.feature.properties.image_medium_url"
-      />
-    </div>
-
-    <!-- Description -->
-    <div
-      class="description"
-      v-if="activeOverlay.feature.properties.description"
-      v-html="activeOverlay.feature.properties.description"
-    />
   </div>
 </template>
 
 <style lang="less">
-.panel.detail {
-  > div {
-    margin-bottom: 1rem;
-  }
+.detail {
+  padding: 1%;
+  max-height: 31.33%;
+  overflow-y: scroll;
+  background: rgba(249, 249, 249, 0.9);
+  transition: all 0.1s;
+  box-shadow: 0 0 0 3px #eee;
 
-  .type {
-    width: 40px;
-    height: 40px;
+  &.has-image {
+    .content {
+      display: flex;
+      flex-direction: row;
+      > div {
+        max-width: 48%;
+      }
+      .image {
+        img {
+          max-width: 100%;
+        }
+      }
+    }
   }
 
   .title {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 140%;
   }
 
-  .description {
-    font-size: 14px;
+  .content {
+    .description {
+      padding: 0 2%;
+      font-size: 120%;
+    }
   }
 }
 </style>
