@@ -6,10 +6,11 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Features from "@/components/UI/Panel/Overlay/Features.vue";
+import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { visibleOverlays, overlays, markers, lines, shapes } =
+const { visibleOverlays, overlays, markers, lines, shapes, activeOverlay } =
 	storeToRefs(instanceStore);
 
 const activeType = ref("line");
@@ -101,6 +102,11 @@ const toggleFilterVisible = () => {
 
 		<!-- Panel Content -->
 		<div class="panel-content">
+			<!-- Detail -->
+			<template v-if="activeOverlay">
+				<Detail :overlay="activeOverlay" />
+			</template>
+
 			<!-- Features (by Type) -->
 			<Features :overlaysByType="filteredOverlays" />
 		</div>

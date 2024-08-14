@@ -77,21 +77,10 @@ onMounted(() => {
 
 	/* Portrait */
 	&.portrait {
-		flex-direction: column;
+		flex-direction: row;
 
 		.map {
-			height: 100%;
-		}
-
-		&.panel-open {
-			.map {
-				height: 60%;
-			}
-
-			.ui {
-				height: 40%;
-				min-height: 40%;
-			}
+			width: 100%;
 		}
 	}
 
@@ -104,13 +93,15 @@ onMounted(() => {
 		}
 
 		&.panel-open {
-			// .map {
-			// 	width: 60%;
-			// }
-
 			.ui {
 				max-width: 320px;
-				width: 40%;
+				// width: 40%;
+			}
+
+			&.panel-expanded {
+				.ui {
+					width: 640px;
+				}
 			}
 		}
 	}
@@ -119,6 +110,23 @@ onMounted(() => {
 	.map,
 	.ui {
 		transition: width 0.25s circular;
+	}
+}
+
+/* Small Screens */
+@media (max-width: 768px) {
+	.instance {
+		&.portrait {
+			flex-direction: column;
+
+			.map {
+				height: 60%;
+			}
+
+			.ui {
+				height: 40%;
+			}
+		}
 	}
 }
 </style>
