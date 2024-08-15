@@ -168,6 +168,19 @@ export const useInstanceStore = defineStore("instance", () => {
 			imageURLs: getImageURLs(feature.properties),
 		};
 
+		// Add events
+		map.on("click", line.id, () => {
+			setActiveOverlay(overlay);
+		});
+
+		map.on("mouseenter", line.id, () => {
+			toggleHoverOverlay(overlay);
+		});
+
+		map.on("mouseleave", line.id, () => {
+			toggleHoverOverlay(overlay);
+		});
+
 		overlays.value.push(overlay);
 
 		return overlay;

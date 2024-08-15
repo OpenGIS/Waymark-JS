@@ -68,7 +68,7 @@ const isActive = () => {
 
       <!-- Go To -->
       <div class="action go">
-        <Button icon="ion-android-search" @click.stop="centerOn()" />
+        <Button icon="ion-android-arrow-forward" @click.stop="centerOn()" />
       </div>
 
       <!-- Visible -->
@@ -131,6 +131,10 @@ const isActive = () => {
         font-size: 15px;
         font-weight: 300;
       }
+
+      &.action {
+        display: none;
+      }
     }
   }
 
@@ -146,6 +150,10 @@ const isActive = () => {
     .overview {
       .title {
         font-weight: bold;
+      }
+
+      .action {
+        display: block;
       }
     }
 

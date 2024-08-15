@@ -135,7 +135,9 @@ const overlayStyle = () => {
     border-bottom-style: solid;
 
     /* Columns */
-    > div {
+    .icon,
+    .title,
+    .action {
       flex: 1;
       // height: 60px;
       max-width: 60px;
