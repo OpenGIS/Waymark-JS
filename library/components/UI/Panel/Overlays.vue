@@ -5,7 +5,7 @@ import { overlaysByType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-import Features from "@/components/UI/Panel/Overlay/Features.vue";
+import List from "@/components/UI/Panel/Overlays/List.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
@@ -128,8 +128,8 @@ watch(activeOverlay, (newOverlay) => {
 
 		<!-- Panel Content -->
 		<div class="panel-content">
-			<!-- Features (by Type) -->
-			<Features :overlaysByType="filteredOverlays" class="list" />
+			<!-- List Overlays (by Type) -->
+			<List :overlaysByType="filteredOverlays" class="list" />
 		</div>
 	</div>
 </template>

@@ -7,7 +7,7 @@ const instanceStore = useInstanceStore();
 const { activePanel, panelOpen, classAppend, activeOverlay } =
 	storeToRefs(instanceStore);
 
-import Overlay from "@/components/UI/Panel/Overlay.vue";
+import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
@@ -55,7 +55,7 @@ const handleNavClick = (panel = "overlay") => {
 
 			<!-- START Panel Content -->
 			<div class="panels-content">
-				<Overlay v-show="showPanel('overlay')" />
+				<Overlays v-show="showPanel('overlay')" />
 
 				<Info v-show="showPanel('info')" />
 			</div>

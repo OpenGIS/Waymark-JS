@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
 import Preview from "@/components/UI/Common/Overlay/Preview.vue";
-import Item from "@/components/UI/Panel/Overlay/Features/Item.vue";
+import Overlay from "@/components/UI/Panel/Overlays/List/Overlay.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
@@ -111,7 +111,7 @@ const overlayStyle = () => {
     </div>
 
     <!-- List -->
-    <Item
+    <Overlay
       v-show="expanded"
       v-for="(overlay, typeKey, index) in byType.overlays"
       :overlay="overlay"

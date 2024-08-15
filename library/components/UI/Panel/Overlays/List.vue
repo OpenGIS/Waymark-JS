@@ -1,5 +1,5 @@
 <script setup>
-import Type from "@/components/UI/Panel/Overlay/Features/Type.vue";
+import Type from "@/components/UI/Panel/Overlays/List/Type.vue";
 
 defineProps({
   overlaysByType: Object,
