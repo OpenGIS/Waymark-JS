@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
+const { activeOverlay } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -38,67 +40,112 @@ const setActive = () => {
 const toggleHover = () => {
   instanceStore.toggleHoverOverlay(props.overlay);
 };
+
+const isActive = () => {
+  return activeOverlay.value === props.overlay;
+};
 </script>
 
 <template>
   <div
-    class="item"
-    @click="setActive"
+    :class="`overlay ${isActive() ? 'active' : ''} overlay-${props.overlay.id}`"
     @mouseenter="toggleHover"
     @mouseleave="toggleHover"
   >
-    <!-- Image -->
-    <div class="image">
-      <img
-        v-if="feature_props.image_thumbnail_url"
-        :alt="feature_props.title"
-        :src="feature_props.image_thumbnail_url"
+    <!-- START Overview -->
+    <div class="overview" @click="setActive">
+      <!-- Image -->
+      <div class="image">
+        <img
+          v-if="feature_props.image_thumbnail_url"
+          :alt="feature_props.title"
+          :src="feature_props.image_thumbnail_url"
+        />
+      </div>
+
+      <!-- Title -->
+      <div class="title">{{ feature_props.title }}</div>
+
+      <!-- Go To -->
+      <div class="action go">
+        <Button icon="ion-android-search" @click.stop="centerOn()" />
+      </div>
+
+      <!-- Visible -->
+      <div class="action visible">
+        <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()" />
+      </div>
+    </div>
+    <!-- END Overview -->
+
+    <!-- START Detail -->
+    <div class="detail">
+      <!-- Image -->
+      <div class="image">
+        <img
+          v-if="feature_props.image_medium_url"
+          :src="feature_props.image_medium_url"
+        />
+      </div>
+
+      <!-- Description -->
+      <div
+        class="description"
+        v-if="feature_props.description"
+        v-html="feature_props.description"
       />
     </div>
-
-    <!-- Title -->
-    <div class="title">{{ feature_props.title }}</div>
-
-    <!-- Go To -->
-    <div class="action go">
-      <Button icon="ion-android-search" @click.stop="centerOn()" />
-    </div>
-
-    <!-- Visible -->
-    <div class="action visible">
-      <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()" />
-    </div>
+    <!-- END Detail -->
   </div>
 </template>
 
 <style lang="less">
-.item {
-  display: flex;
-  align-items: center;
+.overlay {
+  /* Overview */
+  .overview {
+    display: flex;
+    align-items: center;
 
-  height: 60px;
+    height: 60px;
 
-  &:nth-of-type(odd) {
-    background: #f9f9f9;
-  }
-
-  > div {
-    flex: 1;
-    max-width: 60px;
-    padding-right: 5px;
-
-    &.image {
-      min-width: 60px;
-
-      img {
-        max-width: 100%;
-        max-height: 100%;
-      }
+    &:nth-of-type(odd) {
+      background: #f9f9f9;
     }
 
-    &.title {
-      width: 200px;
-      flex: auto;
+    .image,
+    .title,
+    .action {
+      flex: 1;
+      // max-width: 60px;
+      padding-right: 5px;
+
+      &.image {
+        min-width: 60px;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+
+      &.title {
+        width: 200px;
+        flex: auto;
+      }
+    }
+  }
+
+  /* Detail */
+  .detail {
+    display: none;
+  }
+
+  &.active {
+    color: blue !important;
+    background: red !important;
+
+    .detail {
+      display: block;
     }
   }
 }

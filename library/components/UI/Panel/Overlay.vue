@@ -1,12 +1,11 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { overlaysByType } from "@/helpers/Overlay.js";
 
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Features from "@/components/UI/Panel/Overlay/Features.vue";
-import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
@@ -65,6 +64,23 @@ const doFeatureTypes = computed(() => {
 const toggleFilterVisible = () => {
 	filterVisible.value = !filterVisible.value;
 };
+
+watch(activeOverlay, (newOverlay) => {
+	if (newOverlay) {
+		// Scroll to Active Overlay
+		const element = document.querySelector(
+			`.overlay-${newOverlay.id} .overview`,
+		);
+
+		if (element) {
+			element.scrollIntoView({
+				behavior: "smooth",
+				block: "center",
+				inline: "center",
+			});
+		}
+	}
+});
 </script>
 
 <template>
@@ -109,11 +125,6 @@ const toggleFilterVisible = () => {
 
 		<!-- Panel Content -->
 		<div class="panel-content">
-			<!-- Detail -->
-			<template v-if="activeOverlay">
-				<Detail :overlay="activeOverlay" class="detail" />
-			</template>
-
 			<!-- Features (by Type) -->
 			<Features :overlaysByType="filteredOverlays" class="list" />
 		</div>
@@ -150,13 +161,6 @@ const toggleFilterVisible = () => {
 	.panel-content {
 		/*		padding-top: 60px;*/
 		overflow-y: auto;
-
-		.detail {
-			position: sticky;
-		}
-
-		.list {
-		}
 	}
 }
 </style>
