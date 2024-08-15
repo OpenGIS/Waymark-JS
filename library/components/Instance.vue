@@ -97,12 +97,6 @@ onMounted(() => {
 				max-width: 320px;
 				// width: 40%;
 			}
-
-			&.panel-expanded {
-				.ui {
-					width: 640px;
-				}
-			}
 		}
 	}
 

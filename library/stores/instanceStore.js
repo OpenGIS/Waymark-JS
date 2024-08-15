@@ -26,8 +26,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
 
-	const panelExpanded = ref(false);
-
 	const activePanel = ref("overlay");
 	const panelOpen = ref(true);
 
@@ -71,10 +69,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function togglePanel() {
 		panelOpen.value = !panelOpen.value;
-	}
-
-	function togglePanelExpanded() {
-		panelExpanded.value = !panelExpanded.value;
 	}
 
 	function setActivePanel(panel = "overlay") {
@@ -278,11 +272,6 @@ export const useInstanceStore = defineStore("instance", () => {
 			classes.push("panel-closed");
 		}
 
-		// Panel Expanded
-		if (panelExpanded.value) {
-			classes.push("panel-expanded");
-		}
-
 		classes.push(orientation.value);
 
 		return classes.join(" ");
@@ -302,8 +291,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		activeOverlay,
 		setActiveOverlay,
 		toggleHoverOverlay,
-		togglePanelExpanded,
-		panelExpanded,
 		activePanel,
 		panelOpen,
 		storeMarker,

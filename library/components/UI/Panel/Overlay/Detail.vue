@@ -1,14 +1,16 @@
 <script setup>
-import { computed, watch } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activeOverlay, panelExpanded } = storeToRefs(instanceStore);
+const { activeOverlay } = storeToRefs(instanceStore);
 
 import { expandedIcon } from "@/helpers/Common.js";
 
 import Button from "@/components/UI/Common/Button.vue";
+
+const panelExpanded = ref(true);
 
 const detailHeight = computed(() => {
   //Closed
@@ -27,6 +29,10 @@ const detailClass = computed(() => {
     return "has-image";
   }
 });
+
+const togglePanelExpanded = () => {
+  panelExpanded.value = !panelExpanded.value;
+};
 </script>
 
 <template>
@@ -52,7 +58,7 @@ const detailClass = computed(() => {
         <td class="action expand">
           <Button
             :icon="expandedIcon(panelExpanded)"
-            @click.stop="instanceStore.togglePanelExpanded()"
+            @click.stop="togglePanelExpanded()"
           />
         </td>
 
