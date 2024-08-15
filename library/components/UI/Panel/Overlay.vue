@@ -67,6 +67,9 @@ const toggleFilterVisible = () => {
 
 watch(activeOverlay, (newOverlay) => {
 	if (newOverlay) {
+		// Set appropriate active type
+		activeType.value = newOverlay.featureType;
+
 		// Scroll to Active Overlay
 		const element = document.querySelector(
 			`.overlay-${newOverlay.id} .overview`,
