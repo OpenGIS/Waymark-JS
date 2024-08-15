@@ -112,7 +112,6 @@ const overlayStyle = () => {
 
     <!-- List -->
     <Item
-      class="content"
       v-show="expanded"
       v-for="(overlay, typeKey, index) in byType.overlays"
       :overlay="overlay"
@@ -185,6 +184,13 @@ const overlayStyle = () => {
         &.expand {
         }
       }
+    }
+  }
+
+  .overlay {
+    /* Every other */
+    &:nth-child(odd) {
+      background: #f7f7f7;
     }
   }
 }

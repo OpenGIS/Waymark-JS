@@ -54,6 +54,9 @@ const isActive = () => {
   >
     <!-- START Overview -->
     <div class="overview" @click="setActive">
+      <!-- Title -->
+      <div class="title">{{ feature_props.title }}</div>
+
       <!-- Image -->
       <div class="image">
         <img
@@ -62,9 +65,6 @@ const isActive = () => {
           :src="feature_props.image_thumbnail_url"
         />
       </div>
-
-      <!-- Title -->
-      <div class="title">{{ feature_props.title }}</div>
 
       <!-- Go To -->
       <div class="action go">
@@ -108,10 +108,6 @@ const isActive = () => {
 
     height: 60px;
 
-    &:nth-of-type(odd) {
-      background: #f9f9f9;
-    }
-
     .image,
     .title,
     .action {
@@ -129,8 +125,11 @@ const isActive = () => {
       }
 
       &.title {
+        padding-left: 10px;
         width: 200px;
         flex: auto;
+        font-size: 15px;
+        font-weight: 300;
       }
     }
   }
@@ -143,6 +142,12 @@ const isActive = () => {
   &.active {
     color: blue !important;
     background: red !important;
+
+    .overview {
+      .title {
+        font-weight: bold;
+      }
+    }
 
     .detail {
       display: block;
