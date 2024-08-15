@@ -9,20 +9,21 @@ const { activeOverlay } = storeToRefs(instanceStore);
 import { expandedIcon } from "@/helpers/Common.js";
 
 import Button from "@/components/UI/Common/Button.vue";
+import Preview from "@/components/UI/Common/Overlay/Preview.vue";
 
 const panelExpanded = ref(true);
 
-const detailHeight = computed(() => {
-  //Closed
-  if (!activeOverlay.value) {
-    return "0px";
-  }
+// const detailHeight = computed(() => {
+//   //Closed
+//   if (!activeOverlay.value) {
+//     return "0px";
+//   }
 
-  //Open
-  if (!panelExpanded.value) {
-    return "60px";
-  }
-});
+//   //Open
+//   if (!panelExpanded.value) {
+//     return "60px";
+//   }
+// });
 
 const detailClass = computed(() => {
   if (Object.keys(activeOverlay.value.imageURLs).length) {
@@ -36,11 +37,7 @@ const togglePanelExpanded = () => {
 </script>
 
 <template>
-  <div
-    v-if="activeOverlay.feature"
-    :style="`height:${detailHeight}`"
-    :class="`detail ${detailClass}`"
-  >
+  <div v-if="activeOverlay.feature" :class="`detail ${detailClass}`">
     <table>
       <tr class="item" @click="setActive">
         <!-- Image -->
@@ -97,20 +94,20 @@ const togglePanelExpanded = () => {
   transition: all 0.1s;
   box-shadow: 0 0 0 3px #eee;
 
-  &.has-image {
-    .content {
-      display: flex;
-      flex-direction: row;
-      > div {
-        max-width: 48%;
-      }
-      .image {
-        img {
-          max-width: 100%;
-        }
-      }
-    }
-  }
+  // &.has-image {
+  //   .content {
+  //     display: flex;
+  //     flex-direction: row;
+  //     > div {
+  //       max-width: 48%;
+  //     }
+  //     .image {
+  //       img {
+  //         max-width: 100%;
+  //       }
+  //     }
+  //   }
+  // }
 
   .title {
     font-size: 140%;

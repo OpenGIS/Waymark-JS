@@ -10,8 +10,15 @@ import Detail from "@/components/UI/Panel/Overlay/Detail.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { visibleOverlays, overlays, markers, lines, shapes, activeOverlay } =
-	storeToRefs(instanceStore);
+const {
+	visibleOverlays,
+	overlays,
+	markers,
+	lines,
+	shapes,
+	activeOverlay,
+	classAppend,
+} = storeToRefs(instanceStore);
 
 const activeType = ref("line");
 const filterVisible = ref(false);
@@ -104,11 +111,11 @@ const toggleFilterVisible = () => {
 		<div class="panel-content">
 			<!-- Detail -->
 			<template v-if="activeOverlay">
-				<Detail :overlay="activeOverlay" />
+				<Detail :overlay="activeOverlay" class="detail" />
 			</template>
 
 			<!-- Features (by Type) -->
-			<Features :overlaysByType="filteredOverlays" />
+			<Features :overlaysByType="filteredOverlays" class="list" />
 		</div>
 	</div>
 </template>
@@ -143,6 +150,13 @@ const toggleFilterVisible = () => {
 	.panel-content {
 		/*		padding-top: 60px;*/
 		overflow-y: auto;
+
+		.detail {
+			position: sticky;
+		}
+
+		.list {
+		}
 	}
 }
 </style>
