@@ -110,8 +110,8 @@ const handleNavClick = (panel = "overlay") => {
 		.panels-content {
 			width: 100%;
 			height: 100%;
-			max-width: 320px;
-			min-width: 44px;
+			width: 320px;
+			// min-width: 44px;
 			overflow-x: hidden;
 		}
 

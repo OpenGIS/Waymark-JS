@@ -1,6 +1,12 @@
 {
 	"tile_layers": [
 		{
+			"layer_name": "OpenCycleMap",
+			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
+			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+			"layer_max_zoom": "18"
+		},
+		{
 			"layer_name": "Satellite",
 			"layer_url": "https://api.mapbox.com/styles/v1/sunlight76/ckbt6wyru0m2q1iql8agrv8an/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VubGlnaHQ3NiIsImEiOiJja2J0M29lOHgwNmJkMnlvdm54cWg3MWRhIn0.FnqYWqvlJvxYO8MzUL-BVQ",
 			"layer_attribution": "",
@@ -9,12 +15,6 @@
 		{
 			"layer_name": "Open Street Map",
 			"layer_url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-			"layer_max_zoom": "18"
-		},
-		{
-			"layer_name": "OpenCycleMap",
-			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		},

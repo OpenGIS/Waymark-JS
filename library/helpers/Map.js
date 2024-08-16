@@ -28,16 +28,18 @@ export function createMapStyle() {
         attribution: tile_data.layer_attribution,
       };
 
-      // Add First Layer
-      if (firstLayer) {
-        style.layers.push({
-          id: tile_data.layer_name,
-          type: "raster",
-          source: tile_data.layer_name,
-        });
+      // Add Layer
+      style.layers.push({
+        id: tile_data.layer_name,
+        type: "raster",
+        source: tile_data.layer_name,
+        // Only show first layer
+        layout: {
+          visibility: firstLayer ? "visible" : "none",
+        },
+      });
 
-        firstLayer = false;
-      }
+      firstLayer = false;
     });
   } else {
     // Default Tile Layer

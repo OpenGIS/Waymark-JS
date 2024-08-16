@@ -55,9 +55,6 @@ export function useMaplibre() {
 
 		const mapStyle = createMapStyle();
 
-		// Set Active Tile Layer
-		updateTileLayer(mapStyle.layers[0].id);
-
 		// Create Map
 		map = new Map({
 			container: id,
@@ -74,6 +71,9 @@ export function useMaplibre() {
 			geoJSON = config.geoJSON;
 
 			map.on("load", () => {
+				// Set Active Tile Layer
+				updateTileLayer(mapStyle.layers[0].id);
+
 				// Markers
 				pointsFeatures.value.forEach((feature) => {
 					//Extend bounds

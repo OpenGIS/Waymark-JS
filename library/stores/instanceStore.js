@@ -72,18 +72,15 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function updateTileLayer(layerId = "") {
-		// Remove existing layer
-		if (activeTileLayer.value) {
-			// Add new layer
-			map.addLayer({
-				id: layerId,
-				type: "raster",
-				source: layerId,
-				before: activeTileLayer.value,
-			});
-
-			map.removeLayer(activeTileLayer.value);
-		}
+		// Iterate over tile_layers
+		mapConfig.value.tile_layers.forEach((layer) => {
+			// Set visibility based on layerId
+			map.setLayoutProperty(
+				layer.layer_name,
+				"visibility",
+				layer.layer_name == layerId ? "visible" : "none",
+			);
+		});
 
 		// Update active layer
 		activeTileLayer.value = layerId;
