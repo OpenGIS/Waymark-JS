@@ -1,5 +1,10 @@
-import { computed } from "vue";
-import { getMapStyle, createMarker, createLineStyle } from "@/helpers/Map.js";
+import { computed, watch } from "vue";
+import { storeToRefs } from "pinia";
+import {
+	createMapStyle,
+	createMarker,
+	createLineStyle,
+} from "@/helpers/Map.js";
 
 // Import MapLibre
 import { Map, LngLatBounds } from "maplibre-gl";
@@ -28,7 +33,9 @@ export function useMaplibre() {
 	const dataBounds = new LngLatBounds();
 
 	const createMap = (config) => {
-		const { storeMarker, storeMap, storeLine } = useInstanceStore();
+		const instanceStore = useInstanceStore();
+		const { storeMarker, storeMap, storeLine } = instanceStore;
+		const { activeTileLayer } = storeToRefs(instanceStore);
 
 		if (config.id) {
 			id = config.id;
@@ -49,13 +56,19 @@ export function useMaplibre() {
 		// Create Map
 		map = new Map({
 			container: id,
-			style: getMapStyle(),
+			style: createMapStyle(activeTileLayer.value),
 			center: [lng, lat],
 			zoom: zoom,
 			attributionControl: false,
 		});
 
 		storeMap(map);
+
+		// Watch for tile layer changes
+		watch(activeTileLayer, (value) => {
+			console.log("Tile Layer Change", value);
+			map.setStyle(createMapStyle(value));
+		});
 
 		// Add GeoJSON
 		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {

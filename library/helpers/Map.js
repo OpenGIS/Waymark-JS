@@ -5,40 +5,12 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-export function getMapStyle() {
-  const { mapConfig } = useInstanceStore();
-
-  let tile_data = {};
-
-  // Use Config Tile Layer
-  if (Array.isArray(mapConfig.tile_layers)) {
-    tile_data = mapConfig.tile_layers[0];
-  }
-
+export function createMapStyle(tile_data = {}) {
   const style = {
     version: 8,
     sources: {},
     layers: [],
   };
-
-  // If we don't have a tile layer, return default style
-  if (!tile_data.layer_url) {
-    style.sources["OpenStreetMap"] = {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    };
-
-    style.layers.push({
-      id: "OpenStreetMap",
-      type: "raster",
-      source: "OpenStreetMap",
-    });
-
-    return style;
-  }
 
   // Add Tile Layer
   style.sources[tile_data.layer_name] = {
