@@ -16,8 +16,6 @@ export function createMapStyle() {
 
   // Tile Layers
   if (Array.isArray(mapConfig.tile_layers)) {
-    let firstLayer = true;
-
     // Each Tile Layer
     mapConfig.tile_layers.forEach((tile_data) => {
       // Add Source
@@ -33,13 +31,11 @@ export function createMapStyle() {
         id: tile_data.layer_name,
         type: "raster",
         source: tile_data.layer_name,
-        // Only show first layer
+        // Will be set to visible on Map load
         layout: {
-          visibility: firstLayer ? "visible" : "none",
+          visibility: "none",
         },
       });
-
-      firstLayer = false;
     });
   } else {
     // Default Tile Layer
@@ -57,8 +53,6 @@ export function createMapStyle() {
       source: "OpenStreetMap",
     });
   }
-
-  console.log(style);
 
   return style;
 }
