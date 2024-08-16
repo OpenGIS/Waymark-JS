@@ -9,6 +9,7 @@ const { activePanel, panelOpen, classAppend, activeOverlay } =
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
+import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
 
@@ -50,6 +51,15 @@ const handleNavClick = (panel = "overlay") => {
 						:active="activePanel === 'info'"
 					/>
 				</div>
+
+				<!-- Basemaps -->
+				<div class="nav-item nav-basemaps">
+					<Button
+						icon="fa-map"
+						@click="handleNavClick('basemaps')"
+						:active="activePanel === 'basemaps'"
+					/>
+				</div>
 			</nav>
 			<!-- END Panel Nav -->
 
@@ -58,6 +68,8 @@ const handleNavClick = (panel = "overlay") => {
 				<Overlays v-show="showPanel('overlay')" />
 
 				<Info v-show="showPanel('info')" />
+
+				<Basemaps v-show="showPanel('basemaps')" />
 			</div>
 			<!-- END Panel Content -->
 		</div>

@@ -16,6 +16,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	// Config
 	const mapConfig = shallowRef({});
+	const activeBasemap = ref(null);
 
 	// Data
 	const geoJSON = shallowRef({});
@@ -74,6 +75,10 @@ export const useInstanceStore = defineStore("instance", () => {
 	function setActivePanel(panel = "overlay") {
 		activePanel.value = panel;
 		panelOpen.value = true;
+	}
+
+	function switchBasemap(basemap = "") {
+		activeBasemap.value = basemap;
 	}
 
 	function toggleHoverOverlay(overlay) {
@@ -299,6 +304,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		geoJSON,
 		map,
 		mapConfig,
+		activeBasemap,
+		switchBasemap,
 		overlayCount,
 		visibleOverlays,
 		activeOverlay,
