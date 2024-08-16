@@ -8,19 +8,19 @@
 		},
 		{
 			"layer_name": "Open Street Map",
-			"layer_url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+			"layer_url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		},
 		{
 			"layer_name": "OpenCycleMap",
-			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=97fe929c59934b1a822efdbb252cff39",
+			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		},
 		{
 			"layer_name": "OutDoor",
-			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=97fe929c59934b1a822efdbb252cff39",
+			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		}

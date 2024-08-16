@@ -16,7 +16,15 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	// Config
 	const mapConfig = shallowRef({});
-	const activeBasemap = ref(null);
+
+	// Default Tile Layer
+	const activeTileLayer = ref({
+		layer_name: "OpenStreetMap",
+		layer_url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
+		layer_attribution:
+			'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		layer_max_zoom: "18",
+	});
 
 	// Data
 	const geoJSON = shallowRef({});
@@ -27,7 +35,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
 
-	const activePanel = ref("overlay");
+	const activePanel = ref("basemaps");
 	const panelOpen = ref(true);
 
 	const width = ref(0);
@@ -55,8 +63,14 @@ export const useInstanceStore = defineStore("instance", () => {
 			geoJSON.value = data.geoJSON;
 		}
 
+		// Check for config
 		if (data.mapConfig) {
 			mapConfig.value = data.mapConfig;
+
+			// Set initial tile layer
+			if (data.mapConfig.tile_layers && data.mapConfig.tile_layers.length > 0) {
+				activeTileLayer.value = data.mapConfig.tile_layers[0];
+			}
 		}
 	}
 
@@ -68,6 +82,10 @@ export const useInstanceStore = defineStore("instance", () => {
 			.on("moveend", updateVisibleOverlays);
 	}
 
+	function updateTileLayer(tileLayer) {
+		activeTileLayer.value = tileLayer;
+	}
+
 	function togglePanel() {
 		panelOpen.value = !panelOpen.value;
 	}
@@ -75,10 +93,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	function setActivePanel(panel = "overlay") {
 		activePanel.value = panel;
 		panelOpen.value = true;
-	}
-
-	function switchBasemap(basemap = "") {
-		activeBasemap.value = basemap;
 	}
 
 	function toggleHoverOverlay(overlay) {
@@ -304,8 +318,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		geoJSON,
 		map,
 		mapConfig,
-		activeBasemap,
-		switchBasemap,
+		activeTileLayer,
+		updateTileLayer,
 		overlayCount,
 		visibleOverlays,
 		activeOverlay,
