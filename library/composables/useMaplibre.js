@@ -1,4 +1,4 @@
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import {
 	createMapStyle,
@@ -34,7 +34,7 @@ export function useMaplibre() {
 
 	const createMap = (config) => {
 		const instanceStore = useInstanceStore();
-		const { storeMarker, storeMap, storeLine } = instanceStore;
+		const { storeMarker, storeMap, storeLine, updateTileLayer } = instanceStore;
 		const { activeTileLayer } = storeToRefs(instanceStore);
 
 		if (config.id) {
@@ -53,22 +53,21 @@ export function useMaplibre() {
 			zoom = config.zoom;
 		}
 
+		const mapStyle = createMapStyle();
+
+		// Set Active Tile Layer
+		updateTileLayer(mapStyle.layers[0].id);
+
 		// Create Map
 		map = new Map({
 			container: id,
-			style: createMapStyle(activeTileLayer.value),
+			style: mapStyle,
 			center: [lng, lat],
 			zoom: zoom,
 			attributionControl: false,
 		});
 
 		storeMap(map);
-
-		// Watch for tile layer changes
-		watch(activeTileLayer, (value) => {
-			console.log("Tile Layer Change", value);
-			map.setStyle(createMapStyle(value));
-		});
 
 		// Add GeoJSON
 		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {

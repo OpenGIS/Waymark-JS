@@ -5,26 +5,58 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-export function createMapStyle(tile_data = {}) {
+export function createMapStyle() {
+  const { mapConfig } = useInstanceStore();
+
   const style = {
     version: 8,
     sources: {},
     layers: [],
   };
 
-  // Add Tile Layer
-  style.sources[tile_data.layer_name] = {
-    type: "raster",
-    tiles: [tile_data.layer_url],
-    tileSize: 256,
-    attribution: tile_data.layer_attribution,
-  };
+  // Tile Layers
+  if (Array.isArray(mapConfig.tile_layers)) {
+    let firstLayer = true;
 
-  style.layers.push({
-    id: tile_data.layer_name,
-    type: "raster",
-    source: tile_data.layer_name,
-  });
+    // Each Tile Layer
+    mapConfig.tile_layers.forEach((tile_data) => {
+      // Add Source
+      style.sources[tile_data.layer_name] = {
+        type: "raster",
+        tiles: [tile_data.layer_url],
+        tileSize: 256,
+        attribution: tile_data.layer_attribution,
+      };
+
+      // Add First Layer
+      if (firstLayer) {
+        style.layers.push({
+          id: tile_data.layer_name,
+          type: "raster",
+          source: tile_data.layer_name,
+        });
+
+        firstLayer = false;
+      }
+    });
+  } else {
+    // Default Tile Layer
+    style.sources["OpenStreetMap"] = {
+      type: "raster",
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1"],
+      tileSize: 256,
+      attribution:
+        '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    };
+
+    style.layers.push({
+      id: "OpenStreetMap",
+      type: "raster",
+      source: "OpenStreetMap",
+    });
+  }
+
+  console.log(style);
 
   return style;
 }

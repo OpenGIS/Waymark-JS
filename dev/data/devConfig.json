@@ -14,13 +14,13 @@
 		},
 		{
 			"layer_name": "OpenCycleMap",
-			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=",
+			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		},
 		{
 			"layer_name": "OutDoor",
-			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=",
+			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		}

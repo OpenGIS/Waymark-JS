@@ -24,7 +24,7 @@ const { activeTileLayer } = storeToRefs(instanceStore);
 
 				<Button
 					icon="ion-checkmark"
-					@click="updateTileLayer(tileData)"
+					@click="updateTileLayer(tileData.layer_name)"
 					:active="tileData.layer_name == activeTileLayer.layer_name"
 				/>
 			</div>

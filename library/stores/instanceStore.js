@@ -18,13 +18,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const mapConfig = shallowRef({});
 
 	// Default Tile Layer
-	const activeTileLayer = ref({
-		layer_name: "OpenStreetMap",
-		layer_url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
-		layer_attribution:
-			'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		layer_max_zoom: "18",
-	});
+	const activeTileLayer = ref(null);
 
 	// Data
 	const geoJSON = shallowRef({});
@@ -66,11 +60,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Check for config
 		if (data.mapConfig) {
 			mapConfig.value = data.mapConfig;
-
-			// Set initial tile layer
-			if (data.mapConfig.tile_layers && data.mapConfig.tile_layers.length > 0) {
-				activeTileLayer.value = data.mapConfig.tile_layers[0];
-			}
 		}
 	}
 
@@ -82,8 +71,22 @@ export const useInstanceStore = defineStore("instance", () => {
 			.on("moveend", updateVisibleOverlays);
 	}
 
-	function updateTileLayer(tileLayer) {
-		activeTileLayer.value = tileLayer;
+	function updateTileLayer(layerId = "") {
+		// Remove existing layer
+		if (activeTileLayer.value) {
+			// Add new layer
+			map.addLayer({
+				id: layerId,
+				type: "raster",
+				source: layerId,
+				before: activeTileLayer.value,
+			});
+
+			map.removeLayer(activeTileLayer.value);
+		}
+
+		// Update active layer
+		activeTileLayer.value = layerId;
 	}
 
 	function togglePanel() {
