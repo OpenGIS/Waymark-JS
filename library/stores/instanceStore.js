@@ -29,7 +29,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const visibleOverlays = ref([]);
 	const activeOverlay = ref({});
 
-	const activePanel = ref("basemaps");
+	const activePanel = ref("overlays");
 	const panelOpen = ref(true);
 
 	const width = ref(0);
@@ -90,7 +90,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen.value = !panelOpen.value;
 	}
 
-	function setActivePanel(panel = "overlay") {
+	function setActivePanel(panel = "overlays") {
 		activePanel.value = panel;
 		panelOpen.value = true;
 	}
@@ -107,20 +107,28 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
+				const layerId = overlay.layer.id + "-highlight";
+
 				if (highlight) {
-					// Duplicate layer
-					map.value.addLayer({
-						id: overlay.layer.id + "-highlight",
-						type: "line",
-						source: overlay.layer.source,
-						layout: overlay.layer.layout,
-						paint: {
-							"line-color": "red",
-							"line-width": 5,
-						},
-					});
+					// If layer doesn't exist
+					if (!map.value.getLayer(layerId)) {
+						// Duplicate layer
+						map.value.addLayer({
+							id: layerId,
+							type: "line",
+							source: overlay.layer.source,
+							layout: overlay.layer.layout,
+							paint: {
+								"line-color": "red",
+								"line-width": 5,
+							},
+						});
+					}
 				} else {
-					map.value.removeLayer(overlay.layer.id + "-highlight");
+					// If layer exists
+					if (map.value.getLayer(layerId)) {
+						map.value.removeLayer(layerId);
+					}
 				}
 
 				break;
@@ -128,7 +136,15 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setActiveOverlay(overlay) {
-		setActivePanel("overlay");
+		setActivePanel("overlays");
+
+		// Remove all other highlights
+		overlays.value.forEach((overlay) => {
+			highlightOverlay(overlay, false);
+		});
+
+		// Highlight overlay
+		highlightOverlay(overlay, true);
 
 		//Overlay already open
 		if (activeOverlay.value && activeOverlay.value.id == overlay.id) {
@@ -168,7 +184,10 @@ export const useInstanceStore = defineStore("instance", () => {
 		});
 
 		markerElement.addEventListener("mouseleave", () => {
+			// If not active Overlay
+			// if (activeOverlay.value.id != overlay.id) {
 			highlightOverlay(overlay, false);
+			// }
 		});
 
 		overlays.value.push(overlay);

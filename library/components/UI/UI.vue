@@ -17,7 +17,7 @@ const showPanel = (panel) => {
 	return activePanel.value === panel && panelOpen.value;
 };
 
-const handleNavClick = (panel = "overlay") => {
+const handleNavClick = (panel = "overlays") => {
 	// Toggle existing panel
 	if (panel === activePanel.value) {
 		instanceStore.togglePanel();
@@ -35,11 +35,11 @@ const handleNavClick = (panel = "overlay") => {
 			<!-- START Panel Nav -->
 			<nav class="panels-nav">
 				<!-- Overlay -->
-				<div class="nav-item nav-overlay">
+				<div class="nav-item nav-overlays">
 					<Button
 						icon="fa-navicon"
-						@click="handleNavClick('overlay')"
-						:active="activePanel === 'overlay'"
+						@click="handleNavClick('overlays')"
+						:active="activePanel === 'overlays'"
 					/>
 				</div>
 
@@ -65,7 +65,7 @@ const handleNavClick = (panel = "overlay") => {
 
 			<!-- START Panel Content -->
 			<div class="panels-content">
-				<Overlays v-show="showPanel('overlay')" />
+				<Overlays v-show="showPanel('overlays')" />
 
 				<Info v-show="showPanel('info')" />
 
