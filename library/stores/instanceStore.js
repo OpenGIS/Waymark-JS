@@ -23,7 +23,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	// Data
 	const geoJSON = shallowRef({});
 
-	let map = null;
+	let map = shallowRef(null);
 
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
@@ -64,9 +64,9 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function storeMap(mapInstance) {
-		map = mapInstance;
+		map.value = mapInstance;
 
-		map
+		map.value
 			.on("zoomend", updateVisibleOverlays)
 			.on("moveend", updateVisibleOverlays);
 	}
@@ -75,7 +75,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Iterate over tile_layers
 		mapConfig.value.tile_layers.forEach((layer) => {
 			// Set visibility based on layerId
-			map.setLayoutProperty(
+			map.value.setLayoutProperty(
 				layer.layer_name,
 				"visibility",
 				layer.layer_name == layerId ? "visible" : "none",
@@ -102,7 +102,10 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
-				const colour = map.getPaintProperty(overlay.layer.id, "line-color");
+				const colour = map.value.getPaintProperty(
+					overlay.layer.id,
+					"line-color",
+				);
 
 				// Invert HEX colour
 				const hex = colour.replace("#", "");
@@ -118,7 +121,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 				const newColour = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
 
-				map.setPaintProperty(overlay.layer.id, "line-color", newColour);
+				map.value.setPaintProperty(overlay.layer.id, "line-color", newColour);
 
 				break;
 		}
@@ -188,15 +191,15 @@ export const useInstanceStore = defineStore("instance", () => {
 		};
 
 		// Add events
-		map.on("click", line.id, () => {
+		map.value.on("click", line.id, () => {
 			setActiveOverlay(overlay);
 		});
 
-		map.on("mouseenter", line.id, () => {
+		map.value.on("mouseenter", line.id, () => {
 			toggleHoverOverlay(overlay);
 		});
 
-		map.on("mouseleave", line.id, () => {
+		map.value.on("mouseleave", line.id, () => {
 			toggleHoverOverlay(overlay);
 		});
 
@@ -208,7 +211,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	function setFocus(overlay = {}) {
 		switch (overlay.featureType) {
 			case "marker":
-				map.flyTo({
+				map.value.flyTo({
 					center: overlay.layer.getLngLat(),
 					zoom: 15,
 				});
@@ -227,7 +230,7 @@ export const useInstanceStore = defineStore("instance", () => {
 				);
 
 				// Fit to bounds
-				map.fitBounds(bounds, {
+				map.value.fitBounds(bounds, {
 					padding: 30,
 				});
 
@@ -245,7 +248,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	});
 
 	const updateVisibleOverlays = () => {
-		const mapBounds = map.getBounds();
+		const mapBounds = map.value.getBounds();
 
 		//Check if overlay is visible
 		visibleOverlays.value = overlays.value.filter((overlay) => {
