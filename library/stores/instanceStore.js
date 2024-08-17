@@ -103,31 +103,25 @@ export const useInstanceStore = defineStore("instance", () => {
 				} else {
 					overlay.layer.getElement().classList.remove("overlay-highlight");
 				}
-				//overlay.element.classList.toggle("overlay-highlight");
 
 				break;
 
 			case "line":
-				const colour = map.value.getPaintProperty(
-					overlay.layer.id,
-					"line-color",
-				);
-
-				// Invert HEX colour
-				const hex = colour.replace("#", "");
-
-				const r = 255 - parseInt(hex.substring(0, 2), 16);
-				const g = 255 - parseInt(hex.substring(2, 4), 16);
-				const b = 255 - parseInt(hex.substring(4, 6), 16);
-
-				// Ensure each is 2 characters & numeric
-				const pad = (str) => {
-					return str.length == 1 ? `0${str}` : str;
-				};
-
-				const newColour = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
-
-				map.value.setPaintProperty(overlay.layer.id, "line-color", newColour);
+				if (highlight) {
+					// Duplicate layer
+					map.value.addLayer({
+						id: overlay.layer.id + "-highlight",
+						type: "line",
+						source: overlay.layer.source,
+						layout: overlay.layer.layout,
+						paint: {
+							"line-color": "red",
+							"line-width": 5,
+						},
+					});
+				} else {
+					map.value.removeLayer(overlay.layer.id + "-highlight");
+				}
 
 				break;
 		}

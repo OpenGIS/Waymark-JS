@@ -1,6 +1,12 @@
 {
 	"tile_layers": [
 		{
+			"layer_name": "OpenCycleMap",
+			"layer_url": "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
+			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+			"layer_max_zoom": "18"
+		},
+		{
 			"layer_name": "Open Street Map",
 			"layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",

@@ -7,160 +7,123 @@
 			"layer_max_zoom": "18"
 		},
 		{
-			"layer_name": "Satellite",
-			"layer_url": "https://api.mapbox.com/styles/v1/sunlight76/ckbt6wyru0m2q1iql8agrv8an/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VubGlnaHQ3NiIsImEiOiJja2J0M29lOHgwNmJkMnlvdm54cWg3MWRhIn0.FnqYWqvlJvxYO8MzUL-BVQ",
-			"layer_attribution": "",
-			"layer_max_zoom": "18"
-		},
-		{
 			"layer_name": "Open Street Map",
-			"layer_url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-			"layer_max_zoom": "18"
-		},
-		{
-			"layer_name": "OutDoor",
-			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
+			"layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
 			"layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"layer_max_zoom": "18"
 		}
 	],
 	"marker_types": [
 		{
-			"marker_title": "Photo",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-camera",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#475260",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Alert",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-android-alert",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#dd3333",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Vetta",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-flag",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#1e73be",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Svolta",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-ios-redo",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#dd3333",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Bivio",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-shuffle",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#dd3333",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Punto di interesse",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-ios-location",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#81d742",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Panorama",
-			"marker_shape": "marker",
-			"marker_size": "large",
-			"icon_type": "icon",
-			"marker_icon": "ion-eye",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#1e73be",
-			"marker_display": "1",
-			"marker_submission": "1"
-		},
-		{
-			"marker_title": "Informazione",
+			"marker_title": "Information",
 			"marker_shape": "marker",
 			"marker_size": "large",
 			"icon_type": "icon",
 			"marker_icon": "ion-information-circled",
 			"marker_colour": "#fbfbfb",
-			"icon_colour": "#1e73be",
+			"icon_colour": "#0069a5",
 			"marker_display": "1",
 			"marker_submission": "1"
 		},
 		{
-			"marker_title": "Rifugio",
+			"marker_title": "Tunnel",
 			"marker_shape": "marker",
 			"marker_size": "large",
 			"icon_type": "icon",
-			"marker_icon": "ion-android-home",
+			"marker_icon": "fa-universal-access",
 			"marker_colour": "#fbfbfb",
-			"icon_colour": "#1e73be",
+			"icon_colour": "#757575",
 			"marker_display": "1",
 			"marker_submission": "1"
 		},
 		{
-			"marker_title": "Partenza",
+			"marker_title": "Location v\u00e9los",
 			"marker_shape": "marker",
 			"marker_size": "large",
 			"icon_type": "icon",
-			"marker_icon": "ion-ios-flag",
-			"marker_colour": "#fbfbfb",
-			"icon_colour": "#81d742",
+			"marker_icon": "fa-bicycle",
+			"marker_colour": "#17c1b6fb",
+			"icon_colour": "#ffffff",
 			"marker_display": "1",
 			"marker_submission": "1"
 		},
 		{
-			"marker_title": "Arrivo",
+			"marker_title": "Toilettes",
+			"marker_shape": "marker",
+			"marker_size": "medium",
+			"icon_type": "icon",
+			"marker_icon": "fa-user",
+			"marker_colour": "#fbfbfb",
+			"icon_colour": "#0a9cd1",
+			"marker_display": "1",
+			"marker_submission": "1"
+		},
+		{
+			"marker_title": "Parking",
 			"marker_shape": "marker",
 			"marker_size": "large",
 			"icon_type": "icon",
-			"marker_icon": "ion-ios-flag-outline",
+			"marker_icon": "fa-car",
 			"marker_colour": "#fbfbfb",
-			"icon_colour": "#dd3333",
+			"icon_colour": "#000000",
+			"marker_display": "1",
+			"marker_submission": "1"
+		},
+		{
+			"marker_title": "A voir \u00e0 proximit\u00e9",
+			"marker_shape": "marker",
+			"marker_size": "large",
+			"icon_type": "icon",
+			"marker_icon": "fa-star",
+			"marker_colour": "#dd4444",
+			"icon_colour": "#ffffff",
+			"marker_display": "1",
+			"marker_submission": "1"
+		},
+		{
+			"marker_title": "Viaduc",
+			"marker_shape": "marker",
+			"marker_size": "large",
+			"icon_type": "icon",
+			"marker_icon": "fa-camera",
+			"marker_colour": "#fbfbfb",
+			"icon_colour": "#dd9933",
+			"marker_display": "1",
+			"marker_submission": "1"
+		},
+		{
+			"marker_title": "Point d'eau",
+			"marker_shape": "marker",
+			"marker_size": "large",
+			"icon_type": "icon",
+			"marker_icon": "ion-waterdrop",
+			"marker_colour": "#fbfbfb",
+			"icon_colour": "#0092e8",
 			"marker_display": "1",
 			"marker_submission": "1"
 		}
 	],
 	"line_types": [
 		{
-			"line_title": "Andata",
-			"line_colour": "#dd3333",
-			"line_weight": "5",
+			"line_title": "Voie partag\u00e9e",
+			"line_colour": "#0a0404",
+			"line_weight": "12",
 			"line_opacity": "0.7",
 			"line_display": "1",
 			"line_submission": "1"
 		},
 		{
-			"line_title": "Ritorno",
-			"line_colour": "#81d742",
-			"line_weight": "5",
+			"line_title": "Voie cyclable bitum\u00e9e",
+			"line_colour": "#dd883e",
+			"line_weight": "12",
+			"line_opacity": "0.7",
+			"line_display": "1",
+			"line_submission": "1"
+		},
+		{
+			"line_title": "Voie cyclable non bitum\u00e9e",
+			"line_colour": "#246ab3",
+			"line_weight": "12",
 			"line_opacity": "0.7",
 			"line_display": "1",
 			"line_submission": "1"
@@ -188,7 +151,5 @@
 			"shape_display": "1",
 			"shape_submission": "1"
 		}
-	],
-	"show_scale": "0",
-	"debug_mode": false
+	]
 }
