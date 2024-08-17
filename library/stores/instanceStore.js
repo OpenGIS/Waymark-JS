@@ -95,10 +95,16 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen.value = true;
 	}
 
-	function toggleHoverOverlay(overlay) {
+	function highlightOverlay(overlay = {}, highlight = true) {
 		switch (overlay.featureType) {
 			case "marker":
-				overlay.element.classList.toggle("overlay-highlight");
+				if (highlight) {
+					overlay.layer.getElement().classList.add("overlay-highlight");
+				} else {
+					overlay.layer.getElement().classList.remove("overlay-highlight");
+				}
+				//overlay.element.classList.toggle("overlay-highlight");
+
 				break;
 
 			case "line":
@@ -164,11 +170,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		});
 
 		markerElement.addEventListener("mouseenter", () => {
-			toggleHoverOverlay(overlay);
+			highlightOverlay(overlay, true);
 		});
 
 		markerElement.addEventListener("mouseleave", () => {
-			toggleHoverOverlay(overlay);
+			highlightOverlay(overlay, false);
 		});
 
 		overlays.value.push(overlay);
@@ -196,11 +202,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		});
 
 		map.value.on("mouseenter", line.id, () => {
-			toggleHoverOverlay(overlay);
+			highlightOverlay(overlay, true);
 		});
 
 		map.value.on("mouseleave", line.id, () => {
-			toggleHoverOverlay(overlay);
+			highlightOverlay(overlay, false);
 		});
 
 		overlays.value.push(overlay);
@@ -327,7 +333,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		visibleOverlays,
 		activeOverlay,
 		setActiveOverlay,
-		toggleHoverOverlay,
+		highlightOverlay,
 		activePanel,
 		panelOpen,
 		storeMarker,

@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
+const { highlightOverlay } = instanceStore;
 const { activeOverlay } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
@@ -37,10 +38,6 @@ const setActive = () => {
   instanceStore.setActiveOverlay(props.overlay);
 };
 
-const toggleHover = () => {
-  instanceStore.toggleHoverOverlay(props.overlay);
-};
-
 const isActive = () => {
   return activeOverlay.value === props.overlay;
 };
@@ -49,8 +46,8 @@ const isActive = () => {
 <template>
   <div
     :class="`overlay ${isActive() ? 'active' : ''} overlay-${props.overlay.id}`"
-    @mouseenter="toggleHover"
-    @mouseleave="toggleHover"
+    @mouseenter="highlightOverlay(props.overlay, true)"
+    @mouseleave="highlightOverlay(props.overlay, false)"
   >
     <!-- START Overview -->
     <div class="overview" @click="setActive">
