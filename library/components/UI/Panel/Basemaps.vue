@@ -9,13 +9,10 @@ const instanceStore = useInstanceStore();
 const { mapConfig, updateTileLayer } = instanceStore;
 const { activeTileLayer, map } = storeToRefs(instanceStore);
 
-onMounted(() => {
-	console.log(map.value);
-});
-
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
 		Math.floor(((lon + 180) / 360) * Math.pow(2, zoom));
+
 	const lat2tile = (lat, zoom) =>
 		Math.floor(
 			((1 -
@@ -27,11 +24,11 @@ const tilePreviewUrl = (tile_url) => {
 				Math.pow(2, zoom),
 		);
 
-	let zoom = parseInt(map.value.getZoom()),
-		latitude = map.value.getCenter().lat,
-		longitude = map.value.getCenter().lng,
-		x = lon2tile(longitude, zoom),
-		y = lat2tile(latitude, zoom);
+	const zoom = parseInt(map.value.getZoom());
+	const lat = map.value.getCenter().lat;
+	const lng = map.value.getCenter().lng;
+	const x = lon2tile(lng, zoom);
+	const y = lat2tile(lat, zoom);
 
 	// Replace {z}, {x}, {y} with actual values
 	return tile_url.replace("{z}", zoom).replace("{x}", x).replace("{y}", y);
@@ -54,7 +51,6 @@ const tilePreviewUrl = (tile_url) => {
 					{{ tilePreviewUrl(tileData.layer_url) }}
 
 					<img :src="tilePreviewUrl(tileData.layer_url)" />
-					}
 				</div>
 
 				<Button
