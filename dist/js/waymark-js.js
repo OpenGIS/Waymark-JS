@@ -7623,10 +7623,6 @@ function Waymark_Map() {
 			}
 		}
 
-		// Wake message
-		Waymark.config.viewer_options.sleep_wake_message =
-			Waymark.config.language.sleep_wake_message;
-
 		//Set defaults
 		var default_line_type = Waymark.get_type("line");
 		var default_line_type_key = Waymark.make_key(default_line_type.line_title);
