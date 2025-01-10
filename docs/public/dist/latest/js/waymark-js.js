@@ -7883,6 +7883,7 @@ function Waymark_Map() {
 
 			// Polygon & Rectangle
 			case "Polygon":
+			case "MultiPolygon":
 				//Is this a retangle?
 				//				if(feature.properties.rectangle) {}
 
@@ -8184,6 +8185,7 @@ function Waymark_Map() {
 					// Polygon & Rectangle
 
 					case "Polygon":
+					case "MultiPolygon":
 						//Build Waymark data
 						feature.properties = Waymark.parse_layer_data(
 							"shape",
