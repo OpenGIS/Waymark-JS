@@ -20,9 +20,10 @@ export default defineNuxtConfig({
   ],
 
   app: {
+    baseURL: "/js/",
     head: {
       link: [
-        { rel: "icon", type: "image/svg", href: "/assets/icon/waymark.svg" },
+        { rel: "icon", type: "image/svg", href: "/js/assets/icon/waymark.svg" },
       ],
     },
   },
