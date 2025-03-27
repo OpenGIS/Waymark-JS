@@ -4,9 +4,9 @@
 
     "tile_layers": [
       {
-        "layer_name": "OpenTopoMap",
-        "layer_url": "https://tile.opentopomap.org/{z}/{x}/{y}.png",
-        "layer_attribution": "© <a href=\"https://openstreetmap.org/copyright\">OSM</a>-Mitwirkende, SRTM | © <a href=\"http://opentopomap.org\" data-moz-translations-id=\"285\">OpenTopoMap</a>",
+        "layer_name": "Thunderforest Outdoors",
+        "layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}@2x.png?apikey=4550655437ba47fda736e7898339c95f",
+        "layer_attribution": "Maps © <a href=\"http://www.thunderforest.com\">Thunderforest</a> | Data © <a href=\"http://www.openstreetmap.org/copyright\">OSM</a>",
         "layer_max_zoom": "17"
       },
       {
