@@ -4,12 +4,15 @@ export default defineNuxtConfig({
   modules: ["@nuxt/content"],
   content: {
     documentDriven: true,
-    markdown: {
-      remarkPlugins: {
-        "remark-gfm": true,
-        "remark-prism": true,
-      },
+    highlight: {
+      theme: "github-dark",
     },
+    // markdown: {
+    //   remarkPlugins: {
+    //     "remark-gfm": true,
+    //     // "remark-prism": true,
+    //   },
+    // },
   },
 
   css: [
