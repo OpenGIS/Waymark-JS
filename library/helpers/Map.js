@@ -1,60 +1,38 @@
-import { Marker } from "maplibre-gl";
+// import { Marker } from "maplibre-gl";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-export function createMapStyle() {
+export function createTileLayers() {
   const { mapConfig } = useInstanceStore();
 
-  const style = {
-    version: 8,
-    sources: {},
-    layers: [],
-  };
+  const tileLayers = [];
 
   // Tile Layers
   if (Array.isArray(mapConfig.tile_layers)) {
     // Each Tile Layer
     mapConfig.tile_layers.forEach((tile_data) => {
-      // Add Source
-      style.sources[tile_data.layer_name] = {
-        type: "raster",
-        tiles: [tile_data.layer_url],
-        tileSize: 256,
-        attribution: tile_data.layer_attribution,
-      };
-
-      // Add Layer
-      style.layers.push({
-        id: tile_data.layer_name,
-        type: "raster",
-        source: tile_data.layer_name,
-        // Will be set to visible on Map load
-        layout: {
-          visibility: "none",
-        },
-      });
+      // Create Tile Layer
+      tileLayers.push(
+        L.tileLayer(tile_data.layer_url, {
+          maxZoom: parseInt(tile_data.layer_max_zoom),
+          attribution: tile_data.layer_attribution,
+        }),
+      );
     });
   } else {
-    // Default Tile Layer
-    style.sources["OpenStreetMap"] = {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1"],
-      tileSize: 256,
-      attribution:
-        '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    };
-
-    style.layers.push({
-      id: "OpenStreetMap",
-      type: "raster",
-      source: "OpenStreetMap",
-    });
+    tileLayers.push(
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1", {
+        maxZoom: 19,
+        attribution:
+          '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }),
+    );
   }
 
-  return style;
+  return tileLayers;
 }
 
 export function getMapAttribution() {

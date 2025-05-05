@@ -1,6 +1,6 @@
 import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
-import { LngLatBounds } from "maplibre-gl";
+// import { LngLatBounds } from "maplibre-gl";
 import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
@@ -223,6 +223,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setFocus(overlay = {}) {
+		/*
 		switch (overlay.featureType) {
 			case "marker":
 				map.value.flyTo({
@@ -250,6 +251,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 				break;
 		}
+*/
 	}
 
 	//Getters

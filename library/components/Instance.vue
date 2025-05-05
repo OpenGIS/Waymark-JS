@@ -2,8 +2,8 @@
 import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 
-import { useMaplibre } from "@/composables/useMaplibre.js";
-const { createMap } = useMaplibre();
+import { useLeaflet } from "@/composables/useLeaflet.js";
+const { createMap } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();

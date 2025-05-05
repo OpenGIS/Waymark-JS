@@ -21,7 +21,7 @@
   "dependencies": {
     "font-awesome": "^4.7.0",
     "ionicons-npm": "^2.0.1",
-    "maplibre-gl": "^4.3.2",
+    "leaflet": "^1.9.4",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },
@@ -29,6 +29,6 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "less": "^4.2.0",
     "prettier": "^3.2.5",
-    "vite": "^5.2.0"
+    "vite": "^6.3.5"
   }
 }
