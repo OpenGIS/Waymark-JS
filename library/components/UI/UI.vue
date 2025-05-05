@@ -4,8 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
-const { activePanel, panelOpen, classAppend, activeOverlay } =
-	storeToRefs(instanceStore);
+const { activePanel, panelOpen } = storeToRefs(instanceStore);
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
@@ -29,117 +28,95 @@ const handleNavClick = (panel = "overlays") => {
 </script>
 
 <template>
-	<div :class="`ui ${classAppend}`">
-		<!-- START Panels -->
-		<div :class="`panels ${classAppend}`">
-			<!-- START Panel Nav -->
-			<nav class="panels-nav">
-				<!-- Overlay -->
-				<div class="nav-item nav-overlays">
-					<Button
-						icon="fa-navicon"
-						@click="handleNavClick('overlays')"
-						:active="activePanel === 'overlays'"
-					/>
-				</div>
-
-				<!-- Info -->
-				<div class="nav-item nav-info">
-					<Button
-						icon="fa-info"
-						@click="handleNavClick('info')"
-						:active="activePanel === 'info'"
-					/>
-				</div>
-
-				<!-- Basemaps -->
-				<div class="nav-item nav-basemaps">
-					<Button
-						icon="fa-map"
-						@click="handleNavClick('basemaps')"
-						:active="activePanel === 'basemaps'"
-					/>
-				</div>
-			</nav>
-			<!-- END Panel Nav -->
-
-			<!-- START Panel Content -->
-			<div class="panels-content">
-				<Overlays v-show="showPanel('overlays')" />
-
-				<Info v-show="showPanel('info')" />
-
-				<Basemaps v-show="showPanel('basemaps')" />
-			</div>
-			<!-- END Panel Content -->
+	<!-- START Panel Nav -->
+	<nav class="panels-nav">
+		<!-- Overlay -->
+		<div class="nav-item nav-overlays">
+			<Button
+				icon="fa-navicon"
+				@click="handleNavClick('overlays')"
+				:active="activePanel === 'overlays'"
+			/>
 		</div>
-		<!-- END Panels -->
+
+		<!-- Info -->
+		<div class="nav-item nav-info">
+			<Button
+				icon="fa-info"
+				@click="handleNavClick('info')"
+				:active="activePanel === 'info'"
+			/>
+		</div>
+
+		<!-- Basemaps -->
+		<div class="nav-item nav-basemaps">
+			<Button
+				icon="fa-map"
+				@click="handleNavClick('basemaps')"
+				:active="activePanel === 'basemaps'"
+			/>
+		</div>
+	</nav>
+	<!-- END Panel Nav -->
+
+	<!-- START Panel Content -->
+	<div class="panels-content">
+		<Overlays v-show="showPanel('overlays')" />
+
+		<Info v-show="showPanel('info')" />
+
+		<Basemaps v-show="showPanel('basemaps')" />
 	</div>
+	<!-- END Panel Content -->
 </template>
 
 <style lang="less">
-.ui {
-	.panels {
+.instance {
+	.panels-nav {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 100;
+		width: 44px;
 		height: 100%;
-		min-width: 44px;
-		min-height: 44px;
-		transition: height 0.1s jump-start;
+		background: rgba(249, 249, 249, 0.7);
+	}
 
-		/* Open */
-		&.panel-open {
-			padding-right: 50px;
-		}
-
-		/* Nav */
-		.panels-nav {
-			position: fixed;
-			right: 0;
-			width: 44px;
-			height: 100%;
-			display: flex;
-			flex-direction: column;
-			background: pink;
-
-			.nav-item {
-				&.nav-info {
-				}
-			}
-		}
-
-		/* Content */
+	&.panel-open {
 		.panels-content {
+			position: absolute;
+			top: 0;
+			right: 44px;
+			width: calc(320px - 44px);
+			padding-bottom: 44px;
+			height: calc(100% - 44px);
+			overflow-y: auto;
+			background: rgba(249, 249, 249, 0.7);
+		}
+	}
+
+	&.panel-closed {
+		.panels-content {
+			display: none;
+		}
+	}
+
+	&.small {
+		.panels-nav {
+			display: flex;
 			width: 100%;
-			height: 100%;
-			width: 320px;
-			// min-width: 44px;
-			overflow-x: hidden;
+			height: 44px;
+			top: unset;
+			bottom: 0;
+			right: unset;
+			left: 0;
 		}
-
-		&.portrait {
-			/* Closed */
-			&.panel-closed {
-				.panels-nav {
-					height: 44px;
-					width: 100%;
-					flex-direction: row;
-					justify-content: right;
-					direction: rtl;
-				}
-			}
-
-			/* Content */
-			.panel-content {
-				overflow: auto;
-			}
-		}
-
-		&.landscape {
-			/* Open */
-			.panels-nav {
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-			}
+		.panels-content {
+			top: unset;
+			bottom: 0;
+			right: unset;
+			height: 300px;
+			width: 100%;
 		}
 	}
 }

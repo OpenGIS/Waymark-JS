@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";

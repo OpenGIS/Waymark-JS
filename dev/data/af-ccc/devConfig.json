@@ -11,12 +11,6 @@
 			"layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=91872755ecf54e42a47a8982b3dc922a",
 			"layer_attribution": "Maps \u00a9 <a href=\"http://www.thunderforest.com\">Thunderforest</a>, Data \u00a9 <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>",
 			"layer_max_zoom": "18"
-		},
-		{
-			"layer_name": "Satellite",
-			"layer_url": "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg90?access_token=pk.eyJ1IjoiYWYtY2NjIiwiYSI6ImNsMzYxZHEydTBicmUza253NnhwemprYXAifQ.s_vUrzkcyEByegXskFeCEg",
-			"layer_attribution": "\u00a9 <a href=\"https://www.mapbox.com/\">Mapbox</a> contributors",
-			"layer_max_zoom": "18"
 		}
 	],
 	"marker_types": [

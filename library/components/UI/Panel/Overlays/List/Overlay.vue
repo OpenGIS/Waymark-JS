@@ -125,7 +125,7 @@ const isActive = () => {
         padding-left: 10px;
         width: 200px;
         flex: auto;
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 300;
       }
 

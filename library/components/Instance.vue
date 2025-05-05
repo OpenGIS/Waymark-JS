@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 
 import { useMaplibre } from "@/composables/useMaplibre.js";
 const { createMap } = useMaplibre();
@@ -70,57 +70,14 @@ onMounted(() => {
 
 <style lang="less">
 .instance {
+	position: relative;
 	height: 100%;
 	width: 100%;
-
-	display: flex;
-
-	/* Portrait */
-	&.portrait {
-		flex-direction: row;
-
-		.map {
-			width: 100%;
-		}
-	}
-
-	/* Landscape */
-	&.landscape {
-		flex-direction: row;
-
-		.map {
-			width: 100%;
-		}
-
-		&.panel-open {
-			.ui {
-				max-width: 320px;
-				// width: 40%;
-			}
-		}
-	}
 
 	/* Transitions */
 	.map,
 	.ui {
 		transition: width 0.25s circular;
-	}
-}
-
-/* Small Screens */
-@media (max-width: 768px) {
-	.instance {
-		&.portrait {
-			flex-direction: column;
-
-			.map {
-				height: 60%;
-			}
-
-			.ui {
-				height: 40%;
-			}
-		}
 	}
 }
 </style>

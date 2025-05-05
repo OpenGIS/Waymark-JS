@@ -10,13 +10,13 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const {
+	containerId,
 	visibleOverlays,
 	overlays,
 	markers,
 	lines,
 	shapes,
 	activeOverlay,
-	classAppend,
 } = storeToRefs(instanceStore);
 
 const activeType = ref("line");
@@ -72,7 +72,7 @@ watch(activeOverlay, (newOverlay) => {
 
 		// Scroll to Active Overlay
 		const element = document.querySelector(
-			`.overlay-${newOverlay.id} .overview`,
+			`#${containerId.value} .overlay-${newOverlay.id} .overview`,
 		);
 
 		if (element) {

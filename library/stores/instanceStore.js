@@ -1,17 +1,12 @@
 import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
 import { LngLatBounds } from "maplibre-gl";
-import {
-	getTypeData,
-	getFeatureType,
-	getIconData,
-	getImageURLs,
-} from "@/helpers/Overlay.js";
+import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// DOM Target
-	let id = null;
+	let containerId = ref(null);
 	let container = null;
 
 	// Config
@@ -30,17 +25,17 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeOverlay = ref({});
 
 	const activePanel = ref("overlays");
-	const panelOpen = ref(true);
+	const panelOpen = ref(false);
 
 	const width = ref(0);
 	const height = ref(0);
 
 	function createStore(data = {}) {
 		if (data.id) {
-			id = data.id;
+			containerId.value = data.id;
 
 			// Get DOM Element
-			container = document.getElementById(id);
+			container = document.getElementById(containerId.value);
 
 			// Inital Dimensions
 			const getDimensions = () => {
@@ -316,6 +311,13 @@ export const useInstanceStore = defineStore("instance", () => {
 		return width.value > height.value ? "landscape" : "portrait";
 	});
 
+	const small = computed(() => {
+		// Small / Medium / Large
+		if (width.value <= 320) {
+			return "small";
+		}
+	});
+
 	const classAppend = computed(() => {
 		let classes = [""];
 
@@ -328,6 +330,8 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		classes.push(orientation.value);
 
+		classes.push(small.value);
+
 		return classes.join(" ");
 	});
 
@@ -335,7 +339,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		createStore,
 		storeMap,
 		storeLine,
-		id,
+		containerId,
 		overlays,
 		geoJSON,
 		map,

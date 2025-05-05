@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
 import Instance from "../library/components/Instance.vue";
 
 export function useWaymark() {
