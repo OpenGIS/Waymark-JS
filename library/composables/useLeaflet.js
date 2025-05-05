@@ -75,25 +75,38 @@ export function useLeaflet() {
 		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
 			geoJSON = config.geoJSON;
 
+			console.log("GeoJSON", geoJSON);
+
 			// Create Bounds
-			const dataBounds = new L.latLngBounds();
+			const dataBounds = new L.LatLngBounds(
+				L.latLng(lat, lng),
+				L.latLng(lat, lng),
+			);
 
-			map.on("load", () => {
-				// Markers
-				pointsFeatures.value.forEach((feature) => {
-					//Extend bounds
-					dataBounds.extend(L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]));
+			// map.on("load", () => {
+			console.log(pointsFeatures.value);
 
-					// Create the Marker
-					const marker = createMarker(feature);
+			// Markers
+			pointsFeatures.value.forEach((feature) => {
+				//Extend bounds
+				dataBounds.extend(
+					L.latLng(
+						feature.geometry.coordinates[1],
+						feature.geometry.coordinates[0],
+					),
+				);
 
-					// Add Marker to Map
-					marker.addTo(map);
+				// Create the Marker
+				const marker = createMarker(feature);
 
-					// Add Marker to Store
-					storeMarker(marker, feature);
-				});
+				// Add Marker to Map
+				marker.addTo(map);
 
+				// Add Marker to Store
+				storeMarker(marker, feature);
+				// });
+
+				/*
 				// Lines
 				let count = 0;
 				linesFeatures.value.forEach((feature) => {
@@ -135,9 +148,18 @@ export function useLeaflet() {
 					lat = map.getCenter().lat.toFixed(4);
 					zoom = parseInt(map.getZoom());
 				});
+*/
+
+				console.log(dataBounds);
+
+				// Set Map bounds
+				map.fitBounds(dataBounds, {
+					padding: 30,
+					animate: false,
+				});
 			});
 		}
-*/
+
 		return map;
 	};
 

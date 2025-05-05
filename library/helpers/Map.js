@@ -1,4 +1,4 @@
-// import { Marker } from "maplibre-gl";
+import L from "leaflet";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 // Import Helpers
@@ -99,12 +99,19 @@ export function createMarker(feature = {}) {
   el.style.height = `${iconData.iconSize[1]}px`;
 
   // Create Marker
-  const marker = new Marker({
-    element: el,
-    offset: iconData.iconAnchor,
-  });
+  const marker = L.marker(
+    [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+    {
+      icon: L.divIcon({
+        className: iconData.className,
+        html: el,
+        iconSize: iconData.iconSize,
+        iconAnchor: iconData.iconAnchor,
+      }),
+    },
+  );
 
-  marker.setLngLat(feature.geometry.coordinates);
+  console.log("Marker", marker);
 
   return marker;
 }
