@@ -1,6 +1,6 @@
 import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
-// import { LngLatBounds } from "maplibre-gl";
+import L from "leaflet";
 import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
@@ -102,28 +102,14 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
-				const layerId = overlay.layer.id + "-highlight";
-
 				if (highlight) {
-					// If layer doesn't exist
-					if (!map.value.getLayer(layerId)) {
-						// Duplicate layer
-						map.value.addLayer({
-							id: layerId,
-							type: "line",
-							source: overlay.layer.source,
-							layout: overlay.layer.layout,
-							paint: {
-								"line-color": "red",
-								"line-width": 5,
-							},
-						});
-					}
+					overlay.layer.setStyle({
+						weight: 6,
+					});
 				} else {
-					// If layer exists
-					if (map.value.getLayer(layerId)) {
-						map.value.removeLayer(layerId);
-					}
+					overlay.layer.setStyle({
+						weight: overlay.typeData.weight,
+					});
 				}
 
 				break;
@@ -229,20 +215,19 @@ export const useInstanceStore = defineStore("instance", () => {
 				break;
 
 			case "line":
-				// Get coords
-				const coords = overlay.feature.geometry.coordinates;
+				// Set to bounds of Line
+				const bounds = new L.latLngBounds();
 
-				// Get bounds extent
-				const bounds = coords.reduce(
-					(bounds, coord) => {
-						return bounds.extend(coord);
-					},
-					new LngLatBounds(coords[0], coords[0]),
-				);
+				overlay.layer.getLatLngs().forEach((coords) => {
+					bounds.extend(coords);
+				});
 
-				// Fit to bounds
+				console.log(bounds.toBBoxString());
+
+				// Zoom to bounds
 				map.value.fitBounds(bounds, {
-					padding: 30,
+					padding: [30, 30],
+					animate: true,
 				});
 
 				break;

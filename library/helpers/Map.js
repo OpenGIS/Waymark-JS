@@ -52,14 +52,9 @@ export function getMapAttribution() {
   return attrString;
 }
 
-export function createLineStyle(feature = {}, id = "") {
+export function createLineStyle(feature = {}) {
   // Ensure is LineString with coordinates
   if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
-    return null;
-  }
-
-  // Ensure we have an ID
-  if (!id) {
     return null;
   }
 
@@ -67,17 +62,8 @@ export function createLineStyle(feature = {}, id = "") {
   const typeData = getTypeData("line", typeKey);
 
   return {
-    id: id,
-    type: "line",
-    source: id,
-    layout: {
-      "line-join": "round",
-      "line-cap": "round",
-    },
-    paint: {
-      "line-color": typeData.line_colour,
-      "line-width": parseFloat(typeData.line_weight),
-    },
+    color: typeData.line_colour,
+    weight: parseFloat(typeData.line_weight),
   };
 }
 

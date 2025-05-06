@@ -94,51 +94,44 @@ export function useLeaflet() {
 
 					// Add Marker to Store
 					storeMarker(marker, feature);
+
+					// Lines
+					linesFeatures.value.forEach((feature) => {
+						//Extend bounds
+						feature.geometry.coordinates.forEach((coords) => {
+							dataBounds.extend(coords[1], coords[0]);
+						});
+
+						// Create Polyline
+						const line = L.polyline(
+							feature.geometry.coordinates.map((coords) => {
+								return L.latLng(coords[1], coords[0]);
+							}),
+							createLineStyle(feature),
+						);
+
+						// Add Line to Map
+						map.addLayer(line);
+
+						// Add Line to Store
+						storeLine(line, feature);
+					});
+
+					//Set initial centre and zoom to it
+					// map.setCenter(dataBounds.getCenter());
+					// map.fitBounds(dataBounds, {
+					// 	padding: 30,
+					// 	animate: false,
 					// });
 
-					/*
-				// Lines
-				let count = 0;
-				linesFeatures.value.forEach((feature) => {
-					//Extend bounds
-					feature.geometry.coordinates.forEach((coords) => {
-						dataBounds.extend(coords);
-					});
+					// map.once("moveend", () => {
+					// 	//Set Max bounds
+					// 	// map.setMaxBounds(map.getBounds());
 
-					const id = `line-${count++}`;
-
-					// Create Source
-					map.addSource(id, {
-						type: "geojson",
-						data: feature,
-					});
-
-					// Create Line Style
-					const line = createLineStyle(feature, id);
-
-					// Add Line to Map
-					map.addLayer(line);
-
-					// Add Line to Store
-					storeLine(line, feature);
-				});
-
-				//Set initial centre and zoom to it
-				map.setCenter(dataBounds.getCenter());
-				map.fitBounds(dataBounds, {
-					padding: 30,
-					animate: false,
-				});
-
-				map.once("moveend", () => {
-					//Set Max bounds
-					// map.setMaxBounds(map.getBounds());
-
-					lng = map.getCenter().lng.toFixed(4);
-					lat = map.getCenter().lat.toFixed(4);
-					zoom = parseInt(map.getZoom());
-				});
-*/
+					// 	lng = map.getCenter().lng.toFixed(4);
+					// 	lat = map.getCenter().lat.toFixed(4);
+					// 	zoom = parseInt(map.getZoom());
+					// });
 				});
 
 				// Set Map bounds
