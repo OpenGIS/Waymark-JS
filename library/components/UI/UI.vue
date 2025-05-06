@@ -76,7 +76,7 @@ const handleNavClick = (panel = "overlays") => {
 		position: absolute;
 		top: 0;
 		right: 0;
-		z-index: 1000;
+		z-index: 1001;
 		width: 44px;
 		height: 100%;
 		background: rgba(249, 249, 249, 0.7);

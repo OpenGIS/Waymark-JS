@@ -94,44 +94,28 @@ export function useLeaflet() {
 
 					// Add Marker to Store
 					storeMarker(marker, feature);
+				});
 
-					// Lines
-					linesFeatures.value.forEach((feature) => {
-						//Extend bounds
-						feature.geometry.coordinates.forEach((coords) => {
-							dataBounds.extend(coords[1], coords[0]);
-						});
-
-						// Create Polyline
-						const line = L.polyline(
-							feature.geometry.coordinates.map((coords) => {
-								return L.latLng(coords[1], coords[0]);
-							}),
-							createLineStyle(feature),
-						);
-
-						// Add Line to Map
-						map.addLayer(line);
-
-						// Add Line to Store
-						storeLine(line, feature);
+				// Lines
+				linesFeatures.value.forEach((feature) => {
+					//Extend bounds
+					feature.geometry.coordinates.forEach((coords) => {
+						dataBounds.extend(coords[1], coords[0]);
 					});
 
-					//Set initial centre and zoom to it
-					// map.setCenter(dataBounds.getCenter());
-					// map.fitBounds(dataBounds, {
-					// 	padding: 30,
-					// 	animate: false,
-					// });
+					// Create Polyline
+					const line = L.polyline(
+						feature.geometry.coordinates.map((coords) => {
+							return L.latLng(coords[1], coords[0]);
+						}),
+						createLineStyle(feature),
+					);
 
-					// map.once("moveend", () => {
-					// 	//Set Max bounds
-					// 	// map.setMaxBounds(map.getBounds());
+					// Add Line to Map
+					map.addLayer(line);
 
-					// 	lng = map.getCenter().lng.toFixed(4);
-					// 	lat = map.getCenter().lat.toFixed(4);
-					// 	zoom = parseInt(map.getZoom());
-					// });
+					// Add Line to Store
+					storeLine(line, feature);
 				});
 
 				// Set Map bounds

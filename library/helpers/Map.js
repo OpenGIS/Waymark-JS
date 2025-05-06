@@ -64,6 +64,7 @@ export function createLineStyle(feature = {}) {
   return {
     color: typeData.line_colour,
     weight: parseFloat(typeData.line_weight),
+    opacity: typeData.line_opacity,
   };
 }
 

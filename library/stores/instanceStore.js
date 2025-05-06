@@ -108,7 +108,7 @@ export const useInstanceStore = defineStore("instance", () => {
 					});
 				} else {
 					overlay.layer.setStyle({
-						weight: overlay.typeData.weight,
+						weight: overlay.typeData.line_weight,
 					});
 				}
 
@@ -180,6 +180,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		let featureType = "line";
 		let typeKey = makeKey(feature.properties.type);
 
+		const lineElement = line.getElement();
+
 		let overlay = {
 			id: overlays.value.length + 1,
 			typeKey: typeKey,
@@ -187,19 +189,21 @@ export const useInstanceStore = defineStore("instance", () => {
 			feature: feature,
 			layer: line,
 			featureType: featureType,
+			element: lineElement,
 			imageURLs: getImageURLs(feature.properties),
 		};
 
 		// Add events
-		map.value.on("click", line.id, () => {
+
+		lineElement.addEventListener("click", () => {
 			setActiveOverlay(overlay);
 		});
 
-		map.value.on("mouseenter", line.id, () => {
+		lineElement.addEventListener("mouseenter", () => {
 			highlightOverlay(overlay, true);
 		});
 
-		map.value.on("mouseleave", line.id, () => {
+		lineElement.addEventListener("mouseleave", () => {
 			highlightOverlay(overlay, false);
 		});
 
@@ -221,8 +225,6 @@ export const useInstanceStore = defineStore("instance", () => {
 				overlay.layer.getLatLngs().forEach((coords) => {
 					bounds.extend(coords);
 				});
-
-				console.log(bounds.toBBoxString());
 
 				// Zoom to bounds
 				map.value.fitBounds(bounds, {
@@ -259,7 +261,10 @@ export const useInstanceStore = defineStore("instance", () => {
 				case "line":
 					// Check if coords are in view
 					overlay.feature.geometry.coordinates.forEach((coords) => {
-						if (!contains && mapBounds.contains(coords)) {
+						if (
+							!contains &&
+							mapBounds.contains(L.latLng(coords[1], coords[0]))
+						) {
 							contains = true;
 						}
 					});
