@@ -55,11 +55,9 @@ export function useLeaflet() {
 			zoom = config.zoom;
 		}
 
-		// Create Map
-		map = L.map(id, {
-			center: L.latLng(lat, lng),
-			zoom: zoom,
-		});
+		// Create & Store Map
+		map = L.map(id);
+		storeMap(map);
 
 		// Create Tile Layers
 		const tileLayers = createTileLayers();
@@ -69,38 +67,41 @@ export function useLeaflet() {
 			layer.addTo(map);
 		});
 
-		storeMap(map);
+		// Set Event Handlers
+		map.on("load", () => {
+			// Add GeoJSON
+			if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
+				geoJSON = config.geoJSON;
 
-		// Add GeoJSON
-		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
-			geoJSON = config.geoJSON;
+				// Create Bounds
+				const dataBounds = new L.latLngBounds();
 
-			// Create Bounds
-			const dataBounds = new L.latLngBounds();
-
-			// map.on("load", () => {
-
-			// Markers
-			pointsFeatures.value.forEach((feature) => {
-				//Extend bounds
-				dataBounds.extend(
-					L.latLng(
+				// Markers
+				pointsFeatures.value.forEach((feature) => {
+					console.log(
 						feature.geometry.coordinates[1],
 						feature.geometry.coordinates[0],
-					),
-				);
+					);
 
-				// Create the Marker
-				const marker = createMarker(feature);
+					//Extend bounds
+					dataBounds.extend(
+						L.latLng(
+							feature.geometry.coordinates[1],
+							feature.geometry.coordinates[0],
+						),
+					);
 
-				// Add Marker to Map
-				marker.addTo(map);
+					// Create the Marker
+					const marker = createMarker(feature);
 
-				// Add Marker to Store
-				storeMarker(marker, feature);
-				// });
+					// Add Marker to Map
+					marker.addTo(map);
 
-				/*
+					// Add Marker to Store
+					storeMarker(marker, feature);
+					// });
+
+					/*
 				// Lines
 				let count = 0;
 				linesFeatures.value.forEach((feature) => {
@@ -143,16 +144,18 @@ export function useLeaflet() {
 					zoom = parseInt(map.getZoom());
 				});
 */
-			});
+				});
 
-			console.log(dataBounds.toBBoxString());
+				// Set Map bounds
+				map.fitBounds(dataBounds, {
+					padding: [30, 30],
+					animate: false,
+				});
+			}
+		});
 
-			// Set Map bounds
-			map.fitBounds(dataBounds, {
-				padding: 30,
-				animate: false,
-			});
-		}
+		// Initialise the Map
+		map.setView([lat, lng], zoom);
 
 		return map;
 	};
