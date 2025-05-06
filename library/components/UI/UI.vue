@@ -82,6 +82,10 @@ const handleNavClick = (panel = "overlays") => {
 		background: rgba(249, 249, 249, 0.7);
 	}
 
+	.panels-content {
+		z-index: 1000;
+	}
+
 	&.panel-open {
 		.panels-content {
 			position: absolute;

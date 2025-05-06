@@ -78,11 +78,6 @@ export function useLeaflet() {
 
 				// Markers
 				pointsFeatures.value.forEach((feature) => {
-					console.log(
-						feature.geometry.coordinates[1],
-						feature.geometry.coordinates[0],
-					);
-
 					//Extend bounds
 					dataBounds.extend(
 						L.latLng(

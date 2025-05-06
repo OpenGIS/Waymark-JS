@@ -25,7 +25,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeOverlay = ref({});
 
 	const activePanel = ref("overlays");
-	const panelOpen = ref(false);
+	const panelOpen = ref(true);
 
 	const width = ref(0);
 	const height = ref(0);
@@ -223,13 +223,9 @@ export const useInstanceStore = defineStore("instance", () => {
 	}
 
 	function setFocus(overlay = {}) {
-		/*
 		switch (overlay.featureType) {
 			case "marker":
-				map.value.flyTo({
-					center: overlay.layer.getLngLat(),
-					zoom: 15,
-				});
+				map.value.flyTo(overlay.layer.getLatLng());
 				break;
 
 			case "line":
@@ -251,7 +247,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 				break;
 		}
-*/
 	}
 
 	//Getters
