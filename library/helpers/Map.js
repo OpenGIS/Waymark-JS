@@ -5,35 +5,35 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
-export function createTileLayers() {
-  const { mapConfig } = useInstanceStore();
+// export function createTileLayers() {
+//   const { mapConfig } = useInstanceStore();
 
-  const tileLayers = [];
+//   const tileLayers = [];
 
-  // Tile Layers
-  if (Array.isArray(mapConfig.tile_layers)) {
-    // Each Tile Layer
-    mapConfig.tile_layers.forEach((tile_data) => {
-      // Create Tile Layer
-      tileLayers.push(
-        L.tileLayer(tile_data.layer_url, {
-          maxZoom: parseInt(tile_data.layer_max_zoom),
-          attribution: tile_data.layer_attribution,
-        }),
-      );
-    });
-  } else {
-    tileLayers.push(
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1", {
-        maxZoom: 19,
-        attribution:
-          '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }),
-    );
-  }
+//   // Tile Layers
+//   if (Array.isArray(mapConfig.tile_layers)) {
+//     // Each Tile Layer
+//     mapConfig.tile_layers.forEach((tile_data) => {
+//       // Create Tile Layer
+//       tileLayers.push(
+//         L.tileLayer(tile_data.layer_url, {
+//           maxZoom: parseInt(tile_data.layer_max_zoom),
+//           attribution: tile_data.layer_attribution,
+//         }),
+//       );
+//     });
+//   } else {
+//     tileLayers.push(
+//       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1", {
+//         maxZoom: 19,
+//         attribution:
+//           '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+//       }),
+//     );
+//   }
 
-  return tileLayers;
-}
+//   return tileLayers;
+// }
 
 export function getMapAttribution() {
   const { mapConfig } = useInstanceStore();

@@ -13,6 +13,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const mapConfig = shallowRef({});
 
 	// Default Tile Layer
+	const tileLayers = ref([]);
 	const activeTileLayer = ref(null);
 
 	// Data
@@ -64,21 +65,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		map.value
 			.on("zoomend", updateVisibleOverlays)
 			.on("moveend", updateVisibleOverlays);
-	}
-
-	function updateTileLayer(layerId = "") {
-		// Iterate over tile_layers
-		mapConfig.value.tile_layers.forEach((layer) => {
-			// Set visibility based on layerId
-			map.value.setLayoutProperty(
-				layer.layer_name,
-				"visibility",
-				layer.layer_name == layerId ? "visible" : "none",
-			);
-		});
-
-		// Update active layer
-		activeTileLayer.value = layerId;
 	}
 
 	function togglePanel() {
@@ -212,6 +198,19 @@ export const useInstanceStore = defineStore("instance", () => {
 		return overlay;
 	}
 
+	function storeTileLayer(layer, data) {
+		let tileLayer = {
+			id: overlays.value.length + 1,
+			layer: layer,
+			url: data.layer_url,
+			attribution: data.layer_attribution,
+			maxZoom: data.layer_max_zoom,
+			name: data.layer_name,
+		};
+
+		tileLayers.value.push(tileLayer);
+	}
+
 	function setFocus(overlay = {}) {
 		switch (overlay.featureType) {
 			case "marker":
@@ -332,7 +331,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		map,
 		mapConfig,
 		activeTileLayer,
-		updateTileLayer,
+		storeTileLayer,
+		tileLayers,
 		overlayCount,
 		visibleOverlays,
 		activeOverlay,

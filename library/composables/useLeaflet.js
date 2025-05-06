@@ -1,9 +1,6 @@
 import { computed } from "vue";
-import {
-	createTileLayers,
-	createMarker,
-	createLineStyle,
-} from "@/helpers/Map.js";
+import { storeToRefs } from "pinia";
+import { createMarker, createLineStyle } from "@/helpers/Map.js";
 
 // Import MapLibre
 // import { Map, LngLatBounds } from "maplibre-gl";
@@ -37,7 +34,9 @@ export function useLeaflet() {
 
 	const createMap = (config) => {
 		const instanceStore = useInstanceStore();
-		const { storeMarker, storeMap, storeLine, updateTileLayer } = instanceStore;
+		const { storeMarker, storeMap, storeLine, storeTileLayer } = instanceStore;
+		const { mapConfig, tileLayers, activeTileLayer } =
+			storeToRefs(instanceStore);
 
 		if (config.id) {
 			id = config.id;
@@ -60,12 +59,37 @@ export function useLeaflet() {
 		storeMap(map);
 
 		// Create Tile Layers
-		const tileLayers = createTileLayers();
+		if (Array.isArray(mapConfig.tile_layers)) {
+			// Each Tile Layer
+			mapConfig.tile_layers.forEach((tile_data) => {
+				// Create Tile Layer
+				const layer = L.tileLayer(tile_data.layer_url, {
+					maxZoom: parseInt(tile_data.layer_max_zoom),
+					attribution: tile_data.layer_attribution,
+				});
 
-		// Add Tile Layers to Map
-		tileLayers.forEach((layer) => {
-			layer.addTo(map);
-		});
+				storeTileLayer(layer, tile_data);
+			});
+		} else {
+			const layer = L.tileLayer(
+				"https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
+				{
+					maxZoom: 19,
+					attribution:
+						'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				},
+			);
+			storeTileLayer(layer, {
+				layer_name: "OpenStreetMap",
+				layer_url: layer._url,
+				layer_max_zoom: layer.options.maxZoom,
+				layer_attribution: layer.options.attribution,
+			});
+		}
+
+		// Add First as active Tile Layer
+		activeTileLayer.value = tileLayers.value[0].layer;
+		activeTileLayer.value.addTo(map);
 
 		// Set Event Handlers
 		map.on("load", () => {
