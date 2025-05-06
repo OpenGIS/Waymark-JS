@@ -273,7 +273,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			switch (overlay.featureType) {
 				case "marker":
 					//In view
-					contains = mapBounds.contains(overlay.layer.getLngLat());
+					contains = mapBounds.contains(overlay.layer.getLatLng());
 
 					break;
 				case "line":

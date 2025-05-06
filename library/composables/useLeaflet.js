@@ -57,7 +57,7 @@ export function useLeaflet() {
 
 		// Create Map
 		map = L.map(id, {
-			center: L.latLng(lng, lat),
+			center: L.latLng(lat, lng),
 			zoom: zoom,
 		});
 
@@ -75,16 +75,10 @@ export function useLeaflet() {
 		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
 			geoJSON = config.geoJSON;
 
-			console.log("GeoJSON", geoJSON);
-
 			// Create Bounds
-			const dataBounds = new L.LatLngBounds(
-				L.latLng(lat, lng),
-				L.latLng(lat, lng),
-			);
+			const dataBounds = new L.latLngBounds();
 
 			// map.on("load", () => {
-			console.log(pointsFeatures.value);
 
 			// Markers
 			pointsFeatures.value.forEach((feature) => {
@@ -149,14 +143,14 @@ export function useLeaflet() {
 					zoom = parseInt(map.getZoom());
 				});
 */
+			});
 
-				console.log(dataBounds);
+			console.log(dataBounds.toBBoxString());
 
-				// Set Map bounds
-				map.fitBounds(dataBounds, {
-					padding: 30,
-					animate: false,
-				});
+			// Set Map bounds
+			map.fitBounds(dataBounds, {
+				padding: 30,
+				animate: false,
 			});
 		}
 

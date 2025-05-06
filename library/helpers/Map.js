@@ -111,7 +111,5 @@ export function createMarker(feature = {}) {
     },
   );
 
-  console.log("Marker", marker);
-
   return marker;
 }
