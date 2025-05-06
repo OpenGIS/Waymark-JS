@@ -5,8 +5,9 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { mapConfig, updateTileLayer } = instanceStore;
-const { activeTileLayer, map } = storeToRefs(instanceStore);
+const { updateTileLayer } = instanceStore;
+
+const { activeTileLayer, map, tileLayers } = storeToRefs(instanceStore);
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -35,27 +36,23 @@ const tilePreviewUrl = (tile_url) => {
 </script>
 
 <template>
-	<div class="panel tileDatas">
+	<div class="panel basemaps">
 		<h3>Basemaps</h3>
 
 		<div class="list">
-			<div
-				v-for="(tileData, index) in mapConfig.tile_layers"
-				:key="index"
-				class="item"
-			>
-				<div class="name">{{ tileData.layer_name }}</div>
+			<div v-for="(tileLayer, index) in tileLayers" :key="index" class="item">
+				<div class="name">{{ tileLayer.name }}</div>
 
 				<div class="preview">
-					{{ tilePreviewUrl(tileData.layer_url) }}
+					{{ tilePreviewUrl(tileLayer.url) }}
 
-					<img :src="tilePreviewUrl(tileData.layer_url)" />
+					<img :src="tilePreviewUrl(tileLayer.url)" />
 				</div>
 
 				<Button
 					icon="ion-checkmark"
-					@click="updateTileLayer(tileData.layer_name)"
-					:active="tileData.layer_name == activeTileLayer"
+					@click="updateTileLayer(tileLayer)"
+					:active="activeTileLayer == tileLayer"
 				/>
 			</div>
 		</div>

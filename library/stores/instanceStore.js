@@ -67,6 +67,18 @@ export const useInstanceStore = defineStore("instance", () => {
 			.on("moveend", updateVisibleOverlays);
 	}
 
+	function updateTileLayer(layer) {
+		activeTileLayer.value = layer;
+
+		// Remove all layers
+		tileLayers.value.forEach((layer) => {
+			map.value.removeLayer(layer.layer);
+		});
+
+		// Add active layer
+		layer.layer.addTo(map.value);
+	}
+
 	function togglePanel() {
 		panelOpen.value = !panelOpen.value;
 	}
@@ -331,6 +343,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		map,
 		mapConfig,
 		activeTileLayer,
+		updateTileLayer,
 		storeTileLayer,
 		tileLayers,
 		overlayCount,

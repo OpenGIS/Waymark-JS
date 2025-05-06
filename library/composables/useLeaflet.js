@@ -59,9 +59,9 @@ export function useLeaflet() {
 		storeMap(map);
 
 		// Create Tile Layers
-		if (Array.isArray(mapConfig.tile_layers)) {
+		if (Array.isArray(mapConfig.value.tile_layers)) {
 			// Each Tile Layer
-			mapConfig.tile_layers.forEach((tile_data) => {
+			mapConfig.value.tile_layers.forEach((tile_data) => {
 				// Create Tile Layer
 				const layer = L.tileLayer(tile_data.layer_url, {
 					maxZoom: parseInt(tile_data.layer_max_zoom),
