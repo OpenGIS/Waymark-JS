@@ -54,8 +54,6 @@ onMounted(() => {
 		zoom: props.zoom,
 		geoJSON: props.geoJSON,
 	});
-
-	// Add UI
 });
 </script>
 

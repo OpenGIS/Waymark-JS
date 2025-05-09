@@ -1,17 +1,70 @@
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
-import { createMarker, createLineStyle } from "@/helpers/Map.js";
-
-// Import MapLibre
-// import { Map, LngLatBounds } from "maplibre-gl";
-// import "maplibre-gl/dist/maplibre-gl.css";
 
 // Import Leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// Import Helpers
+import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
+
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
+
+function createLine(feature = {}) {
+	// Ensure is LineString with coordinates
+	if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+		return null;
+	}
+
+	const typeKey = makeKey(feature.properties.type);
+	const typeData = getTypeData("line", typeKey);
+
+	return L.polyline(
+		feature.geometry.coordinates.map((coords) => {
+			return L.latLng(coords[1], coords[0]);
+		}),
+		{
+			color: typeData.line_colour,
+			weight: parseFloat(typeData.line_weight),
+			opacity: typeData.line_opacity,
+		},
+	);
+}
+
+function createMarker(feature = {}) {
+	// Ensure is Marker with coordinates
+	if (getFeatureType(feature) !== "marker" || !feature.geometry.coordinates) {
+		return null;
+	}
+
+	const typeKey = makeKey(feature.properties.type);
+	const typeData = getTypeData("marker", typeKey);
+	const iconData = getIconData(typeData);
+
+	// Create a DOM element for the marker
+	const el = document.createElement("div");
+	el.className = iconData.className;
+	el.innerHTML = iconData.html;
+	el.style.width = `${iconData.iconSize[0]}px`;
+	el.style.height = `${iconData.iconSize[1]}px`;
+
+	// Create Marker
+	const marker = L.marker(
+		[feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+		{
+			icon: L.divIcon({
+				className: iconData.className,
+				html: el,
+				iconSize: iconData.iconSize,
+				iconAnchor: iconData.iconAnchor,
+			}),
+		},
+	);
+
+	return marker;
+}
 
 export function useLeaflet() {
 	let id = "map";
@@ -20,10 +73,6 @@ export function useLeaflet() {
 	let lng = null;
 	let lat = null;
 	let zoom = null;
-
-	// Dimensions
-	// let width = null;
-	// let height = null;
 
 	// Data
 	let geoJSON = {};
@@ -128,12 +177,7 @@ export function useLeaflet() {
 					});
 
 					// Create Polyline
-					const line = L.polyline(
-						feature.geometry.coordinates.map((coords) => {
-							return L.latLng(coords[1], coords[0]);
-						}),
-						createLineStyle(feature),
-					);
+					const line = createLine(feature);
 
 					// Add Line to Map
 					map.addLayer(line);

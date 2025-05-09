@@ -1,9 +1,7 @@
-<script setup>
-import { getMapAttribution } from "@/helpers/Map";
-</script>
+<script setup></script>
 
 <template>
-	<div v-html="getMapAttribution()" />
+	<p>Info goes here!</p>
 </template>
 
 <style></style>
