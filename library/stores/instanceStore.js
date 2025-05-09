@@ -334,35 +334,108 @@ export const useInstanceStore = defineStore("instance", () => {
 	});
 
 	return {
+		// Init
 		createStore,
-		storeMap,
-		storeLine,
+
+		// === Configuration ===
+
+		// - Map Options
+
 		containerId,
-		overlays,
+		width,
+		height,
+		//lat
+		//lng
+		//zoom
+		//max zoom
+		//tile layers
+		//marker types
+
+		//line types
+		//shape types
+		//debug mode
+
+		//basemap
+		//show scale
+
+		// - Viewer Options
+
+		/*
+show_gallery	1/0	Whether to display an image gallery for Markers that have images. Thumbnails for Markers currently in view on the Map are displayed and clicking on a thumbnail will centre the Map on the Marker and open the popup.	1
+show_filter	1/0	Allow the user to filter which Overlays are currently visible on Map.	1
+show_cluster	1/0	Whether to cluster (stack) Markers that are close together, to declutter the Map.	1
+cluster_radius	number	The maximum radius that a cluster will cover from the central Marker (in pixels). Decreasing will make more, smaller clusters. Default 80.	80
+cluster_threshold	0-18	Markers will not be clustered above this zoom level.	14
+show_elevation	1/0	Whether to display an interactive elevation profile graph below the Map for Lines that have elevation data.	1
+elevation_div_id	string	The ID of the HTML element to contain the elevation profile graph. The default is waymark-elevation and if this element does not exist, it will be created inside the Map Container.	waymark-elevation
+elevation_units	metric/imperial	Display elevation data in metric (m/km) or imperial (ft/mi) units.	metric
+elevation_colour	CSS Colour	The colour of the elevation graph and associated Line, provided as a CSS colour (e.g. white, #ffba00, rgb(255, 186, 0)).	#b42714
+elevation_initial	1/0	Whether to show the elevation profile initially when the Map loads, or wait for a Line to be clicked.	0
+sleep_delay_seconds	number	How many seconds before scroll zoom is enabled. 0 seconds will mean no delay (disabling this feature). A large number of seconds like 3600 (an hour) will essentially disable hover to wake, meaning the user will need to click to wake.	3600
+sleep_do_message	1/0	Whether to display a message while scroll zoom is disabled.	1
+sleep_wake_message	string	The message to display while scroll zoom is disabled.	Click to Wake
+*/
+
+		// - Editor Options
+
+		/*
+confirm_delete	1/0	Whether to show a confirmation message when deleting an object.	1
+data_div_id	string	The ID of a element to output the GeoJSON into. By default this is a <textarea>.	waymark-data
+*/
+
+		// === State ===
+
 		geoJSON,
-		map,
 		mapConfig,
-		activeTileLayer,
-		updateTileLayer,
-		storeTileLayer,
+		orientation,
+
+		// - Map
+
+		map,
+
 		tileLayers,
-		overlayCount,
-		visibleOverlays,
-		activeOverlay,
-		setActiveOverlay,
-		highlightOverlay,
-		activePanel,
-		panelOpen,
-		storeMarker,
-		togglePanel,
-		setActivePanel,
-		setFocus,
+		activeTileLayer,
+
+		// - Overlays
+
+		overlays,
 		markers,
 		lines,
 		shapes,
-		width,
-		height,
-		orientation,
+
+		overlayCount,
+		visibleOverlays,
+
+		activeOverlay,
+
+		// - Panels
+
+		panelOpen,
+
+		activePanel,
+
 		classAppend,
+
+		// === Modifiers ===
+
+		updateTileLayer,
+
+		storeMap,
+
+		storeLine,
+
+		storeMarker,
+
+		storeTileLayer,
+
+		setActiveOverlay,
+
+		highlightOverlay,
+
+		setFocus,
+
+		togglePanel,
+
+		setActivePanel,
 	};
 });
