@@ -23,7 +23,7 @@ const props = defineProps({
 	},
 	map_options: {
 		type: Object,
-		default: {
+		default: () => ({
 			// map_div_id	string	The ID of the HTML element to contain the Map. Defaults to waymark-map.	map
 			// map_height	number	Specify the desired height of the Map (in pixels).	420
 			// map_width	number	Specify the desired width of the Map (in pixels).	800
@@ -49,7 +49,11 @@ const props = defineProps({
 				type: Number,
 				default: 16,
 			},
-		},
+			max_zoom: {
+				type: Number,
+				default: 18,
+			},
+		}),
 	},
 });
 

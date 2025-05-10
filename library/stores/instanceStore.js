@@ -5,17 +5,16 @@ import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
-	// DOM Target
-	let containerId = ref(null);
-	let container = null;
-
 	// Config
 	const config = shallowRef({
 		map_options: {},
 	});
 
 	// State
-	const state = ref({});
+	const state = ref({
+		geoJSON: {},
+		container: {},
+	});
 
 	// Default Tile Layer
 	const tileLayers = ref([]);
@@ -47,12 +46,14 @@ export const useInstanceStore = defineStore("instance", () => {
 
 			if (typeof instanceConfig.map_options.div_id === "string") {
 				// Get DOM Element
-				container = document.getElementById(instanceConfig.map_options.div_id);
+				state.value.container = document.getElementById(
+					instanceConfig.map_options.div_id,
+				);
 
 				// Inital Dimensions
 				const getDimensions = () => {
-					width.value = container.clientWidth;
-					height.value = container.clientHeight;
+					width.value = state.value.container.clientWidth;
+					height.value = state.value.container.clientHeight;
 				};
 				getDimensions();
 
@@ -348,7 +349,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// - Map Options
 
-		containerId,
 		width,
 		height,
 		//lat

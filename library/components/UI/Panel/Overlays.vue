@@ -10,7 +10,7 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const {
-	containerId,
+	state,
 	visibleOverlays,
 	overlays,
 	markers,
@@ -71,8 +71,8 @@ watch(activeOverlay, (newOverlay) => {
 		activeType.value = newOverlay.featureType;
 
 		// Scroll to Active Overlay
-		const element = document.querySelector(
-			`#${containerId.value} .overlay-${newOverlay.id} .overview`,
+		const element = state.value.container.querySelector(
+			`.overlay-${newOverlay.id} .overview`,
 		);
 
 		if (element) {
