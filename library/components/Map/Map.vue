@@ -7,23 +7,24 @@ const { createMap } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { map_options, state } = storeToRefs(instanceStore);
+const { config, state } = storeToRefs(instanceStore);
 
 const map = ref(null);
 
 onMounted(() => {
-  map.value = createMap({
-    div_id: `${map_options.div_id}-map`,
-    init_latlng: map_options.init_latlng,
-    init_zoom: map_options.init_zoom,
-    geoJSON: state.geoJSON,
-  });
+  console.log(config.value.map_options);
+
+  map.value = createMap(`${config.value.map_options.div_id}-map`);
 });
 </script>
 
 <template>
   <!-- Map -->
-  <div class="map" :id="`${map_options.div_id}-map`" style="height: 100%"></div>
+  <div
+    class="map"
+    :id="`${config.map_options.div_id}-map`"
+    style="height: 100%"
+  ></div>
 </template>
 
 <style lang="less">

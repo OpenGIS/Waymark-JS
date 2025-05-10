@@ -67,50 +67,65 @@ function createMarker(feature = {}) {
 }
 
 export function useLeaflet() {
-	let id = "map";
+	// let id = "map";
 
-	// View
-	let lng = null;
-	let lat = null;
-	let zoom = null;
+	// // View
+	// let lng = null;
+	// let lat = null;
+	// let zoom = null;
 
 	// Data
-	let geoJSON = {};
+	// let geoJSON = {};
 
 	let map = null;
 
 	// const dataBounds = new LngLatBounds();
 
-	const createMap = (config) => {
+	const createMap = (div_id) => {
 		const instanceStore = useInstanceStore();
 		const { storeMarker, storeMap, storeLine, storeTileLayer } = instanceStore;
-		const { mapConfig, tileLayers, activeTileLayer } =
+		const { config, state, tileLayers, activeTileLayer } =
 			storeToRefs(instanceStore);
 
-		if (config.id) {
-			id = config.id;
-		}
+		const pointsFeatures = computed(() => {
+			// Ensure is valid Array
+			if (
+				typeof state.value.geoJSON.features === "undefined" ||
+				!Array.isArray(state.value.geoJSON.features)
+			) {
+				return [];
+			}
 
-		if (config.lng) {
-			lng = config.lng;
-		}
+			return state.value.geoJSON.features.filter((feature) => {
+				return feature.geometry.type === "Point";
+			});
+		});
 
-		if (config.lat) {
-			lat = config.lat;
-		}
+		const linesFeatures = computed(() => {
+			// Ensure is valid Array
+			if (
+				typeof state.value.geoJSON.features === "undefined" ||
+				!Array.isArray(state.value.geoJSON.features)
+			) {
+				return [];
+			}
 
-		if (config.zoom) {
-			zoom = config.zoom;
-		}
+			return state.value.geoJSON.features.filter((feature) => {
+				return (
+					["LineString", "MultiLineString"].indexOf(feature.geometry.type) !==
+					-1
+				);
+			});
+		});
 
 		// Create & Store Map
-		map = L.map(id);
+		map = L.map(div_id);
 		storeMap(map);
 
 		// Create Tile Layers
-		if (Array.isArray(mapConfig.value.tile_layers)) {
+		if (Array.isArray(config.value.map_options.tile_layers)) {
 			// Each Tile Layer
-			mapConfig.value.tile_layers.forEach((tile_data) => {
+			config.value.map_options.tile_layers.forEach((tile_data) => {
 				// Create Tile Layer
 				const layer = L.tileLayer(tile_data.layer_url, {
 					maxZoom: parseInt(tile_data.layer_max_zoom),
@@ -143,8 +158,10 @@ export function useLeaflet() {
 		// Set Event Handlers
 		map.on("load", () => {
 			// Add GeoJSON
-			if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
-				geoJSON = config.geoJSON;
+			if (state.value.geoJSON && Array.isArray(state.value.geoJSON.features)) {
+				console.log(state.value.geoJSON.features);
+
+				// geoJSON = mapConfig.geoJSON;
 
 				// Create Bounds
 				const dataBounds = new L.latLngBounds();
@@ -195,40 +212,13 @@ export function useLeaflet() {
 		});
 
 		// Initialise the Map
-		map.setView([lat, lng], zoom);
+		map.setView(
+			config.value.map_options.init_latlng,
+			config.value.map_options.init_zoom,
+		);
 
 		return map;
 	};
-
-	const pointsFeatures = computed(() => {
-		// Ensure is valid Array
-		if (
-			typeof geoJSON.features === "undefined" ||
-			!Array.isArray(geoJSON.features)
-		) {
-			return [];
-		}
-
-		return geoJSON.features.filter((feature) => {
-			return feature.geometry.type === "Point";
-		});
-	});
-
-	const linesFeatures = computed(() => {
-		// Ensure is valid Array
-		if (
-			typeof geoJSON.features === "undefined" ||
-			!Array.isArray(geoJSON.features)
-		) {
-			return [];
-		}
-
-		return geoJSON.features.filter((feature) => {
-			return (
-				["LineString", "MultiLineString"].indexOf(feature.geometry.type) !== -1
-			);
-		});
-	});
 
 	return {
 		map,

@@ -5,11 +5,12 @@ import Instance from "../library/components/Instance.vue";
 export function useWaymark() {
 	const createInstance = (config) => {
 		// Ensure we have an ID
-		if (!config.id) {
+		if (!config.map_options.div_id) {
 			console.error("No ID provided for Waymark instance.");
 
 			return;
 		}
+
 		// Create Instance
 		const instance = createApp(Instance, config);
 
@@ -18,7 +19,7 @@ export function useWaymark() {
 		instance.use(pinia);
 
 		// Mount to DOM
-		instance.mount("#" + config.id);
+		instance.mount("#" + config.map_options.div_id);
 	};
 
 	return {

@@ -10,14 +10,19 @@ export const useInstanceStore = defineStore("instance", () => {
 	let container = null;
 
 	// Config
-	const mapConfig = shallowRef({});
+	const config = shallowRef({
+		map_options: {},
+	});
+
+	// State
+	const state = ref({});
 
 	// Default Tile Layer
 	const tileLayers = ref([]);
 	const activeTileLayer = ref(null);
 
 	// Data
-	const geoJSON = shallowRef({});
+	// const geoJSON = shallowRef({});
 
 	let map = shallowRef(null);
 
@@ -31,31 +36,31 @@ export const useInstanceStore = defineStore("instance", () => {
 	const width = ref(0);
 	const height = ref(0);
 
-	function createStore(data = {}) {
-		if (data.id) {
-			containerId.value = data.id;
-
-			// Get DOM Element
-			container = document.getElementById(containerId.value);
-
-			// Inital Dimensions
-			const getDimensions = () => {
-				width.value = container.clientWidth;
-				height.value = container.clientHeight;
-			};
-			getDimensions();
-
-			// Resize Event
-			window.addEventListener("resize", getDimensions);
-		}
-
-		if (data.geoJSON) {
-			geoJSON.value = data.geoJSON;
+	function createStore(instanceConfig = {}) {
+		if (instanceConfig.geoJSON) {
+			state.value.geoJSON = instanceConfig.geoJSON;
 		}
 
 		// Check for config
-		if (data.mapConfig) {
-			mapConfig.value = data.mapConfig;
+		if (typeof instanceConfig.map_options === "object") {
+			config.value.map_options = instanceConfig.map_options;
+
+			if (typeof instanceConfig.map_options.div_id === "string") {
+				// Get DOM Element
+				container = document.getElementById(instanceConfig.map_options.div_id);
+
+				// Inital Dimensions
+				const getDimensions = () => {
+					width.value = container.clientWidth;
+					height.value = container.clientHeight;
+				};
+				getDimensions();
+
+				// Resize Event
+				window.addEventListener("resize", getDimensions);
+			} else {
+				console.error("No map_options.div_id provided");
+			}
 		}
 	}
 
@@ -339,6 +344,8 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// === Configuration ===
 
+		config,
+
 		// - Map Options
 
 		containerId,
@@ -385,8 +392,8 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 
 		// === State ===
 
-		geoJSON,
-		mapConfig,
+		state,
+
 		orientation,
 
 		// - Map
