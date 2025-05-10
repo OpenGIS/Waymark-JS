@@ -12,6 +12,7 @@ const { classAppend } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
+import Map from "@/components/Map/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
 // Config Definition!
@@ -42,11 +43,11 @@ const props = defineProps({
 	},
 });
 
+createStore(props);
+
 const map = ref(null);
 
 onMounted(() => {
-	createStore(props);
-
 	map.value = createMap({
 		id: `${props.id}-map`,
 		lng: props.lng,
