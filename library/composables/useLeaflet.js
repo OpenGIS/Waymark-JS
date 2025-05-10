@@ -67,21 +67,9 @@ function createMarker(feature = {}) {
 }
 
 export function useLeaflet() {
-	// let id = "map";
-
-	// // View
-	// let lng = null;
-	// let lat = null;
-	// let zoom = null;
-
-	// Data
-	// let geoJSON = {};
-
 	let map = null;
 
-	// const dataBounds = new LngLatBounds();
-
-	const createMap = (div_id) => {
+	const createMap = () => {
 		const instanceStore = useInstanceStore();
 		const { storeMarker, storeMap, storeLine, storeTileLayer } = instanceStore;
 		const { config, state, tileLayers, activeTileLayer } =
@@ -119,7 +107,7 @@ export function useLeaflet() {
 		});
 
 		// Create & Store Map
-		map = L.map(div_id);
+		map = L.map(`${config.value.map_options.div_id}-map`);
 		storeMap(map);
 
 		// Create Tile Layers
@@ -159,10 +147,6 @@ export function useLeaflet() {
 		map.on("load", () => {
 			// Add GeoJSON
 			if (state.value.geoJSON && Array.isArray(state.value.geoJSON.features)) {
-				console.log(state.value.geoJSON.features);
-
-				// geoJSON = mapConfig.geoJSON;
-
 				// Create Bounds
 				const dataBounds = new L.latLngBounds();
 
