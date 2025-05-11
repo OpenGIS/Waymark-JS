@@ -12,7 +12,7 @@ const { config, state } = storeToRefs(instanceStore);
 const map = ref(null);
 
 onMounted(() => {
-  map.value = createMap();
+  map.value = createMap(`${config.value.map_options.div_id}-map`);
 });
 </script>
 
