@@ -2,12 +2,25 @@ import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
 import L from "leaflet";
 import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
+import { makeKey, deepMerge } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
+	const defaultConfig = {
+		geoJSON: {},
+		map_options: {
+			div_id: "map",
+			leaflet_options: {
+				center: [51.1788144, -1.8261632],
+				zoom: 17,
+			},
+		},
+	};
+
 	// Config
 	const config = shallowRef({
 		map_options: {},
+		viewer_options: {},
+		editor_options: {},
 	});
 
 	// State
@@ -19,9 +32,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	// Default Tile Layer
 	const tileLayers = ref([]);
 	const activeTileLayer = ref(null);
-
-	// Data
-	// const geoJSON = shallowRef({});
 
 	let map = shallowRef(null);
 
@@ -35,34 +45,30 @@ export const useInstanceStore = defineStore("instance", () => {
 	const width = ref(0);
 	const height = ref(0);
 
-	function createStore(instanceConfig = {}) {
-		if (instanceConfig.geoJSON) {
-			state.value.geoJSON = instanceConfig.geoJSON;
-		}
+	function createStore(initConfig = {}) {
+		// Create a merged config
+		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
 
-		// Check for config
-		if (typeof instanceConfig.map_options === "object") {
-			config.value.map_options = instanceConfig.map_options;
+		console.log("Config", config.value);
 
-			if (typeof instanceConfig.map_options.div_id === "string") {
-				// Get DOM Element
-				state.value.container = document.getElementById(
-					instanceConfig.map_options.div_id,
-				);
+		// if (typeof config.geoJSON === "object") {
+		// 	state.value.geoJSON = config.geoJSON;
+		// }
 
-				// Inital Dimensions
-				const getDimensions = () => {
-					width.value = state.value.container.clientWidth;
-					height.value = state.value.container.clientHeight;
-				};
-				getDimensions();
+		// Get DOM Element
+		state.value.container = document.getElementById(
+			config.value.map_options.div_id,
+		);
 
-				// Resize Event
-				window.addEventListener("resize", getDimensions);
-			} else {
-				console.error("No map_options.div_id provided");
-			}
-		}
+		// Inital Dimensions
+		const getDimensions = () => {
+			width.value = state.value.container.clientWidth;
+			height.value = state.value.container.clientHeight;
+		};
+		getDimensions();
+
+		// Resize Event
+		window.addEventListener("resize", getDimensions);
 	}
 
 	function storeMap(mapInstance) {

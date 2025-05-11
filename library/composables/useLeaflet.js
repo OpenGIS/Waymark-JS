@@ -78,13 +78,13 @@ export function useLeaflet() {
 		const pointsFeatures = computed(() => {
 			// Ensure is valid Array
 			if (
-				typeof state.value.geoJSON.features === "undefined" ||
-				!Array.isArray(state.value.geoJSON.features)
+				typeof config.value.geoJSON.features === "undefined" ||
+				!Array.isArray(config.value.geoJSON.features)
 			) {
 				return [];
 			}
 
-			return state.value.geoJSON.features.filter((feature) => {
+			return config.value.geoJSON.features.filter((feature) => {
 				return feature.geometry.type === "Point";
 			});
 		});
@@ -92,13 +92,13 @@ export function useLeaflet() {
 		const linesFeatures = computed(() => {
 			// Ensure is valid Array
 			if (
-				typeof state.value.geoJSON.features === "undefined" ||
-				!Array.isArray(state.value.geoJSON.features)
+				typeof config.value.geoJSON.features === "undefined" ||
+				!Array.isArray(config.value.geoJSON.features)
 			) {
 				return [];
 			}
 
-			return state.value.geoJSON.features.filter((feature) => {
+			return config.value.geoJSON.features.filter((feature) => {
 				return (
 					["LineString", "MultiLineString"].indexOf(feature.geometry.type) !==
 					-1
@@ -149,7 +149,7 @@ export function useLeaflet() {
 		activeTileLayer.value.addTo(map);
 
 		// Add GeoJSON
-		if (state.value.geoJSON && Array.isArray(state.value.geoJSON.features)) {
+		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
 			// Create Bounds
 			const dataBounds = new L.latLngBounds();
 

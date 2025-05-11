@@ -6,7 +6,7 @@ export function useWaymark() {
 	const createInstance = (config) => {
 		// Ensure we have an ID
 		if (typeof config.map_options.div_id === "undefined") {
-			console.error("No ID provided for Waymark instance.");
+			console.error("No Container ID provided for Waymark instance.");
 
 			return;
 		}

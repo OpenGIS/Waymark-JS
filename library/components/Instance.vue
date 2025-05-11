@@ -1,8 +1,5 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { deepMerge } from "@/helpers/Common.js";
-import { useLeaflet } from "@/composables/useLeaflet.js";
-const { createMap } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
@@ -30,7 +27,7 @@ shape_types array An array of Shape Types to be used on the Map.  See Below
 debug_mode  1/0 Whether to enable debug mode. This will output debug information to the console.  1
 */
 
-const componentConfig = defineProps({
+const config = defineProps({
 	geoJSON: {
 		type: Object,
 		default: () => ({}),
@@ -44,20 +41,6 @@ const componentConfig = defineProps({
 		default: () => ({}),
 	},
 });
-
-const defaultConfig = {
-	geoJSON: {},
-	map_options: {
-		div_id: "map",
-		leaflet_options: {
-			center: [51.1788144, -1.8261632],
-			zoom: 17,
-		},
-	},
-};
-
-// Create a merged config
-const config = deepMerge(structuredClone(defaultConfig), componentConfig);
 
 // Create Store with provided config
 createStore(config);
