@@ -106,8 +106,13 @@ export function useLeaflet() {
 			});
 		});
 
+		console.log("Map Options", config.value.map_options);
+
 		// Create & Store Map
-		map = L.map(`${config.value.map_options.div_id}-map`);
+		map = L.map(
+			`${config.value.map_options.div_id}-map`,
+			config.value.map_options.leaflet_options,
+		);
 		storeMap(map);
 
 		// Create Tile Layers
@@ -143,63 +148,54 @@ export function useLeaflet() {
 		activeTileLayer.value = tileLayers.value[0].layer;
 		activeTileLayer.value.addTo(map);
 
-		// Set Event Handlers
-		map.on("load", () => {
-			// Add GeoJSON
-			if (state.value.geoJSON && Array.isArray(state.value.geoJSON.features)) {
-				// Create Bounds
-				const dataBounds = new L.latLngBounds();
+		// Add GeoJSON
+		if (state.value.geoJSON && Array.isArray(state.value.geoJSON.features)) {
+			// Create Bounds
+			const dataBounds = new L.latLngBounds();
 
-				// Markers
-				pointsFeatures.value.forEach((feature) => {
-					//Extend bounds
-					dataBounds.extend(
-						L.latLng(
-							feature.geometry.coordinates[1],
-							feature.geometry.coordinates[0],
-						),
-					);
+			// Markers
+			pointsFeatures.value.forEach((feature) => {
+				//Extend bounds
+				dataBounds.extend(
+					L.latLng(
+						feature.geometry.coordinates[1],
+						feature.geometry.coordinates[0],
+					),
+				);
 
-					// Create the Marker
-					const marker = createMarker(feature);
+				// Create the Marker
+				const marker = createMarker(feature);
 
-					// Add Marker to Map
-					marker.addTo(map);
+				// Add Marker to Map
+				marker.addTo(map);
 
-					// Add Marker to Store
-					storeMarker(marker, feature);
+				// Add Marker to Store
+				storeMarker(marker, feature);
+			});
+
+			// Lines
+			linesFeatures.value.forEach((feature) => {
+				//Extend bounds
+				feature.geometry.coordinates.forEach((coords) => {
+					dataBounds.extend(coords[1], coords[0]);
 				});
 
-				// Lines
-				linesFeatures.value.forEach((feature) => {
-					//Extend bounds
-					feature.geometry.coordinates.forEach((coords) => {
-						dataBounds.extend(coords[1], coords[0]);
-					});
+				// Create Polyline
+				const line = createLine(feature);
 
-					// Create Polyline
-					const line = createLine(feature);
+				// Add Line to Map
+				map.addLayer(line);
 
-					// Add Line to Map
-					map.addLayer(line);
+				// Add Line to Store
+				storeLine(line, feature);
+			});
 
-					// Add Line to Store
-					storeLine(line, feature);
-				});
-
-				// Set Map bounds
-				map.fitBounds(dataBounds, {
-					padding: [30, 30],
-					animate: false,
-				});
-			}
-		});
-
-		// Initialise the Map
-		map.setView(
-			config.value.map_options.init_latlng,
-			config.value.map_options.init_zoom,
-		);
+			// Set Map bounds
+			map.fitBounds(dataBounds, {
+				padding: [30, 30],
+				animate: false,
+			});
+		}
 
 		return map;
 	};
