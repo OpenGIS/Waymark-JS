@@ -67,8 +67,6 @@ function createMarker(feature = {}) {
 }
 
 export function useLeaflet() {
-	let map = null;
-
 	const createMap = () => {
 		const instanceStore = useInstanceStore();
 		const { storeMarker, storeMap, storeLine, storeTileLayer } = instanceStore;
@@ -109,11 +107,11 @@ export function useLeaflet() {
 		console.log("Map Options", config.value.map_options);
 
 		// Create & Store Map
-		map = L.map(
+		state.value.map = L.map(
 			`${config.value.map_options.div_id}-map`,
 			config.value.map_options.leaflet_options,
 		);
-		storeMap(map);
+		// storeMap(map);
 
 		// Create Tile Layers
 		if (Array.isArray(config.value.map_options.tile_layers)) {
@@ -146,7 +144,7 @@ export function useLeaflet() {
 
 		// Add First as active Tile Layer
 		activeTileLayer.value = tileLayers.value[0].layer;
-		activeTileLayer.value.addTo(map);
+		activeTileLayer.value.addTo(state.value.map);
 
 		// Add GeoJSON
 		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
@@ -167,7 +165,7 @@ export function useLeaflet() {
 				const marker = createMarker(feature);
 
 				// Add Marker to Map
-				marker.addTo(map);
+				marker.addTo(state.value.map);
 
 				// Add Marker to Store
 				storeMarker(marker, feature);
@@ -184,24 +182,21 @@ export function useLeaflet() {
 				const line = createLine(feature);
 
 				// Add Line to Map
-				map.addLayer(line);
+				state.value.map.addLayer(line);
 
 				// Add Line to Store
 				storeLine(line, feature);
 			});
 
 			// Set Map bounds
-			map.fitBounds(dataBounds, {
+			state.value.map.fitBounds(dataBounds, {
 				padding: [30, 30],
 				animate: false,
 			});
 		}
-
-		return map;
 	};
 
 	return {
-		map,
 		createMap,
 	};
 }

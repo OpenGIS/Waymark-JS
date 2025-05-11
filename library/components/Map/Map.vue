@@ -7,12 +7,10 @@ const { createMap } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { config, state } = storeToRefs(instanceStore);
-
-const map = ref(null);
+const { config } = storeToRefs(instanceStore);
 
 onMounted(() => {
-  map.value = createMap(`${config.value.map_options.div_id}-map`);
+  createMap();
 });
 </script>
 

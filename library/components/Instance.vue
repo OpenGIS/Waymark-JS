@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { createStore } = instanceStore;
-const { classAppend, map } = storeToRefs(instanceStore);
+const { classAppend, state } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -35,7 +35,7 @@ createStore(config);
 	<div :class="`instance ${classAppend}`" :id="`${config.div_id}-instance`">
 		<Map />
 
-		<UI v-if="map" />
+		<UI />
 	</div>
 </template>
 

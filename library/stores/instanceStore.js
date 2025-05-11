@@ -6,7 +6,7 @@ import { makeKey, deepMerge } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	/*
-map_div_id  string  The ID of the HTML element to contain the Map. Defaults to waymark-map. map
+map_div_id  => div_id
 map_height  number  Specify the desired height of the Map (in pixels).  420
 map_width number  Specify the desired width of the Map (in pixels). 800
 map_init_zoom ==> zoom
@@ -40,18 +40,20 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	});
 
 	// State
-	const state = ref({
+	const state = shallowRef({
 		geoJSON: {},
 		container: {},
 		width: 0,
 		height: 0,
+		map: null,
+		orientation: computed(() => {
+			return state.value.width > state.value.height ? "landscape" : "portrait";
+		}),
 	});
 
 	// Default Tile Layer
 	const tileLayers = ref([]);
 	const activeTileLayer = ref(null);
-
-	let map = shallowRef(null);
 
 	const overlays = ref([]);
 	const visibleOverlays = ref([]);
@@ -63,12 +65,6 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	function createStore(initConfig = {}) {
 		// Create a merged config
 		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
-
-		console.log("Config", config.value);
-
-		// if (typeof config.geoJSON === "object") {
-		// 	state.value.geoJSON = config.geoJSON;
-		// }
 
 		// Get DOM Element
 		state.value.container = document.getElementById(
@@ -88,24 +84,24 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		window.addEventListener("resize", getDimensions);
 	}
 
-	function storeMap(mapInstance) {
-		map.value = mapInstance;
+	// function storeMap(mapInstance) {
+	// 	state.value.map = mapInstance;
 
-		map.value
-			.on("zoomend", updateVisibleOverlays)
-			.on("moveend", updateVisibleOverlays);
-	}
+	// 	state.value.map
+	// 		.on("zoomend", updateVisibleOverlays)
+	// 		.on("moveend", updateVisibleOverlays);
+	// }
 
 	function updateTileLayer(layer) {
 		activeTileLayer.value = layer;
 
 		// Remove all layers
 		tileLayers.value.forEach((layer) => {
-			map.value.removeLayer(layer.layer);
+			state.value.map.removeLayer(layer.layer);
 		});
 
 		// Add active layer
-		layer.layer.addTo(map.value);
+		layer.layer.addTo(state.value.map);
 	}
 
 	function togglePanel() {
@@ -255,7 +251,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	function setFocus(overlay = {}) {
 		switch (overlay.featureType) {
 			case "marker":
-				map.value.flyTo(overlay.layer.getLatLng());
+				state.value.map.flyTo(overlay.layer.getLatLng());
 				break;
 
 			case "line":
@@ -267,7 +263,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 				});
 
 				// Zoom to bounds
-				map.value.fitBounds(bounds, {
+				state.value.map.fitBounds(bounds, {
 					padding: [30, 30],
 					animate: true,
 				});
@@ -286,7 +282,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	});
 
 	const updateVisibleOverlays = () => {
-		const mapBounds = map.value.getBounds();
+		const mapBounds = state.value.map.getBounds();
 
 		//Check if overlay is visible
 		visibleOverlays.value = overlays.value.filter((overlay) => {
@@ -334,9 +330,9 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		return overlays.value.filter((overlay) => overlay.featureType == "shape");
 	});
 
-	const orientation = computed(() => {
-		return state.value.width > state.value.height ? "landscape" : "portrait";
-	});
+	// const orientation = computed(() => {
+	// 	return state.value.width > state.value.height ? "landscape" : "portrait";
+	// });
 
 	const small = computed(() => {
 		// Small / Medium / Large
@@ -355,7 +351,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 			classes.push("panel-closed");
 		}
 
-		classes.push(orientation.value);
+		classes.push(state.value.orientation);
 
 		classes.push(small.value);
 
@@ -415,11 +411,7 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 
 		state,
 
-		orientation,
-
 		// - Map
-
-		map,
 
 		tileLayers,
 		activeTileLayer,
@@ -448,7 +440,7 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 
 		updateTileLayer,
 
-		storeMap,
+		// storeMap,
 
 		storeLine,
 
