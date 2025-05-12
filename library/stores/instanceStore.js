@@ -21,6 +21,8 @@ shape_types array An array of Shape Types to be used on the Map.  See Below
 debug_mode  1/0 Whether to enable debug mode. This will output debug information to the console.  1
 */
 
+	// === CONFIGURATION ===
+
 	const defaultConfig = {
 		geoJSON: {},
 		map_options: {
@@ -32,14 +34,14 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		},
 	};
 
-	// Config
 	const config = shallowRef({
 		map_options: {},
 		viewer_options: {},
 		editor_options: {},
 	});
 
-	// State
+	// === STATE ===
+
 	const state = shallowRef({
 		geoJSON: {},
 		container: {},
@@ -49,14 +51,30 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		orientation: computed(() => {
 			return state.value.width > state.value.height ? "landscape" : "portrait";
 		}),
+
+		// Overlays
+		markers: computed(() => {
+			return overlays.value.filter(
+				(overlay) => overlay.featureType == "marker",
+			);
+		}),
+
+		lines: computed(() => {
+			return overlays.value.filter((overlay) => overlay.featureType == "line");
+		}),
+
+		shapes: computed(() => {
+			return overlays.value.filter((overlay) => overlay.featureType == "shape");
+		}),
 	});
 
 	// Default Tile Layer
 	const tileLayers = ref([]);
 	const activeTileLayer = ref(null);
 
-	const overlays = ref([]);
 	const visibleOverlays = ref([]);
+
+	const overlays = ref([]);
 	const activeOverlay = ref({});
 
 	const activePanel = ref("overlays");
@@ -318,22 +336,6 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		});
 	};
 
-	const markers = computed(() => {
-		return overlays.value.filter((overlay) => overlay.featureType == "marker");
-	});
-
-	const lines = computed(() => {
-		return overlays.value.filter((overlay) => overlay.featureType == "line");
-	});
-
-	const shapes = computed(() => {
-		return overlays.value.filter((overlay) => overlay.featureType == "shape");
-	});
-
-	// const orientation = computed(() => {
-	// 	return state.value.width > state.value.height ? "landscape" : "portrait";
-	// });
-
 	const small = computed(() => {
 		// Small / Medium / Large
 		if (state.value.width <= 320) {
@@ -419,9 +421,6 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 		// - Overlays
 
 		overlays,
-		markers,
-		lines,
-		shapes,
 
 		overlayCount,
 		visibleOverlays,

@@ -9,15 +9,8 @@ import List from "@/components/UI/Panel/Overlays/List.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const {
-	state,
-	visibleOverlays,
-	overlays,
-	markers,
-	lines,
-	shapes,
-	activeOverlay,
-} = storeToRefs(instanceStore);
+const { state, visibleOverlays, overlays, activeOverlay } =
+	storeToRefs(instanceStore);
 
 const activeType = ref("line");
 const filterVisible = ref(false);
@@ -57,8 +50,13 @@ const filteredOverlays = computed(() => {
 	return overlaysByType(filtered);
 });
 
-const doFeatureTypes = computed(() => {
-	return markers.value.length + lines.value.length + shapes.value.length > 1;
+const hasOverlays = computed(() => {
+	return (
+		state.value.markers.length +
+			state.value.lines.length +
+			state.value.shapes.length >
+		1
+	);
 });
 
 const toggleFilterVisible = () => {
@@ -90,24 +88,24 @@ watch(activeOverlay, (newOverlay) => {
 	<div class="panel overlay">
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
-			<!-- Feature Nav -->
-			<nav v-if="doFeatureTypes" class="type-nav" :value="activeType">
+			<!-- Nav -->
+			<nav v-if="hasOverlays" class="type-nav" :value="activeType">
 				<Button
-					v-if="markers.length"
+					v-if="state.markers.length"
 					icon="ion-ios-location-outline"
 					@click="activeType = 'marker'"
 					:active="activeType === 'marker'"
 				/>
 
 				<Button
-					v-if="lines.length"
+					v-if="state.lines.length"
 					icon="ion-arrow-graph-up-right"
 					@click="activeType = 'line'"
 					:active="activeType === 'line'"
 				/>
 
 				<Button
-					v-if="shapes.length"
+					v-if="state.shapes.length"
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeType = 'shape'"
 					:active="activeType === 'shape'"
