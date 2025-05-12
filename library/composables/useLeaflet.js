@@ -188,6 +188,9 @@ export function useLeaflet() {
 				storeLine(line, feature);
 			});
 
+			// Update loaded state
+			state.mapLoaded = true;
+
 			// Set Map bounds
 			state.map.fitBounds(dataBounds, {
 				padding: [30, 30],

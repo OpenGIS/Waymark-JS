@@ -10,7 +10,7 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { state } = instanceStore;
-const { visibleOverlays, overlays, activeOverlay } = storeToRefs(instanceStore);
+const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
 const activeType = ref("line");
 const filterVisible = ref(false);
@@ -21,7 +21,7 @@ const filteredOverlays = computed(() => {
 
 	// All Overlays
 	if (!filterVisible.value) {
-		filtered = overlays.value.filter((o) => {
+		filtered = state.overlays.filter((o) => {
 			return o.featureType === activeType.value;
 		});
 
@@ -48,10 +48,6 @@ const filteredOverlays = computed(() => {
 	}
 
 	return overlaysByType(filtered);
-});
-
-const hasOverlays = computed(() => {
-	return state.markers.length + state.lines.length + state.shapes.length > 1;
 });
 
 const toggleFilterVisible = () => {
@@ -84,7 +80,7 @@ watch(activeOverlay, (newOverlay) => {
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
 			<!-- Nav -->
-			<nav v-if="hasOverlays" class="type-nav" :value="activeType">
+			<nav class="type-nav" :value="activeType">
 				<Button
 					v-if="state.markers.length"
 					icon="ion-ios-location-outline"

@@ -1,10 +1,12 @@
 <script setup>
+import { onMounted, watch } from "vue";
+
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { createStore } = instanceStore;
-const { classAppend, state } = storeToRefs(instanceStore);
+const { createStore, state } = instanceStore;
+const { classAppend } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -28,6 +30,11 @@ const config = defineProps({
 
 // Create Store with provided config
 createStore(config);
+
+onMounted(() => {
+	// Set map options
+	// console.log(state.map._loaded);
+});
 </script>
 
 <template>
@@ -35,7 +42,7 @@ createStore(config);
 	<div :class="`instance ${classAppend}`" :id="`${config.div_id}-instance`">
 		<Map />
 
-		<UI />
+		<UI v-if="state.map._loaded" />
 	</div>
 </template>
 

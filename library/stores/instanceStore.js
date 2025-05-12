@@ -1,4 +1,4 @@
-import { ref, shallowRef, computed } from "vue";
+import { ref, shallowRef, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import L from "leaflet";
 import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
@@ -47,25 +47,33 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		container: {},
 		width: 0,
 		height: 0,
-		map: null,
-		orientation: computed(() => {
+
+		// Map
+
+		map: {
+			_loaded: false,
+		},
+
+		orientation: () => {
 			return state.width > state.height ? "landscape" : "portrait";
-		}),
+		},
 
 		// Overlays
-		markers: computed(() => {
-			return overlays.value.filter(
+		overlays: [],
+
+		markers: () => {
+			return state.overlays.filter(
 				(overlay) => overlay.featureType == "marker",
 			);
-		}),
+		},
 
-		lines: computed(() => {
-			return overlays.value.filter((overlay) => overlay.featureType == "line");
-		}),
+		lines: () => {
+			return state.overlays.filter((overlay) => overlay.featureType == "line");
+		},
 
-		shapes: computed(() => {
-			return overlays.value.filter((overlay) => overlay.featureType == "shape");
-		}),
+		shapes: () => {
+			return state.overlays.filter((overlay) => overlay.featureType == "shape");
+		},
 	};
 
 	// Default Tile Layer
@@ -74,7 +82,6 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 
 	const visibleOverlays = ref([]);
 
-	const overlays = ref([]);
 	const activeOverlay = ref({});
 
 	const activePanel = ref("overlays");
@@ -159,7 +166,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		setActivePanel("overlays");
 
 		// Remove all other highlights
-		overlays.value.forEach((overlay) => {
+		state.overlays.forEach((overlay) => {
 			highlightOverlay(overlay, false);
 		});
 
@@ -184,7 +191,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		const markerElement = marker.getElement();
 
 		let overlay = {
-			id: overlays.value.length + 1,
+			id: state.overlays.length + 1,
 			typeKey: typeKey,
 			typeData: getTypeData(featureType, typeKey),
 			feature: feature,
@@ -210,7 +217,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 			// }
 		});
 
-		overlays.value.push(overlay);
+		state.overlays.push(overlay);
 
 		return overlay;
 	}
@@ -222,7 +229,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		const lineElement = line.getElement();
 
 		let overlay = {
-			id: overlays.value.length + 1,
+			id: state.overlays.length + 1,
 			typeKey: typeKey,
 			typeData: getTypeData(featureType, typeKey),
 			feature: feature,
@@ -246,14 +253,14 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 			highlightOverlay(overlay, false);
 		});
 
-		overlays.value.push(overlay);
+		state.overlays.push(overlay);
 
 		return overlay;
 	}
 
 	function storeTileLayer(layer, data) {
 		let tileLayer = {
-			id: overlays.value.length + 1,
+			id: state.overlays.length + 1,
 			layer: layer,
 			url: data.layer_url,
 			attribution: data.layer_attribution,
@@ -294,14 +301,14 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	});
 
 	const overlayCount = computed(() => {
-		return overlays.value.length;
+		return state.overlays.length;
 	});
 
 	const updateVisibleOverlays = () => {
 		const mapBounds = state.map.getBounds();
 
 		//Check if overlay is visible
-		visibleOverlays.value = overlays.value.filter((overlay) => {
+		visibleOverlays.value = state.overlays.filter((overlay) => {
 			let contains = false;
 
 			switch (overlay.featureType) {
@@ -417,8 +424,6 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 		activeTileLayer,
 
 		// - Overlays
-
-		overlays,
 
 		overlayCount,
 		visibleOverlays,
