@@ -53,7 +53,7 @@
             div.style.width = `${size[0]}px`;
             document.body.appendChild(div);
 
-            // Read test state.value.container. (JSON)
+            // Read test config (JSON)
             let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
               (res) => res.json(),
             );

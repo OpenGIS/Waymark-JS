@@ -5,9 +5,8 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { updateTileLayer } = instanceStore;
-
-const { activeTileLayer, state, tileLayers } = storeToRefs(instanceStore);
+const { updateTileLayer, state } = instanceStore;
+const { activeTileLayer, tileLayers } = storeToRefs(instanceStore);
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -24,9 +23,9 @@ const tilePreviewUrl = (tile_url) => {
 				Math.pow(2, zoom),
 		);
 
-	const zoom = parseInt(state.value.map.getZoom());
-	const lat = state.value.map.getCenter().lat;
-	const lng = state.value.map.getCenter().lng;
+	const zoom = parseInt(state.map.getZoom());
+	const lat = state.map.getCenter().lat;
+	const lng = state.map.getCenter().lng;
 	const x = lon2tile(lng, zoom);
 	const y = lat2tile(lat, zoom);
 

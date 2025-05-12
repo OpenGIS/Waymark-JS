@@ -9,8 +9,8 @@ import List from "@/components/UI/Panel/Overlays/List.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { state, visibleOverlays, overlays, activeOverlay } =
-	storeToRefs(instanceStore);
+const { state } = instanceStore;
+const { visibleOverlays, overlays, activeOverlay } = storeToRefs(instanceStore);
 
 const activeType = ref("line");
 const filterVisible = ref(false);
@@ -51,12 +51,7 @@ const filteredOverlays = computed(() => {
 });
 
 const hasOverlays = computed(() => {
-	return (
-		state.value.markers.length +
-			state.value.lines.length +
-			state.value.shapes.length >
-		1
-	);
+	return state.markers.length + state.lines.length + state.shapes.length > 1;
 });
 
 const toggleFilterVisible = () => {
@@ -69,7 +64,7 @@ watch(activeOverlay, (newOverlay) => {
 		activeType.value = newOverlay.featureType;
 
 		// Scroll to Active Overlay
-		const element = state.value.container.querySelector(
+		const element = state.container.querySelector(
 			`.overlay-${newOverlay.id} .overview`,
 		);
 

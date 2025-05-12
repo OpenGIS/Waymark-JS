@@ -42,14 +42,14 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 
 	// === STATE ===
 
-	const state = shallowRef({
+	const state = {
 		geoJSON: {},
 		container: {},
 		width: 0,
 		height: 0,
 		map: null,
 		orientation: computed(() => {
-			return state.value.width > state.value.height ? "landscape" : "portrait";
+			return state.width > state.height ? "landscape" : "portrait";
 		}),
 
 		// Overlays
@@ -66,7 +66,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		shapes: computed(() => {
 			return overlays.value.filter((overlay) => overlay.featureType == "shape");
 		}),
-	});
+	};
 
 	// Default Tile Layer
 	const tileLayers = ref([]);
@@ -85,16 +85,14 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
 
 		// Get DOM Element
-		state.value.container = document.getElementById(
-			config.value.map_options.div_id,
-		);
+		state.container = document.getElementById(config.value.map_options.div_id);
 
 		// Inital Dimensions
 		const getDimensions = () => {
-			state.value.width = state.value.container.clientWidth;
-			state.value.height = state.value.container.clientHeight;
+			state.width = state.container.clientWidth;
+			state.height = state.container.clientHeight;
 
-			console.log(`Width: ${state.value.width}, Height: ${state.value.height}`);
+			console.log(`Width: ${state.width}, Height: ${state.height}`);
 		};
 		getDimensions();
 
@@ -103,9 +101,9 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	}
 
 	// function storeMap(mapInstance) {
-	// 	state.value.map = mapInstance;
+	// 	state.map = mapInstance;
 
-	// 	state.value.map
+	// 	state.map
 	// 		.on("zoomend", updateVisibleOverlays)
 	// 		.on("moveend", updateVisibleOverlays);
 	// }
@@ -115,11 +113,11 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 
 		// Remove all layers
 		tileLayers.value.forEach((layer) => {
-			state.value.map.removeLayer(layer.layer);
+			state.map.removeLayer(layer.layer);
 		});
 
 		// Add active layer
-		layer.layer.addTo(state.value.map);
+		layer.layer.addTo(state.map);
 	}
 
 	function togglePanel() {
@@ -269,7 +267,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	function setFocus(overlay = {}) {
 		switch (overlay.featureType) {
 			case "marker":
-				state.value.map.flyTo(overlay.layer.getLatLng());
+				state.map.flyTo(overlay.layer.getLatLng());
 				break;
 
 			case "line":
@@ -281,7 +279,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 				});
 
 				// Zoom to bounds
-				state.value.map.fitBounds(bounds, {
+				state.map.fitBounds(bounds, {
 					padding: [30, 30],
 					animate: true,
 				});
@@ -300,7 +298,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 	});
 
 	const updateVisibleOverlays = () => {
-		const mapBounds = state.value.map.getBounds();
+		const mapBounds = state.map.getBounds();
 
 		//Check if overlay is visible
 		visibleOverlays.value = overlays.value.filter((overlay) => {
@@ -338,7 +336,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 
 	const small = computed(() => {
 		// Small / Medium / Large
-		if (state.value.width <= 320) {
+		if (state.width <= 320) {
 			return "small";
 		}
 	});
@@ -353,7 +351,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 			classes.push("panel-closed");
 		}
 
-		classes.push(state.value.orientation);
+		classes.push(state.orientation);
 
 		classes.push(small.value);
 
