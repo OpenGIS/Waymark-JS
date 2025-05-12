@@ -14,7 +14,9 @@ const props = defineProps({
   overlay: Object,
 });
 
-const feature_props = props.overlay.feature.properties;
+console.log(props.overlay);
+
+const feature_props = props.overlay.properties;
 
 let visible = ref(true);
 

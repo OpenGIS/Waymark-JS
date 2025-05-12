@@ -1,7 +1,7 @@
 import { ref, shallowRef, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import L from "leaflet";
-import { getTypeData, getImageURLs } from "@/helpers/Overlay.js";
+import { getFeatureType } from "@/helpers/Overlay.js";
 import { makeKey, deepMerge } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
@@ -59,20 +59,24 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		},
 
 		// Overlays
-		overlays: [],
+		overlays: L.featureGroup(),
 
 		markers: () => {
-			return state.overlays.filter(
-				(overlay) => overlay.featureType == "marker",
-			);
+			return state.overlays
+				.getLayers()
+				.filter((overlay) => overlay.featureType == "marker");
 		},
 
 		lines: () => {
-			return state.overlays.filter((overlay) => overlay.featureType == "line");
+			return state.overlays
+				.getLayers()
+				.filter((overlay) => overlay.featureType == "line");
 		},
 
 		shapes: () => {
-			return state.overlays.filter((overlay) => overlay.featureType == "shape");
+			return state.overlays
+				.getLayers()
+				.filter((overlay) => overlay.featureType == "shape");
 		},
 	};
 
@@ -184,78 +188,52 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		}
 	}
 
-	function storeMarker(marker, feature) {
-		let featureType = "marker";
-		let typeKey = makeKey(feature.properties.type);
+	function storeOverlay(layer = {}) {
+		state.overlays.addLayer(layer);
 
-		const markerElement = marker.getElement();
-
-		let overlay = {
-			id: state.overlays.length + 1,
-			typeKey: typeKey,
-			typeData: getTypeData(featureType, typeKey),
-			feature: feature,
-			layer: marker,
-			featureType: featureType,
-			element: markerElement,
-			imageURLs: getImageURLs(feature.properties),
-		};
-
-		//Add Events
-		markerElement.addEventListener("click", () => {
-			setActiveOverlay(overlay);
-		});
-
-		markerElement.addEventListener("mouseenter", () => {
-			highlightOverlay(overlay, true);
-		});
-
-		markerElement.addEventListener("mouseleave", () => {
-			// If not active Overlay
-			// if (activeOverlay.value.id != overlay.id) {
-			highlightOverlay(overlay, false);
-			// }
-		});
-
-		state.overlays.push(overlay);
-
-		return overlay;
-	}
-
-	function storeLine(line, feature) {
-		let featureType = "line";
-		let typeKey = makeKey(feature.properties.type);
-
-		const lineElement = line.getElement();
-
-		let overlay = {
-			id: state.overlays.length + 1,
-			typeKey: typeKey,
-			typeData: getTypeData(featureType, typeKey),
-			feature: feature,
-			layer: line,
-			featureType: featureType,
-			element: lineElement,
-			imageURLs: getImageURLs(feature.properties),
-		};
+		let featureType = getFeatureType(layer.toGeoJSON());
+		let element = layer.getElement();
 
 		// Add events
+		switch (featureType) {
+			case "marker":
+				element.addEventListener("click", () => {
+					setActiveOverlay(overlay);
+				});
 
-		lineElement.addEventListener("click", () => {
-			setActiveOverlay(overlay);
-		});
+				element.addEventListener("mouseenter", () => {
+					highlightOverlay(overlay, true);
+				});
 
-		lineElement.addEventListener("mouseenter", () => {
-			highlightOverlay(overlay, true);
-		});
+				element.addEventListener("mouseleave", () => {
+					// If not active Overlay
+					// if (activeOverlay.value.id != overlay.id) {
+					highlightOverlay(overlay, false);
+					// }
+				});
 
-		lineElement.addEventListener("mouseleave", () => {
-			highlightOverlay(overlay, false);
-		});
+				break;
 
-		state.overlays.push(overlay);
+			case "line":
+				element.addEventListener("click", () => {
+					setActiveOverlay(overlay);
+				});
 
-		return overlay;
+				element.addEventListener("mouseenter", () => {
+					highlightOverlay(overlay, true);
+				});
+
+				element.addEventListener("mouseleave", () => {
+					highlightOverlay(overlay, false);
+				});
+
+				break;
+
+			case "shape":
+				//
+
+				break;
+		}
 	}
 
 	function storeTileLayer(layer, data) {
@@ -308,7 +286,7 @@ debug_mode  1/0 Whether to enable debug mode. This will output debug information
 		const mapBounds = state.map.getBounds();
 
 		//Check if overlay is visible
-		visibleOverlays.value = state.overlays.filter((overlay) => {
+		visibleOverlays.value = state.overlays.getLayers().filter((overlay) => {
 			let contains = false;
 
 			switch (overlay.featureType) {
@@ -444,9 +422,7 @@ data_div_id	string	The ID of a element to output the GeoJSON into. By default th
 
 		// storeMap,
 
-		storeLine,
-
-		storeMarker,
+		storeOverlay,
 
 		storeTileLayer,
 

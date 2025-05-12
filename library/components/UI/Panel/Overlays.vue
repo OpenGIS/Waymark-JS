@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import { overlaysByType } from "@/helpers/Overlay.js";
+import { overlaysByType, getFeatureType } from "@/helpers/Overlay.js";
 
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -21,15 +21,15 @@ const filteredOverlays = computed(() => {
 
 	// All Overlays
 	if (!filterVisible.value) {
-		filtered = state.overlays.filter((o) => {
-			return o.featureType === activeType.value;
+		filtered = state.overlays.eachLayer((o) => {
+			return getFeatureType(o.toGeoJSON()) === activeType.value;
 		});
 
 		// Only show visible overlays
 	} else {
-		filtered = visibleOverlays.value.filter((o) => {
-			return o.featureType === activeType.value;
-		});
+		// filtered = visibleOverlays.value.filter((o) => {
+		// 	return o.featureType === activeType.value;
+		// });
 	}
 
 	// Filter by Search

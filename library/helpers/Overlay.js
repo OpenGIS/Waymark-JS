@@ -182,21 +182,40 @@ export function iconHtml(iconData) {
 export function overlaysByType(overlays) {
   const byType = {};
 
-  for (let i in overlays) {
-    let overlay = overlays[i];
+  // for (let overlay in overlays) {
+  //   console.log("Overlay", overlay);
+
+  //   //Not yet present?
+  //   if (typeof byType[overlay.typeKey] !== "object") {
+  //     byType[overlay.typeKey] = {
+  //       title: overlay.typeData[getFeatureType(overlay.toGeoJSON()) + "_title"],
+  //       typeData: getTypeData(
+  //         getFeatureType(overlay.toGeoJSON()),
+  //         overlay.typeKey,
+  //       ),
+  //       overlays: [],
+  //       featureType: getFeatureType(overlay.toGeoJSON()),
+  //     };
+  //   }
+
+  //   byType[overlay.typeKey]["overlays"].push(overlay);
+  // }
+
+  overlays.eachLayer((overlay) => {
+    const overlayType = getFeatureType(overlay.toGeoJSON());
 
     //Not yet present?
-    if (typeof byType[overlay.typeKey] !== "object") {
-      byType[overlay.typeKey] = {
-        title: overlay.typeData[getFeatureType(overlay.feature) + "_title"],
-        typeData: getTypeData(getFeatureType(overlay.feature), overlay.typeKey),
+    if (typeof byType[overlayType] !== "object") {
+      byType[overlayType] = {
+        title: overlay.options.title,
+        typeData: getTypeData(overlayType, overlay.options.typeKey),
         overlays: [],
-        featureType: getFeatureType(overlay.feature),
+        featureType: overlayType,
       };
     }
 
-    byType[overlay.typeKey]["overlays"].push(overlay);
-  }
+    byType[overlayType]["overlays"].push(overlay);
+  });
 
   return byType;
 }

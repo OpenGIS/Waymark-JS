@@ -42,7 +42,7 @@ onMounted(() => {
 	<div :class="`instance ${classAppend}`" :id="`${config.div_id}-instance`">
 		<Map />
 
-		<UI v-if="state.map._loaded" />
+		<!-- <UI v-if="state.map._loaded" /> -->
 	</div>
 </template>
 

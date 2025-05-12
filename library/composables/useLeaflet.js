@@ -69,8 +69,7 @@ function createMarker(feature = {}) {
 export function useLeaflet() {
 	const createMap = () => {
 		const instanceStore = useInstanceStore();
-		const { storeMarker, storeMap, storeLine, storeTileLayer, state } =
-			instanceStore;
+		const { storeOverlay, storeTileLayer, state } = instanceStore;
 		const { config, tileLayers, activeTileLayer } = storeToRefs(instanceStore);
 
 		const pointsFeatures = computed(() => {
@@ -168,7 +167,7 @@ export function useLeaflet() {
 				marker.addTo(state.map);
 
 				// Add Marker to Store
-				storeMarker(marker, feature);
+				storeOverlay(marker);
 			});
 
 			// Lines
@@ -185,7 +184,7 @@ export function useLeaflet() {
 				state.map.addLayer(line);
 
 				// Add Line to Store
-				storeLine(line, feature);
+				storeOverlay(line);
 			});
 
 			// Update loaded state
