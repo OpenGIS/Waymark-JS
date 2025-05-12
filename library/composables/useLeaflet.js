@@ -12,105 +12,17 @@ import { makeKey } from "@/helpers/Common.js";
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-function createLine(feature = {}) {
-	// Ensure is LineString with coordinates
-	if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
-		return null;
-	}
-
-	const typeKey = makeKey(feature.properties.type);
-	const typeData = getTypeData("line", typeKey);
-
-	return L.polyline(
-		feature.geometry.coordinates.map((coords) => {
-			return L.latLng(coords[1], coords[0]);
-		}),
-		{
-			color: typeData.line_colour,
-			weight: parseFloat(typeData.line_weight),
-			opacity: typeData.line_opacity,
-		},
-	);
-}
-
-function createMarker(feature = {}) {
-	// Ensure is Marker with coordinates
-	if (getFeatureType(feature) !== "marker" || !feature.geometry.coordinates) {
-		return null;
-	}
-
-	const typeKey = makeKey(feature.properties.type);
-	const typeData = getTypeData("marker", typeKey);
-	const iconData = getIconData(typeData);
-
-	// Create a DOM element for the marker
-	const el = document.createElement("div");
-	el.className = iconData.className;
-	el.innerHTML = iconData.html;
-	el.style.width = `${iconData.iconSize[0]}px`;
-	el.style.height = `${iconData.iconSize[1]}px`;
-
-	// Create Marker
-	const marker = L.marker(
-		[feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
-		{
-			icon: L.divIcon({
-				className: iconData.className,
-				html: el,
-				iconSize: iconData.iconSize,
-				iconAnchor: iconData.iconAnchor,
-			}),
-		},
-	);
-
-	return marker;
-}
-
 export function useLeaflet() {
+	const instanceStore = useInstanceStore();
+	const { state } = instanceStore;
+	const { config } = storeToRefs(instanceStore);
+
 	const createMap = () => {
-		const instanceStore = useInstanceStore();
-		const { storeOverlay, storeTileLayer, state } = instanceStore;
-		const { config, tileLayers, activeTileLayer } = storeToRefs(instanceStore);
-
-		const pointsFeatures = computed(() => {
-			// Ensure is valid Array
-			if (
-				typeof config.value.geoJSON.features === "undefined" ||
-				!Array.isArray(config.value.geoJSON.features)
-			) {
-				return [];
-			}
-
-			return config.value.geoJSON.features.filter((feature) => {
-				return feature.geometry.type === "Point";
-			});
-		});
-
-		const linesFeatures = computed(() => {
-			// Ensure is valid Array
-			if (
-				typeof config.value.geoJSON.features === "undefined" ||
-				!Array.isArray(config.value.geoJSON.features)
-			) {
-				return [];
-			}
-
-			return config.value.geoJSON.features.filter((feature) => {
-				return (
-					["LineString", "MultiLineString"].indexOf(feature.geometry.type) !==
-					-1
-				);
-			});
-		});
-
-		console.log("Map Options", config.value.map_options);
-
 		// Create & Store Map
 		state.map = L.map(
 			`${config.value.map_options.div_id}-map`,
 			config.value.map_options.leaflet_options,
 		);
-		// storeMap(map);
 
 		// Create Tile Layers
 		if (Array.isArray(config.value.map_options.tile_layers)) {
@@ -122,8 +34,9 @@ export function useLeaflet() {
 					attribution: tile_data.layer_attribution,
 				});
 
-				storeTileLayer(layer, tile_data);
+				state.tileLayers.addLayer(layer);
 			});
+			// Default to OpenStreetMap
 		} else {
 			const layer = L.tileLayer(
 				"https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
@@ -133,71 +46,68 @@ export function useLeaflet() {
 						'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 				},
 			);
-			storeTileLayer(layer, {
-				layer_name: "OpenStreetMap",
-				layer_url: layer._url,
-				layer_max_zoom: layer.options.maxZoom,
-				layer_attribution: layer.options.attribution,
-			});
+
+			state.tileLayers.addLayer(layer);
 		}
 
 		// Add First as active Tile Layer
-		activeTileLayer.value = tileLayers.value[0].layer;
-		activeTileLayer.value.addTo(state.map);
+		state.tileLayers.getLayers()[0].addTo(state.map);
 
 		// Add GeoJSON
-		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
-			// Create Bounds
-			const dataBounds = new L.latLngBounds();
+		state.geoJSON = L.geoJSON(config.value.geoJSON, {
+			// Create Markers
+			pointToLayer: (feature, latlng) => {
+				const typeKey = makeKey(feature.properties.type);
+				const typeData = getTypeData("marker", typeKey);
+				const iconData = getIconData(typeData);
 
-			// Markers
-			pointsFeatures.value.forEach((feature) => {
-				//Extend bounds
-				dataBounds.extend(
-					L.latLng(
-						feature.geometry.coordinates[1],
-						feature.geometry.coordinates[0],
-					),
-				);
+				// Create a DOM element for the marker
+				const el = document.createElement("div");
+				el.className = iconData.className;
+				el.innerHTML = iconData.html;
+				el.style.width = `${iconData.iconSize[0]}px`;
+				el.style.height = `${iconData.iconSize[1]}px`;
 
-				// Create the Marker
-				const marker = createMarker(feature);
-
-				// Add Marker to Map
-				marker.addTo(state.map);
-
-				// Add Marker to Store
-				storeOverlay(marker);
-			});
-
-			// Lines
-			linesFeatures.value.forEach((feature) => {
-				//Extend bounds
-				feature.geometry.coordinates.forEach((coords) => {
-					dataBounds.extend(coords[1], coords[0]);
+				// Create Marker
+				const marker = L.marker([latlng.lat, latlng.lng], {
+					icon: L.divIcon({
+						className: iconData.className,
+						html: el,
+						iconSize: iconData.iconSize,
+						iconAnchor: iconData.iconAnchor,
+					}),
 				});
 
-				// Create Polyline
-				const line = createLine(feature);
+				marker.feature = feature;
 
-				// Add Line to Map
-				state.map.addLayer(line);
+				marker.addTo(state.map);
+			},
+			onEachFeature: (feature, layer) => {
+				layer.feature = feature;
 
-				// Add Line to Store
-				storeOverlay(line);
-			});
+				const typeKey = makeKey(feature.properties.type);
+				const typeData = getTypeData(getFeatureType(feature), typeKey);
 
-			// Update loaded state
-			state.mapLoaded = true;
+				switch (getFeatureType(feature)) {
+					case "line":
+						layer.setStyle({
+							color: typeData.line_colour,
+							weight: parseFloat(typeData.line_weight),
+							opacity: typeData.line_opacity,
+						});
 
-			// Set Map bounds
-			state.map.fitBounds(dataBounds, {
-				padding: [30, 30],
-				animate: false,
-			});
-		}
+						break;
+
+					default:
+						console.warn("Unknown Feature Type", feature);
+						break;
+				}
+			},
+		}).addTo(state.map);
+
+		// Set bounds
+		state.map.fitBounds(state.geoJSON.getBounds());
 	};
-
 	return {
 		createMap,
 	};
