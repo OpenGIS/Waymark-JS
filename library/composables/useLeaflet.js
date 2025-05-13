@@ -14,7 +14,8 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
 	const instanceStore = useInstanceStore();
-	const { state, config } = instanceStore;
+	const { state } = instanceStore;
+	const { config } = storeToRefs(instanceStore);
 
 	const createMap = () => {
 		// Create & Store Map

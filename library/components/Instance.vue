@@ -1,12 +1,12 @@
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, useTemplateRef } from "vue";
 
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { createStore, state, config } = instanceStore;
-const { classAppend } = storeToRefs(instanceStore);
+const { createStore, state } = instanceStore;
+const { classAppend, config } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -28,19 +28,33 @@ const props = defineProps({
 	},
 });
 
+// Create Store with provided config
+createStore(props);
+
+const container = useTemplateRef("container");
+
 onMounted(() => {
-	// Create Store with provided config
-	createStore(props);
-	// Create Store with provided config
+	// Inital Dimensions
+	const getDimensions = () => {
+		state.width = container.value.clientWidth;
+		state.height = container.value.clientHeight;
+
+		console.log(`Width: ${state.width}, Height: ${state.height}`);
+	};
+	getDimensions();
+
+	// Resize Event
+	window.addEventListener("resize", getDimensions);
 });
 </script>
 
 <template>
 	<!-- Instance -->
 	<div
-		v-if="state.hasInit"
+		v-if="config"
+		ref="container"
 		:class="`instance ${classAppend}`"
-		:id="`${config.div_id}-instance`"
+		:id="`${config.map_options.div_id}-instance`"
 	>
 		<Map />
 

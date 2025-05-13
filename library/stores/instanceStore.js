@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import { defineStore } from "pinia";
 
 import L from "leaflet";
@@ -17,12 +18,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		},
 	};
 
-	let config = {};
-	let state = {};
+	const config = ref({});
 
 	// === STATE ===
 
-	state = {
+	const state = {
 		dataLayer: null,
 
 		container: {},
@@ -32,8 +32,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Map
 
 		map: null,
-
-		hasInit: false,
 
 		orientation: () => {
 			return state.width > state.height ? "landscape" : "portrait";
@@ -48,14 +46,19 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	function createStore(initConfig = {}) {
 		// Create a merged config
-		config = deepMerge(structuredClone(defaultConfig), initConfig);
+		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
 
-		state.hasInit = true;
+		isReady.value = true;
 	}
+
+	// === READY ===
+
+	const isReady = ref(false);
 
 	return {
 		createStore,
 		config,
 		state,
+		isReady,
 	};
 });
