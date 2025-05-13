@@ -44,7 +44,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		overlays: L.featureGroup(),
 
 		// Panels
-		activePanel: "overlays",
+		activePanelKey: "basemaps",
 	};
 
 	function init(initConfig = {}) {

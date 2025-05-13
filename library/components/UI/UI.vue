@@ -8,17 +8,26 @@ import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 
 import Button from "@/components/UI/Common/Button.vue";
 
-const showPanel = (panel) => {
-	return activePanel.value === panel && panelOpen.value;
+const showPanel = (panelKey) => {
+	return state.activePanelKey === panelKey && state.panelOpen;
 };
 
-const handleNavClick = (panel = "overlays") => {
+function togglePanel() {
+	state.panelOpen = !state.panelOpen;
+}
+
+function setActivePanel(panelKey = "overlays") {
+	state.activePanelKey = panelKey;
+	state.panelOpen = true;
+}
+
+const handleNavClick = (panelKey = "overlays") => {
 	// Toggle existing panel
-	if (panel === activePanel.value) {
-		instanceStore.togglePanel();
+	if (panelKey === state.activePanelKey) {
+		togglePanel();
 		// Switch to a different panel
 	} else {
-		instanceStore.setActivePanel(panel);
+		setActivePanel(panelKey);
 	}
 };
 </script>
@@ -57,11 +66,11 @@ const handleNavClick = (panel = "overlays") => {
 
 	<!-- START Panel Content -->
 	<div class="panels-content">
-		<Overlays v-show="showPanel('overlays')" />
+		<Overlays v-if="showPanel('overlays')" />
 
-		<Info v-show="showPanel('info')" />
+		<Info v-if="showPanel('info')" />
 
-		<Basemaps v-show="showPanel('basemaps')" />
+		<Basemaps v-if="showPanel('basemaps')" />
 	</div>
 	<!-- END Panel Content -->
 </template>
