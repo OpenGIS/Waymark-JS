@@ -5,8 +5,8 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { createStore, state } = instanceStore;
-const { classAppend, config } = storeToRefs(instanceStore);
+const { init, state, config } = instanceStore;
+const { classAppend } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -28,8 +28,8 @@ const props = defineProps({
 	},
 });
 
-// Create Store with provided config
-createStore(props);
+// Initialise Instance Store
+init(props);
 
 const container = useTemplateRef("container");
 
@@ -51,14 +51,13 @@ onMounted(() => {
 <template>
 	<!-- Instance -->
 	<div
-		v-if="config"
 		ref="container"
 		:class="`instance ${classAppend}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
 		<Map />
 
-		<!-- <UI v-if="state.map._loaded" /> -->
+		<UI />
 	</div>
 </template>
 

@@ -1,10 +1,6 @@
 <script setup>
-// import { computed } from "vue";
-import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
-
-const instanceStore = useInstanceStore();
-const { activePanel, panelOpen } = storeToRefs(instanceStore);
+const { state } = useInstanceStore();
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";

@@ -18,7 +18,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		},
 	};
 
-	const config = ref({});
+	const config = {};
 
 	// === STATE ===
 
@@ -42,19 +42,22 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// Overlays
 		overlays: L.featureGroup(),
+
+		// Panels
+		activePanel: "overlays",
 	};
 
-	function createStore(initConfig = {}) {
-		// Create a merged config
-		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
+	function init(initConfig = {}) {
+		const parsedConfig = deepMerge(structuredClone(defaultConfig), initConfig);
+
+		// Set config
+		for (const key in parsedConfig) {
+			config[key] = parsedConfig[key];
+		}
 	}
 
-	// === READY ===
-
-	const isReady = ref(false);
-
 	return {
-		createStore,
+		init,
 		config,
 		state,
 	};

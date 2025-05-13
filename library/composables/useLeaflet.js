@@ -1,6 +1,3 @@
-// import { computed } from "vue";
-import { storeToRefs } from "pinia";
-
 // Import Leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,7 +11,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
 	const instanceStore = useInstanceStore();
-	const { state, config } = instanceStore;
+	const { config } = instanceStore;
 
 	const createMap = () => {
 		// Create & Store Map
@@ -84,14 +81,10 @@ export function useLeaflet() {
 			}),
 		});
 
-		marker.feature = feature;
-
 		return marker;
 	};
 
 	const onEachFeature = (feature, layer) => {
-		layer.feature = feature;
-
 		const typeKey = makeKey(feature.properties.type);
 		const typeData = getTypeData(getFeatureType(feature), typeKey);
 

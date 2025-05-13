@@ -1,6 +1,5 @@
 <script setup>
-import { storeToRefs } from "pinia";
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
