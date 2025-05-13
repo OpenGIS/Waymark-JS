@@ -1,16 +1,36 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import { overlaysByType, getFeatureType } from "@/helpers/Overlay.js";
+import { getFeatureType } from "@/helpers/Overlay.js";
+import { makeKey } from "@/helpers/Common.js";
 
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-import List from "@/components/UI/Panel/Overlays/List.vue";
+import Type from "@/components/UI/Panel/Overlays/List/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { state } = instanceStore;
+const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
+
+const overlaysByType = (featureType, typeKey) => {
+	switch (featureType) {
+		case "marker":
+			return state.overlays.markers.getLayers().filter((o) => {
+				return o.feature.properties.type === typeKey;
+			});
+		case "line":
+			return state.overlays.lines.getLayers().filter((o) => {
+				return o.feature.properties.type === typeKey;
+			});
+		case "shape":
+			return state.overlays.shapes.getLayers().filter((o) => {
+				return o.feature.properties.type === typeKey;
+			});
+		default:
+			return [];
+	}
+};
 
 const activeFeatureType = ref("line");
 // const filterVisible = ref(false);
@@ -117,8 +137,32 @@ const activeFeatureType = ref("line");
 
 		<!-- Panel Content -->
 		<div class="panel-content">
-			<!-- List Overlays (by Type) -->
-			<List :overlaysByType="filteredOverlays" class="list" />
+			<!-- Markers -->
+			<div class="marker-types type-list">
+				<!-- Iterate over Marker Types in config( config.map_options.marker_types) -->
+				<div v-for="(markerType, index) in config.map_options.marker_types">
+					<strong class="heading">{{ markerType.marker_title }}</strong>
+
+					<!-- Iterate over Markers -->
+					<div
+						v-for="(marker, index) in overlaysByType(
+							'marker',
+							makeKey(markerType.marker_title),
+						)"
+					>
+						<div class="overlay marker">
+							<!-- Properties Table -->
+							<table>
+								<!-- Iterate over feature.properties -->
+								<tr v-for="(value, key) in marker.feature.properties">
+									<td class="key">{{ key }}</td>
+									<td class="value">{{ value }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
