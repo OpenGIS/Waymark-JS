@@ -10,69 +10,69 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { state } = instanceStore;
-const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
+// const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
-const activeType = ref("line");
-const filterVisible = ref(false);
-const filterText = ref("");
+const activeFeatureType = ref("line");
+// const filterVisible = ref(false);
+// const filterText = ref("");
 
-const filteredOverlays = computed(() => {
-	let filtered = [];
+// const filteredOverlays = computed(() => {
+// 	let filtered = [];
 
-	// All Overlays
-	if (!filterVisible.value) {
-		filtered = state.overlays.eachLayer((o) => {
-			return getFeatureType(o.toGeoJSON()) === activeType.value;
-		});
+// 	// All Overlays
+// 	if (!filterVisible.value) {
+// 		filtered = state.overlays.eachLayer((o) => {
+// 			return getFeatureType(o.toGeoJSON()) === activeFeatureType.value;
+// 		});
 
-		// Only show visible overlays
-	} else {
-		// filtered = visibleOverlays.value.filter((o) => {
-		// 	return o.featureType === activeType.value;
-		// });
-	}
+// 		// Only show visible overlays
+// 	} else {
+// 		// filtered = visibleOverlays.value.filter((o) => {
+// 		// 	return o.featureType === activeFeatureType.value;
+// 		// });
+// 	}
 
-	// Filter by Search
-	if (filterText.value !== "") {
-		filtered = filtered.filter((o) => {
-			// Check all GeoJSON properties for existence of filterText
-			const properties = Object.values(o.feature.properties);
+// 	// Filter by Search
+// 	if (filterText.value !== "") {
+// 		filtered = filtered.filter((o) => {
+// 			// Check all GeoJSON properties for existence of filterText
+// 			const properties = Object.values(o.feature.properties);
 
-			return properties.some((p) => {
-				return p
-					.toString()
-					.toLowerCase()
-					.includes(filterText.value.toLowerCase());
-			});
-		});
-	}
+// 			return properties.some((p) => {
+// 				return p
+// 					.toString()
+// 					.toLowerCase()
+// 					.includes(filterText.value.toLowerCase());
+// 			});
+// 		});
+// 	}
 
-	return overlaysByType(filtered);
-});
+// 	return overlaysByType(filtered);
+// });
 
-const toggleFilterVisible = () => {
-	filterVisible.value = !filterVisible.value;
-};
+// const toggleFilterVisible = () => {
+// 	filterVisible.value = !filterVisible.value;
+// };
 
-watch(activeOverlay, (newOverlay) => {
-	if (newOverlay) {
-		// Set appropriate active type
-		activeType.value = newOverlay.featureType;
+// watch(activeOverlay, (newOverlay) => {
+// 	if (newOverlay) {
+// 		// Set appropriate active type
+// 		activeFeatureType.value = newOverlay.featureType;
 
-		// Scroll to Active Overlay
-		const element = state.container.querySelector(
-			`.overlay-${newOverlay.id} .overview`,
-		);
+// 		// Scroll to Active Overlay
+// 		const element = state.container.querySelector(
+// 			`.overlay-${newOverlay.id} .overview`,
+// 		);
 
-		if (element) {
-			element.scrollIntoView({
-				behavior: "smooth",
-				block: "center",
-				inline: "center",
-			});
-		}
-	}
-});
+// 		if (element) {
+// 			element.scrollIntoView({
+// 				behavior: "smooth",
+// 				block: "center",
+// 				inline: "center",
+// 			});
+// 		}
+// 	}
+// });
 </script>
 
 <template>
@@ -80,30 +80,30 @@ watch(activeOverlay, (newOverlay) => {
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
 			<!-- Nav -->
-			<nav class="type-nav" :value="activeType">
+			<nav class="type-nav" :value="activeFeatureType">
 				<Button
-					v-if="state.markers.length"
+					v-if="state.overlays.markers.getLayers().length"
 					icon="ion-ios-location-outline"
-					@click="activeType = 'marker'"
-					:active="activeType === 'marker'"
+					@click="activeFeatureType = 'marker'"
+					:active="activeFeatureType === 'marker'"
 				/>
 
 				<Button
-					v-if="state.lines.length"
+					v-if="state.overlays.lines.getLayers().length"
 					icon="ion-arrow-graph-up-right"
-					@click="activeType = 'line'"
-					:active="activeType === 'line'"
+					@click="activeFeatureType = 'line'"
+					:active="activeFeatureType === 'line'"
 				/>
 
 				<Button
-					v-if="state.shapes.length"
+					v-if="state.overlays.shapes.getLayers().length"
 					icon="ion-android-checkbox-outline-blank"
-					@click="activeType = 'shape'"
-					:active="activeType === 'shape'"
+					@click="activeFeatureType = 'shape'"
+					:active="activeFeatureType === 'shape'"
 				/>
 			</nav>
 
-			<nav class="feature-nav">
+			<!-- 			<nav class="feature-nav">
 				<Button
 					icon="fa-eye"
 					@click="toggleFilterVisible"
@@ -111,7 +111,7 @@ watch(activeOverlay, (newOverlay) => {
 				/>
 
 				<input type="search" placeholder="Search" v-model="filterText" />
-			</nav>
+			</nav> -->
 		</header>
 		<!-- END Panel Nav -->
 
