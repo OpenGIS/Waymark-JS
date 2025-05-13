@@ -47,8 +47,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	function createStore(initConfig = {}) {
 		// Create a merged config
 		config.value = deepMerge(structuredClone(defaultConfig), initConfig);
-
-		isReady.value = true;
 	}
 
 	// === READY ===
@@ -59,6 +57,5 @@ export const useInstanceStore = defineStore("instance", () => {
 		createStore,
 		config,
 		state,
-		isReady,
 	};
 });

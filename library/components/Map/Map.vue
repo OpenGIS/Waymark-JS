@@ -3,13 +3,18 @@ import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
-const { createMap } = useLeaflet();
+const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { config } = useInstanceStore();
+const { config, state } = useInstanceStore();
 
 onMounted(() => {
-  createMap();
+  // Create Map
+  state.map = createMap();
+
+  // Create Tile Layers
+  state.tileLayers = createTileLayerGroup();
+  state.map.addLayer(state.tileLayers.getLayers()[0]);
 });
 </script>
 

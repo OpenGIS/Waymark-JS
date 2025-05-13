@@ -14,44 +14,43 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
 	const instanceStore = useInstanceStore();
-	const { state } = instanceStore;
-	const { config } = storeToRefs(instanceStore);
+	const { state, config } = instanceStore;
 
 	const createMap = () => {
 		// Create & Store Map
-		state.map = L.map(
-			`${config.value.map_options.div_id}-map`,
-			config.value.map_options.leaflet_options,
+		return L.map(
+			`${config.map_options.div_id}-map`,
+			config.map_options.leaflet_options,
 		);
+	};
+
+	const createTileLayerGroup = () => {
+		const layerGroup = L.layerGroup();
 
 		// Create Tile Layers
-		if (Array.isArray(config.value.map_options.tile_layers)) {
+		if (Array.isArray(config.map_options.tile_layers)) {
 			// Each Tile Layer
-			config.value.map_options.tile_layers.forEach((tile_data) => {
+			config.map_options.tile_layers.forEach((tile_data) => {
 				// Create Tile Layer
-				const layer = L.tileLayer(tile_data.layer_url, {
-					maxZoom: parseInt(tile_data.layer_max_zoom),
-					attribution: tile_data.layer_attribution,
-				});
-
-				state.tileLayers.addLayer(layer);
+				layerGroup.addLayer(
+					L.tileLayer(tile_data.layer_url, {
+						maxZoom: parseInt(tile_data.layer_max_zoom),
+						attribution: tile_data.layer_attribution,
+					}),
+				);
 			});
 			// Default to OpenStreetMap
 		} else {
-			const layer = L.tileLayer(
-				"https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1",
-				{
+			layerGroup.addLayer(
+				L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1", {
 					maxZoom: 19,
 					attribution:
 						'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-				},
+				}),
 			);
-
-			state.tileLayers.addLayer(layer);
 		}
 
-		// Add First as active Tile Layer
-		state.tileLayers.getLayers()[0].addTo(state.map);
+		return layerGroup;
 	};
 
 	// Create Markers
@@ -106,6 +105,7 @@ export function useLeaflet() {
 
 	return {
 		createMap,
+		createTileLayerGroup,
 		pointToLayer,
 		onEachFeature,
 	};
