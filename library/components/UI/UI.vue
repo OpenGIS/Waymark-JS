@@ -40,7 +40,7 @@ const handleNavClick = (panelKey = "overlays") => {
 			<Button
 				icon="fa-navicon"
 				@click="handleNavClick('overlays')"
-				:active="activePanel === 'overlays'"
+				:active="state.activePanelKey === 'overlays'"
 			/>
 		</div>
 
@@ -49,7 +49,7 @@ const handleNavClick = (panelKey = "overlays") => {
 			<Button
 				icon="fa-info"
 				@click="handleNavClick('info')"
-				:active="activePanel === 'info'"
+				:active="state.activePanelKey === 'info'"
 			/>
 		</div>
 
@@ -58,7 +58,7 @@ const handleNavClick = (panelKey = "overlays") => {
 			<Button
 				icon="fa-map"
 				@click="handleNavClick('basemaps')"
-				:active="activePanel === 'basemaps'"
+				:active="state.activePanelKey === 'basemaps'"
 			/>
 		</div>
 	</nav>
