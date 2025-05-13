@@ -110,7 +110,7 @@ const handleNavClick = (panelKey = "overlays") => {
 		}
 	}
 
-	&.small {
+	&.display-small {
 		.panels-nav {
 			display: flex;
 			width: 100%;

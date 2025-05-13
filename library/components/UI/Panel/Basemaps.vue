@@ -62,6 +62,8 @@ const updateTileLayer = (tileLayer) => {
 					<img :src="tilePreviewUrl(tileLayer._url)" />
 				</div>
 
+				<div class="attribution" v-html="tileLayer.options.attribution"></div>
+
 				<Button
 					icon="ion-checkmark"
 					@click="updateTileLayer(tileLayer)"

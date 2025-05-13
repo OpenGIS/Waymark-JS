@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { init, state, config } = instanceStore;
-const { classAppend, mapReady } = storeToRefs(instanceStore);
+const { mapReady } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -31,20 +31,37 @@ const props = defineProps({
 // Initialise Instance Store
 init(props);
 
+const classAppend = () => {
+	let classes = [""];
+
+	// Panel Open
+	if (state.panelOpen) {
+		classes.push("panel-open");
+	} else {
+		classes.push("panel-closed");
+	}
+
+	// Orientation
+	if (state.width > state.height) {
+		classes.push("orientation-landscape");
+	} else {
+		classes.push("orientation-portrait");
+	}
+
+	// Small display
+	if (state.width <= 320) {
+		classes.push("display-small");
+	}
+
+	return classes.join(" ");
+};
+
 const container = useTemplateRef("container");
 
 onMounted(() => {
-	// Inital Dimensions
-	const getDimensions = () => {
-		state.width = container.value.clientWidth;
-		state.height = container.value.clientHeight;
-
-		console.log(`Width: ${state.width}, Height: ${state.height}`);
-	};
-	getDimensions();
-
-	// Resize Event
-	window.addEventListener("resize", getDimensions);
+	// Instance dimensions
+	state.width = container.value.clientWidth;
+	state.height = container.value.clientHeight;
 });
 </script>
 
@@ -52,7 +69,7 @@ onMounted(() => {
 	<!-- Instance -->
 	<div
 		ref="container"
-		:class="`instance ${classAppend}`"
+		:class="`instance ${classAppend()}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
 		<Map />

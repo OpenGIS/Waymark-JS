@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
 import L from "leaflet";
@@ -34,10 +34,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		map: null,
 
-		orientation: () => {
-			return state.width > state.height ? "landscape" : "portrait";
-		},
-
 		// Tile Layers
 		activeTileLayer: L.tileLayer(),
 		tileLayers: L.layerGroup(),
@@ -70,6 +66,5 @@ export const useInstanceStore = defineStore("instance", () => {
 		config,
 		state,
 		mapReady,
-		classAppend,
 	};
 });
