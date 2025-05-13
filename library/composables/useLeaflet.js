@@ -53,6 +53,14 @@ export function useLeaflet() {
 		return layerGroup;
 	};
 
+	const createDataLayer = () => {
+		return L.geoJSON(config.geoJSON, {
+			// Create Markers
+			pointToLayer,
+			onEachFeature,
+		});
+	};
+
 	// Create Markers
 	const pointToLayer = (feature, latlng) => {
 		const typeKey = makeKey(feature.properties.type);
@@ -78,7 +86,7 @@ export function useLeaflet() {
 
 		marker.feature = feature;
 
-		marker.addTo(state.map);
+		return marker;
 	};
 
 	const onEachFeature = (feature, layer) => {
@@ -105,6 +113,7 @@ export function useLeaflet() {
 
 	return {
 		createMap,
+		createDataLayer,
 		createTileLayerGroup,
 		pointToLayer,
 		onEachFeature,

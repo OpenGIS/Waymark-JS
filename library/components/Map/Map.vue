@@ -15,6 +15,13 @@ onMounted(() => {
   // Create Tile Layers
   state.tileLayers = createTileLayerGroup();
   state.map.addLayer(state.tileLayers.getLayers()[0]);
+
+  // Create data layer
+  state.dataLayer = createDataLayer();
+  state.map.addLayer(state.dataLayer);
+
+  // Set initial bounds
+  state.map.fitBounds(state.dataLayer.getBounds());
 });
 </script>
 
