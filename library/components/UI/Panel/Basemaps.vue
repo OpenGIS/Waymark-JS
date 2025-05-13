@@ -1,12 +1,8 @@
 <script setup>
-import { storeToRefs } from "pinia";
-
 import { useInstanceStore } from "@/stores/instanceStore.js";
 import Button from "@/components/UI/Common/Button.vue";
 
-const instanceStore = useInstanceStore();
-const { updateTileLayer, state } = instanceStore;
-const { activeTileLayer, tileLayers } = storeToRefs(instanceStore);
+const { state } = useInstanceStore();
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -32,6 +28,19 @@ const tilePreviewUrl = (tile_url) => {
 	// Replace {z}, {x}, {y} with actual values
 	return tile_url.replace("{z}", zoom).replace("{x}", x).replace("{y}", y);
 };
+
+const updateTileLayer = (tileLayer) => {
+	// Remove all tile layers
+	state.tileLayers.eachLayer((layer) => {
+		state.map.removeLayer(layer);
+	});
+
+	// Add selected tile layer
+	state.map.addLayer(tileLayer);
+
+	// Set active tile layer
+	state.activeTileLayer = tileLayer;
+};
 </script>
 
 <template>
@@ -39,13 +48,18 @@ const tilePreviewUrl = (tile_url) => {
 		<h3>Basemaps</h3>
 
 		<div class="list">
-			<div v-for="(tileLayer, index) in tileLayers" :key="index" class="item">
-				<div class="name">{{ tileLayer.name }}</div>
+			<!-- Iterate over Leaflet Tile Layers -->
+			<div
+				v-for="(tileLayer, index) in state.tileLayers.getLayers()"
+				:key="index"
+				:class="`tile-layer ${tileLayer.options.name}`"
+			>
+				<div class="name">{{ tileLayer.options.name }}</div>
 
 				<div class="preview">
-					{{ tilePreviewUrl(tileLayer.url) }}
+					{{ tilePreviewUrl(tileLayer._url) }}
 
-					<img :src="tilePreviewUrl(tileLayer.url)" />
+					<img :src="tilePreviewUrl(tileLayer._url)" />
 				</div>
 
 				<Button

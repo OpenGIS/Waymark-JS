@@ -1,11 +1,14 @@
 <script setup>
 import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { config, state } = useInstanceStore();
+const instanceStore = useInstanceStore();
+const { config, state } = instanceStore;
+const { mapReady } = storeToRefs(instanceStore);
 
 onMounted(() => {
   // Create Map
@@ -13,7 +16,8 @@ onMounted(() => {
 
   // Create Tile Layers
   state.tileLayers = createTileLayerGroup();
-  state.map.addLayer(state.tileLayers.getLayers()[0]);
+  state.activeTileLayer = state.tileLayers.getLayers()[0];
+  state.map.addLayer(state.tileLayers);
 
   // Create data layer
   state.dataLayer = createDataLayer();
@@ -21,6 +25,7 @@ onMounted(() => {
 
   // Set initial bounds
   state.map.fitBounds(state.dataLayer.getBounds());
+  mapReady.value = true;
 });
 </script>
 

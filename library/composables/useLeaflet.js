@@ -33,6 +33,7 @@ export function useLeaflet() {
 					L.tileLayer(tile_data.layer_url, {
 						maxZoom: parseInt(tile_data.layer_max_zoom),
 						attribution: tile_data.layer_attribution,
+						name: tile_data.layer_name,
 					}),
 				);
 			});
@@ -43,6 +44,7 @@ export function useLeaflet() {
 					maxZoom: 19,
 					attribution:
 						'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+					name: "OpenStreetMap",
 				}),
 			);
 		}

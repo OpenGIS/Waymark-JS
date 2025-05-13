@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { init, state, config } = instanceStore;
-const { classAppend } = storeToRefs(instanceStore);
+const { classAppend, mapReady } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -57,7 +57,7 @@ onMounted(() => {
 	>
 		<Map />
 
-		<UI />
+		<UI v-if="mapReady" />
 	</div>
 </template>
 

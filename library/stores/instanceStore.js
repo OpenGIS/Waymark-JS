@@ -14,6 +14,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			leaflet_options: {
 				center: [51.1788144, -1.8261632],
 				zoom: 17,
+				attributionControl: false,
 			},
 		},
 	};
@@ -38,6 +39,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		},
 
 		// Tile Layers
+		activeTileLayer: L.tileLayer(),
 		tileLayers: L.layerGroup(),
 
 		// Overlays
@@ -45,7 +47,14 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// Panels
 		activePanelKey: "basemaps",
+		panelOpen: true,
 	};
+
+	// === REFS ===
+
+	const mapReady = ref(false);
+
+	// === COMPUTED ===
 
 	function init(initConfig = {}) {
 		const parsedConfig = deepMerge(structuredClone(defaultConfig), initConfig);
@@ -60,5 +69,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		init,
 		config,
 		state,
+		mapReady,
+		classAppend,
 	};
 });
