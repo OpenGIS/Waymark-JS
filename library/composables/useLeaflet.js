@@ -1,4 +1,4 @@
-import { computed } from "vue";
+// import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 // Import Leaflet
@@ -14,8 +14,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
 	const instanceStore = useInstanceStore();
-	const { state } = instanceStore;
-	const { config } = storeToRefs(instanceStore);
+	const { state, config } = instanceStore;
 
 	const createMap = () => {
 		// Create & Store Map
@@ -52,63 +51,61 @@ export function useLeaflet() {
 
 		// Add First as active Tile Layer
 		state.tileLayers.getLayers()[0].addTo(state.map);
+	};
 
-		// Add GeoJSON
-		state.geoJSON = L.geoJSON(config.value.geoJSON, {
-			// Create Markers
-			pointToLayer: (feature, latlng) => {
-				const typeKey = makeKey(feature.properties.type);
-				const typeData = getTypeData("marker", typeKey);
-				const iconData = getIconData(typeData);
+	// Create Markers
+	const pointToLayer = (feature, latlng) => {
+		const typeKey = makeKey(feature.properties.type);
+		const typeData = getTypeData("marker", typeKey);
+		const iconData = getIconData(typeData);
 
-				// Create a DOM element for the marker
-				const el = document.createElement("div");
-				el.className = iconData.className;
-				el.innerHTML = iconData.html;
-				el.style.width = `${iconData.iconSize[0]}px`;
-				el.style.height = `${iconData.iconSize[1]}px`;
+		// Create a DOM element for the marker
+		const el = document.createElement("div");
+		el.className = iconData.className;
+		el.innerHTML = iconData.html;
+		el.style.width = `${iconData.iconSize[0]}px`;
+		el.style.height = `${iconData.iconSize[1]}px`;
 
-				// Create Marker
-				const marker = L.marker([latlng.lat, latlng.lng], {
-					icon: L.divIcon({
-						className: iconData.className,
-						html: el,
-						iconSize: iconData.iconSize,
-						iconAnchor: iconData.iconAnchor,
-					}),
+		// Create Marker
+		const marker = L.marker([latlng.lat, latlng.lng], {
+			icon: L.divIcon({
+				className: iconData.className,
+				html: el,
+				iconSize: iconData.iconSize,
+				iconAnchor: iconData.iconAnchor,
+			}),
+		});
+
+		marker.feature = feature;
+
+		marker.addTo(state.map);
+	};
+
+	const onEachFeature = (feature, layer) => {
+		layer.feature = feature;
+
+		const typeKey = makeKey(feature.properties.type);
+		const typeData = getTypeData(getFeatureType(feature), typeKey);
+
+		switch (getFeatureType(feature)) {
+			case "line":
+				layer.setStyle({
+					color: typeData.line_colour,
+					weight: parseFloat(typeData.line_weight),
+					opacity: typeData.line_opacity,
 				});
 
-				marker.feature = feature;
+				break;
 
-				marker.addTo(state.map);
-			},
-			onEachFeature: (feature, layer) => {
-				layer.feature = feature;
-
-				const typeKey = makeKey(feature.properties.type);
-				const typeData = getTypeData(getFeatureType(feature), typeKey);
-
-				switch (getFeatureType(feature)) {
-					case "line":
-						layer.setStyle({
-							color: typeData.line_colour,
-							weight: parseFloat(typeData.line_weight),
-							opacity: typeData.line_opacity,
-						});
-
-						break;
-
-					default:
-						console.warn("Unknown Feature Type", feature);
-						break;
-				}
-			},
-		}).addTo(state.map);
-
-		// Set bounds
-		state.map.fitBounds(state.geoJSON.getBounds());
+			default:
+				console.warn("Unknown Feature Type", feature);
+				break;
+		}
 	};
+
 	return {
 		createMap,
+		pointToLayer,
+		onEachFeature,
 	};
 }

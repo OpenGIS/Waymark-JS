@@ -6,8 +6,7 @@ import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const instanceStore = useInstanceStore();
-const { config } = storeToRefs(instanceStore);
+const { config } = useInstanceStore();
 
 onMounted(() => {
   createMap();

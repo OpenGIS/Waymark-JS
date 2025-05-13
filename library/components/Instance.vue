@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { createStore, state } = instanceStore;
+const { createStore, state, config } = instanceStore;
 const { classAppend } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
@@ -13,7 +13,7 @@ import "@/assets/css/index.css";
 import Map from "@/components/Map/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
-const config = defineProps({
+const props = defineProps({
 	geoJSON: {
 		type: Object,
 		default: () => ({}),
@@ -28,18 +28,20 @@ const config = defineProps({
 	},
 });
 
-// Create Store with provided config
-createStore(config);
-
 onMounted(() => {
-	// Set map options
-	// console.log(state.map._loaded);
+	// Create Store with provided config
+	createStore(props);
+	// Create Store with provided config
 });
 </script>
 
 <template>
 	<!-- Instance -->
-	<div :class="`instance ${classAppend}`" :id="`${config.div_id}-instance`">
+	<div
+		v-if="state.hasInit"
+		:class="`instance ${classAppend}`"
+		:id="`${config.div_id}-instance`"
+	>
 		<Map />
 
 		<!-- <UI v-if="state.map._loaded" /> -->
