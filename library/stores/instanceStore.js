@@ -39,7 +39,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		tileLayers: L.layerGroup(),
 
 		// Overlays
-		overlays: L.featureGroup(),
+		overlays: {
+			markers: L.featureGroup(),
+			lines: L.featureGroup(),
+			shapes: L.featureGroup(),
+		},
 
 		// Panels
 		activePanelKey: "basemaps",

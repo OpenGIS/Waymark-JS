@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
+import { getFeatureType } from "@/helpers/Overlay.js";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
@@ -23,8 +24,29 @@ onMounted(() => {
   state.dataLayer = createDataLayer();
   state.map.addLayer(state.dataLayer);
 
+  // Store Overlays
+  state.overlays.markers = L.layerGroup(
+    state.dataLayer
+      .getLayers()
+      .filter((layer) => getFeatureType(layer.feature) === "marker"),
+  );
+
+  state.overlays.lines = L.layerGroup(
+    state.dataLayer
+      .getLayers()
+      .filter((layer) => getFeatureType(layer.feature) === "line"),
+  );
+
+  state.overlays.shapes = L.layerGroup(
+    state.dataLayer
+      .getLayers()
+      .filter((layer) => getFeatureType(layer.feature) === "shape"),
+  );
+
   // Set initial bounds
   state.map.fitBounds(state.dataLayer.getBounds());
+
+  // Trigger the UI to populate
   mapReady.value = true;
 });
 </script>
