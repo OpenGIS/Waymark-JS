@@ -133,7 +133,7 @@ const props = defineProps({
 
   /* Detail */
   .detail {
-    display: none;
+    // display: none;
   }
 
   &.active {

@@ -113,11 +113,12 @@ const headingStyle = () => {
       </div> -->
     </div>
 
-    <!-- List -->
+    <!-- List Overlays for this Type -->
     <div class="overlays">
-      <div v-for="overlay in props.overlays.getLayers()">
-        <Overlay :overlay="overlay" />
-      </div>
+      <Overlay
+        :overlay="overlay"
+        v-for="overlay in props.overlays.getLayers()"
+      />
     </div>
   </div>
 </template>
@@ -137,8 +138,8 @@ const headingStyle = () => {
     .icon,
     .title,
     .action {
+      padding: 10px 0;
       flex: 1;
-      // height: 60px;
       max-width: 60px;
       vertical-align: middle;
 
@@ -178,11 +179,6 @@ const headingStyle = () => {
           &::before {
             content: "x";
           }
-        }
-      }
-
-      &.action {
-        &.expand {
         }
       }
     }

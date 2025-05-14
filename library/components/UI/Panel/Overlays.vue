@@ -14,6 +14,7 @@ const instanceStore = useInstanceStore();
 const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
+// Sort the Overlays by their types (as layer groups)
 const overlaysByType = () => {
 	const overlays = {
 		marker: {},
@@ -144,18 +145,27 @@ const activeFeatureType = ref("marker");
 		<!-- Panel Content -->
 		<div class="panel-content">
 			<!-- Markers -->
-			<div v-if="activeFeatureType === 'marker'" class="markers type-list">
+			<div v-if="activeFeatureType === 'marker'" class="marker-types type-list">
 				<!-- Iterate over Marker Types  -->
-				<div
+				<Type
 					v-for="(markers, typeKey) in overlaysByType().marker"
 					:key="typeKey"
-				>
-					<Type
-						featureType="marker"
-						:overlayType="typeKey"
-						:overlays="markers"
-					/>
-				</div>
+					featureType="marker"
+					:overlayType="typeKey"
+					:overlays="markers"
+				/>
+			</div>
+
+			<!-- Lines -->
+			<div v-if="activeFeatureType === 'line'" class="line-types type-list">
+				<!-- Iterate over Line Types  -->
+				<Type
+					v-for="(lines, typeKey) in overlaysByType().line"
+					:key="typeKey"
+					featureType="line"
+					:overlayType="typeKey"
+					:overlays="lines"
+				/>
 			</div>
 		</div>
 	</div>
