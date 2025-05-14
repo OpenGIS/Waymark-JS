@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import { getFeatureType, getOverlayType } from "@/helpers/Overlay.js";
+import {
+	getFeatureType,
+	getOverlayTypeKey,
+	getTypeData,
+} from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 import { storeToRefs } from "pinia";
@@ -14,8 +18,10 @@ const instanceStore = useInstanceStore();
 const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
+const filterText = ref("");
+
 // Sort the Overlays by their types (as layer groups)
-const overlaysByType = () => {
+const overlaysByType = computed(() => {
 	const overlays = {
 		marker: {},
 		line: {},
@@ -25,23 +31,48 @@ const overlaysByType = () => {
 	// Iterate over all Overlays
 	state.dataLayer.eachLayer((layer) => {
 		const featureType = getFeatureType(layer.feature);
-		const overlayType = getOverlayType(layer.feature);
+		const overlayTypeKey = getOverlayTypeKey(layer.feature);
+		const typeData = getTypeData(featureType, overlayTypeKey);
 
-		// If not yet present
-		if (!overlays[featureType][overlayType]) {
-			overlays[featureType][overlayType] = L.layerGroup();
+		// Text filter
+		if (filterText.value !== "") {
+			let matches = 0;
+
+			// Text included in type title
+			matches += typeData[featureType + "_title"]
+				.toString()
+				.toLowerCase()
+				.includes(filterText.value.toLowerCase());
+
+			// Check all GeoJSON properties VALUES (not keys) for existence of filterText
+			const properties = Object.values(layer.feature.properties);
+
+			matches += properties.some((p) => {
+				return p
+					.toString()
+					.toLowerCase()
+					.includes(filterText.value.toLowerCase());
+			});
+
+			// If no matches, skip this layer
+			if (matches === 0) {
+				return;
+			}
 		}
 
 		// Add to appropriate type
-		overlays[featureType][overlayType].addLayer(layer);
+		if (!overlays[featureType][overlayTypeKey]) {
+			// Needs creating
+			overlays[featureType][overlayTypeKey] = L.layerGroup();
+		}
+		overlays[featureType][overlayTypeKey].addLayer(layer);
 	});
 
 	return overlays;
-};
+});
 
 const activeFeatureType = ref("marker");
 // const filterVisible = ref(false);
-// const filterText = ref("");
 
 // const filteredOverlays = computed(() => {
 // 	let filtered = [];
@@ -130,15 +161,15 @@ const activeFeatureType = ref("marker");
 				/>
 			</nav>
 
-			<!-- 			<nav class="feature-nav">
-				<Button
+			<nav class="feature-nav">
+				<!--		<Button
 					icon="fa-eye"
 					@click="toggleFilterVisible"
 					:active="filterVisible"
 				/>
-
+-->
 				<input type="search" placeholder="Search" v-model="filterText" />
-			</nav> -->
+			</nav>
 		</header>
 		<!-- END Panel Nav -->
 
@@ -148,7 +179,7 @@ const activeFeatureType = ref("marker");
 			<div v-if="activeFeatureType === 'marker'" class="marker-types type-list">
 				<!-- Iterate over Marker Types  -->
 				<Type
-					v-for="(markers, typeKey) in overlaysByType().marker"
+					v-for="(markers, typeKey) in overlaysByType.marker"
 					:key="typeKey"
 					featureType="marker"
 					:overlayType="typeKey"
@@ -160,7 +191,7 @@ const activeFeatureType = ref("marker");
 			<div v-if="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types  -->
 				<Type
-					v-for="(lines, typeKey) in overlaysByType().line"
+					v-for="(lines, typeKey) in overlaysByType.line"
 					:key="typeKey"
 					featureType="line"
 					:overlayType="typeKey"
