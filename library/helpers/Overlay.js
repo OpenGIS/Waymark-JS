@@ -171,6 +171,10 @@ export function getFeatureType(feature) {
   }
 }
 
+export function getOverlayType(feature) {
+  return makeKey(feature.properties.type);
+}
+
 export function iconHtml(iconData) {
   return '<div class="' + iconData.className + '">' + iconData.html + "</div>";
 }

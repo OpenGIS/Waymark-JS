@@ -1,38 +1,44 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import { getFeatureType } from "@/helpers/Overlay.js";
+import { getFeatureType, getOverlayType } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-import Type from "@/components/UI/Panel/Overlays/List/Type.vue";
+import Type from "@/components/UI/Panel/Overlays/Type.vue";
+import Overlay from "@/components/UI/Panel/Overlays/Overlay.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
-const overlaysByType = (featureType, typeKey) => {
-	switch (featureType) {
-		case "marker":
-			return state.overlays.markers.getLayers().filter((o) => {
-				return o.feature.properties.type === typeKey;
-			});
-		case "line":
-			return state.overlays.lines.getLayers().filter((o) => {
-				return o.feature.properties.type === typeKey;
-			});
-		case "shape":
-			return state.overlays.shapes.getLayers().filter((o) => {
-				return o.feature.properties.type === typeKey;
-			});
-		default:
-			return [];
-	}
+const overlaysByType = () => {
+	const overlays = {
+		marker: {},
+		line: {},
+		shape: {},
+	};
+
+	// Iterate over all Overlays
+	state.dataLayer.eachLayer((layer) => {
+		const featureType = getFeatureType(layer.feature);
+		const overlayType = getOverlayType(layer.feature);
+
+		// If not yet present
+		if (!overlays[featureType][overlayType]) {
+			overlays[featureType][overlayType] = L.layerGroup();
+		}
+
+		// Add to appropriate type
+		overlays[featureType][overlayType].addLayer(layer);
+	});
+
+	return overlays;
 };
 
-const activeFeatureType = ref("line");
+const activeFeatureType = ref("marker");
 // const filterVisible = ref(false);
 // const filterText = ref("");
 
@@ -138,29 +144,17 @@ const activeFeatureType = ref("line");
 		<!-- Panel Content -->
 		<div class="panel-content">
 			<!-- Markers -->
-			<div class="marker-types type-list">
-				<!-- Iterate over Marker Types in config( config.map_options.marker_types) -->
-				<div v-for="(markerType, index) in config.map_options.marker_types">
-					<strong class="heading">{{ markerType.marker_title }}</strong>
-
-					<!-- Iterate over Markers -->
-					<div
-						v-for="(marker, index) in overlaysByType(
-							'marker',
-							makeKey(markerType.marker_title),
-						)"
-					>
-						<div class="overlay marker">
-							<!-- Properties Table -->
-							<table>
-								<!-- Iterate over feature.properties -->
-								<tr v-for="(value, key) in marker.feature.properties">
-									<td class="key">{{ key }}</td>
-									<td class="value">{{ value }}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
+			<div v-if="activeFeatureType === 'marker'" class="markers type-list">
+				<!-- Iterate over Marker Types  -->
+				<div
+					v-for="(markers, typeKey) in overlaysByType().marker"
+					:key="typeKey"
+				>
+					<Type
+						featureType="marker"
+						:overlayType="typeKey"
+						:overlays="markers"
+					/>
 				</div>
 			</div>
 		</div>

@@ -5,7 +5,6 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 const instanceStore = useInstanceStore();
 const { highlightOverlay } = instanceStore;
-const { activeOverlay } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -14,66 +13,61 @@ const props = defineProps({
   overlay: Object,
 });
 
-console.log(props.overlay);
+// const props.overlay.feature = props.overlay.properties;
 
-const feature_props = props.overlay.properties;
+// let visible = ref(true);
 
-let visible = ref(true);
+// const toggleVisible = () => {
+//   visible.value = !visible.value;
 
-const toggleVisible = () => {
-  visible.value = !visible.value;
+//   const element = props.overlay.element;
 
-  const element = props.overlay.element;
+//   if (!visible.value) {
+//     element.classList.add("overlay-hidden");
+//   } else {
+//     element.classList.remove("overlay-hidden");
+//   }
+// };
 
-  if (!visible.value) {
-    element.classList.add("overlay-hidden");
-  } else {
-    element.classList.remove("overlay-hidden");
-  }
-};
+// const centerOn = () => {
+//   instanceStore.setFocus(props.overlay);
+// };
 
-const centerOn = () => {
-  instanceStore.setFocus(props.overlay);
-};
+// const setActive = () => {
+//   instanceStore.setActiveOverlay(props.overlay);
+// };
 
-const setActive = () => {
-  instanceStore.setActiveOverlay(props.overlay);
-};
-
-const isActive = () => {
-  return activeOverlay.value === props.overlay;
-};
+// const isActive = () => {
+//   return activeOverlay.value === props.overlay;
+// };
 </script>
 
 <template>
-  <div
-    :class="`overlay ${isActive() ? 'active' : ''} overlay-${props.overlay.id}`"
-    @mouseenter="highlightOverlay(props.overlay, true)"
-    @mouseleave="highlightOverlay(props.overlay, false)"
-  >
+  <div class="overlay">
     <!-- START Overview -->
-    <div class="overview" @click="setActive">
+    <div class="overview">
       <!-- Title -->
-      <div class="title">{{ feature_props.title }}</div>
+      <div class="title">{{ props.overlay.feature.properties.title }}</div>
 
       <!-- Image -->
       <div class="image">
         <img
-          v-if="feature_props.image_thumbnail_url"
-          :alt="feature_props.title"
-          :src="feature_props.image_thumbnail_url"
+          v-if="props.overlay.feature.properties.image_thumbnail_url"
+          :alt="props.overlay.feature.properties.title"
+          :src="props.overlay.feature.properties.image_thumbnail_url"
         />
       </div>
 
       <!-- Go To -->
-      <div class="action go">
+      <!--       <div class="action go">
         <Button icon="ion-android-arrow-forward" @click.stop="centerOn()" />
-      </div>
+      </div> -->
 
       <!-- Visible -->
-      <div class="action visible">
+      <!--       <div class="action visible">
         <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()" />
       </div>
+ -->
     </div>
     <!-- END Overview -->
 
@@ -82,16 +76,16 @@ const isActive = () => {
       <!-- Image -->
       <div class="image">
         <img
-          v-if="feature_props.image_medium_url"
-          :src="feature_props.image_medium_url"
+          v-if="props.overlay.feature.properties.image_medium_url"
+          :src="props.overlay.feature.properties.image_medium_url"
         />
       </div>
 
       <!-- Description -->
       <div
         class="description"
-        v-if="feature_props.description"
-        v-html="feature_props.description"
+        v-if="props.overlay.feature.properties.description"
+        v-html="props.overlay.feature.properties.description"
       />
     </div>
     <!-- END Detail -->
