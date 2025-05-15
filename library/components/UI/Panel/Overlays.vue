@@ -10,6 +10,9 @@ import { makeKey } from "@/helpers/Common.js";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
+import { useLeaflet } from "@/composables/useLeaflet.js";
+const { isLayerInBounds } = useLeaflet();
+
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Overlay from "@/components/UI/Panel/Overlays/Overlay.vue";
 import Button from "@/components/UI/Common/Button.vue";
@@ -19,9 +22,16 @@ const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
 
 const filterText = ref("");
+const filterInView = ref(true);
+const currentBounds = ref(state.map.getBounds());
+
+// Update map bounds on map move & zoom
+state.map.on("moveend", () => {
+	currentBounds.value = state.map.getBounds();
+});
 
 // Sort the Overlays by their types (as layer groups)
-const overlaysByType = computed(() => {
+const filteredOverlaysByType = computed(() => {
 	const overlays = {
 		marker: {},
 		line: {},
@@ -33,6 +43,11 @@ const overlaysByType = computed(() => {
 		const featureType = getFeatureType(layer.feature);
 		const overlayTypeKey = getOverlayTypeKey(layer.feature);
 		const typeData = getTypeData(featureType, overlayTypeKey);
+
+		// Is it in the current map bounds
+		if (filterInView.value && !isLayerInBounds(layer, currentBounds.value)) {
+			return;
+		}
 
 		// Text filter
 		if (filterText.value !== "") {
@@ -72,7 +87,6 @@ const overlaysByType = computed(() => {
 });
 
 const activeFeatureType = ref("marker");
-// const filterVisible = ref(false);
 
 // const filteredOverlays = computed(() => {
 // 	let filtered = [];
@@ -105,7 +119,7 @@ const activeFeatureType = ref("marker");
 // 		});
 // 	}
 
-// 	return overlaysByType(filtered);
+// 	return filteredOverlaysByType(filtered);
 // });
 
 // const toggleFilterVisible = () => {
@@ -162,12 +176,12 @@ const activeFeatureType = ref("marker");
 			</nav>
 
 			<nav class="feature-nav">
-				<!--		<Button
+				<Button
 					icon="fa-eye"
-					@click="toggleFilterVisible"
-					:active="filterVisible"
+					@click="filterInView = !filterInView"
+					:active="filterInView"
 				/>
--->
+
 				<input type="search" placeholder="Search" v-model="filterText" />
 			</nav>
 		</header>
@@ -179,7 +193,7 @@ const activeFeatureType = ref("marker");
 			<div v-if="activeFeatureType === 'marker'" class="marker-types type-list">
 				<!-- Iterate over Marker Types  -->
 				<Type
-					v-for="(markers, typeKey) in overlaysByType.marker"
+					v-for="(markers, typeKey) in filteredOverlaysByType.marker"
 					:key="typeKey"
 					featureType="marker"
 					:overlayType="typeKey"
@@ -191,7 +205,7 @@ const activeFeatureType = ref("marker");
 			<div v-if="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types  -->
 				<Type
-					v-for="(lines, typeKey) in overlaysByType.line"
+					v-for="(lines, typeKey) in filteredOverlaysByType.line"
 					:key="typeKey"
 					featureType="line"
 					:overlayType="typeKey"
