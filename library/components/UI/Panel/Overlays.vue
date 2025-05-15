@@ -7,8 +7,7 @@ import {
 } from "@/helpers/Overlay.js";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const instanceStore = useInstanceStore();
-const { config, state } = instanceStore;
+const { state } = useInstanceStore();
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
@@ -137,7 +136,7 @@ const filteredOverlaysByType = computed(() => {
 
 			<nav class="feature-nav">
 				<Button
-					icon="fa-eye"
+					icon="ion-android-expand"
 					@click="filterInView = !filterInView"
 					:active="filterInView"
 				/>

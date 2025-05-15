@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 
+import { useInstanceStore } from "@/stores/instanceStore.js";
+const { state } = useInstanceStore();
+
 import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
@@ -14,8 +17,8 @@ const props = defineProps({
   overlays: Object,
 });
 
-let isExpanded = ref(true);
-// let visible = ref(true);
+let isExpanded = ref(false);
+let isVisible = ref(true);
 
 // const toggleHighlight = (overlay) => {
 //   switch (props.byType.featureType) {
@@ -36,30 +39,22 @@ let isExpanded = ref(true);
 //   }
 // };
 
-// const toggleExpanded = () => {
-//   expanded.value = !expanded.value;
-// };
+const toggleVisible = () => {
+  isVisible.value = !isVisible.value;
 
-// const toggleVisible = () => {
-//   visible.value = !visible.value;
+  //Close Type if hiding all
+  if (!isVisible.value) {
+    isExpanded.value = false;
+  }
 
-//   //Close Type if hiding all
-//   if (!visible.value) {
-//     expanded.value = false;
-//   }
+  props.overlays.eachLayer((layer) => {
+    state.map.removeLayer(layer);
 
-//   const overlays = props.byType.overlays;
-
-//   for (let i in overlays) {
-//     const element = overlays[i].element;
-
-//     if (!visible.value) {
-//       element.classList.add("overlay-hidden");
-//     } else {
-//       element.classList.remove("overlay-hidden");
-//     }
-//   }
-// };
+    if (isVisible.value) {
+      state.map.addLayer(layer);
+    }
+  });
+};
 
 const typeData = getTypeData(props.featureType, props.overlayType);
 
@@ -109,12 +104,12 @@ const headingStyle = () => {
       </div>
 
       <!-- Visible -->
-      <!--       <div class="action visible">
+      <div class="action visible">
         <Button
-          :icon="visibleIcon(visible)"
+          :icon="visibleIcon(isVisible)"
           @click.stop="toggleVisible()"
         ></Button>
-      </div> -->
+      </div>
     </div>
 
     <!-- List Overlays for this Type -->
