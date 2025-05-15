@@ -14,7 +14,7 @@ const props = defineProps({
   overlays: Object,
 });
 
-// let expanded = ref(true);
+let isExpanded = ref(true);
 // let visible = ref(true);
 
 // const toggleHighlight = (overlay) => {
@@ -86,8 +86,11 @@ const headingStyle = () => {
 <template>
   <div class="type">
     <!-- Heading -->
-    <!-- <div class="heading" :style="overlayStyle()" @click.stop="toggleExpanded()"> -->
-    <div class="heading" :style="headingStyle()">
+    <div
+      class="heading"
+      :style="headingStyle()"
+      @click.stop="isExpanded = !isExpanded"
+    >
       <!-- Image -->
       <div class="icon">
         <Preview :featureType="props.featureType" :typeData="typeData" />
@@ -96,13 +99,14 @@ const headingStyle = () => {
       <!-- Title -->
       <div class="title">
         {{ typeData[props.featureType + "_title"] }}
-        <!-- <span class="count">{{ byType.overlays.length }}</span> -->
       </div>
 
       <!-- Expand -->
-      <!--       <div class="action expand">
-        <Button :icon="expandedIcon(expanded)"></Button>
-      </div> -->
+      <div class="action expand">
+        <Button :icon="expandedIcon(isExpanded)">
+          <span class="count">{{ overlays.getLayers().length }}</span>
+        </Button>
+      </div>
 
       <!-- Visible -->
       <!--       <div class="action visible">
@@ -114,7 +118,7 @@ const headingStyle = () => {
     </div>
 
     <!-- List Overlays for this Type -->
-    <div class="overlays">
+    <div class="overlays" v-if="isExpanded">
       <Overlay
         :overlay="overlay"
         v-for="overlay in props.overlays.getLayers()"
@@ -171,15 +175,15 @@ const headingStyle = () => {
         font-size: 14px;
         // color: #000;
         // text-shadow: 1px 1px 1px #fff;
+      }
 
-        .count {
-          // float: right;
-          opacity: 0.7;
-          font-size: 80%;
-          &::before {
-            content: "x";
-          }
-        }
+      .count {
+        // float: right;
+        opacity: 0.7;
+        font-size: 80%;
+        // &::before {
+        //   content: "x";
+        // }
       }
     }
   }

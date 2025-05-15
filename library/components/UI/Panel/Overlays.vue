@@ -1,25 +1,25 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import {
 	getFeatureType,
 	getOverlayTypeKey,
 	getTypeData,
 } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
 
-import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
+const instanceStore = useInstanceStore();
+const { config, state } = instanceStore;
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
-import Overlay from "@/components/UI/Panel/Overlays/Overlay.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-const instanceStore = useInstanceStore();
-const { config, state } = instanceStore;
 // const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
+
+// Tabs
+const activeFeatureType = ref("marker");
 
 const filterText = ref("");
 const filterInView = ref(true);
@@ -85,46 +85,6 @@ const filteredOverlaysByType = computed(() => {
 
 	return overlays;
 });
-
-const activeFeatureType = ref("marker");
-
-// const filteredOverlays = computed(() => {
-// 	let filtered = [];
-
-// 	// All Overlays
-// 	if (!filterVisible.value) {
-// 		filtered = state.overlays.eachLayer((o) => {
-// 			return getFeatureType(o.toGeoJSON()) === activeFeatureType.value;
-// 		});
-
-// 		// Only show visible overlays
-// 	} else {
-// 		// filtered = visibleOverlays.value.filter((o) => {
-// 		// 	return o.featureType === activeFeatureType.value;
-// 		// });
-// 	}
-
-// 	// Filter by Search
-// 	if (filterText.value !== "") {
-// 		filtered = filtered.filter((o) => {
-// 			// Check all GeoJSON properties for existence of filterText
-// 			const properties = Object.values(o.feature.properties);
-
-// 			return properties.some((p) => {
-// 				return p
-// 					.toString()
-// 					.toLowerCase()
-// 					.includes(filterText.value.toLowerCase());
-// 			});
-// 		});
-// 	}
-
-// 	return filteredOverlaysByType(filtered);
-// });
-
-// const toggleFilterVisible = () => {
-// 	filterVisible.value = !filterVisible.value;
-// };
 
 // watch(activeOverlay, (newOverlay) => {
 // 	if (newOverlay) {
