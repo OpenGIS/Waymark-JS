@@ -46,6 +46,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		},
 
 		activeOverlay: null,
+		highlightedOverlay: null,
 
 		// Panels
 		activePanelKey: "overlays",

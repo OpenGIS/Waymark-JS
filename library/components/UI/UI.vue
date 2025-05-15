@@ -111,6 +111,12 @@ const handleNavClick = (panelKey = "overlays") => {
 	}
 
 	&.display-small {
+		&.panel-open {
+			.panels-content {
+				max-height: 230px;
+			}
+		}
+
 		.panels-nav {
 			display: flex;
 			width: 100%;

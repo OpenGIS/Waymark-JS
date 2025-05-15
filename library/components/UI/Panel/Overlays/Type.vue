@@ -114,10 +114,7 @@ const headingStyle = () => {
 
     <!-- List Overlays for this Type -->
     <div class="overlays" v-if="isExpanded">
-      <Overlay
-        :overlay="overlay"
-        v-for="overlay in props.overlays.getLayers()"
-      />
+      <Overlay :layer="layer" v-for="layer in props.overlays.getLayers()" />
     </div>
   </div>
 </template>

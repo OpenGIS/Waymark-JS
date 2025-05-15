@@ -1,44 +1,44 @@
 <script setup>
 import { ref } from "vue";
-import { storeToRefs } from "pinia";
+
 import { useInstanceStore } from "@/stores/instanceStore.js";
+const { state } = useInstanceStore();
 
-const instanceStore = useInstanceStore();
-const { highlightOverlay } = instanceStore;
-
-import { visibleIcon } from "@/helpers/Common.js";
+import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
-  overlay: Object,
+  layer: Object,
 });
 
-// const props.overlay.feature = props.overlay.properties;
+let isVisible = ref(true);
+let isExpanded = ref(false);
 
-// let visible = ref(true);
+const toggleVisible = () => {
+  isVisible.value = !isVisible.value;
 
-// const toggleVisible = () => {
-//   visible.value = !visible.value;
+  // Close if hiding
+  if (!isVisible.value) {
+    isExpanded.value = false;
+  }
 
-//   const element = props.overlay.element;
+  state.map.removeLayer(props.layer);
 
-//   if (!visible.value) {
-//     element.classList.add("overlay-hidden");
-//   } else {
-//     element.classList.remove("overlay-hidden");
-//   }
-// };
+  if (isVisible.value) {
+    state.map.addLayer(props.layer);
+  }
+};
 
 // const centerOn = () => {
-//   instanceStore.setFocus(props.overlay);
+//   instanceStore.setFocus(props.layer);
 // };
 
 // const setActive = () => {
-//   instanceStore.setActiveOverlay(props.overlay);
+//   instanceStore.setActiveOverlay(props.layer);
 // };
 
 // const isActive = () => {
-//   return activeOverlay.value === props.overlay;
+//   return activeOverlay.value === props.layer;
 // };
 </script>
 
@@ -46,46 +46,53 @@ const props = defineProps({
   <div class="overlay">
     <!-- START Overview -->
     <div class="overview">
-      <!-- Title -->
-      <div class="title">{{ props.overlay.feature.properties.title }}</div>
-
       <!-- Image -->
       <div class="image">
         <img
-          v-if="props.overlay.feature.properties.image_thumbnail_url"
-          :alt="props.overlay.feature.properties.title"
-          :src="props.overlay.feature.properties.image_thumbnail_url"
+          v-if="props.layer.feature.properties.image_thumbnail_url"
+          :alt="props.layer.feature.properties.title"
+          :src="props.layer.feature.properties.image_thumbnail_url"
         />
       </div>
+
+      <!-- Title -->
+      <div class="title">{{ props.layer.feature.properties.title }}</div>
 
       <!-- Go To -->
       <!--       <div class="action go">
         <Button icon="ion-android-arrow-forward" @click.stop="centerOn()" />
       </div> -->
 
-      <!-- Visible -->
-      <!--       <div class="action visible">
-        <Button :icon="visibleIcon(visible)" @click.stop="toggleVisible()" />
+      <!-- Expanded -->
+      <div class="action visible">
+        <Button
+          :icon="expandedIcon(isExpanded)"
+          @click.stop="isExpanded = !isExpanded"
+        />
       </div>
- -->
+
+      <!-- Visible -->
+      <div class="action visible">
+        <Button :icon="visibleIcon(isVisible)" @click.stop="toggleVisible()" />
+      </div>
     </div>
     <!-- END Overview -->
 
     <!-- START Detail -->
-    <div class="detail">
+    <div class="detail" v-if="isExpanded">
       <!-- Image -->
       <div class="image">
         <img
-          v-if="props.overlay.feature.properties.image_medium_url"
-          :src="props.overlay.feature.properties.image_medium_url"
+          v-if="props.layer.feature.properties.image_medium_url"
+          :src="props.layer.feature.properties.image_medium_url"
         />
       </div>
 
       <!-- Description -->
       <div
         class="description"
-        v-if="props.overlay.feature.properties.description"
-        v-html="props.overlay.feature.properties.description"
+        v-if="props.layer.feature.properties.description"
+        v-html="props.layer.feature.properties.description"
       />
     </div>
     <!-- END Detail -->
@@ -123,10 +130,6 @@ const props = defineProps({
         flex: auto;
         font-size: 13px;
         font-weight: 300;
-      }
-
-      &.action {
-        display: none;
       }
     }
   }
