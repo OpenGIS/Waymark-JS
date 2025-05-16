@@ -15,8 +15,6 @@ const { isLayerInBounds } = useLeaflet();
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-// const { visibleOverlays, activeOverlay } = storeToRefs(instanceStore);
-
 // Tabs
 const activeFeatureType = ref("marker");
 
@@ -84,26 +82,6 @@ const filteredOverlaysByType = computed(() => {
 
 	return overlays;
 });
-
-// watch(activeOverlay, (newOverlay) => {
-// 	if (newOverlay) {
-// 		// Set appropriate active type
-// 		activeFeatureType.value = newOverlay.featureType;
-
-// 		// Scroll to Active Overlay
-// 		const element = state.container.querySelector(
-// 			`.overlay-${newOverlay.id} .overview`,
-// 		);
-
-// 		if (element) {
-// 			element.scrollIntoView({
-// 				behavior: "smooth",
-// 				block: "center",
-// 				inline: "center",
-// 			});
-// 		}
-// 	}
-// });
 </script>
 
 <template>

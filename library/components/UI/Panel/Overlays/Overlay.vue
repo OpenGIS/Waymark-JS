@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { focusMapOnLayer } = useLeaflet();
@@ -7,7 +7,7 @@ const { focusMapOnLayer } = useLeaflet();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { state } = useInstanceStore();
 
-import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
+import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
@@ -15,14 +15,29 @@ const props = defineProps({
 });
 
 let isVisible = ref(true);
-let isExpanded = ref(false);
+
+const toggleActiveLayer = () => {
+  // If already active
+  if (isActiveLayer.value) {
+    // Make inactive
+    state.activeLayer = null;
+  } else {
+    // Make active
+    state.activeLayer = props.layer;
+    focusMapOnLayer(props.layer);
+  }
+};
+
+const isActiveLayer = computed(() => {
+  return state.activeLayer === props.layer;
+});
 
 const toggleVisible = () => {
   isVisible.value = !isVisible.value;
 
   // Close if hiding
-  if (!isVisible.value) {
-    isExpanded.value = false;
+  if (isActiveLayer.value) {
+    toggleActiveLayer();
   }
 
   state.map.removeLayer(props.layer);
@@ -31,10 +46,50 @@ const toggleVisible = () => {
     state.map.addLayer(props.layer);
   }
 };
+
+// Add click handler to the layer
+const container = ref(null);
+
+props.layer.on("click", () => {
+  toggleActiveLayer();
+
+  if (isActiveLayer.value) {
+    // container.value.scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "center",
+    //   inline: "center",
+    // });
+  }
+});
+
+// watch(activeOverlay, (newOverlay) => {
+//  if (newOverlay) {
+//    // Set appropriate active type
+//    activeFeatureType.value = newOverlay.featureType;
+
+//    // Scroll to Active Overlay
+//    const element = state.container.querySelector(
+//      `.overlay-${newOverlay.id} .overview`,
+//    );
+
+//    if (element) {
+//      element.scrollIntoView({
+//        behavior: "smooth",
+//        block: "center",
+//        inline: "center",
+//      });
+//    }
+//  }
+// });
 </script>
 
 <template>
-  <div class="overlay">
+  <div
+    ref="container"
+    class="overlay"
+    @click="toggleActiveLayer()"
+    :class="{ active: isActiveLayer }"
+  >
     <!-- START Overview -->
     <div class="overview">
       <!-- Image -->
@@ -49,22 +104,6 @@ const toggleVisible = () => {
       <!-- Title -->
       <div class="title">{{ props.layer.feature.properties.title }}</div>
 
-      <!-- Go To -->
-      <div class="action go">
-        <Button
-          icon="ion-android-arrow-forward"
-          @click.stop="focusMapOnLayer(props.layer)"
-        />
-      </div>
-
-      <!-- Expanded -->
-      <div class="action visible">
-        <Button
-          :icon="expandedIcon(isExpanded)"
-          @click.stop="isExpanded = !isExpanded"
-        />
-      </div>
-
       <!-- Visible -->
       <div class="action visible">
         <Button :icon="visibleIcon(isVisible)" @click.stop="toggleVisible()" />
@@ -73,7 +112,7 @@ const toggleVisible = () => {
     <!-- END Overview -->
 
     <!-- START Detail -->
-    <div class="detail" v-show="isExpanded">
+    <div class="detail" v-show="isActiveLayer">
       <!-- Image -->
       <div class="image">
         <img

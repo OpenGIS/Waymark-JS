@@ -45,6 +45,8 @@ export const useInstanceStore = defineStore("instance", () => {
 			shapes: L.featureGroup(),
 		},
 
+		activeLayer: null,
+
 		// Panels
 		activePanelKey: "overlays",
 		panelOpen: true,
