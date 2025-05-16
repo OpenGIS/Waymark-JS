@@ -51,15 +51,13 @@ const toggleVisible = () => {
 const container = ref(null);
 
 props.layer.on("click", () => {
-  toggleActiveLayer();
+  state.activeLayer = props.layer;
 
-  if (isActiveLayer.value) {
-    // container.value.scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "center",
-    //   inline: "center",
-    // });
-  }
+  container.value.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+    inline: "center",
+  });
 });
 
 // watch(activeOverlay, (newOverlay) => {

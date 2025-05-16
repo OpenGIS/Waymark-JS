@@ -127,7 +127,10 @@ const filteredOverlaysByType = computed(() => {
 		<!-- Panel Content -->
 		<div class="panel-content">
 			<!-- Markers -->
-			<div v-if="activeFeatureType === 'marker'" class="marker-types type-list">
+			<div
+				v-show="activeFeatureType === 'marker'"
+				class="marker-types type-list"
+			>
 				<!-- Iterate over Marker Types -->
 				<Type
 					v-for="typeKey in Object.keys(filteredOverlaysByType.marker)"
@@ -139,7 +142,7 @@ const filteredOverlaysByType = computed(() => {
 			</div>
 
 			<!-- Lines -->
-			<div v-if="activeFeatureType === 'line'" class="line-types type-list">
+			<div v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
 					v-for="typeKey in Object.keys(filteredOverlaysByType.line)"
