@@ -32,16 +32,25 @@ const handleNavClick = (panelKey = "overlays") => {
 	}
 };
 
+// On container resize, update the map size
 const container = useTemplateRef("container");
 
-// On container resize, update the map size
 onMounted(() => {
 	const resizeObserver = new ResizeObserver(() => {
 		state.map.invalidateSize();
+		state.map.fitBounds(state.dataLayer.getBounds(), {
+			padding: [30, 30],
+			animate: false,
+		});
 	});
 
 	resizeObserver.observe(container.value);
 });
+
+// Check if the panel is active
+const isActivePanel = (panelKey) => {
+	return state.panelOpen && state.activePanelKey === panelKey;
+};
 </script>
 
 <template>
@@ -54,7 +63,7 @@ onMounted(() => {
 				<Button
 					icon="fa-navicon"
 					@click="handleNavClick('overlays')"
-					:active="state.activePanelKey === 'overlays'"
+					:active="isActivePanel('overlays')"
 				/>
 			</div>
 
@@ -63,7 +72,7 @@ onMounted(() => {
 				<Button
 					icon="fa-info"
 					@click="handleNavClick('info')"
-					:active="state.activePanelKey === 'info'"
+					:active="isActivePanel('info')"
 				/>
 			</div>
 
@@ -72,7 +81,7 @@ onMounted(() => {
 				<Button
 					icon="fa-map"
 					@click="handleNavClick('basemaps')"
-					:active="state.activePanelKey === 'basemaps'"
+					:active="isActivePanel('basemaps')"
 				/>
 			</div>
 		</nav>
@@ -119,6 +128,41 @@ onMounted(() => {
 
 			.panels-content {
 				padding-right: 44px;
+			}
+		}
+	}
+
+	&.display-small {
+		.map {
+			width: 100%;
+			height: calc(100% - 44px);
+		}
+
+		.ui {
+			height: 44px;
+			width: 100%;
+
+			.panels-nav {
+				display: flex;
+				top: unset;
+				bottom: 0;
+				height: 44px;
+				width: 100%;
+			}
+		}
+
+		&.panel-open {
+			.map {
+				height: calc(100% - 320px);
+			}
+
+			.ui {
+				height: 320px;
+				width: 100%;
+
+				.panels-content {
+					padding-right: 0;
+				}
 			}
 		}
 	}

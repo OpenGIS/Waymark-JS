@@ -44,7 +44,10 @@ onMounted(() => {
   );
 
   // Set initial bounds
-  state.map.fitBounds(state.dataLayer.getBounds());
+  state.map.fitBounds(state.dataLayer.getBounds(), {
+    padding: [30, 30],
+    animate: false,
+  });
 
   // Trigger the UI to populate
   mapReady.value = true;

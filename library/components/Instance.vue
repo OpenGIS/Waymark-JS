@@ -116,12 +116,12 @@ onMounted(() => {
 		&.panel-open {
 			.map {
 				width: 100%;
-				height: calc(100% - 320px);
+				height: calc(100% - 480px);
 			}
 
 			.ui {
 				width: 100%;
-				height: 320px;
+				// height: 480px;
 			}
 		}
 	}

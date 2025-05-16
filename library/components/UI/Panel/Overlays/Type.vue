@@ -17,7 +17,7 @@ const props = defineProps({
   layerGroup: Object,
 });
 
-let isExpanded = ref(false);
+let isExpanded = ref(true);
 let isVisible = ref(true);
 
 const toggleVisible = () => {
@@ -65,7 +65,9 @@ const headingClick = () => {
   // Close all other types
   if (isExpanded.value) {
     // Set bounds to
-    state.map.fitBounds(props.layerGroup.getBounds());
+    state.map.fitBounds(props.layerGroup.getBounds(), {
+      padding: [30, 30],
+    });
   }
 };
 </script>
