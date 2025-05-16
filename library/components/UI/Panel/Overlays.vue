@@ -77,7 +77,7 @@ const filteredOverlaysByType = computed(() => {
 		// Add to appropriate type
 		if (!overlays[featureType][overlayTypeKey]) {
 			// Needs creating
-			overlays[featureType][overlayTypeKey] = L.layerGroup();
+			overlays[featureType][overlayTypeKey] = L.featureGroup();
 		}
 		overlays[featureType][overlayTypeKey].addLayer(layer);
 	});
@@ -150,25 +150,25 @@ const filteredOverlaysByType = computed(() => {
 		<div class="panel-content">
 			<!-- Markers -->
 			<div v-if="activeFeatureType === 'marker'" class="marker-types type-list">
-				<!-- Iterate over Marker Types  -->
+				<!-- Iterate over Marker Types -->
 				<Type
-					v-for="(markers, typeKey) in filteredOverlaysByType.marker"
+					v-for="typeKey in Object.keys(filteredOverlaysByType.marker)"
 					:key="typeKey"
 					featureType="marker"
+					:layerGroup="filteredOverlaysByType.marker[typeKey]"
 					:overlayType="typeKey"
-					:overlays="markers"
 				/>
 			</div>
 
 			<!-- Lines -->
 			<div v-if="activeFeatureType === 'line'" class="line-types type-list">
-				<!-- Iterate over Line Types  -->
+				<!-- Iterate over Line Types -->
 				<Type
-					v-for="(lines, typeKey) in filteredOverlaysByType.line"
+					v-for="typeKey in Object.keys(filteredOverlaysByType.line)"
 					:key="typeKey"
 					featureType="line"
+					:layerGroup="filteredOverlaysByType.line[typeKey]"
 					:overlayType="typeKey"
-					:overlays="lines"
 				/>
 			</div>
 		</div>

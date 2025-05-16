@@ -79,7 +79,7 @@ const toggleVisible = () => {
     <!-- END Overview -->
 
     <!-- START Detail -->
-    <div class="detail" v-if="isExpanded">
+    <div class="detail" v-show="isExpanded">
       <!-- Image -->
       <div class="image">
         <img

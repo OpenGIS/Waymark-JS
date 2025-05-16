@@ -14,30 +14,11 @@ import Button from "@/components/UI/Common/Button.vue";
 const props = defineProps({
   featureType: String,
   overlayType: String,
-  overlays: Object,
+  layerGroup: Object,
 });
 
 let isExpanded = ref(false);
 let isVisible = ref(true);
-
-// const toggleHighlight = (overlay) => {
-//   switch (props.byType.featureType) {
-//     case "marker":
-//       if (!overlay.element) {
-//         return;
-//       }
-
-//       overlay.element.classList.toggle("overlay-highlight");
-
-//       break;
-
-//     case "line":
-//       // if (!overlay.layer || !overlay.layer.getElement()) {
-//       //   return;
-//       // }
-//       break;
-//   }
-// };
 
 const toggleVisible = () => {
   isVisible.value = !isVisible.value;
@@ -47,7 +28,7 @@ const toggleVisible = () => {
     isExpanded.value = false;
   }
 
-  props.overlays.eachLayer((layer) => {
+  props.layerGroup.eachLayer((layer) => {
     state.map.removeLayer(layer);
 
     if (isVisible.value) {
@@ -64,31 +45,38 @@ const headingStyle = () => {
   switch (props.featureType) {
     case "marker":
       style += `color:${typeData.icon_colour};`;
-      style += `border-color:${typeData.marker_colour};`;
+      style += `border-color:${typeData.icon_colour};`;
       style += `background-color:${typeData.marker_colour};`;
 
       break;
     case "line":
-      style += `color:#fff;background-color:${typeData.line_colour};`;
+      style += `color:${typeData.icon_colour};`;
+      style += `border-color:${typeData.line_colour};`;
 
       break;
   }
 
   return style;
 };
+
+const headingClick = () => {
+  isExpanded.value = !isExpanded.value;
+
+  // Close all other types
+  if (isExpanded.value) {
+    // Set bounds to
+    state.map.fitBounds(props.layerGroup.getBounds());
+  }
+};
 </script>
 
 <template>
   <div class="type">
     <!-- Heading -->
-    <div
-      class="heading"
-      :style="headingStyle()"
-      @click.stop="isExpanded = !isExpanded"
-    >
+    <div class="heading" :style="headingStyle()" @click.stop="headingClick()">
       <!-- Image -->
-      <div class="icon">
-        <Preview :featureType="props.featureType" :typeData="typeData" />
+      <div class="icon" v-if="featureType == 'marker'">
+        <Preview :featureType="featureType" :typeData="typeData" />
       </div>
 
       <!-- Title -->
@@ -99,7 +87,7 @@ const headingStyle = () => {
       <!-- Expand -->
       <div class="action expand">
         <Button :icon="expandedIcon(isExpanded)">
-          <span class="count">{{ overlays.getLayers().length }}</span>
+          <span class="count">{{ layerGroup.getLayers().length }}</span>
         </Button>
       </div>
 
@@ -113,8 +101,8 @@ const headingStyle = () => {
     </div>
 
     <!-- List Overlays for this Type -->
-    <div class="overlays" v-if="isExpanded">
-      <Overlay :layer="layer" v-for="layer in props.overlays.getLayers()" />
+    <div class="overlays" v-show="isExpanded">
+      <Overlay :layer="layer" v-for="layer in layerGroup.getLayers()" />
     </div>
   </div>
 </template>
@@ -127,7 +115,7 @@ const headingStyle = () => {
     display: flex;
 
     align-items: center;
-    border-bottom-width: 2px;
+    border-bottom-width: 3px;
     border-bottom-style: solid;
 
     /* Columns */
@@ -136,11 +124,11 @@ const headingStyle = () => {
     .action {
       padding: 10px 0;
       flex: 1;
-      max-width: 60px;
+      // max-width: 60px;
       vertical-align: middle;
 
       &.icon {
-        width: 60px;
+        // width: 50px;
         position: relative;
         .waymark-marker {
           .waymark-marker-background {
@@ -152,30 +140,20 @@ const headingStyle = () => {
             font-size: 24px !important;
           }
         }
-
-        .count {
-          position: absolute;
-          top: 15px;
-          left: 5px;
-        }
       }
 
       &.title {
-        flex: auto;
-        overflow: hidden;
-        max-width: unset;
+        // flex: auto;
+        // overflow: hidden;
+        // max-width: unset;
+        min-width: 140px;
+        padding-left: 5px;
         font-size: 14px;
-        // color: #000;
-        // text-shadow: 1px 1px 1px #fff;
       }
 
       .count {
-        // float: right;
         opacity: 0.7;
         font-size: 80%;
-        // &::before {
-        //   content: "x";
-        // }
       }
     }
   }
