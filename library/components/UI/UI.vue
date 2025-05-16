@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted, useTemplateRef } from "vue";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { state } = useInstanceStore();
 
@@ -30,108 +31,95 @@ const handleNavClick = (panelKey = "overlays") => {
 		setActivePanel(panelKey);
 	}
 };
+
+const container = useTemplateRef("container");
+
+// On container resize, update the map size
+onMounted(() => {
+	const resizeObserver = new ResizeObserver(() => {
+		state.map.invalidateSize();
+	});
+
+	resizeObserver.observe(container.value);
+});
 </script>
 
 <template>
-	<!-- START Panel Nav -->
-	<nav class="panels-nav">
-		<!-- Overlay -->
-		<div class="nav-item nav-overlays">
-			<Button
-				icon="fa-navicon"
-				@click="handleNavClick('overlays')"
-				:active="state.activePanelKey === 'overlays'"
-			/>
+	<!-- START UI -->
+	<div class="ui" ref="container">
+		<!-- START Panel Nav -->
+		<nav class="panels-nav">
+			<!-- Overlay -->
+			<div class="nav-item nav-overlays">
+				<Button
+					icon="fa-navicon"
+					@click="handleNavClick('overlays')"
+					:active="state.activePanelKey === 'overlays'"
+				/>
+			</div>
+
+			<!-- Info -->
+			<div class="nav-item nav-info">
+				<Button
+					icon="fa-info"
+					@click="handleNavClick('info')"
+					:active="state.activePanelKey === 'info'"
+				/>
+			</div>
+
+			<!-- Basemaps -->
+			<div class="nav-item nav-basemaps">
+				<Button
+					icon="fa-map"
+					@click="handleNavClick('basemaps')"
+					:active="state.activePanelKey === 'basemaps'"
+				/>
+			</div>
+		</nav>
+		<!-- END Panel Nav -->
+
+		<!-- START Panel Content -->
+		<div class="panels-content">
+			<Overlays v-if="showPanel('overlays')" />
+
+			<Info v-if="showPanel('info')" />
+
+			<Basemaps v-if="showPanel('basemaps')" />
 		</div>
-
-		<!-- Info -->
-		<div class="nav-item nav-info">
-			<Button
-				icon="fa-info"
-				@click="handleNavClick('info')"
-				:active="state.activePanelKey === 'info'"
-			/>
-		</div>
-
-		<!-- Basemaps -->
-		<div class="nav-item nav-basemaps">
-			<Button
-				icon="fa-map"
-				@click="handleNavClick('basemaps')"
-				:active="state.activePanelKey === 'basemaps'"
-			/>
-		</div>
-	</nav>
-	<!-- END Panel Nav -->
-
-	<!-- START Panel Content -->
-	<div class="panels-content">
-		<Overlays v-if="showPanel('overlays')" />
-
-		<Info v-if="showPanel('info')" />
-
-		<Basemaps v-if="showPanel('basemaps')" />
+		<!-- END Panel Content -->
 	</div>
-	<!-- END Panel Content -->
+	<!-- END UI -->
 </template>
 
 <style lang="less">
 .instance {
-	.panels-nav {
-		position: absolute;
-		top: 0;
-		right: 0;
-		z-index: 1001;
-		width: 44px;
-		height: 100%;
-		background: rgba(249, 249, 249, 0.7);
-	}
-
-	.panels-content {
+	.ui {
+		position: relative;
 		z-index: 1000;
+
+		.panels-nav {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 44px;
+			height: 100%;
+			z-index: 1010;
+			background: #f9f9f9;
+		}
+
+		.panels-content {
+			height: 100%;
+			overflow-y: auto;
+		}
 	}
 
 	&.panel-open {
-		.panels-content {
-			position: absolute;
-			top: 0;
-			right: 44px;
-			width: calc(320px - 44px);
-			padding-bottom: 44px;
-			height: calc(100% - 44px);
-			overflow-y: auto;
-			background: rgba(249, 249, 249, 0.7);
-		}
-	}
+		.ui {
+			width: 320px;
 
-	&.panel-closed {
-		.panels-content {
-			display: none;
-		}
-	}
-
-	&.display-small {
-		&.panel-open {
 			.panels-content {
-				max-height: 230px;
+				padding-right: 44px;
 			}
-		}
-
-		.panels-nav {
-			display: flex;
-			width: 100%;
-			height: 44px;
-			top: unset;
-			bottom: 0;
-			right: unset;
-			left: 0;
-		}
-		.panels-content {
-			top: unset;
-			bottom: 0;
-			right: unset;
-			height: 300px;
-			width: 100%;
 		}
 	}
 }

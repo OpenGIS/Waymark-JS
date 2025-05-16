@@ -59,17 +59,3 @@ onMounted(() => {
     style="height: 100%"
   ></div>
 </template>
-
-<style lang="less">
-.instance {
-  position: relative;
-  height: 100%;
-  width: 100%;
-
-  /* Transitions */
-  .map,
-  .ui {
-    transition: width 0.25s circular;
-  }
-}
-</style>

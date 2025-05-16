@@ -72,7 +72,7 @@ onMounted(() => {
 		:class="`instance ${classAppend()}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
-		<Map />
+		<Map ref="map" />
 
 		<UI v-if="mapReady" />
 	</div>
@@ -80,14 +80,50 @@ onMounted(() => {
 
 <style lang="less">
 .instance {
-	position: relative;
 	height: 100%;
 	width: 100%;
+	display: flex;
 
 	/* Transitions */
-	.map,
+	// .map,
+	// .ui {
+	// 	transition: width 0.25s circular;
+	// }
+
+	.map {
+		width: calc(100% - 44px);
+		height: 100%;
+	}
+
 	.ui {
-		transition: width 0.25s circular;
+		width: 44px;
+		height: 100%;
+	}
+
+	&.panel-open {
+		.map {
+			width: calc(100% - 320px);
+		}
+
+		.ui {
+			width: 320px;
+		}
+	}
+
+	&.display-small {
+		flex-direction: column;
+
+		&.panel-open {
+			.map {
+				width: 100%;
+				height: calc(100% - 320px);
+			}
+
+			.ui {
+				width: 100%;
+				height: 320px;
+			}
+		}
 	}
 }
 </style>
