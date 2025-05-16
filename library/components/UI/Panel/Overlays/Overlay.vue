@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 
+import { useLeaflet } from "@/composables/useLeaflet.js";
+const { focusMapOnLayer } = useLeaflet();
+
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { state } = useInstanceStore();
 
@@ -28,18 +31,6 @@ const toggleVisible = () => {
     state.map.addLayer(props.layer);
   }
 };
-
-// const centerOn = () => {
-//   instanceStore.setFocus(props.layer);
-// };
-
-// const setActive = () => {
-//   instanceStore.setActiveOverlay(props.layer);
-// };
-
-// const isActive = () => {
-//   return activeOverlay.value === props.layer;
-// };
 </script>
 
 <template>
@@ -59,9 +50,12 @@ const toggleVisible = () => {
       <div class="title">{{ props.layer.feature.properties.title }}</div>
 
       <!-- Go To -->
-      <!--       <div class="action go">
-        <Button icon="ion-android-arrow-forward" @click.stop="centerOn()" />
-      </div> -->
+      <div class="action go">
+        <Button
+          icon="ion-android-arrow-forward"
+          @click.stop="focusMapOnLayer(props.layer)"
+        />
+      </div>
 
       <!-- Expanded -->
       <div class="action visible">

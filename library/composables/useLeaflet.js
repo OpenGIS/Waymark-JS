@@ -144,6 +144,22 @@ export function useLeaflet() {
 		return contains;
 	};
 
+	const focusMapOnLayer = (layer) => {
+		switch (getFeatureType(layer.feature)) {
+			case "marker":
+				state.map.flyTo(layer.getLatLng());
+
+				break;
+
+			case "line":
+				// Set to bounds of Line
+				const lineBounds = L.latLngBounds(layer.getLatLngs());
+				state.map.flyToBounds(lineBounds);
+
+				break;
+		}
+	};
+
 	return {
 		createMap,
 		createDataLayer,
@@ -152,5 +168,6 @@ export function useLeaflet() {
 		onEachFeature,
 		isLayerInView,
 		isLayerInBounds,
+		focusMapOnLayer,
 	};
 }
