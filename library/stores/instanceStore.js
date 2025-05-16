@@ -50,6 +50,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Panels
 		activePanelKey: "overlays",
 		panelOpen: true,
+
+		activeFeatureType: "marker",
 	};
 
 	// === REFS ===

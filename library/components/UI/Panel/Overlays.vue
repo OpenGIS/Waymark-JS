@@ -15,9 +15,6 @@ const { isLayerInBounds } = useLeaflet();
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-// Tabs
-const activeFeatureType = ref("marker");
-
 const filterText = ref("");
 const filterInView = ref(true);
 const currentBounds = ref(state.map.getBounds());
@@ -89,26 +86,26 @@ const filteredOverlaysByType = computed(() => {
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
 			<!-- Nav -->
-			<nav class="type-nav" :value="activeFeatureType">
+			<nav class="type-nav" :value="state.activeFeatureType">
 				<Button
 					v-if="state.overlays.markers.getLayers().length"
 					icon="ion-ios-location-outline"
-					@click="activeFeatureType = 'marker'"
-					:active="activeFeatureType === 'marker'"
+					@click="state.activeFeatureType = 'marker'"
+					:active="state.activeFeatureType === 'marker'"
 				/>
 
 				<Button
 					v-if="state.overlays.lines.getLayers().length"
 					icon="ion-arrow-graph-up-right"
-					@click="activeFeatureType = 'line'"
-					:active="activeFeatureType === 'line'"
+					@click="state.activeFeatureType = 'line'"
+					:active="state.activeFeatureType === 'line'"
 				/>
 
 				<Button
 					v-if="state.overlays.shapes.getLayers().length"
 					icon="ion-android-checkbox-outline-blank"
-					@click="activeFeatureType = 'shape'"
-					:active="activeFeatureType === 'shape'"
+					@click="state.activeFeatureType = 'shape'"
+					:active="state.activeFeatureType === 'shape'"
 				/>
 			</nav>
 
@@ -128,7 +125,7 @@ const filteredOverlaysByType = computed(() => {
 		<div class="panel-content">
 			<!-- Markers -->
 			<div
-				v-show="activeFeatureType === 'marker'"
+				v-show="state.activeFeatureType === 'marker'"
 				class="marker-types type-list"
 			>
 				<!-- Iterate over Marker Types -->
@@ -142,7 +139,10 @@ const filteredOverlaysByType = computed(() => {
 			</div>
 
 			<!-- Lines -->
-			<div v-show="activeFeatureType === 'line'" class="line-types type-list">
+			<div
+				v-show="state.activeFeatureType === 'line'"
+				class="line-types type-list"
+			>
 				<!-- Iterate over Line Types -->
 				<Type
 					v-for="typeKey in Object.keys(filteredOverlaysByType.line)"

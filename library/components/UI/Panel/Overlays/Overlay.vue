@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed } from "vue";
 
+import { getFeatureType } from "@/helpers/Overlay.js";
+
 import { useLeaflet } from "@/composables/useLeaflet.js";
-const { focusMapOnLayer } = useLeaflet();
+const { focusMapOnLayer, highlightLayer, unHighlightLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { state } = useInstanceStore();
@@ -16,16 +18,28 @@ const props = defineProps({
 
 let isVisible = ref(true);
 
-const toggleActiveLayer = () => {
-  // If already active
-  if (isActiveLayer.value) {
+const setActiveLayer = () => {
+  // If active layer is set, remove it
+  if (state.activeLayer) {
+    // If this is the active layer
+    if (state.activeLayer === props.layer) {
+      // Increase zoom
+      state.map.setZoom(state.map.getZoom() + 1);
+
+      return;
+    }
+
+    // Remove highlight
+    unHighlightLayer(state.activeLayer);
+
     // Make inactive
     state.activeLayer = null;
-  } else {
-    // Make active
-    state.activeLayer = props.layer;
-    focusMapOnLayer(props.layer);
   }
+
+  // Make active
+  state.activeLayer = props.layer;
+  focusMapOnLayer(props.layer);
+  highlightLayer(props.layer);
 };
 
 const isActiveLayer = computed(() => {
@@ -51,41 +65,22 @@ const toggleVisible = () => {
 const container = ref(null);
 
 props.layer.on("click", () => {
-  state.activeLayer = props.layer;
+  setActiveLayer();
+  state.activeFeatureType = getFeatureType(props.layer.feature);
 
   container.value.scrollIntoView({
     behavior: "smooth",
     block: "center",
-    inline: "center",
+    inline: "nearest",
   });
 });
-
-// watch(activeOverlay, (newOverlay) => {
-//  if (newOverlay) {
-//    // Set appropriate active type
-//    activeFeatureType.value = newOverlay.featureType;
-
-//    // Scroll to Active Overlay
-//    const element = state.container.querySelector(
-//      `.overlay-${newOverlay.id} .overview`,
-//    );
-
-//    if (element) {
-//      element.scrollIntoView({
-//        behavior: "smooth",
-//        block: "center",
-//        inline: "center",
-//      });
-//    }
-//  }
-// });
 </script>
 
 <template>
   <div
     ref="container"
     class="overlay"
-    @click="toggleActiveLayer()"
+    @click="setActiveLayer()"
     :class="{ active: isActiveLayer }"
   >
     <!-- START Overview -->
@@ -131,6 +126,20 @@ props.layer.on("click", () => {
 </template>
 
 <style lang="less">
+.map {
+  .waymark-marker {
+    &.waymark-active {
+      .waymark-marker-background {
+        border: 4px solid red;
+      }
+      .waymark-marker-icon::before {
+        padding-top: 8px;
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
 .overlay {
   /* Overview */
   .overview {
