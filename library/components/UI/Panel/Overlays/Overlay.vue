@@ -51,7 +51,11 @@ const toggleVisible = () => {
 
   // Close if hiding
   if (isActiveLayer.value) {
-    toggleActiveLayer();
+    // Remove highlight
+    unHighlightLayer(state.activeLayer);
+
+    // Make inactive
+    state.activeLayer = null;
   }
 
   state.map.removeLayer(props.layer);
@@ -67,6 +71,8 @@ const container = ref(null);
 props.layer.on("click", () => {
   setActiveLayer();
   state.activeFeatureType = getFeatureType(props.layer.feature);
+  state.activePanelKey = "overlays";
+  state.panelOpen = true;
 
   container.value.scrollIntoView({
     behavior: "smooth",

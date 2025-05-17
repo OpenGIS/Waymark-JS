@@ -89,11 +89,11 @@ const isActivePanel = (panelKey) => {
 
 		<!-- START Panel Content -->
 		<div class="panels-content">
-			<Overlays v-if="showPanel('overlays')" />
+			<Overlays v-show="showPanel('overlays')" />
 
-			<Info v-if="showPanel('info')" />
+			<Info v-show="showPanel('info')" />
 
-			<Basemaps v-if="showPanel('basemaps')" />
+			<Basemaps v-show="showPanel('basemaps')" />
 		</div>
 		<!-- END Panel Content -->
 	</div>

@@ -58,8 +58,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const mapReady = ref(false);
 
-	// === COMPUTED ===
-
 	function init(initConfig = {}) {
 		const parsedConfig = deepMerge(structuredClone(defaultConfig), initConfig);
 

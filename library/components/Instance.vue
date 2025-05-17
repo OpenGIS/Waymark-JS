@@ -85,10 +85,11 @@ onMounted(() => {
 	display: flex;
 
 	/* Transitions */
-	// .map,
-	// .ui {
-	// 	transition: width 0.25s circular;
-	// }
+	.map,
+	.ui {
+		transition: width 0.25s ease-in-out;
+		transition: height 0.25s ease-in-out;
+	}
 
 	.map {
 		width: calc(100% - 44px);
