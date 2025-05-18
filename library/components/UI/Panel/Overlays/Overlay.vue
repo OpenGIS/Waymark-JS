@@ -135,6 +135,7 @@ props.layer.on("click", () => {
 .map {
   .waymark-marker {
     &.waymark-active {
+      z-index: 1000 !important;
       .waymark-marker-background {
         border: 4px solid red;
       }
@@ -182,7 +183,11 @@ props.layer.on("click", () => {
 
   /* Detail */
   .detail {
-    // display: none;
+    .image {
+      img {
+        max-height: 120px;
+      }
+    }
   }
 
   &.active {
@@ -193,14 +198,6 @@ props.layer.on("click", () => {
       .title {
         font-weight: bold;
       }
-
-      .action {
-        display: block;
-      }
-    }
-
-    .detail {
-      display: block;
     }
   }
 }
