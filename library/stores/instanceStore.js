@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, markRaw } from "vue";
 import { defineStore } from "pinia";
 
 import L from "leaflet";
@@ -19,11 +19,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		},
 	};
 
-	const config = {};
+	const config = markRaw({});
 
 	// === STATE ===
 
-	const state = {
+	const state = markRaw({
 		dataLayer: null,
 
 		container: {},
@@ -52,7 +52,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen: true,
 
 		activeFeatureType: "marker",
-	};
+	});
 
 	// === REFS ===
 
