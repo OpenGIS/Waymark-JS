@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, useTemplateRef } from "vue";
+import { onMounted, useTemplateRef, computed } from "vue";
 
 import { storeToRefs } from "pinia";
 
@@ -31,37 +31,32 @@ const props = defineProps({
 // Initialise Instance Store
 init(props);
 
-const classAppend = () => {
+// Get container
+state.container = document.getElementById(`${config.map_options.div_id}`);
+
+const classAppend = computed(() => {
 	let classes = [""];
 
 	// Panel Open
-	if (state.panelOpen) {
+	if (state.panelOpen.value) {
 		classes.push("panel-open");
 	} else {
 		classes.push("panel-closed");
 	}
 
 	// Orientation
-	if (state.width > state.height) {
+	if (state.container.clientWidth > state.container.clientHeight) {
 		classes.push("orientation-landscape");
 	} else {
 		classes.push("orientation-portrait");
 	}
 
 	// Small display
-	if (state.width <= 320) {
+	if (state.container.clientWidth <= 320) {
 		classes.push("display-small");
 	}
 
 	return classes.join(" ");
-};
-
-const container = useTemplateRef("container");
-
-onMounted(() => {
-	// Instance dimensions
-	state.width = container.value.clientWidth;
-	state.height = container.value.clientHeight;
 });
 </script>
 
@@ -69,7 +64,7 @@ onMounted(() => {
 	<!-- Instance -->
 	<div
 		ref="container"
-		:class="`instance ${classAppend()}`"
+		:class="`instance ${classAppend}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
 		<Map ref="map" />

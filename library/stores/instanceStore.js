@@ -1,4 +1,4 @@
-import { ref, markRaw } from "vue";
+import { ref, markRaw, shallowRef } from "vue";
 import { defineStore } from "pinia";
 
 import L from "leaflet";
@@ -7,6 +7,35 @@ import { deepMerge } from "@/helpers/Common.js";
 export const useInstanceStore = defineStore("instance", () => {
 	// State
 	const config = markRaw({});
+
+	const state = shallowRef({
+		dataLayer: null,
+		container: ref({}),
+
+		// Map
+
+		map: null,
+
+		// Tile Layers
+		activeTileLayer: L.tileLayer(),
+		tileLayers: L.layerGroup(),
+
+		// Overlays
+		overlays: {
+			markers: L.featureGroup(),
+			lines: L.featureGroup(),
+			shapes: L.featureGroup(),
+		},
+
+		activeLayer: null,
+
+		// Panels
+		activePanelKey: "overlays",
+		panelOpen: ref(true),
+
+		activeFeatureType: "marker",
+	});
+
 	const mapReady = ref(false);
 
 	// Getters
@@ -35,42 +64,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		}
 	}
 
-	// === STATE ===
-
-	const state = markRaw({
-		dataLayer: null,
-
-		container: {},
-		width: 0,
-		height: 0,
-
-		// Map
-
-		map: null,
-
-		// Tile Layers
-		activeTileLayer: L.tileLayer(),
-		tileLayers: L.layerGroup(),
-
-		// Overlays
-		overlays: {
-			markers: L.featureGroup(),
-			lines: L.featureGroup(),
-			shapes: L.featureGroup(),
-		},
-
-		activeLayer: null,
-
-		// Panels
-		activePanelKey: "overlays",
-		panelOpen: true,
-
-		activeFeatureType: "marker",
-	});
-
 	return {
 		// State
-
 		config,
 		state,
 		mapReady,

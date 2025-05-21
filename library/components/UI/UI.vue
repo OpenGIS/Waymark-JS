@@ -10,16 +10,16 @@ import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const showPanel = (panelKey) => {
-	return state.activePanelKey === panelKey && state.panelOpen;
+	return state.activePanelKey === panelKey && state.panelOpen.value;
 };
 
 function togglePanel() {
-	state.panelOpen = !state.panelOpen;
+	state.panelOpen.value = !state.panelOpen.value;
 }
 
 function setActivePanel(panelKey = "overlays") {
 	state.activePanelKey = panelKey;
-	state.panelOpen = true;
+	state.panelOpen.value = true;
 }
 
 const handleNavClick = (panelKey = "overlays") => {
@@ -49,7 +49,7 @@ onMounted(() => {
 
 // Check if the panel is active
 const isActivePanel = (panelKey) => {
-	return state.panelOpen && state.activePanelKey === panelKey;
+	return state.panelOpen.value && state.activePanelKey === panelKey;
 };
 </script>
 

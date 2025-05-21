@@ -72,7 +72,7 @@ props.layer.on("click", () => {
   setActiveLayer();
   state.activeFeatureType = getFeatureType(props.layer.feature);
   state.activePanelKey = "overlays";
-  state.panelOpen = true;
+  state.panelOpen.value = true;
 
   container.value.scrollIntoView({
     behavior: "smooth",
