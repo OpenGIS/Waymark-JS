@@ -9,8 +9,7 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { state } = useInstanceStore();
-const { map, dataLayer } = storeToRefs(instanceStore);
+const { map, dataLayer, activeFeatureType } = storeToRefs(instanceStore);
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
@@ -89,7 +88,7 @@ const filteredOverlaysByType = computed(() => {
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
 			<!-- Nav -->
-			<nav class="type-nav" :value="state.activeFeatureType">
+			<nav class="type-nav" :value="activeFeatureType">
 				<Button
 					v-if="
 						dataLayer
@@ -98,8 +97,8 @@ const filteredOverlaysByType = computed(() => {
 							.length
 					"
 					icon="ion-ios-location-outline"
-					@click="state.activeFeatureType = 'marker'"
-					:active="state.activeFeatureType === 'marker'"
+					@click="activeFeatureType = 'marker'"
+					:active="activeFeatureType === 'marker'"
 				/>
 
 				<Button
@@ -110,8 +109,8 @@ const filteredOverlaysByType = computed(() => {
 							.length
 					"
 					icon="ion-arrow-graph-up-right"
-					@click="state.activeFeatureType = 'line'"
-					:active="state.activeFeatureType === 'line'"
+					@click="activeFeatureType = 'line'"
+					:active="activeFeatureType === 'line'"
 				/>
 
 				<Button
@@ -122,8 +121,8 @@ const filteredOverlaysByType = computed(() => {
 							.length
 					"
 					icon="ion-android-checkbox-outline-blank"
-					@click="state.activeFeatureType = 'shape'"
-					:active="state.activeFeatureType === 'shape'"
+					@click="activeFeatureType = 'shape'"
+					:active="activeFeatureType === 'shape'"
 				/>
 			</nav>
 
@@ -143,7 +142,7 @@ const filteredOverlaysByType = computed(() => {
 		<div class="panel-content">
 			<!-- Markers -->
 			<div
-				v-show="state.activeFeatureType === 'marker'"
+				v-show="activeFeatureType === 'marker'"
 				class="marker-types type-list"
 			>
 				<!-- Iterate over Marker Types -->
@@ -157,10 +156,7 @@ const filteredOverlaysByType = computed(() => {
 			</div>
 
 			<!-- Lines -->
-			<div
-				v-show="state.activeFeatureType === 'line'"
-				class="line-types type-list"
-			>
+			<div v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
 					v-for="typeKey in Object.keys(filteredOverlaysByType.line)"

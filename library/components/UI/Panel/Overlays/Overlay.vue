@@ -9,8 +9,8 @@ const { focusMapOnLayer, highlightLayer, unHighlightLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { state } = instanceStore;
-const { map, panelOpen } = storeToRefs(instanceStore);
+const { map, panelOpen, activeLayer, activePanelKey, activeFeatureType } =
+  storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -23,9 +23,9 @@ let isVisible = ref(true);
 
 const setActiveLayer = () => {
   // If active layer is set, remove it
-  if (state.activeLayer) {
+  if (activeLayer.value) {
     // If this is the active layer
-    if (state.activeLayer === props.layer) {
+    if (activeLayer.value === props.layer) {
       // Increase zoom
       map.value.setZoom(map.value.getZoom() + 1);
 
@@ -33,20 +33,20 @@ const setActiveLayer = () => {
     }
 
     // Remove highlight
-    unHighlightLayer(state.activeLayer);
+    unHighlightLayer(activeLayer.value);
 
     // Make inactive
-    state.activeLayer = null;
+    activeLayer.value = null;
   }
 
   // Make active
-  state.activeLayer = props.layer;
+  activeLayer.value = props.layer;
   focusMapOnLayer(props.layer);
   highlightLayer(props.layer);
 };
 
 const isActiveLayer = computed(() => {
-  return state.activeLayer === props.layer;
+  return activeLayer.value === props.layer;
 });
 
 const toggleVisible = () => {
@@ -55,10 +55,10 @@ const toggleVisible = () => {
   // Close if hiding
   if (isActiveLayer.value) {
     // Remove highlight
-    unHighlightLayer(state.activeLayer);
+    unHighlightLayer(activeLayer.value);
 
     // Make inactive
-    state.activeLayer = null;
+    activeLayer.value = null;
   }
 
   map.value.removeLayer(props.layer);
@@ -73,8 +73,8 @@ const container = ref(null);
 
 props.layer.on("click", () => {
   setActiveLayer();
-  state.activeFeatureType = getFeatureType(props.layer.feature);
-  state.activePanelKey = "overlays";
+  activeFeatureType.value = getFeatureType(props.layer.feature);
+  activePanelKey.value = "overlays";
   panelOpen.value = true;
 
   container.value.scrollIntoView({

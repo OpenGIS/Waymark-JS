@@ -1,7 +1,6 @@
-import { ref, markRaw, shallowRef } from "vue";
+import { shallowRef } from "vue";
 import { defineStore } from "pinia";
 
-import L from "leaflet";
 import { deepMerge } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
@@ -11,21 +10,17 @@ export const useInstanceStore = defineStore("instance", () => {
 	const dataLayer = shallowRef({});
 	const map = shallowRef({});
 
-	const panelOpen = ref(true);
+	const panelOpen = shallowRef(true);
 
 	const tileLayers = shallowRef({});
 	const activeTileLayer = shallowRef({});
 
-	const state = shallowRef({
-		activeLayer: null,
+	const activeLayer = shallowRef({});
 
-		// Panels
-		activePanelKey: "overlays",
+	const activePanelKey = shallowRef("overlays");
+	const activeFeatureType = shallowRef("marker");
 
-		activeFeatureType: "marker",
-	});
-
-	const mapReady = ref(false);
+	const mapReady = shallowRef(false);
 
 	// Getters
 
@@ -58,9 +53,9 @@ export const useInstanceStore = defineStore("instance", () => {
 		map,
 		tileLayers,
 		activeTileLayer,
-
-		// Del...
-		state,
+		activeLayer,
+		activePanelKey,
+		activeFeatureType,
 
 		// Getters
 

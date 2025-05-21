@@ -9,11 +9,11 @@ import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
-const { state } = instanceStore;
-const { panelOpen, map, dataLayer } = storeToRefs(instanceStore);
+const { panelOpen, map, dataLayer, activePanelKey } =
+	storeToRefs(instanceStore);
 
 const showPanel = (panelKey) => {
-	return state.activePanelKey === panelKey && panelOpen.value;
+	return activePanelKey.value === panelKey && panelOpen.value;
 };
 
 function togglePanel() {
@@ -21,13 +21,13 @@ function togglePanel() {
 }
 
 function setActivePanel(panelKey = "overlays") {
-	state.activePanelKey = panelKey;
+	activePanelKey.value = panelKey;
 	panelOpen.value = true;
 }
 
 const handleNavClick = (panelKey = "overlays") => {
 	// Toggle existing panel
-	if (panelKey === state.activePanelKey) {
+	if (panelKey === activePanelKey.value) {
 		togglePanel();
 		// Switch to a different panel
 	} else {
@@ -52,7 +52,7 @@ onMounted(() => {
 
 // Check if the panel is active
 const isActivePanel = (panelKey) => {
-	return panelOpen.value && state.activePanelKey === panelKey;
+	return panelOpen.value && activePanelKey.value === panelKey;
 };
 </script>
 
