@@ -5,8 +5,8 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { init, state } = instanceStore;
-const { mapReady, config } = storeToRefs(instanceStore);
+const { init } = instanceStore;
+const { mapReady, config, container, panelOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -32,27 +32,27 @@ const props = defineProps({
 init(props);
 
 // Get container
-state.container = document.getElementById(`${config.value.map_options.div_id}`);
+container.value = document.getElementById(`${config.value.map_options.div_id}`);
 
 const classAppend = computed(() => {
 	let classes = [""];
 
 	// Panel Open
-	if (state.panelOpen.value) {
+	if (panelOpen.value) {
 		classes.push("panel-open");
 	} else {
 		classes.push("panel-closed");
 	}
 
 	// Orientation
-	if (state.container.clientWidth > state.container.clientHeight) {
+	if (container.value.clientWidth > container.value.clientHeight) {
 		classes.push("orientation-landscape");
 	} else {
 		classes.push("orientation-portrait");
 	}
 
 	// Small display
-	if (state.container.clientWidth <= 320) {
+	if (container.value.clientWidth <= 320) {
 		classes.push("display-small");
 	}
 

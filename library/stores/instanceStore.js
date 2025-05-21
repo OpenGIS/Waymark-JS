@@ -7,10 +7,11 @@ import { deepMerge } from "@/helpers/Common.js";
 export const useInstanceStore = defineStore("instance", () => {
 	// State
 	const config = shallowRef({});
+	const container = shallowRef(null);
+	const panelOpen = ref(true);
 
 	const state = shallowRef({
 		dataLayer: null,
-		container: ref({}),
 
 		// Map
 
@@ -31,7 +32,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// Panels
 		activePanelKey: "overlays",
-		panelOpen: ref(true),
 
 		activeFeatureType: "marker",
 	});
@@ -62,8 +62,11 @@ export const useInstanceStore = defineStore("instance", () => {
 	return {
 		// State
 		config,
-		state,
 		mapReady,
+		container,
+		panelOpen,
+
+		state,
 
 		// Getters
 

@@ -1,25 +1,28 @@
 <script setup>
 import { onMounted, useTemplateRef } from "vue";
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { state } = useInstanceStore();
+import { storeToRefs } from "pinia";
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
-
 import Button from "@/components/UI/Common/Button.vue";
 
+const instanceStore = useInstanceStore();
+const { state } = instanceStore;
+const { panelOpen } = storeToRefs(instanceStore);
+
 const showPanel = (panelKey) => {
-	return state.activePanelKey === panelKey && state.panelOpen.value;
+	return state.activePanelKey === panelKey && panelOpen.value;
 };
 
 function togglePanel() {
-	state.panelOpen.value = !state.panelOpen.value;
+	panelOpen.value = !panelOpen.value;
 }
 
 function setActivePanel(panelKey = "overlays") {
 	state.activePanelKey = panelKey;
-	state.panelOpen.value = true;
+	panelOpen.value = true;
 }
 
 const handleNavClick = (panelKey = "overlays") => {
@@ -49,7 +52,7 @@ onMounted(() => {
 
 // Check if the panel is active
 const isActivePanel = (panelKey) => {
-	return state.panelOpen.value && state.activePanelKey === panelKey;
+	return panelOpen.value && state.activePanelKey === panelKey;
 };
 </script>
 
