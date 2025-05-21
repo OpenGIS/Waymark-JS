@@ -1,16 +1,13 @@
 <script setup>
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
-import { getFeatureType } from "@/helpers/Overlay.js";
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const instanceStore = useInstanceStore();
-const { config, state } = instanceStore;
-const { mapReady, dataLayer, map, tileLayers, activeTileLayer } =
-  storeToRefs(instanceStore);
+const { config, mapReady, dataLayer, map, tileLayers, activeTileLayer } =
+  storeToRefs(useInstanceStore());
 
 onMounted(() => {
   // Create Map

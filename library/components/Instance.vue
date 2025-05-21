@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, useTemplateRef, computed } from "vue";
+import { computed } from "vue";
 
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { init } = instanceStore;
 const { mapReady, config, container, panelOpen } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
@@ -29,7 +28,7 @@ const props = defineProps({
 });
 
 // Initialise Instance Store
-init(props);
+instanceStore.init(props);
 
 // Get container
 container.value = document.getElementById(`${config.value.map_options.div_id}`);

@@ -1,28 +1,31 @@
 import { useInstanceStore } from "@/stores/instanceStore.js";
 import { makeKey } from "@/helpers/Common.js";
+import { storeToRefs } from "pinia";
 
 export function getTypeData(featureType, typeKey) {
-  const { config } = useInstanceStore();
+  const { config } = storeToRefs(useInstanceStore());
 
   var type = {};
 
   //Iterate over all types
-  for (var i in config.map_options[featureType + "_types"]) {
+  for (var i in config.value.map_options[featureType + "_types"]) {
     //Use first as default
     if (i == 0) {
-      type = config.map_options[featureType + "_types"][i];
+      type = config.value.map_options[featureType + "_types"][i];
     }
 
     //Grab title
     var type_title =
-      config.map_options[featureType + "_types"][i][featureType + "_title"];
+      config.value.map_options[featureType + "_types"][i][
+        featureType + "_title"
+      ];
 
     //Has title
     if (type_title) {
       //Found (run both through make_key, just to be on safe side)
       if (makeKey(typeKey) == makeKey(type_title)) {
         // console.log('Found=' + typeKey)
-        type = config.map_options[featureType + "_types"][i];
+        type = config.value.map_options[featureType + "_types"][i];
       } else {
         // console.log('Not found=' + typeKey)
       }

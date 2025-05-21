@@ -8,14 +8,14 @@ export const useInstanceStore = defineStore("instance", () => {
 	const config = shallowRef({});
 	const container = shallowRef(null);
 	const dataLayer = shallowRef({});
-	const map = shallowRef({});
+	const map = shallowRef(null);
 
 	const panelOpen = shallowRef(true);
 
 	const tileLayers = shallowRef({});
 	const activeTileLayer = shallowRef({});
 
-	const activeLayer = shallowRef({});
+	const activeLayer = shallowRef(null);
 
 	const activePanelKey = shallowRef("overlays");
 	const activeFeatureType = shallowRef("marker");

@@ -3,9 +3,7 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const instanceStore = useInstanceStore();
-const { state } = instanceStore;
-const { map } = storeToRefs(instanceStore);
+const { map } = storeToRefs(useInstanceStore());
 
 import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";

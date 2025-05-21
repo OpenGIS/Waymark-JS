@@ -11,15 +11,13 @@ import { makeKey } from "@/helpers/Common.js";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
-	const instanceStore = useInstanceStore();
-	const { config, state } = instanceStore;
-	const { map } = storeToRefs(instanceStore);
+	const { config, map } = storeToRefs(useInstanceStore());
 
 	const createMap = () => {
 		// Create & Store Map
 		return L.map(
-			`${config.map_options.div_id}-map`,
-			config.map_options.leaflet_options,
+			`${config.value.map_options.div_id}-map`,
+			config.value.map_options.leaflet_options,
 		);
 	};
 
@@ -27,9 +25,9 @@ export function useLeaflet() {
 		const layerGroup = L.layerGroup();
 
 		// Create Tile Layers
-		if (Array.isArray(config.map_options.tile_layers)) {
+		if (Array.isArray(config.value.map_options.tile_layers)) {
 			// Each Tile Layer
-			config.map_options.tile_layers.forEach((tile_data) => {
+			config.value.map_options.tile_layers.forEach((tile_data) => {
 				// Create Tile Layer
 				layerGroup.addLayer(
 					L.tileLayer(tile_data.layer_url, {
@@ -55,7 +53,7 @@ export function useLeaflet() {
 	};
 
 	const createDataLayer = () => {
-		return L.geoJSON(config.geoJSON, {
+		return L.geoJSON(config.value.geoJSON, {
 			// Create Markers
 			pointToLayer,
 			onEachFeature,
@@ -89,6 +87,7 @@ export function useLeaflet() {
 	};
 
 	const onEachFeature = (feature, layer) => {
+		layer.feature = feature;
 		const typeKey = makeKey(feature.properties.type);
 		const typeData = getTypeData(getFeatureType(feature), typeKey);
 

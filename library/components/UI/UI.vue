@@ -8,9 +8,8 @@ import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-const instanceStore = useInstanceStore();
 const { panelOpen, map, dataLayer, activePanelKey } =
-	storeToRefs(instanceStore);
+	storeToRefs(useInstanceStore());
 
 const showPanel = (panelKey) => {
 	return activePanelKey.value === panelKey && panelOpen.value;

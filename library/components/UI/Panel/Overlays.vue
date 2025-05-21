@@ -8,8 +8,7 @@ import {
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const instanceStore = useInstanceStore();
-const { map, dataLayer, activeFeatureType } = storeToRefs(instanceStore);
+const { map, dataLayer, activeFeatureType } = storeToRefs(useInstanceStore());
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
