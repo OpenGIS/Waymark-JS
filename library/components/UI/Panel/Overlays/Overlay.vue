@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
 
 import { getFeatureType } from "@/helpers/Overlay.js";
 
@@ -7,7 +8,9 @@ import { useLeaflet } from "@/composables/useLeaflet.js";
 const { focusMapOnLayer, highlightLayer, unHighlightLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { state } = useInstanceStore();
+const instanceStore = useInstanceStore();
+const { state } = instanceStore;
+const { map, panelOpen } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -24,7 +27,7 @@ const setActiveLayer = () => {
     // If this is the active layer
     if (state.activeLayer === props.layer) {
       // Increase zoom
-      state.map.setZoom(state.map.getZoom() + 1);
+      map.value.setZoom(map.value.getZoom() + 1);
 
       return;
     }
@@ -58,10 +61,10 @@ const toggleVisible = () => {
     state.activeLayer = null;
   }
 
-  state.map.removeLayer(props.layer);
+  map.value.removeLayer(props.layer);
 
   if (isVisible.value) {
-    state.map.addLayer(props.layer);
+    map.value.addLayer(props.layer);
   }
 };
 

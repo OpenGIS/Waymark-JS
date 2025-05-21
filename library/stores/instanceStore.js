@@ -9,13 +9,15 @@ export const useInstanceStore = defineStore("instance", () => {
 	const config = shallowRef({});
 	const container = shallowRef(null);
 	const panelOpen = ref(true);
+	const dataLayer = shallowRef({});
+	const map = shallowRef({});
 
 	const state = shallowRef({
-		dataLayer: null,
+		// dataLayer: null,
 
 		// Map
 
-		map: null,
+		// map: null,
 
 		// Tile Layers
 		activeTileLayer: L.tileLayer(),
@@ -65,7 +67,10 @@ export const useInstanceStore = defineStore("instance", () => {
 		mapReady,
 		container,
 		panelOpen,
+		dataLayer,
+		map,
 
+		// Del...
 		state,
 
 		// Getters

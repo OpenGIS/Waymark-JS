@@ -1,8 +1,12 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
+
 import Button from "@/components/UI/Common/Button.vue";
 
-const { state } = useInstanceStore();
+const instanceStore = useInstanceStore();
+const { state } = instanceStore;
+const { map } = storeToRefs(instanceStore);
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -19,9 +23,9 @@ const tilePreviewUrl = (tile_url) => {
 				Math.pow(2, zoom),
 		);
 
-	const zoom = parseInt(state.map.getZoom());
-	const lat = state.map.getCenter().lat;
-	const lng = state.map.getCenter().lng;
+	const zoom = parseInt(map.value.getZoom());
+	const lat = map.value.getCenter().lat;
+	const lng = map.value.getCenter().lng;
 	const x = lon2tile(lng, zoom);
 	const y = lat2tile(lat, zoom);
 
@@ -32,11 +36,11 @@ const tilePreviewUrl = (tile_url) => {
 const updateTileLayer = (tileLayer) => {
 	// Remove all tile layers
 	state.tileLayers.eachLayer((layer) => {
-		state.map.removeLayer(layer);
+		map.value.removeLayer(layer);
 	});
 
 	// Add selected tile layer
-	state.map.addLayer(tileLayer);
+	map.value.addLayer(tileLayer);
 
 	// Set active tile layer
 	state.activeTileLayer = tileLayer;

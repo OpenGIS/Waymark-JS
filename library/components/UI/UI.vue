@@ -10,7 +10,7 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const instanceStore = useInstanceStore();
 const { state } = instanceStore;
-const { panelOpen } = storeToRefs(instanceStore);
+const { panelOpen, map } = storeToRefs(instanceStore);
 
 const showPanel = (panelKey) => {
 	return state.activePanelKey === panelKey && panelOpen.value;
@@ -40,8 +40,8 @@ const container = useTemplateRef("container");
 
 onMounted(() => {
 	const resizeObserver = new ResizeObserver(() => {
-		state.map.invalidateSize();
-		state.map.fitBounds(state.dataLayer.getBounds(), {
+		map.value.invalidateSize();
+		map.value.fitBounds(state.dataLayer.getBounds(), {
 			padding: [30, 30],
 			animate: false,
 		});

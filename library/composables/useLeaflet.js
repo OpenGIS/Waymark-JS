@@ -1,6 +1,7 @@
 // Import Leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { storeToRefs } from "pinia";
 
 // Import Helpers
 import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
@@ -12,6 +13,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 export function useLeaflet() {
 	const instanceStore = useInstanceStore();
 	const { config, state } = instanceStore;
+	const { map } = storeToRefs(instanceStore);
 
 	const createMap = () => {
 		// Create & Store Map
@@ -107,7 +109,7 @@ export function useLeaflet() {
 	};
 
 	const isLayerInView = (layer) => {
-		const mapBounds = state.map.getBounds();
+		const mapBounds = map.value.getBounds();
 
 		return isLayerInBounds(layer, mapBounds);
 	};
@@ -147,14 +149,14 @@ export function useLeaflet() {
 	const focusMapOnLayer = (layer) => {
 		switch (getFeatureType(layer.feature)) {
 			case "marker":
-				state.map.flyTo(layer.getLatLng());
+				map.value.flyTo(layer.getLatLng());
 
 				break;
 
 			case "line":
 				// Set to bounds of Line
 				const lineBounds = L.latLngBounds(layer.getLatLngs());
-				state.map.flyToBounds(lineBounds);
+				map.value.flyToBounds(lineBounds);
 
 				break;
 		}

@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { state } = useInstanceStore();
+const instanceStore = useInstanceStore();
+const { state } = instanceStore;
+const { map } = storeToRefs(instanceStore);
 
 import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
@@ -29,10 +32,10 @@ const toggleVisible = () => {
   }
 
   props.layerGroup.eachLayer((layer) => {
-    state.map.removeLayer(layer);
+    map.value.removeLayer(layer);
 
     if (isVisible.value) {
-      state.map.addLayer(layer);
+      map.value.addLayer(layer);
     }
   });
 };
@@ -65,7 +68,7 @@ const headingClick = () => {
   // Close all other types
   if (isExpanded.value) {
     // Set bounds to
-    state.map.fitBounds(props.layerGroup.getBounds(), {
+    map.value.fitBounds(props.layerGroup.getBounds(), {
       padding: [30, 30],
     });
   }

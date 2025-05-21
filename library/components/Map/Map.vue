@@ -9,20 +9,20 @@ const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { config, state } = instanceStore;
-const { mapReady } = storeToRefs(instanceStore);
+const { mapReady, map } = storeToRefs(instanceStore);
 
 onMounted(() => {
   // Create Map
-  state.map = createMap();
+  map.value = createMap();
 
   // Create Tile Layers
   state.tileLayers = createTileLayerGroup();
   state.activeTileLayer = state.tileLayers.getLayers()[0];
-  state.map.addLayer(state.tileLayers);
+  map.value.addLayer(state.tileLayers);
 
   // Create data layer
   state.dataLayer = createDataLayer();
-  state.map.addLayer(state.dataLayer);
+  map.value.addLayer(state.dataLayer);
 
   // Store Overlays
   state.overlays.markers = L.layerGroup(
@@ -44,7 +44,7 @@ onMounted(() => {
   );
 
   // Set initial bounds
-  state.map.fitBounds(state.dataLayer.getBounds(), {
+  map.value.fitBounds(state.dataLayer.getBounds(), {
     padding: [30, 30],
     animate: false,
   });

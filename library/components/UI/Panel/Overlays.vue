@@ -5,9 +5,12 @@ import {
 	getOverlayTypeKey,
 	getTypeData,
 } from "@/helpers/Overlay.js";
+import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
+const instanceStore = useInstanceStore();
 const { state } = useInstanceStore();
+const { map } = storeToRefs(instanceStore);
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
@@ -17,11 +20,11 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const filterText = ref("");
 const filterInView = ref(true);
-const currentBounds = ref(state.map.getBounds());
+const currentBounds = ref(map.value.getBounds());
 
 // Update map bounds on map move & zoom
-state.map.on("moveend", () => {
-	currentBounds.value = state.map.getBounds();
+map.value.on("moveend", () => {
+	currentBounds.value = map.value.getBounds();
 });
 
 // Sort the Overlays by their types (as layer groups)
