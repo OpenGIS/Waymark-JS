@@ -8,21 +8,15 @@ export const useInstanceStore = defineStore("instance", () => {
 	// State
 	const config = shallowRef({});
 	const container = shallowRef(null);
-	const panelOpen = ref(true);
 	const dataLayer = shallowRef({});
 	const map = shallowRef({});
 
+	const panelOpen = ref(true);
+
+	const tileLayers = shallowRef({});
+	const activeTileLayer = shallowRef({});
+
 	const state = shallowRef({
-		// dataLayer: null,
-
-		// Map
-
-		// map: null,
-
-		// Tile Layers
-		activeTileLayer: L.tileLayer(),
-		tileLayers: L.layerGroup(),
-
 		// Overlays
 		overlays: {
 			markers: L.featureGroup(),
@@ -69,6 +63,8 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen,
 		dataLayer,
 		map,
+		tileLayers,
+		activeTileLayer,
 
 		// Del...
 		state,

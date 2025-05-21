@@ -9,42 +9,43 @@ const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { config, state } = instanceStore;
-const { mapReady, map } = storeToRefs(instanceStore);
+const { mapReady, dataLayer, map, tileLayers, activeTileLayer } =
+  storeToRefs(instanceStore);
 
 onMounted(() => {
   // Create Map
   map.value = createMap();
 
   // Create Tile Layers
-  state.tileLayers = createTileLayerGroup();
-  state.activeTileLayer = state.tileLayers.getLayers()[0];
-  map.value.addLayer(state.tileLayers);
+  tileLayers.value = createTileLayerGroup();
+  activeTileLayer.value = tileLayers.value.getLayers()[0];
+  map.value.addLayer(tileLayers.value);
 
   // Create data layer
-  state.dataLayer = createDataLayer();
-  map.value.addLayer(state.dataLayer);
+  dataLayer.value = createDataLayer();
+  map.value.addLayer(dataLayer.value);
 
   // Store Overlays
   state.overlays.markers = L.layerGroup(
-    state.dataLayer
+    dataLayer.value
       .getLayers()
       .filter((layer) => getFeatureType(layer.feature) === "marker"),
   );
 
   state.overlays.lines = L.layerGroup(
-    state.dataLayer
+    dataLayer.value
       .getLayers()
       .filter((layer) => getFeatureType(layer.feature) === "line"),
   );
 
   state.overlays.shapes = L.layerGroup(
-    state.dataLayer
+    dataLayer.value
       .getLayers()
       .filter((layer) => getFeatureType(layer.feature) === "shape"),
   );
 
   // Set initial bounds
-  map.value.fitBounds(state.dataLayer.getBounds(), {
+  map.value.fitBounds(dataLayer.value.getBounds(), {
     padding: [30, 30],
     animate: false,
   });

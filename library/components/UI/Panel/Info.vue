@@ -1,7 +1,8 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-const { state } = useInstanceStore();
+const { activeTileLayer } = storeToRefs(useInstanceStore());
 </script>
 
 <template>
@@ -10,12 +11,9 @@ const { state } = useInstanceStore();
 
 		<h3>Basemap</h3>
 
-		<div class="name">{{ state.activeTileLayer.options.name }}</div>
+		<div class="name">{{ activeTileLayer.options.name }}</div>
 
-		<div
-			class="attribution"
-			v-html="state.activeTileLayer.options.attribution"
-		></div>
+		<div class="attribution" v-html="activeTileLayer.options.attribution"></div>
 	</div>
 </template>
 

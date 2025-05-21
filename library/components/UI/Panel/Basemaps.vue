@@ -4,9 +4,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Button from "@/components/UI/Common/Button.vue";
 
-const instanceStore = useInstanceStore();
-const { state } = instanceStore;
-const { map } = storeToRefs(instanceStore);
+const { map, tileLayers, activeTileLayer } = storeToRefs(useInstanceStore());
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -35,7 +33,7 @@ const tilePreviewUrl = (tile_url) => {
 
 const updateTileLayer = (tileLayer) => {
 	// Remove all tile layers
-	state.tileLayers.eachLayer((layer) => {
+	tileLayers.value.eachLayer((layer) => {
 		map.value.removeLayer(layer);
 	});
 
@@ -43,7 +41,7 @@ const updateTileLayer = (tileLayer) => {
 	map.value.addLayer(tileLayer);
 
 	// Set active tile layer
-	state.activeTileLayer = tileLayer;
+	activeTileLayer.value = tileLayer;
 };
 </script>
 
@@ -54,7 +52,7 @@ const updateTileLayer = (tileLayer) => {
 		<div class="list">
 			<!-- Iterate over Leaflet Tile Layers -->
 			<div
-				v-for="(tileLayer, index) in state.tileLayers.getLayers()"
+				v-for="(tileLayer, index) in tileLayers.getLayers()"
 				:key="index"
 				:class="`tile-layer ${tileLayer.options.name}`"
 			>

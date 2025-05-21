@@ -10,7 +10,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
 const { state } = useInstanceStore();
-const { map } = storeToRefs(instanceStore);
+const { map, dataLayer } = storeToRefs(instanceStore);
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
@@ -36,7 +36,7 @@ const filteredOverlaysByType = computed(() => {
 	};
 
 	// Iterate over all Overlays
-	state.dataLayer.eachLayer((layer) => {
+	dataLayer.value.eachLayer((layer) => {
 		const featureType = getFeatureType(layer.feature);
 		const overlayTypeKey = getOverlayTypeKey(layer.feature);
 		const typeData = getTypeData(featureType, overlayTypeKey);
