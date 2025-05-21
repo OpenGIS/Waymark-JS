@@ -91,21 +91,36 @@ const filteredOverlaysByType = computed(() => {
 			<!-- Nav -->
 			<nav class="type-nav" :value="state.activeFeatureType">
 				<Button
-					v-if="state.overlays.markers.getLayers().length"
+					v-if="
+						dataLayer
+							.getLayers()
+							.filter((layer) => getFeatureType(layer.feature) === 'marker')
+							.length
+					"
 					icon="ion-ios-location-outline"
 					@click="state.activeFeatureType = 'marker'"
 					:active="state.activeFeatureType === 'marker'"
 				/>
 
 				<Button
-					v-if="state.overlays.lines.getLayers().length"
+					v-if="
+						dataLayer
+							.getLayers()
+							.filter((layer) => getFeatureType(layer.feature) === 'line')
+							.length
+					"
 					icon="ion-arrow-graph-up-right"
 					@click="state.activeFeatureType = 'line'"
 					:active="state.activeFeatureType === 'line'"
 				/>
 
 				<Button
-					v-if="state.overlays.shapes.getLayers().length"
+					v-if="
+						dataLayer
+							.getLayers()
+							.filter((layer) => getFeatureType(layer.feature) === 'shape')
+							.length
+					"
 					icon="ion-android-checkbox-outline-blank"
 					@click="state.activeFeatureType = 'shape'"
 					:active="state.activeFeatureType === 'shape'"

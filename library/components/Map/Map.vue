@@ -25,25 +25,6 @@ onMounted(() => {
   dataLayer.value = createDataLayer();
   map.value.addLayer(dataLayer.value);
 
-  // Store Overlays
-  state.overlays.markers = L.layerGroup(
-    dataLayer.value
-      .getLayers()
-      .filter((layer) => getFeatureType(layer.feature) === "marker"),
-  );
-
-  state.overlays.lines = L.layerGroup(
-    dataLayer.value
-      .getLayers()
-      .filter((layer) => getFeatureType(layer.feature) === "line"),
-  );
-
-  state.overlays.shapes = L.layerGroup(
-    dataLayer.value
-      .getLayers()
-      .filter((layer) => getFeatureType(layer.feature) === "shape"),
-  );
-
   // Set initial bounds
   map.value.fitBounds(dataLayer.value.getBounds(), {
     padding: [30, 30],

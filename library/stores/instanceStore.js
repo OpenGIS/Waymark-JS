@@ -17,13 +17,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeTileLayer = shallowRef({});
 
 	const state = shallowRef({
-		// Overlays
-		overlays: {
-			markers: L.featureGroup(),
-			lines: L.featureGroup(),
-			shapes: L.featureGroup(),
-		},
-
 		activeLayer: null,
 
 		// Panels
