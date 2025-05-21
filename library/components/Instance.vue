@@ -5,8 +5,8 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { init, state, config } = instanceStore;
-const { mapReady } = storeToRefs(instanceStore);
+const { init, state } = instanceStore;
+const { mapReady, config } = storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -32,7 +32,7 @@ const props = defineProps({
 init(props);
 
 // Get container
-state.container = document.getElementById(`${config.map_options.div_id}`);
+state.container = document.getElementById(`${config.value.map_options.div_id}`);
 
 const classAppend = computed(() => {
 	let classes = [""];
@@ -67,7 +67,7 @@ const classAppend = computed(() => {
 		:class="`instance ${classAppend}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
-		<Map ref="map" />
+		<Map />
 
 		<UI v-if="mapReady" />
 	</div>

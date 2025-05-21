@@ -6,7 +6,7 @@ import { deepMerge } from "@/helpers/Common.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
-	const config = markRaw({});
+	const config = shallowRef({});
 
 	const state = shallowRef({
 		dataLayer: null,
@@ -43,7 +43,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	// Actions
 	function init(initConfig = {}) {
 		// Parse config & set defaults
-		const parsedConfig = deepMerge(
+		config.value = deepMerge(
 			structuredClone({
 				geoJSON: {},
 				map_options: {
@@ -57,11 +57,6 @@ export const useInstanceStore = defineStore("instance", () => {
 			}),
 			initConfig,
 		);
-
-		// Set config
-		for (const key in parsedConfig) {
-			config[key] = parsedConfig[key];
-		}
 	}
 
 	return {
