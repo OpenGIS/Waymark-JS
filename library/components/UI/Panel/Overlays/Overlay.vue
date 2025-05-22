@@ -1,22 +1,13 @@
 <script setup>
-import { ref, computed, useTemplateRef } from "vue";
+import { ref, computed, useTemplateRef, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 
-import { getFeatureType } from "@/helpers/Overlay.js";
-
 import { useLeaflet } from "@/composables/useLeaflet.js";
-const { focusMapOnLayer, highlightLayer, unHighlightLayer } = useLeaflet();
+const { unHighlightLayer, setActiveLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const {
-  map,
-  panelOpen,
-  activeLayer,
-  activePanelKey,
-  activeFeatureType,
-  filteredLayers,
-} = storeToRefs(instanceStore);
+const { map, activeLayer, filteredLayers } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -26,41 +17,6 @@ const props = defineProps({
 });
 
 let isOnMap = ref(true);
-
-const setActiveLayer = () => {
-  // If active layer is set, remove it
-  if (activeLayer.value) {
-    // If this is the active layer
-    if (activeLayer.value === props.layer) {
-      switch (getFeatureType(props.layer.feature)) {
-        case "marker":
-          // Increase zoom to max layer zoom
-          map.value.setView(props.layer.getLatLng(), map.value.getMaxZoom());
-
-          break;
-        case "line":
-          focusMapOnLayer(props.layer);
-
-          break;
-        case "shape":
-          break;
-      }
-
-      return;
-    }
-
-    // Remove highlight
-    unHighlightLayer(activeLayer.value);
-
-    // Make inactive
-    activeLayer.value = null;
-  }
-
-  // Make active
-  activeLayer.value = props.layer;
-  focusMapOnLayer(props.layer);
-  highlightLayer(props.layer);
-};
 
 const isActiveLayer = computed(() => {
   return activeLayer.value === props.layer;
@@ -92,31 +48,27 @@ const toggleOnMap = () => {
 // Add click handler to the layer
 const container = useTemplateRef("container");
 
-props.layer.on("click", () => {
-  setActiveLayer();
-  activeFeatureType.value = getFeatureType(props.layer.feature);
-  activePanelKey.value = "overlays";
-  panelOpen.value = true;
-
-  // Wait for next tick to ensure DOM is updated
-  nextTick(() => {
-    // Scroll to the clicked layer
-    container.value.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest",
+watch(activeLayer, (layer) => {
+  if (layer === props.layer) {
+    // Wait for next tick to ensure DOM is updated
+    nextTick(() => {
+      // Scroll to the clicked layer
+      container.value.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
     });
-  });
+  }
 });
 </script>
 
 <template>
   <!-- START Overlay -->
-
   <div
     ref="container"
     class="overlay"
-    @click="setActiveLayer()"
+    @click="setActiveLayer(layer)"
     :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"
   >
     <!-- START Overview -->

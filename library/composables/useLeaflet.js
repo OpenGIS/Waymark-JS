@@ -11,7 +11,15 @@ import { makeKey } from "@/helpers/Common.js";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
-	const { config, map, overlays } = storeToRefs(useInstanceStore());
+	const {
+		config,
+		map,
+		overlays,
+		activeLayer,
+		activeFeatureType,
+		panelOpen,
+		activePanelKey,
+	} = storeToRefs(useInstanceStore());
 
 	const createMap = () => {
 		// Create & Store Map
@@ -97,6 +105,11 @@ export function useLeaflet() {
 			overlays.value[featureType][typeKey] = L.featureGroup();
 		}
 		overlays.value[featureType][typeKey].addLayer(layer);
+
+		// Add events
+		layer.on("click", () => {
+			setActiveLayer(layer);
+		});
 
 		switch (featureType) {
 			case "lines":
@@ -224,6 +237,46 @@ export function useLeaflet() {
 		}
 	};
 
+	const setActiveLayer = (layer) => {
+		// If active layer is set
+		if (activeLayer.value) {
+			// If already active layer - focus on it
+			if (activeLayer.value === layer) {
+				switch (getFeatureType(layer.feature)) {
+					case "marker":
+						// Increase zoom to max layer zoom
+						map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
+
+						break;
+					case "line":
+						focusMapOnLayer(layer);
+
+						break;
+					case "shape":
+						break;
+				}
+
+				return;
+			}
+
+			// Remove highlight
+			unHighlightLayer(activeLayer.value);
+
+			// Make inactive
+			activeLayer.value = null;
+		}
+
+		// Go to Overlay in Overlays panel
+		activeFeatureType.value = getFeatureType(layer.feature);
+		activePanelKey.value = "overlays";
+		panelOpen.value = true;
+
+		// Make active
+		activeLayer.value = layer;
+		focusMapOnLayer(layer);
+		highlightLayer(layer);
+	};
+
 	return {
 		createMap,
 		createDataLayer,
@@ -234,5 +287,6 @@ export function useLeaflet() {
 		focusMapOnLayer,
 		highlightLayer,
 		unHighlightLayer,
+		setActiveLayer,
 	};
 }
