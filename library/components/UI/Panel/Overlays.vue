@@ -131,7 +131,6 @@ import Button from "@/components/UI/Common/Button.vue";
 	}
 
 	.panel-content {
-		min-height: 320px;
 		padding-bottom: 44px;
 		overflow-y: auto;
 	}

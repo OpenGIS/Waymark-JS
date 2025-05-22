@@ -38,11 +38,15 @@ const handleNavClick = (panelKey = "overlays") => {
 const container = useTemplateRef("container");
 
 onMounted(() => {
-	map.value.invalidateSize();
-	map.value.fitBounds(dataLayer.value.getBounds(), {
-		padding: [30, 30],
-		animate: false,
+	const resizeObserver = new ResizeObserver(() => {
+		map.value.invalidateSize();
+		map.value.fitBounds(dataLayer.value.getBounds(), {
+			padding: [30, 30],
+			animate: false,
+		});
 	});
+
+	resizeObserver.observe(container.value);
 });
 
 // Check if the panel is active
@@ -155,10 +159,11 @@ const isActivePanel = (panelKey) => {
 			}
 
 			.ui {
-				height: 320px;
+				height: 260px;
 				width: 100%;
 
 				.panels-content {
+					min-height: 260px;
 					padding-right: 0;
 				}
 			}
