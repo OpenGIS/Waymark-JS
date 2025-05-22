@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, useTemplateRef, nextTick } from "vue";
+import { ref, computed, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { getFeatureType } from "@/helpers/Overlay.js";
