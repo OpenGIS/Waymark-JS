@@ -9,6 +9,11 @@ export const useInstanceStore = defineStore("instance", () => {
 	const container = shallowRef(null);
 	const dataLayer = shallowRef({});
 	const map = shallowRef(null);
+	const overlays = shallowRef({
+		markers: {},
+		lines: {},
+		shapes: {},
+	});
 
 	const panelOpen = shallowRef(true);
 
@@ -51,6 +56,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen,
 		dataLayer,
 		map,
+		overlays,
 		tileLayers,
 		activeTileLayer,
 		activeLayer,

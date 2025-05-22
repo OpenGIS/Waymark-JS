@@ -21,6 +21,42 @@ const props = defineProps({
 
 let isVisible = ref(true);
 
+/*
+
+
+    // Is it in the current map bounds
+    if (filterInView.value && !isLayerInBounds(layer, currentBounds.value)) {
+      return;
+    }
+
+    // Text filter
+    if (filterText.value !== "") {
+      let matches = 0;
+
+      // Text included in type title
+      matches += typeData[featureType + "_title"]
+        .toString()
+        .toLowerCase()
+        .includes(filterText.value.toLowerCase());
+
+      // Check all GeoJSON properties VALUES (not keys) for existence of filterText
+      const properties = Object.values(layer.feature.properties);
+
+      matches += properties.some((p) => {
+        return p
+          .toString()
+          .toLowerCase()
+          .includes(filterText.value.toLowerCase());
+      });
+
+      // If no matches, skip this layer
+      if (matches === 0) {
+        return;
+      }
+    }
+
+*/
+
 const setActiveLayer = () => {
   // If active layer is set, remove it
   if (activeLayer.value) {

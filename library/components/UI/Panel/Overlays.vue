@@ -8,7 +8,8 @@ import {
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, dataLayer, activeFeatureType } = storeToRefs(useInstanceStore());
+const { map, dataLayer, overlays, activeFeatureType } =
+	storeToRefs(useInstanceStore());
 
 import { useLeaflet } from "@/composables/useLeaflet.js";
 const { isLayerInBounds } = useLeaflet();
@@ -23,62 +24,6 @@ const currentBounds = ref(map.value.getBounds());
 // Update map bounds on map move & zoom
 map.value.on("moveend", () => {
 	currentBounds.value = map.value.getBounds();
-});
-
-// Sort the Overlays by their types (as layer groups)
-const filteredOverlaysByType = computed(() => {
-	const overlays = {
-		marker: {},
-		line: {},
-		shape: {},
-	};
-
-	// Iterate over all Overlays
-	dataLayer.value.eachLayer((layer) => {
-		const featureType = getFeatureType(layer.feature);
-		const overlayTypeKey = getOverlayTypeKey(layer.feature);
-		const typeData = getTypeData(featureType, overlayTypeKey);
-
-		// Is it in the current map bounds
-		if (filterInView.value && !isLayerInBounds(layer, currentBounds.value)) {
-			return;
-		}
-
-		// Text filter
-		if (filterText.value !== "") {
-			let matches = 0;
-
-			// Text included in type title
-			matches += typeData[featureType + "_title"]
-				.toString()
-				.toLowerCase()
-				.includes(filterText.value.toLowerCase());
-
-			// Check all GeoJSON properties VALUES (not keys) for existence of filterText
-			const properties = Object.values(layer.feature.properties);
-
-			matches += properties.some((p) => {
-				return p
-					.toString()
-					.toLowerCase()
-					.includes(filterText.value.toLowerCase());
-			});
-
-			// If no matches, skip this layer
-			if (matches === 0) {
-				return;
-			}
-		}
-
-		// Add to appropriate type
-		if (!overlays[featureType][overlayTypeKey]) {
-			// Needs creating
-			overlays[featureType][overlayTypeKey] = L.featureGroup();
-		}
-		overlays[featureType][overlayTypeKey].addLayer(layer);
-	});
-
-	return overlays;
 });
 </script>
 
@@ -146,10 +91,10 @@ const filteredOverlaysByType = computed(() => {
 			>
 				<!-- Iterate over Marker Types -->
 				<Type
-					v-for="typeKey in Object.keys(filteredOverlaysByType.marker)"
+					v-for="typeKey in Object.keys(overlays.markers)"
 					:key="typeKey"
 					featureType="marker"
-					:layerGroup="filteredOverlaysByType.marker[typeKey]"
+					:layerGroup="overlays.markers[typeKey]"
 					:overlayType="typeKey"
 				/>
 			</div>
@@ -158,10 +103,10 @@ const filteredOverlaysByType = computed(() => {
 			<div v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
-					v-for="typeKey in Object.keys(filteredOverlaysByType.line)"
+					v-for="typeKey in Object.keys(overlays.lines)"
 					:key="typeKey"
 					featureType="line"
-					:layerGroup="filteredOverlaysByType.line[typeKey]"
+					:layerGroup="overlays.lines[typeKey]"
 					:overlayType="typeKey"
 				/>
 			</div>

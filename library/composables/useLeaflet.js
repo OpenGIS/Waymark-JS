@@ -11,7 +11,7 @@ import { makeKey } from "@/helpers/Common.js";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useLeaflet() {
-	const { config, map } = storeToRefs(useInstanceStore());
+	const { config, map, overlays } = storeToRefs(useInstanceStore());
 
 	const createMap = () => {
 		// Create & Store Map
@@ -87,12 +87,19 @@ export function useLeaflet() {
 	};
 
 	const onEachFeature = (feature, layer) => {
-		layer.feature = feature;
 		const typeKey = makeKey(feature.properties.type);
 		const typeData = getTypeData(getFeatureType(feature), typeKey);
+		const featureType = getFeatureType(feature) + "s";
 
-		switch (getFeatureType(feature)) {
-			case "line":
+		// Add to appropriate Type group
+		if (!overlays.value[featureType][typeKey]) {
+			// Needs creating
+			overlays.value[featureType][typeKey] = L.featureGroup();
+		}
+		overlays.value[featureType][typeKey].addLayer(layer);
+
+		switch (featureType) {
+			case "lines":
 				layer.setStyle({
 					color: typeData.line_colour,
 					weight: parseFloat(typeData.line_weight),
