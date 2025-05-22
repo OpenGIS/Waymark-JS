@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, useTemplateRef } from "vue";
+import { ref, computed, useTemplateRef, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 
 import { getFeatureType } from "@/helpers/Overlay.js";
@@ -87,10 +87,14 @@ props.layer.on("click", () => {
   activePanelKey.value = "overlays";
   panelOpen.value = true;
 
-  container.value.scrollIntoView({
-    behavior: "smooth",
-    block: "center",
-    inline: "nearest",
+  // Wait for next tick to ensure DOM is updated
+  nextTick(() => {
+    // Scroll to the clicked layer
+    container.value.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
   });
 });
 </script>

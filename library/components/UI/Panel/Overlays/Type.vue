@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map } = storeToRefs(useInstanceStore());
+const { map, filteredLayers } = storeToRefs(useInstanceStore());
 
 import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
@@ -20,6 +20,18 @@ const props = defineProps({
 
 let isExpanded = ref(true);
 let isVisible = ref(true);
+
+const layerCount = computed(() => {
+  //Check occurence of each props.layerGroup layer in filteredLayers
+  let count = 0;
+  props.layerGroup.eachLayer((layer) => {
+    // Check if layer is in filteredLayers
+    if (filteredLayers.value.hasLayer(layer)) {
+      count++;
+    }
+  });
+  return count;
+});
 
 const toggleVisible = () => {
   isVisible.value = !isVisible.value;
@@ -74,7 +86,7 @@ const headingClick = () => {
 </script>
 
 <template>
-  <div class="type">
+  <div class="type" :class="{ hidden: !layerCount }">
     <!-- Heading -->
     <div class="heading" :style="headingStyle()" @click.stop="headingClick()">
       <!-- Image -->
@@ -90,7 +102,7 @@ const headingClick = () => {
       <!-- Expand -->
       <div class="action expand">
         <Button :icon="expandedIcon(isExpanded)">
-          <span class="count">{{ layerGroup.getLayers().length }}</span>
+          <span class="count">{{ layerCount }}</span>
         </Button>
       </div>
 
@@ -113,6 +125,10 @@ const headingClick = () => {
 <style lang="less">
 .type {
   margin-bottom: 0;
+
+  &.hidden {
+    display: none;
+  }
 
   .heading {
     display: flex;
