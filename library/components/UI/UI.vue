@@ -38,15 +38,11 @@ const handleNavClick = (panelKey = "overlays") => {
 const container = useTemplateRef("container");
 
 onMounted(() => {
-	const resizeObserver = new ResizeObserver(() => {
-		map.value.invalidateSize();
-		map.value.fitBounds(dataLayer.value.getBounds(), {
-			padding: [30, 30],
-			animate: false,
-		});
+	map.value.invalidateSize();
+	map.value.fitBounds(dataLayer.value.getBounds(), {
+		padding: [30, 30],
+		animate: false,
 	});
-
-	resizeObserver.observe(container.value);
 });
 
 // Check if the panel is active

@@ -114,12 +114,6 @@ export function useLeaflet() {
 		}
 	};
 
-	const isLayerInView = (layer) => {
-		const mapBounds = map.value.getBounds();
-
-		return isLayerInBounds(layer, mapBounds);
-	};
-
 	const isLayerInBounds = (layer, bounds) => {
 		const featureType = getFeatureType(layer.feature);
 		let contains = false;
@@ -232,7 +226,6 @@ export function useLeaflet() {
 		createTileLayerGroup,
 		pointToLayer,
 		onEachFeature,
-		isLayerInView,
 		isLayerInBounds,
 		focusMapOnLayer,
 		highlightLayer,

@@ -11,9 +11,9 @@ import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 // Watch filteredLayers
-watch(filteredLayers, (layers) => {
-	console.log("Filtered Layers:", layers.getLayers().length);
-});
+// watch(filteredLayers, (layers) => {
+// 	console.log("Filtered Layers:", layers.getLayers().length);
+// });
 </script>
 
 <template>
@@ -131,7 +131,8 @@ watch(filteredLayers, (layers) => {
 	}
 
 	.panel-content {
-		/*		padding-top: 60px;*/
+		height: 320px;
+		padding-bottom: 44px;
 		overflow-y: auto;
 	}
 }

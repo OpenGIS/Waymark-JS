@@ -88,7 +88,8 @@ const headingClick = () => {
 <template>
   <div class="type" :class="{ hidden: !layerCount }">
     <!-- Heading -->
-    <div class="heading" :style="headingStyle()" @click.stop="headingClick()">
+    <!-- <div class="heading" :style="headingStyle()" @click.stop="headingClick()"> -->
+    <div class="heading" :style="headingStyle()">
       <!-- Image -->
       <div class="icon" v-if="featureType == 'marker'">
         <Preview :featureType="featureType" :typeData="typeData" />
