@@ -1,7 +1,12 @@
-import { shallowRef } from "vue";
+import { ref, shallowRef, computed } from "vue";
 import { defineStore } from "pinia";
-
+import {
+	getFeatureType,
+	getOverlayTypeKey,
+	getTypeData,
+} from "@/helpers/Overlay.js";
 import { deepMerge } from "@/helpers/Common.js";
+import { useLeaflet } from "@/composables/useLeaflet.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
@@ -9,6 +14,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const container = shallowRef(null);
 	const dataLayer = shallowRef({});
 	const map = shallowRef(null);
+	const mapBounds = shallowRef(null);
 	const overlays = shallowRef({
 		markers: {},
 		lines: {},
@@ -27,10 +33,68 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const mapReady = shallowRef(false);
 
+	const filters = ref({
+		text: "",
+		inBounds: false,
+	});
+
 	// Getters
 
+	const { isLayerInBounds } = useLeaflet();
+
+	const filteredLayers = computed(() => {
+		const filtered = L.featureGroup();
+
+		// Iterate over all overlays
+		dataLayer.value.eachLayer((layer) => {
+			const featureType = getFeatureType(layer.feature);
+			const typeKey = getOverlayTypeKey(layer.feature);
+			const typeData = getTypeData(featureType, typeKey);
+
+			// Is it in the current map bounds
+			if (filters.value.inBounds && !isLayerInBounds(layer, mapBounds.value)) {
+				return;
+			}
+
+			// Text filter
+			if (filters.value.text !== "") {
+				let matches = 0;
+
+				// Text included in type title
+				matches += typeData[featureType + "_title"]
+					.toString()
+					.toLowerCase()
+					.includes(filters.value.text.toLowerCase());
+
+				// Check all GeoJSON properties VALUES (not keys) for existence of filter text
+				const properties = Object.values(layer.feature.properties);
+
+				matches += properties.some((p) => {
+					return p
+						.toString()
+						.toLowerCase()
+						.includes(filters.value.text.toLowerCase());
+				});
+
+				// If no matches, skip this layer
+				if (matches === 0) {
+					return;
+				}
+			}
+
+			// Add to filtered layers
+			if (!filtered.hasLayer(layer)) {
+				filtered.addLayer(layer);
+			}
+		});
+
+		// Text filter
+
+		return filtered;
+	});
+
 	// Actions
-	function init(initConfig = {}) {
+	const init = (initConfig = {}) => {
 		// Parse config & set defaults
 		config.value = deepMerge(
 			structuredClone({
@@ -46,7 +110,7 @@ export const useInstanceStore = defineStore("instance", () => {
 			}),
 			initConfig,
 		);
-	}
+	};
 
 	return {
 		// State
@@ -56,7 +120,9 @@ export const useInstanceStore = defineStore("instance", () => {
 		panelOpen,
 		dataLayer,
 		map,
+		mapBounds,
 		overlays,
+		filters,
 		tileLayers,
 		activeTileLayer,
 		activeLayer,
@@ -64,6 +130,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		activeFeatureType,
 
 		// Getters
+		filteredLayers,
 
 		// Actions
 		init,

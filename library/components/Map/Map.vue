@@ -6,8 +6,15 @@ import { useLeaflet } from "@/composables/useLeaflet.js";
 const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { config, mapReady, dataLayer, map, tileLayers, activeTileLayer } =
-  storeToRefs(useInstanceStore());
+const {
+  config,
+  mapReady,
+  dataLayer,
+  map,
+  tileLayers,
+  activeTileLayer,
+  mapBounds,
+} = storeToRefs(useInstanceStore());
 
 onMounted(() => {
   // Create Map
@@ -26,6 +33,11 @@ onMounted(() => {
   map.value.fitBounds(dataLayer.value.getBounds(), {
     padding: [30, 30],
     animate: false,
+  });
+
+  // Update bounds on map move & zoom
+  map.value.on("moveend", () => {
+    mapBounds.value = map.value.getBounds();
   });
 
   // Trigger the UI to populate

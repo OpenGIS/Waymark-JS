@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { getFeatureType } from "@/helpers/Overlay.js";
@@ -9,8 +9,14 @@ const { focusMapOnLayer, highlightLayer, unHighlightLayer } = useLeaflet();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { map, panelOpen, activeLayer, activePanelKey, activeFeatureType } =
-  storeToRefs(instanceStore);
+const {
+  map,
+  panelOpen,
+  activeLayer,
+  activePanelKey,
+  activeFeatureType,
+  filteredLayers,
+} = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -19,43 +25,7 @@ const props = defineProps({
   layer: Object,
 });
 
-let isVisible = ref(true);
-
-/*
-
-
-    // Is it in the current map bounds
-    if (filterInView.value && !isLayerInBounds(layer, currentBounds.value)) {
-      return;
-    }
-
-    // Text filter
-    if (filterText.value !== "") {
-      let matches = 0;
-
-      // Text included in type title
-      matches += typeData[featureType + "_title"]
-        .toString()
-        .toLowerCase()
-        .includes(filterText.value.toLowerCase());
-
-      // Check all GeoJSON properties VALUES (not keys) for existence of filterText
-      const properties = Object.values(layer.feature.properties);
-
-      matches += properties.some((p) => {
-        return p
-          .toString()
-          .toLowerCase()
-          .includes(filterText.value.toLowerCase());
-      });
-
-      // If no matches, skip this layer
-      if (matches === 0) {
-        return;
-      }
-    }
-
-*/
+let isOnMap = ref(true);
 
 const setActiveLayer = () => {
   // If active layer is set, remove it
@@ -85,8 +55,12 @@ const isActiveLayer = computed(() => {
   return activeLayer.value === props.layer;
 });
 
-const toggleVisible = () => {
-  isVisible.value = !isVisible.value;
+const inFilteredLayers = computed(() => {
+  return filteredLayers.value.hasLayer(props.layer);
+});
+
+const toggleOnMap = () => {
+  isOnMap.value = !isOnMap.value;
 
   // Close if hiding
   if (isActiveLayer.value) {
@@ -99,13 +73,13 @@ const toggleVisible = () => {
 
   map.value.removeLayer(props.layer);
 
-  if (isVisible.value) {
+  if (isOnMap.value) {
     map.value.addLayer(props.layer);
   }
 };
 
 // Add click handler to the layer
-const container = ref(null);
+const container = useTemplateRef("container");
 
 props.layer.on("click", () => {
   setActiveLayer();
@@ -122,11 +96,13 @@ props.layer.on("click", () => {
 </script>
 
 <template>
+  <!-- START Overlay -->
+
   <div
     ref="container"
     class="overlay"
     @click="setActiveLayer()"
-    :class="{ active: isActiveLayer }"
+    :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"
   >
     <!-- START Overview -->
     <div class="overview">
@@ -142,9 +118,9 @@ props.layer.on("click", () => {
       <!-- Title -->
       <div class="title">{{ props.layer.feature.properties.title }}</div>
 
-      <!-- Visible -->
+      <!-- OnMap -->
       <div class="action visible">
-        <Button :icon="visibleIcon(isVisible)" @click.stop="toggleVisible()" />
+        <Button :icon="visibleIcon(isOnMap)" @click.stop="toggleOnMap()" />
       </div>
     </div>
     <!-- END Overview -->
@@ -168,6 +144,7 @@ props.layer.on("click", () => {
     </div>
     <!-- END Detail -->
   </div>
+  <!-- END Overlay -->
 </template>
 
 <style lang="less">
@@ -238,6 +215,10 @@ props.layer.on("click", () => {
         font-weight: bold;
       }
     }
+  }
+
+  &.hidden {
+    display: none;
   }
 }
 </style>

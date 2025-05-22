@@ -1,29 +1,18 @@
 <script setup>
-import { ref, computed } from "vue";
-import {
-	getFeatureType,
-	getOverlayTypeKey,
-	getTypeData,
-} from "@/helpers/Overlay.js";
+import { watch } from "vue";
+import { getFeatureType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, dataLayer, overlays, activeFeatureType } =
+const { map, dataLayer, filters, filteredLayers, overlays, activeFeatureType } =
 	storeToRefs(useInstanceStore());
-
-import { useLeaflet } from "@/composables/useLeaflet.js";
-const { isLayerInBounds } = useLeaflet();
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-const filterText = ref("");
-const filterInView = ref(true);
-const currentBounds = ref(map.value.getBounds());
-
-// Update map bounds on map move & zoom
-map.value.on("moveend", () => {
-	currentBounds.value = map.value.getBounds();
+// Watch filteredLayers
+watch(filteredLayers, (layers) => {
+	console.log("Filtered Layers:", layers.getLayers().length);
 });
 </script>
 
@@ -73,11 +62,11 @@ map.value.on("moveend", () => {
 			<nav class="feature-nav">
 				<Button
 					icon="ion-android-expand"
-					@click="filterInView = !filterInView"
-					:active="filterInView"
+					@click="filters.inBounds = !filters.inBounds"
+					:active="filters.inBounds"
 				/>
 
-				<input type="search" placeholder="Search" v-model="filterText" />
+				<input type="search" placeholder="Search" v-model="filters.text" />
 			</nav>
 		</header>
 		<!-- END Panel Nav -->
