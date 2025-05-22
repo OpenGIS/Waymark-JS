@@ -32,8 +32,19 @@ const setActiveLayer = () => {
   if (activeLayer.value) {
     // If this is the active layer
     if (activeLayer.value === props.layer) {
-      // Increase zoom
-      map.value.setZoom(map.value.getZoom() + 1);
+      switch (getFeatureType(props.layer.feature)) {
+        case "marker":
+          // Increase zoom to max layer zoom
+          map.value.setView(props.layer.getLatLng(), map.value.getMaxZoom());
+
+          break;
+        case "line":
+          focusMapOnLayer(props.layer);
+
+          break;
+        case "shape":
+          break;
+      }
 
       return;
     }

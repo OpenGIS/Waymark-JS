@@ -149,14 +149,18 @@ export function useLeaflet() {
 	const focusMapOnLayer = (layer) => {
 		switch (getFeatureType(layer.feature)) {
 			case "marker":
-				map.value.flyTo(layer.getLatLng());
+				map.value.flyTo(layer.getLatLng(), map.value.getZoom(), {
+					duration: 0.5,
+				});
 
 				break;
 
 			case "line":
 				// Set to bounds of Line
 				const lineBounds = L.latLngBounds(layer.getLatLngs());
-				map.value.flyToBounds(lineBounds);
+				map.value.flyToBounds(lineBounds, {
+					duration: 0.5,
+				});
 
 				break;
 		}
