@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from "vue";
+import { computed } from "vue";
 import { getFeatureType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 
@@ -9,6 +9,18 @@ const { map, dataLayer, filters, filteredLayers, overlays, activeFeatureType } =
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
+
+const markerCount = computed(() => {
+	return filteredLayers.value
+		.getLayers()
+		.filter((layer) => getFeatureType(layer.feature) === "marker").length;
+});
+
+const lineCount = computed(() => {
+	return filteredLayers.value
+		.getLayers()
+		.filter((layer) => getFeatureType(layer.feature) === "line").length;
+});
 
 // Watch filteredLayers
 // watch(filteredLayers, (layers) => {
@@ -33,7 +45,7 @@ import Button from "@/components/UI/Common/Button.vue";
 					@click="activeFeatureType = 'marker'"
 					:active="activeFeatureType === 'marker'"
 				>
-					<span class="count">99</span>
+					<span class="count" v-html="markerCount"></span>
 				</Button>
 
 				<Button
@@ -46,7 +58,9 @@ import Button from "@/components/UI/Common/Button.vue";
 					icon="ion-arrow-graph-up-right"
 					@click="activeFeatureType = 'line'"
 					:active="activeFeatureType === 'line'"
-				/>
+				>
+					<span class="count" v-html="lineCount"></span>
+				</Button>
 
 				<Button
 					v-if="
@@ -137,10 +151,7 @@ import Button from "@/components/UI/Common/Button.vue";
 					display: inline-block;
 				}
 
-				/*position: relative;*/
 				.count {
-					/*position: absolute;*/
-					color: red;
 					font-size: 12px;
 				}
 			}
