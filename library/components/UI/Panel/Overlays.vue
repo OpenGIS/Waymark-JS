@@ -4,8 +4,15 @@ import { getFeatureType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, dataLayer, filters, filteredLayers, overlays, activeFeatureType } =
-	storeToRefs(useInstanceStore());
+const {
+	map,
+	dataLayer,
+	filters,
+	filteredLayers,
+	overlays,
+	activeFeatureType,
+	activeLayer,
+} = storeToRefs(useInstanceStore());
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
@@ -25,9 +32,44 @@ const lineCount = computed(() => {
 
 <template>
 	<div class="panel overlay">
-		<!-- START Panel Nav -->
-		<header class="panel-nav">
-			<!-- Nav -->
+		<!-- START Panel Top -->
+		<header class="panel-top">
+			<!-- START Active Layer -->
+			<div v-if="activeLayer" class="active-layer">
+				<!-- START Detail -->
+				<div class="detail">
+					<!-- Image -->
+					<div class="image">
+						<img
+							v-if="activeLayer.feature.properties.image_thumbnail_url"
+							:alt="activeLayer.feature.properties.title"
+							:src="activeLayer.feature.properties.image_thumbnail_url"
+						/>
+					</div>
+
+					<!-- Title -->
+					<div class="title">{{ activeLayer.feature.properties.title }}</div>
+
+					<!-- Image -->
+					<div class="image">
+						<img
+							v-if="activeLayer.feature.properties.image_medium_url"
+							:src="activeLayer.feature.properties.image_medium_url"
+						/>
+					</div>
+
+					<!-- Description -->
+					<div
+						class="description"
+						v-if="activeLayer.feature.properties.description"
+						v-html="activeLayer.feature.properties.description"
+					/>
+				</div>
+				<!-- END Detail -->
+			</div>
+			<!-- End Active Layer -->
+
+			<!-- START Nav -->
 			<nav class="feature-nav" :value="activeFeatureType">
 				<Button
 					v-if="
@@ -79,8 +121,9 @@ const lineCount = computed(() => {
 
 				<input type="search" placeholder="Search" v-model="filters.text" />
 			</nav>
+			<!-- END Nav -->
 		</header>
-		<!-- END Panel Nav -->
+		<!-- END Panel Top -->
 
 		<!-- Panel Content -->
 		<div class="panel-content">
@@ -116,7 +159,7 @@ const lineCount = computed(() => {
 
 <style>
 .panel.overlay {
-	.panel-nav {
+	.panel-top {
 		position: sticky;
 		top: 0;
 		right: 0;
@@ -162,6 +205,19 @@ const lineCount = computed(() => {
 .instance.has-active-layer.panel-open {
 	.ui {
 		height: 400px !important;
+
+		.panel.overlay {
+			.panel-top {
+				height: 220px;
+				border: 1px solid red;
+
+				.detail {
+					height: 180px;
+					overflow: hidden;
+					border: 1px solid blue;
+				}
+			}
+		}
 	}
 }
 </style>

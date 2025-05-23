@@ -44,29 +44,11 @@ const toggleOnMap = () => {
     map.value.addLayer(props.layer);
   }
 };
-
-// Add click handler to the layer
-const container = useTemplateRef("container");
-
-watch(activeLayer, (layer) => {
-  if (layer === props.layer) {
-    // Wait for next tick to ensure DOM is updated
-    nextTick(() => {
-      // Scroll to the clicked layer
-      container.value.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest",
-      });
-    });
-  }
-});
 </script>
 
 <template>
   <!-- START Overlay -->
   <div
-    ref="container"
     class="overlay"
     @click="setActiveLayer(layer)"
     :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"
@@ -91,25 +73,6 @@ watch(activeLayer, (layer) => {
       </div>
     </div>
     <!-- END Overview -->
-
-    <!-- START Detail -->
-    <div class="detail" v-show="isActiveLayer">
-      <!-- Image -->
-      <div class="image">
-        <img
-          v-if="props.layer.feature.properties.image_medium_url"
-          :src="props.layer.feature.properties.image_medium_url"
-        />
-      </div>
-
-      <!-- Description -->
-      <div
-        class="description"
-        v-if="props.layer.feature.properties.description"
-        v-html="props.layer.feature.properties.description"
-      />
-    </div>
-    <!-- END Detail -->
   </div>
   <!-- END Overlay -->
 </template>
@@ -164,15 +127,6 @@ watch(activeLayer, (layer) => {
         font-size: 13px;
         font-weight: 300;
         text-overflow: ellipsis;
-      }
-    }
-  }
-
-  /* Detail */
-  .detail {
-    .image {
-      img {
-        max-height: 120px;
       }
     }
   }
