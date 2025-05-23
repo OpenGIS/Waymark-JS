@@ -136,7 +136,7 @@ watch(activeLayer, (layer) => {
     display: flex;
     align-items: center;
 
-    height: 60px;
+    height: 45px;
 
     .image,
     .title,
@@ -146,6 +146,7 @@ watch(activeLayer, (layer) => {
       padding-right: 5px;
 
       &.image {
+        max-height: 45px;
         min-width: 60px;
 
         img {
@@ -155,11 +156,14 @@ watch(activeLayer, (layer) => {
       }
 
       &.title {
-        padding-left: 10px;
-        width: 200px;
+        padding: 10px;
+        width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
         flex: auto;
         font-size: 13px;
         font-weight: 300;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -174,11 +178,14 @@ watch(activeLayer, (layer) => {
   }
 
   &.active {
-    color: blue !important;
-    background: red !important;
+    // color: blue !important;
+    border-color: red !important;
 
     .overview {
+      height: auto;
       .title {
+        overflow: visible;
+        white-space: normal;
         font-weight: bold;
       }
     }

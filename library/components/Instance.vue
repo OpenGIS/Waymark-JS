@@ -51,7 +51,7 @@ const classAppend = computed(() => {
 	}
 
 	// Small display
-	if (container.value.clientWidth <= 320) {
+	if (container.value.clientWidth <= 375) {
 		classes.push("display-small");
 	}
 

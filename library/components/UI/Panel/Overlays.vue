@@ -21,7 +21,7 @@ import Button from "@/components/UI/Common/Button.vue";
 		<!-- START Panel Nav -->
 		<header class="panel-nav">
 			<!-- Nav -->
-			<nav class="type-nav" :value="activeFeatureType">
+			<nav class="feature-nav" :value="activeFeatureType">
 				<Button
 					v-if="
 						dataLayer
@@ -32,7 +32,9 @@ import Button from "@/components/UI/Common/Button.vue";
 					icon="ion-ios-location-outline"
 					@click="activeFeatureType = 'marker'"
 					:active="activeFeatureType === 'marker'"
-				/>
+				>
+					<span class="count">99</span>
+				</Button>
 
 				<Button
 					v-if="
@@ -57,9 +59,9 @@ import Button from "@/components/UI/Common/Button.vue";
 					@click="activeFeatureType = 'shape'"
 					:active="activeFeatureType === 'shape'"
 				/>
-			</nav>
+				<!-- </nav> -->
 
-			<nav class="feature-nav">
+				<!-- <nav class="feature-nav"> -->
 				<Button
 					icon="ion-android-expand"
 					@click="filters.inBounds = !filters.inBounds"
@@ -126,6 +128,21 @@ import Button from "@/components/UI/Common/Button.vue";
 			input {
 				height: 30px;
 				width: 80px;
+			}
+
+			.button {
+				width: auto;
+				i,
+				.count {
+					display: inline-block;
+				}
+
+				/*position: relative;*/
+				.count {
+					/*position: absolute;*/
+					color: red;
+					font-size: 12px;
+				}
 			}
 		}
 	}

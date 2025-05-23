@@ -65,6 +65,7 @@ const headingStyle = () => {
     case "line":
       style += `color:${typeData.icon_colour};`;
       style += `border-color:${typeData.line_colour};`;
+      style += `background-color:${typeData.line_colour};`;
 
       break;
   }
@@ -83,13 +84,27 @@ const headingClick = () => {
     });
   }
 };
+
+const headingClass = () => {
+  let out = "type";
+
+  out += ` ${props.featureType}`;
+  out += ` ${props.overlayType}`;
+
+  // Check if hidden
+  if (!layerCount.value) {
+    out += " hidden";
+  }
+
+  return out;
+};
 </script>
 
 <template>
-  <div class="type" :class="{ hidden: !layerCount }">
+  <div :class="headingClass()">
+    <!-- <div class="type" :class="{ hidden: !layerCount }"> -->
     <!-- Heading -->
-    <!-- <div class="heading" :style="headingStyle()" @click.stop="headingClick()"> -->
-    <div class="heading" :style="headingStyle()">
+    <div class="heading" :style="headingStyle()" @click.stop="headingClick()">
       <!-- Image -->
       <div class="icon" v-if="featureType == 'marker'">
         <Preview :featureType="featureType" :typeData="typeData" />
@@ -131,9 +146,19 @@ const headingClick = () => {
     display: none;
   }
 
+  &.line {
+    .heading {
+      .title {
+        color: #fff;
+        text-shadow:
+          0 0 1px #000,
+          0 0 2px #000;
+      }
+    }
+  }
+
   .heading {
     display: flex;
-
     align-items: center;
     border-bottom-width: 3px;
     border-bottom-style: solid;
@@ -142,13 +167,11 @@ const headingClick = () => {
     .icon,
     .title,
     .action {
-      padding: 10px 0;
+      padding: 0 5px;
       flex: 1;
-      // max-width: 60px;
       vertical-align: middle;
 
       &.icon {
-        // width: 50px;
         position: relative;
         .waymark-marker {
           .waymark-marker-background {
@@ -163,10 +186,7 @@ const headingClick = () => {
       }
 
       &.title {
-        // flex: auto;
-        // overflow: hidden;
-        // max-width: unset;
-        min-width: 140px;
+        min-width: 255px;
         padding-left: 5px;
         font-size: 14px;
       }
