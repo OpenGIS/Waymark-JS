@@ -21,11 +21,6 @@ const lineCount = computed(() => {
 		.getLayers()
 		.filter((layer) => getFeatureType(layer.feature) === "line").length;
 });
-
-// Watch filteredLayers
-// watch(filteredLayers, (layers) => {
-// 	console.log("Filtered Layers:", layers.getLayers().length);
-// });
 </script>
 
 <template>
@@ -161,6 +156,12 @@ const lineCount = computed(() => {
 	.panel-content {
 		padding-bottom: 44px;
 		overflow-y: auto;
+	}
+}
+
+.instance.has-active-layer.panel-open {
+	.ui {
+		height: 400px !important;
 	}
 }
 </style>

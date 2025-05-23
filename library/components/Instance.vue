@@ -5,7 +5,8 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { mapReady, config, container, panelOpen } = storeToRefs(instanceStore);
+const { mapReady, config, container, panelOpen, activeLayer } =
+	storeToRefs(instanceStore);
 
 import "@/assets/css/index.css";
 
@@ -53,6 +54,11 @@ const classAppend = computed(() => {
 	// Small display
 	if (container.value.clientWidth <= 375) {
 		classes.push("display-small");
+	}
+
+	// Has active layer
+	if (activeLayer.value) {
+		classes.push("has-active-layer");
 	}
 
 	return classes.join(" ");
