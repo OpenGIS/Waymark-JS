@@ -150,38 +150,29 @@ const headingClass = () => {
   border-bottom-width: 3px;
   border-bottom-style: solid;
 
-  /* Columns */
-  .icon,
-  .title,
-  .action {
-    padding: 0 5px;
-    flex: 1;
-    vertical-align: middle;
+  .icon {
+    position: relative;
+    .waymark-marker {
+      .waymark-marker-background {
+        display: none;
+      }
 
-    &.icon {
-      position: relative;
-      .waymark-marker {
-        .waymark-marker-background {
-          display: none;
-        }
-
-        .waymark-marker-icon::before {
-          padding-top: 0 !important;
-          font-size: 24px !important;
-        }
+      .waymark-marker-icon::before {
+        padding-top: 0 !important;
+        font-size: 24px !important;
       }
     }
+  }
 
-    &.title {
-      // min-width: 255px;
-      padding-left: 5px;
-      font-size: 14px;
-    }
+  .title {
+    // min-width: 255px;
+    padding-left: 5px;
+    font-size: 14px;
+  }
 
-    .count {
-      opacity: 0.7;
-      font-size: 80%;
-    }
+  .count {
+    opacity: 0.7;
+    font-size: 80%;
   }
 }
 

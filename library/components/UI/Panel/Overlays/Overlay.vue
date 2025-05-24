@@ -93,41 +93,13 @@ const toggleOnMap = () => {
 }
 
 .overlay {
-  /* Overview */
-  .overview {
-    display: flex;
-    align-items: center;
-
-    height: 45px;
-
-    .image,
-    .title,
-    .action {
-      flex: 1;
-      // max-width: 60px;
-      padding-right: 5px;
-
-      &.image {
-        max-height: 45px;
-        min-width: 60px;
-
-        img {
-          max-width: 100%;
-          max-height: 100%;
-        }
-      }
-
-      &.title {
-        padding: 10px;
-        // width: 180px;
-        white-space: nowrap;
-        overflow: hidden;
-        flex: auto;
-        font-size: 13px;
-        font-weight: 300;
-        text-overflow: ellipsis;
-      }
-    }
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    flex: auto;
+    font-size: 13px;
+    font-weight: 300;
+    text-overflow: ellipsis;
   }
 
   &.active {

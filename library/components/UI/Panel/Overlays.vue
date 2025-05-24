@@ -202,7 +202,30 @@ const lineCount = computed(() => {
 
 		table {
 			td {
-				border: 1px solid #999;
+				padding: 0 3px;
+				vertical-align: middle;
+				text-align: center;
+				/*border: 1px solid #999;*/
+
+				&.icon,
+				&.image {
+					width: 44px;
+					img {
+						width: 100%;
+						height: auto;
+					}
+				}
+
+				&.title {
+					text-align: left;
+
+					white-space: nowrap;
+					overflow: hidden;
+					font-size: 13px;
+					font-weight: 300;
+					text-overflow: ellipsis;
+					color: blue;
+				}
 			}
 		}
 	}
