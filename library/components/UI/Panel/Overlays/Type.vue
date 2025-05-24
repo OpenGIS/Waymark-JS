@@ -102,42 +102,44 @@ const headingClass = () => {
 
 <template>
   <!-- Heading -->
-  <div
+  <tr
     class="heading"
     :class="headingClass()"
     :style="headingStyle()"
     @click.stop="headingClick()"
   >
     <!-- Image -->
-    <div class="icon" v-if="featureType == 'marker'">
+    <td class="icon" v-if="featureType == 'marker'">
       <Preview :featureType="featureType" :typeData="typeData" />
-    </div>
+    </td>
 
     <!-- Title -->
-    <div class="title">
+    <td class="title">
       {{ typeData[props.featureType + "_title"] }}
-    </div>
+    </td>
 
     <!-- Expand -->
-    <div class="action expand">
+    <td class="action expand">
       <Button :icon="expandedIcon(isExpanded)">
         <span class="count">{{ layerCount }}</span>
       </Button>
-    </div>
+    </td>
 
     <!-- Visible -->
-    <div class="action visible">
+    <td class="action visible">
       <Button
         :icon="visibleIcon(isVisible)"
         @click.stop="toggleVisible()"
       ></Button>
-    </div>
-  </div>
+    </td>
+  </tr>
 
   <!-- List Overlays for this Type -->
-  <div class="overlays" v-show="isExpanded">
-    <Overlay :layer="layer" v-for="layer in layerGroup.getLayers()" />
-  </div>
+  <Overlay
+    :layer="layer"
+    v-for="layer in layerGroup.getLayers()"
+    v-show="isExpanded"
+  />
 </template>
 
 <style lang="less">

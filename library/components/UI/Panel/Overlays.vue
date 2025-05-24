@@ -128,7 +128,7 @@ const lineCount = computed(() => {
 		<!-- Panel Content -->
 		<div class="panel-content">
 			<!-- Markers -->
-			<div
+			<table
 				v-show="activeFeatureType === 'marker'"
 				class="marker-types type-list"
 			>
@@ -140,10 +140,10 @@ const lineCount = computed(() => {
 					:layerGroup="overlays.markers[typeKey]"
 					:overlayType="typeKey"
 				/>
-			</div>
+			</table>
 
 			<!-- Lines -->
-			<div v-show="activeFeatureType === 'line'" class="line-types type-list">
+			<table v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
 					v-for="typeKey in Object.keys(overlays.lines)"
@@ -152,7 +152,7 @@ const lineCount = computed(() => {
 					:layerGroup="overlays.lines[typeKey]"
 					:overlayType="typeKey"
 				/>
-			</div>
+			</table>
 		</div>
 	</div>
 </template>
@@ -199,6 +199,12 @@ const lineCount = computed(() => {
 	.panel-content {
 		padding-bottom: 44px;
 		overflow-y: auto;
+
+		table {
+			td {
+				border: 1px solid #999;
+			}
+		}
 	}
 }
 

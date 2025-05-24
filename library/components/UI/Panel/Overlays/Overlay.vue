@@ -48,32 +48,31 @@ const toggleOnMap = () => {
 
 <template>
   <!-- START Overlay -->
-  <div
+  <tr
     class="overlay"
     @click="setActiveLayer(layer)"
     :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"
   >
-    <!-- START Overview -->
-    <div class="overview">
-      <!-- Image -->
-      <div class="image">
-        <img
-          v-if="props.layer.feature.properties.image_thumbnail_url"
-          :alt="props.layer.feature.properties.title"
-          :src="props.layer.feature.properties.image_thumbnail_url"
-        />
-      </div>
+    <!-- Image -->
+    <td class="image">
+      <img
+        v-if="props.layer.feature.properties.image_thumbnail_url"
+        :alt="props.layer.feature.properties.title"
+        :src="props.layer.feature.properties.image_thumbnail_url"
+      />
+    </td>
 
-      <!-- Title -->
-      <div class="title">{{ props.layer.feature.properties.title }}</div>
+    <!-- Title -->
+    <td class="title">{{ props.layer.feature.properties.title }}</td>
 
-      <!-- OnMap -->
-      <div class="action visible">
-        <Button :icon="visibleIcon(isOnMap)" @click.stop="toggleOnMap()" />
-      </div>
-    </div>
-    <!-- END Overview -->
-  </div>
+    <!-- ? -->
+    <td class="action">&nbsp;</td>
+
+    <!-- Visible -->
+    <td class="action visible">
+      <Button :icon="visibleIcon(isOnMap)" @click.stop="toggleOnMap()" />
+    </td>
+  </tr>
   <!-- END Overlay -->
 </template>
 
@@ -135,13 +134,11 @@ const toggleOnMap = () => {
     // color: blue !important;
     border-color: red !important;
 
-    .overview {
-      height: auto;
-      .title {
-        overflow: visible;
-        white-space: normal;
-        font-weight: bold;
-      }
+    height: auto;
+    .title {
+      overflow: visible;
+      white-space: normal;
+      font-weight: bold;
     }
   }
 
