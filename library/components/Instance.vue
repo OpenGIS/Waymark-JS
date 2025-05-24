@@ -53,7 +53,7 @@ const classAppend = computed(() => {
 
 	// Small display
 	if (container.value.clientWidth <= 375) {
-		classes.push("display-small");
+		classes.push("display-narrow");
 	}
 
 	// Has active layer
@@ -111,7 +111,7 @@ const classAppend = computed(() => {
 		}
 	}
 
-	&.display-small {
+	&.display-narrow {
 		flex-direction: column;
 
 		&.panel-open {

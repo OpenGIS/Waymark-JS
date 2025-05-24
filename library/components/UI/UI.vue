@@ -134,7 +134,7 @@ const isActivePanel = (panelKey) => {
 		}
 	}
 
-	&.display-small {
+	&.display-narrow {
 		.map {
 			width: 100%;
 			height: calc(100% - 44px);
