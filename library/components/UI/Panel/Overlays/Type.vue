@@ -86,7 +86,7 @@ const headingClick = () => {
 };
 
 const headingClass = () => {
-  let out = "type";
+  let out = "";
 
   out += ` ${props.featureType}`;
   out += ` ${props.overlayType}`;
@@ -101,109 +101,92 @@ const headingClass = () => {
 </script>
 
 <template>
-  <div :class="headingClass()">
-    <!-- <div class="type" :class="{ hidden: !layerCount }"> -->
-    <!-- Heading -->
-    <div class="heading" :style="headingStyle()" @click.stop="headingClick()">
-      <!-- Image -->
-      <div class="icon" v-if="featureType == 'marker'">
-        <Preview :featureType="featureType" :typeData="typeData" />
-      </div>
-
-      <!-- Title -->
-      <div class="title">
-        {{ typeData[props.featureType + "_title"] }}
-      </div>
-
-      <!-- Expand -->
-      <div class="action expand">
-        <Button :icon="expandedIcon(isExpanded)">
-          <span class="count">{{ layerCount }}</span>
-        </Button>
-      </div>
-
-      <!-- Visible -->
-      <div class="action visible">
-        <Button
-          :icon="visibleIcon(isVisible)"
-          @click.stop="toggleVisible()"
-        ></Button>
-      </div>
+  <!-- Heading -->
+  <div
+    class="heading"
+    :class="headingClass()"
+    :style="headingStyle()"
+    @click.stop="headingClick()"
+  >
+    <!-- Image -->
+    <div class="icon" v-if="featureType == 'marker'">
+      <Preview :featureType="featureType" :typeData="typeData" />
     </div>
 
-    <!-- List Overlays for this Type -->
-    <div class="overlays" v-show="isExpanded">
-      <Overlay :layer="layer" v-for="layer in layerGroup.getLayers()" />
+    <!-- Title -->
+    <div class="title">
+      {{ typeData[props.featureType + "_title"] }}
     </div>
+
+    <!-- Expand -->
+    <div class="action expand">
+      <Button :icon="expandedIcon(isExpanded)">
+        <span class="count">{{ layerCount }}</span>
+      </Button>
+    </div>
+
+    <!-- Visible -->
+    <div class="action visible">
+      <Button
+        :icon="visibleIcon(isVisible)"
+        @click.stop="toggleVisible()"
+      ></Button>
+    </div>
+  </div>
+
+  <!-- List Overlays for this Type -->
+  <div class="overlays" v-show="isExpanded">
+    <Overlay :layer="layer" v-for="layer in layerGroup.getLayers()" />
   </div>
 </template>
 
 <style lang="less">
-.type {
-  margin-bottom: 0;
+.heading {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
 
-  &.hidden {
-    display: none;
-  }
+  /* Columns */
+  .icon,
+  .title,
+  .action {
+    padding: 0 5px;
+    flex: 1;
+    vertical-align: middle;
 
-  &.line {
-    .heading {
-      .title {
-        color: #fff;
-        text-shadow:
-          0 0 1px #000,
-          0 0 2px #000;
-      }
-    }
-  }
+    &.icon {
+      position: relative;
+      .waymark-marker {
+        .waymark-marker-background {
+          display: none;
+        }
 
-  .heading {
-    display: flex;
-    overflow: hidden;
-    align-items: center;
-    border-bottom-width: 3px;
-    border-bottom-style: solid;
-
-    /* Columns */
-    .icon,
-    .title,
-    .action {
-      padding: 0 5px;
-      flex: 1;
-      vertical-align: middle;
-
-      &.icon {
-        position: relative;
-        .waymark-marker {
-          .waymark-marker-background {
-            display: none;
-          }
-
-          .waymark-marker-icon::before {
-            padding-top: 0 !important;
-            font-size: 24px !important;
-          }
+        .waymark-marker-icon::before {
+          padding-top: 0 !important;
+          font-size: 24px !important;
         }
       }
+    }
 
-      &.title {
-        // min-width: 255px;
-        padding-left: 5px;
-        font-size: 14px;
-      }
+    &.title {
+      // min-width: 255px;
+      padding-left: 5px;
+      font-size: 14px;
+    }
 
-      .count {
-        opacity: 0.7;
-        font-size: 80%;
-      }
+    .count {
+      opacity: 0.7;
+      font-size: 80%;
     }
   }
+}
 
-  .overlay {
-    /* Every other */
-    &:nth-child(odd) {
-      background: #f7f7f7;
-    }
+.overlay {
+  /* Every other */
+  &:nth-child(odd) {
+    background: #f7f7f7;
   }
 }
 </style>
