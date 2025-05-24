@@ -201,30 +201,35 @@ const lineCount = computed(() => {
 		overflow-y: auto;
 
 		table {
-			td {
-				padding: 0 3px;
-				vertical-align: middle;
-				text-align: center;
-				/*border: 1px solid #999;*/
-
-				&.icon,
-				&.image {
-					width: 44px;
-					img {
-						width: 100%;
-						height: auto;
-					}
+			tr {
+				&.overlay {
+					border-bottom: 1px solid #eee;
 				}
+				td {
+					padding: 0 3px;
+					vertical-align: middle;
+					text-align: center;
+					/*border: 1px solid #999;*/
 
-				&.title {
-					text-align: left;
+					&.icon,
+					&.image {
+						min-width: 44px;
+						img {
+							width: 100%;
+							height: auto;
+						}
+					}
 
-					white-space: nowrap;
-					overflow: hidden;
-					font-size: 13px;
-					font-weight: 300;
-					text-overflow: ellipsis;
-					color: blue;
+					&.title {
+						text-align: left;
+						width: 120px;
+						.content {
+							width: inherit;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
 				}
 			}
 		}

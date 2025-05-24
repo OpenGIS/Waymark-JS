@@ -109,13 +109,15 @@ const headingClass = () => {
     @click.stop="headingClick()"
   >
     <!-- Image -->
-    <td class="icon" v-if="featureType == 'marker'">
+    <td class="icon">
       <Preview :featureType="featureType" :typeData="typeData" />
     </td>
 
     <!-- Title -->
     <td class="title">
-      {{ typeData[props.featureType + "_title"] }}
+      <div class="content">
+        {{ typeData[props.featureType + "_title"] }}
+      </div>
     </td>
 
     <!-- Expand -->
@@ -174,12 +176,17 @@ const headingClass = () => {
     opacity: 0.7;
     font-size: 80%;
   }
-}
 
-.overlay {
-  /* Every other */
-  &:nth-child(odd) {
-    background: #f7f7f7;
+  &.line {
+    .title {
+      color: #fff;
+      text-shadow:
+        0 0 1px #000,
+        0 0 2px #000;
+    }
+  }
+  &.hidden {
+    display: none;
   }
 }
 </style>

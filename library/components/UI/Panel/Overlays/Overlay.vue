@@ -63,10 +63,12 @@ const toggleOnMap = () => {
     </td>
 
     <!-- Title -->
-    <td class="title">{{ props.layer.feature.properties.title }}</td>
+    <td class="title" colspan="2">
+      <div class="content">{{ props.layer.feature.properties.title }}</div>
+    </td>
 
     <!-- ? -->
-    <td class="action">&nbsp;</td>
+    <!-- <td class="action">&nbsp;</td> -->
 
     <!-- Visible -->
     <td class="action visible">
@@ -93,15 +95,6 @@ const toggleOnMap = () => {
 }
 
 .overlay {
-  .title {
-    white-space: nowrap;
-    overflow: hidden;
-    flex: auto;
-    font-size: 13px;
-    font-weight: 300;
-    text-overflow: ellipsis;
-  }
-
   &.active {
     // color: blue !important;
     border-color: red !important;

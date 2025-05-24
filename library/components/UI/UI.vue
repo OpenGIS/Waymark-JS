@@ -120,7 +120,6 @@ const isActivePanel = (panelKey) => {
 
 		.panels-content {
 			height: 100%;
-			margin-right: -15px;
 			overflow-y: auto;
 		}
 	}
