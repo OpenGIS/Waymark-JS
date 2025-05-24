@@ -144,7 +144,7 @@ const headingClass = () => {
 
 <style lang="less">
 .heading {
-  display: flex;
+  // display: flex;
   overflow: hidden;
   align-items: center;
   border-bottom-width: 3px;
