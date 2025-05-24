@@ -204,7 +204,7 @@ const lineCount = computed(() => {
 
 .instance.has-active-layer.panel-open {
 	.ui {
-		height: 400px !important;
+		/*height: 400px !important;*/
 
 		.panel.overlay {
 			.panel-top {

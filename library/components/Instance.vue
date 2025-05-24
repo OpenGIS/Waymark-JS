@@ -124,6 +124,12 @@ const classAppend = computed(() => {
 				width: 100%;
 				// height: 480px;
 			}
+
+			&.has-active-layer {
+				.ui {
+					height: 480px;
+				}
+			}
 		}
 	}
 }

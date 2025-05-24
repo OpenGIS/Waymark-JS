@@ -159,6 +159,7 @@ const headingClass = () => {
 
   .heading {
     display: flex;
+    overflow: hidden;
     align-items: center;
     border-bottom-width: 3px;
     border-bottom-style: solid;
@@ -186,7 +187,7 @@ const headingClass = () => {
       }
 
       &.title {
-        min-width: 255px;
+        // min-width: 255px;
         padding-left: 5px;
         font-size: 14px;
       }

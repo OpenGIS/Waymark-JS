@@ -120,7 +120,7 @@ const toggleOnMap = () => {
 
       &.title {
         padding: 10px;
-        width: 180px;
+        // width: 180px;
         white-space: nowrap;
         overflow: hidden;
         flex: auto;
