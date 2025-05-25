@@ -36,36 +36,23 @@ const lineCount = computed(() => {
 		<header class="panel-top">
 			<!-- START Active Layer -->
 			<div v-if="activeLayer" class="active-layer">
-				<!-- START Detail -->
-				<div class="detail">
-					<!-- Image -->
-					<div class="image">
-						<img
-							v-if="activeLayer.feature.properties.image_thumbnail_url"
-							:alt="activeLayer.feature.properties.title"
-							:src="activeLayer.feature.properties.image_thumbnail_url"
-						/>
-					</div>
+				<!-- Title -->
+				<div class="title">{{ activeLayer.feature.properties.title }}</div>
 
-					<!-- Title -->
-					<div class="title">{{ activeLayer.feature.properties.title }}</div>
-
-					<!-- Image -->
-					<div class="image">
-						<img
-							v-if="activeLayer.feature.properties.image_medium_url"
-							:src="activeLayer.feature.properties.image_medium_url"
-						/>
-					</div>
-
-					<!-- Description -->
-					<div
-						class="description"
-						v-if="activeLayer.feature.properties.description"
-						v-html="activeLayer.feature.properties.description"
+				<!-- Image -->
+				<div class="image">
+					<img
+						v-if="activeLayer.feature.properties.image_medium_url"
+						:src="activeLayer.feature.properties.image_medium_url"
 					/>
 				</div>
-				<!-- END Detail -->
+
+				<!-- Description -->
+				<div
+					class="description"
+					v-if="activeLayer.feature.properties.description"
+					v-html="activeLayer.feature.properties.description"
+				/>
 			</div>
 			<!-- End Active Layer -->
 
@@ -110,9 +97,7 @@ const lineCount = computed(() => {
 					@click="activeFeatureType = 'shape'"
 					:active="activeFeatureType === 'shape'"
 				/>
-				<!-- </nav> -->
 
-				<!-- <nav class="feature-nav"> -->
 				<Button
 					icon="ion-android-expand"
 					@click="filters.inBounds = !filters.inBounds"
@@ -166,6 +151,25 @@ const lineCount = computed(() => {
 		background-color: #fff;
 		border-bottom: 1px solid #999;
 		z-index: 100;
+
+		.active-layer {
+			.title {
+				font-size: 16px;
+				font-weight: bold;
+				margin-bottom: 5px;
+			}
+
+			.image {
+				img {
+					max-width: 120px;
+				}
+			}
+
+			.description {
+				font-size: 14px;
+				color: #555;
+			}
+		}
 
 		nav {
 			display: inline-block;
@@ -245,7 +249,7 @@ const lineCount = computed(() => {
 				height: 220px;
 				border: 1px solid red;
 
-				.detail {
+				.active-layer {
 					height: 180px;
 					overflow: hidden;
 					border: 1px solid blue;
