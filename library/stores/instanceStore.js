@@ -52,7 +52,11 @@ export const useInstanceStore = defineStore("instance", () => {
 			const typeData = getTypeData(featureType, typeKey);
 
 			// Is it in the current map bounds
-			if (filters.value.inBounds && !isLayerInBounds(layer, mapBounds.value)) {
+			if (
+				filters.value.inBounds &&
+				mapBounds.value &&
+				!isLayerInBounds(layer, mapBounds.value)
+			) {
 				return;
 			}
 

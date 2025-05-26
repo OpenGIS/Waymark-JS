@@ -5,7 +5,6 @@ import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const {
-	map,
 	dataLayer,
 	filters,
 	filteredLayers,
@@ -57,7 +56,7 @@ const lineCount = computed(() => {
 			<!-- End Active Layer -->
 
 			<!-- START Nav -->
-			<nav class="feature-nav" :value="activeFeatureType">
+			<nav class="feature-nav">
 				<Button
 					v-if="
 						dataLayer
