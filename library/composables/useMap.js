@@ -14,19 +14,49 @@ export function useMap() {
 	const {
 		config,
 		map,
+		mapReady,
+		mapBounds,
+		dataLayer,
 		overlays,
 		activeLayer,
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
+		tileLayers,
+		activeTileLayer,
 	} = storeToRefs(useInstanceStore());
 
+	// Create & Store Map
 	const createMap = () => {
-		// Create & Store Map
-		return L.map(
-			`${config.value.map_options.div_id}-map`,
+		// Create Leaflet instance
+		map.value = L.map(
+			getMapContainerID(),
 			config.value.map_options.leaflet_options,
 		);
+
+		// Create Tile Layers
+		tileLayers.value = createTileLayerGroup();
+		activeTileLayer.value = tileLayers.value.getLayers()[0];
+		map.value.addLayer(activeTileLayer.value);
+
+		// Create data layer
+		createDataLayer();
+
+		// Set initial bounds
+		viewDataBounds();
+
+		// Update bounds on map move & zoom
+		map.value.on("moveend", () => {
+			mapBounds.value = map.value.getBounds();
+		});
+
+		// Triggers the UI to populate
+		mapReady.value = true;
+	};
+
+	// Get the Div ID for the Map container
+	const getMapContainerID = () => {
+		return `${config.value.map_options.div_id}-map`;
 	};
 
 	const createTileLayerGroup = () => {
@@ -61,11 +91,14 @@ export function useMap() {
 	};
 
 	const createDataLayer = () => {
-		return L.geoJSON(config.value.geoJSON, {
-			// Create Markers
+		// Create Data Layer
+		dataLayer.value = L.geoJSON(config.value.geoJSON, {
 			pointToLayer,
 			onEachFeature,
 		});
+
+		// Add Data Layer to Map
+		map.value.addLayer(dataLayer.value);
 	};
 
 	// Create Markers
@@ -277,16 +310,25 @@ export function useMap() {
 		highlightLayer(layer);
 	};
 
+	const mapResized = () => {
+		map.value.invalidateSize();
+	};
+
+	const viewDataBounds = () => {
+		map.value.fitBounds(dataLayer.value.getBounds(), {
+			padding: [30, 30],
+			animate: false,
+		});
+	};
+
 	return {
 		createMap,
-		createDataLayer,
-		createTileLayerGroup,
-		pointToLayer,
-		onEachFeature,
+		getMapContainerID,
 		isLayerInBounds,
 		focusMapOnLayer,
 		highlightLayer,
 		unHighlightLayer,
 		setActiveLayer,
+		mapResized,
 	};
 }

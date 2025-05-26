@@ -1,32 +1,24 @@
 <script setup>
 import { onMounted, useTemplateRef } from "vue";
-import { useInstanceStore } from "@/stores/instanceStore.js";
-import { storeToRefs } from "pinia";
+
+import { useUI } from "@/composables/useUI.js";
+const {
+	showPanel,
+	togglePanel,
+	setActivePanel,
+	isActivePanel,
+	getActivePanelKey,
+	setUIContainer,
+} = useUI();
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-const { panelOpen, map, dataLayer, activePanelKey } =
-	storeToRefs(useInstanceStore());
-
-const showPanel = (panelKey) => {
-	return activePanelKey.value === panelKey && panelOpen.value;
-};
-
-function togglePanel() {
-	panelOpen.value = !panelOpen.value;
-}
-
-function setActivePanel(panelKey = "overlays") {
-	activePanelKey.value = panelKey;
-	panelOpen.value = true;
-}
-
 const handleNavClick = (panelKey = "overlays") => {
 	// Toggle existing panel
-	if (panelKey === activePanelKey.value) {
+	if (panelKey === getActivePanelKey()) {
 		togglePanel();
 		// Switch to a different panel
 	} else {
@@ -34,25 +26,11 @@ const handleNavClick = (panelKey = "overlays") => {
 	}
 };
 
-// On container resize, update the map size
 const container = useTemplateRef("container");
 
 onMounted(() => {
-	const resizeObserver = new ResizeObserver(() => {
-		map.value.invalidateSize();
-		map.value.fitBounds(dataLayer.value.getBounds(), {
-			padding: [30, 30],
-			animate: false,
-		});
-	});
-
-	resizeObserver.observe(container.value);
+	setUIContainer(container.value);
 });
-
-// Check if the panel is active
-const isActivePanel = (panelKey) => {
-	return panelOpen.value && activePanelKey.value === panelKey;
-};
 </script>
 
 <template>
