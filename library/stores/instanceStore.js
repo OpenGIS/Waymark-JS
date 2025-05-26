@@ -6,7 +6,7 @@ import {
 	getTypeData,
 } from "@/helpers/Overlay.js";
 import { deepMerge } from "@/helpers/Common.js";
-import { useLeaflet } from "@/composables/useLeaflet.js";
+import { useMap } from "@/composables/useMap.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
@@ -40,7 +40,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	// Getters
 
-	const { isLayerInBounds } = useLeaflet();
+	const { isLayerInBounds } = useMap();
 
 	const filteredLayers = computed(() => {
 		const filtered = L.featureGroup();

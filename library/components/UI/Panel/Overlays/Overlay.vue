@@ -2,8 +2,8 @@
 import { ref, computed, useTemplateRef, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useLeaflet } from "@/composables/useLeaflet.js";
-const { unHighlightLayer, setActiveLayer } = useLeaflet();
+import { useMap } from "@/composables/useMap.js";
+const { unHighlightLayer, setActiveLayer } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();

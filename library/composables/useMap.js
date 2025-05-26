@@ -10,7 +10,7 @@ import { makeKey } from "@/helpers/Common.js";
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-export function useLeaflet() {
+export function useMap() {
 	const {
 		config,
 		map,

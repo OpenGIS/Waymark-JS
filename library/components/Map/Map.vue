@@ -2,8 +2,8 @@
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useLeaflet } from "@/composables/useLeaflet.js";
-const { createMap, createTileLayerGroup, createDataLayer } = useLeaflet();
+import { useMap } from "@/composables/useMap.js";
+const { createMap, createTileLayerGroup, createDataLayer } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const {
