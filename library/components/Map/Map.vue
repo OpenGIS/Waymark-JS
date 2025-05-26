@@ -23,7 +23,7 @@ onMounted(() => {
   // Create Tile Layers
   tileLayers.value = createTileLayerGroup();
   activeTileLayer.value = tileLayers.value.getLayers()[0];
-  map.value.addLayer(tileLayers.value);
+  map.value.addLayer(activeTileLayer.value);
 
   // Create data layer
   dataLayer.value = createDataLayer();
