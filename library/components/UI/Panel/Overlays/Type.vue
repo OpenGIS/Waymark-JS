@@ -2,8 +2,11 @@
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
+import { useMap } from "@/composables/useMap.js";
+const { filteredLayers } = useMap();
+
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, filteredLayers } = storeToRefs(useInstanceStore());
+const { map } = storeToRefs(useInstanceStore());
 
 import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";

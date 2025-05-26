@@ -1,12 +1,6 @@
-import { ref, shallowRef, computed } from "vue";
+import { ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
-import {
-	getFeatureType,
-	getOverlayTypeKey,
-	getTypeData,
-} from "@/helpers/Overlay.js";
 import { deepMerge } from "@/helpers/Common.js";
-import { useMap } from "@/composables/useMap.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
@@ -39,63 +33,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	});
 
 	// Getters
-
-	const { isLayerInBounds } = useMap();
-
-	const filteredLayers = computed(() => {
-		const filtered = L.featureGroup();
-
-		// Iterate over all overlays
-		dataLayer.value.eachLayer((layer) => {
-			const featureType = getFeatureType(layer.feature);
-			const typeKey = getOverlayTypeKey(layer.feature);
-			const typeData = getTypeData(featureType, typeKey);
-
-			// Is it in the current map bounds
-			if (
-				filters.value.inBounds &&
-				mapBounds.value &&
-				!isLayerInBounds(layer, mapBounds.value)
-			) {
-				return;
-			}
-
-			// Text filter
-			if (filters.value.text !== "") {
-				let matches = 0;
-
-				// Text included in type title
-				matches += typeData[featureType + "_title"]
-					.toString()
-					.toLowerCase()
-					.includes(filters.value.text.toLowerCase());
-
-				// Check all GeoJSON properties VALUES (not keys) for existence of filter text
-				const properties = Object.values(layer.feature.properties);
-
-				matches += properties.some((p) => {
-					return p
-						.toString()
-						.toLowerCase()
-						.includes(filters.value.text.toLowerCase());
-				});
-
-				// If no matches, skip this layer
-				if (matches === 0) {
-					return;
-				}
-			}
-
-			// Add to filtered layers
-			if (!filtered.hasLayer(layer)) {
-				filtered.addLayer(layer);
-			}
-		});
-
-		// Text filter
-
-		return filtered;
-	});
 
 	// Actions
 	const init = (initConfig = {}) => {
@@ -132,9 +69,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		activeLayer,
 		activePanelKey,
 		activeFeatureType,
-
-		// Getters
-		filteredLayers,
 
 		// Actions
 		init,

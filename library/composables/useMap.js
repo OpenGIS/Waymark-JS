@@ -1,10 +1,17 @@
+import { computed } from "vue";
+
 // Import Leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { storeToRefs } from "pinia";
 
 // Import Helpers
-import { getTypeData, getFeatureType, getIconData } from "@/helpers/Overlay.js";
+import {
+	getTypeData,
+	getFeatureType,
+	getIconData,
+	getOverlayTypeKey,
+} from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 // Import instanceStore
@@ -15,6 +22,7 @@ export function useMap() {
 		config,
 		map,
 		mapReady,
+		filters,
 		mapBounds,
 		dataLayer,
 		overlays,
@@ -321,6 +329,59 @@ export function useMap() {
 		});
 	};
 
+	const filteredLayers = computed(() => {
+		const filtered = L.featureGroup();
+
+		// Iterate over all overlays
+		dataLayer.value.eachLayer((layer) => {
+			const featureType = getFeatureType(layer.feature);
+			const typeKey = getOverlayTypeKey(layer.feature);
+			const typeData = getTypeData(featureType, typeKey);
+
+			// Is it in the current map bounds
+			if (
+				filters.value.inBounds &&
+				mapBounds.value &&
+				!isLayerInBounds(layer, mapBounds.value)
+			) {
+				return;
+			}
+
+			// Text filter
+			if (filters.value.text !== "") {
+				let matches = 0;
+
+				// Text included in type title
+				matches += typeData[featureType + "_title"]
+					.toString()
+					.toLowerCase()
+					.includes(filters.value.text.toLowerCase());
+
+				// Check all GeoJSON properties VALUES (not keys) for existence of filter text
+				const properties = Object.values(layer.feature.properties);
+
+				matches += properties.some((p) => {
+					return p
+						.toString()
+						.toLowerCase()
+						.includes(filters.value.text.toLowerCase());
+				});
+
+				// If no matches, skip this layer
+				if (matches === 0) {
+					return;
+				}
+			}
+
+			// Add to filtered layers
+			if (!filtered.hasLayer(layer)) {
+				filtered.addLayer(layer);
+			}
+		});
+
+		return filtered;
+	});
+
 	return {
 		createMap,
 		getMapContainerID,
@@ -330,5 +391,6 @@ export function useMap() {
 		unHighlightLayer,
 		setActiveLayer,
 		mapResized,
+		filteredLayers,
 	};
 }

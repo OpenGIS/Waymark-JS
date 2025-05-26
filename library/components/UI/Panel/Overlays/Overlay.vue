@@ -1,13 +1,13 @@
 <script setup>
-import { ref, computed, useTemplateRef, watch, nextTick } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
-const { unHighlightLayer, setActiveLayer } = useMap();
+const { unHighlightLayer, setActiveLayer, filteredLayers } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { map, activeLayer, filteredLayers } = storeToRefs(instanceStore);
+const { map, activeLayer } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";

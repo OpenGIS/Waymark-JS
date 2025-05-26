@@ -3,15 +3,12 @@ import { computed } from "vue";
 import { getFeatureType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 
+import { useMap } from "@/composables/useMap.js";
+const { filteredLayers } = useMap();
+
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const {
-	dataLayer,
-	filters,
-	filteredLayers,
-	overlays,
-	activeFeatureType,
-	activeLayer,
-} = storeToRefs(useInstanceStore());
+const { dataLayer, filters, overlays, activeFeatureType, activeLayer } =
+	storeToRefs(useInstanceStore());
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
