@@ -1,10 +1,5 @@
 import L from "leaflet";
-import {
-  getTypeData,
-  getFeatureType,
-  getIconData,
-  getOverlayTypeKey,
-} from "@/helpers/Overlay.js";
+import { getTypeData, getIconData } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 /*
@@ -61,10 +56,9 @@ export const createDataLayer = (geoJSON = [], onEachFeature = () => {}) => {
 */
 
 export const isLayerInBounds = (layer, bounds) => {
-  const featureType = getFeatureType(layer.feature);
   let contains = false;
 
-  switch (featureType) {
+  switch (layer.featureType) {
     case "marker":
       //In view
       contains = bounds.contains(layer.getLatLng());
@@ -93,10 +87,9 @@ export const isLayerInBounds = (layer, bounds) => {
 };
 
 export const addLayerHighlight = (layer) => {
-  // Get feature type
-  const featureType = getFeatureType(layer.feature);
+  console.log(layer.featureType);
 
-  switch (featureType) {
+  switch (layer.featureType) {
     case "marker":
       // Get marker
       const element = layer.getElement();
@@ -108,7 +101,7 @@ export const addLayerHighlight = (layer) => {
 
     case "line":
       const typeKey = makeKey(layer.feature.properties.type);
-      const typeData = getTypeData(featureType, typeKey);
+      const typeData = getTypeData(layer.featureType, typeKey);
 
       // Highlight Layer
       layer.setStyle({
@@ -122,10 +115,7 @@ export const addLayerHighlight = (layer) => {
 };
 
 export const removeLayerHighlight = (layer) => {
-  // Get feature type
-  const featureType = getFeatureType(layer.feature);
-
-  switch (featureType) {
+  switch (layer.featureType) {
     case "marker":
       // Get marker
       const element = layer.getElement();
@@ -137,7 +127,7 @@ export const removeLayerHighlight = (layer) => {
 
     case "line":
       const typeKey = makeKey(layer.feature.properties.type);
-      const typeData = getTypeData(featureType, typeKey);
+      const typeData = getTypeData(layer.featureType, typeKey);
 
       // Highlight Layer
       layer.setStyle({
@@ -151,7 +141,7 @@ export const removeLayerHighlight = (layer) => {
 };
 
 export const flyToLayer = (layer) => {
-  switch (getFeatureType(layer.feature)) {
+  switch (layer.featureType) {
     case "marker":
       layer._map.flyTo(layer.getLatLng(), layer._map.getZoom(), {
         duration: 0.5,

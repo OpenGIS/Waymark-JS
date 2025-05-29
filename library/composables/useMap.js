@@ -17,8 +17,8 @@ import {
 } from "@/helpers/Leaflet.js";
 import {
 	getTypeData,
-	getFeatureType,
 	getOverlayTypeKey,
+	getFeatureType,
 } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
@@ -70,11 +70,12 @@ export function useMap() {
 			config.value.geoJSON,
 			// On each feature
 			(feature, layer) => {
+				layer.featureType = getFeatureType(feature);
 				const typeKey = makeKey(feature.properties.type);
-				const typeData = getTypeData(getFeatureType(feature), typeKey);
-				const featureType = getFeatureType(feature) + "s";
+				const typeData = getTypeData(layer.featureType, typeKey);
 
 				// Add to appropriate Type group
+				const featureType = layer.featureType + "s";
 				if (!overlays.value[featureType][typeKey]) {
 					// Needs creating
 					overlays.value[featureType][typeKey] = L.featureGroup();
@@ -129,7 +130,7 @@ export function useMap() {
 		if (activeLayer.value) {
 			// If already active layer - focus on it
 			if (activeLayer.value === layer) {
-				switch (getFeatureType(layer.feature)) {
+				switch (layer.featureType) {
 					case "marker":
 						// Increase zoom to max layer zoom
 						map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
@@ -154,7 +155,7 @@ export function useMap() {
 		}
 
 		// Go to Overlay in Overlays panel
-		activeFeatureType.value = getFeatureType(layer.feature);
+		activeFeatureType.value = layer.featureType;
 		activePanelKey.value = "overlays";
 		panelOpen.value = true;
 
@@ -169,7 +170,7 @@ export function useMap() {
 
 		// Iterate over all overlays
 		dataLayer.value.eachLayer((layer) => {
-			const featureType = getFeatureType(layer.feature);
+			const featureType = layer.featureType;
 			const typeKey = getOverlayTypeKey(layer.feature);
 			const typeData = getTypeData(featureType, typeKey);
 

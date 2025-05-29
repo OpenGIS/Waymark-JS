@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from "vue";
-import { getFeatureType } from "@/helpers/Overlay.js";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
@@ -16,13 +15,13 @@ import Button from "@/components/UI/Common/Button.vue";
 const markerCount = computed(() => {
 	return filteredLayers.value
 		.getLayers()
-		.filter((layer) => getFeatureType(layer.feature) === "marker").length;
+		.filter((layer) => layer.featureType === "marker").length;
 });
 
 const lineCount = computed(() => {
 	return filteredLayers.value
 		.getLayers()
-		.filter((layer) => getFeatureType(layer.feature) === "line").length;
+		.filter((layer) => layer.featureType === "line").length;
 });
 </script>
 
@@ -58,8 +57,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => getFeatureType(layer.feature) === 'marker')
-							.length
+							.filter((layer) => layer.featureType === 'marker').length
 					"
 					icon="ion-ios-location-outline"
 					@click="activeFeatureType = 'marker'"
@@ -72,8 +70,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => getFeatureType(layer.feature) === 'line')
-							.length
+							.filter((layer) => layer.featureType === 'line').length
 					"
 					icon="ion-arrow-graph-up-right"
 					@click="activeFeatureType = 'line'"
@@ -86,8 +83,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => getFeatureType(layer.feature) === 'shape')
-							.length
+							.filter((layer) => layer.featureType === 'shape').length
 					"
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeFeatureType = 'shape'"

@@ -158,8 +158,9 @@ export function getIconData(type) {
   return icon_data;
 }
 
-export function getFeatureType(feature) {
-  if (typeof feature.geometry.type === "undefined") {
+export function getFeatureType(feature = {}) {
+  // Ensure there is a feature & geometry
+  if (!feature || !feature.geometry) {
     return null;
   }
 
@@ -181,47 +182,6 @@ export function getOverlayTypeKey(feature) {
 export function iconHtml(iconData) {
   return '<div class="' + iconData.className + '">' + iconData.html + "</div>";
 }
-
-// export function overlaysByType(overlays) {
-//   const byType = {};
-
-//   // for (let overlay in overlays) {
-//   //   console.log("Overlay", overlay);
-
-//   //   //Not yet present?
-//   //   if (typeof byType[overlay.typeKey] !== "object") {
-//   //     byType[overlay.typeKey] = {
-//   //       title: overlay.typeData[getFeatureType(overlay.toGeoJSON()) + "_title"],
-//   //       typeData: getTypeData(
-//   //         getFeatureType(overlay.toGeoJSON()),
-//   //         overlay.typeKey,
-//   //       ),
-//   //       overlays: [],
-//   //       featureType: getFeatureType(overlay.toGeoJSON()),
-//   //     };
-//   //   }
-
-//   //   byType[overlay.typeKey]["overlays"].push(overlay);
-//   // }
-
-//   overlays.eachLayer((overlay) => {
-//     const overlayType = getFeatureType(overlay.toGeoJSON());
-
-//     //Not yet present?
-//     if (typeof byType[overlayType] !== "object") {
-//       byType[overlayType] = {
-//         title: overlay.options.title,
-//         typeData: getTypeData(overlayType, overlay.options.typeKey),
-//         overlays: [],
-//         featureType: overlayType,
-//       };
-//     }
-
-//     byType[overlayType]["overlays"].push(overlay);
-//   });
-
-//   return byType;
-// }
 
 export function getImageURLs(featureProps) {
   const urls = {};
