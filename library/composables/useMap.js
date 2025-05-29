@@ -11,6 +11,8 @@ import {
 	createTileLayerGroup,
 	createDataLayer,
 	isLayerInBounds,
+	addLayerHighlight,
+	removeLayerHighlight,
 } from "@/helpers/Leaflet.js";
 import {
 	getTypeData,
@@ -139,64 +141,6 @@ export function useMap() {
 		}
 	};
 
-	const highlightLayer = (layer) => {
-		// Get feature type
-		const featureType = getFeatureType(layer.feature);
-
-		switch (featureType) {
-			case "marker":
-				// Get marker
-				const element = layer.getElement();
-
-				// Add active class
-				element.classList.add("waymark-active");
-
-				break;
-
-			case "line":
-				const typeKey = makeKey(layer.feature.properties.type);
-				const typeData = getTypeData(featureType, typeKey);
-
-				// Highlight Layer
-				layer.setStyle({
-					color: "#ff0000",
-					weight: parseInt(typeData.line_weight) + 2,
-					opacity: 1,
-				});
-
-				break;
-		}
-	};
-
-	const unHighlightLayer = (layer) => {
-		// Get feature type
-		const featureType = getFeatureType(layer.feature);
-
-		switch (featureType) {
-			case "marker":
-				// Get marker
-				const element = layer.getElement();
-
-				// Remove active class
-				element.classList.remove("waymark-active");
-
-				break;
-
-			case "line":
-				const typeKey = makeKey(layer.feature.properties.type);
-				const typeData = getTypeData(featureType, typeKey);
-
-				// Highlight Layer
-				layer.setStyle({
-					color: typeData.line_colour,
-					weight: parseInt(typeData.line_weight),
-					opacity: typeData.line_opacity,
-				});
-
-				break;
-		}
-	};
-
 	const setActiveLayer = (layer) => {
 		// If active layer is set
 		if (activeLayer.value) {
@@ -220,7 +164,7 @@ export function useMap() {
 			}
 
 			// Remove highlight
-			unHighlightLayer(activeLayer.value);
+			removeLayerHighlight(layer);
 
 			// Make inactive
 			activeLayer.value = null;
@@ -234,7 +178,7 @@ export function useMap() {
 		// Make active
 		activeLayer.value = layer;
 		focusMapOnLayer(layer);
-		highlightLayer(layer);
+		addLayerHighlight(layer);
 	};
 
 	const mapResized = () => {
@@ -299,8 +243,6 @@ export function useMap() {
 		getMapContainerID,
 		isLayerInBounds,
 		focusMapOnLayer,
-		highlightLayer,
-		unHighlightLayer,
 		setActiveLayer,
 		mapResized,
 		filteredLayers,
