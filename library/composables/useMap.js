@@ -7,9 +7,13 @@ import { storeToRefs } from "pinia";
 
 // Import Helpers
 import {
+	createMap,
+	createTileLayerGroup,
+	createDataLayer,
+} from "@/helpers/Leaflet.js";
+import {
 	getTypeData,
 	getFeatureType,
-	getIconData,
 	getOverlayTypeKey,
 } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
@@ -30,25 +34,67 @@ export function useMap() {
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
-		tileLayers,
+		tileLayerGroup,
 		activeTileLayer,
 	} = storeToRefs(useInstanceStore());
 
 	// Create & Store Map
-	const createMap = () => {
+	const init = () => {
 		// Create Leaflet instance
-		map.value = L.map(
+		map.value = createMap(
 			getMapContainerID(),
 			config.value.map_options.leaflet_options,
 		);
 
 		// Create Tile Layers
-		tileLayers.value = createTileLayerGroup();
-		activeTileLayer.value = tileLayers.value.getLayers()[0];
+		tileLayerGroup.value = createTileLayerGroup(
+			config.value.map_options.tile_layers,
+		);
+
+		// Set active Tile Layer
+		activeTileLayer.value = tileLayerGroup.value.getLayers()[0];
 		map.value.addLayer(activeTileLayer.value);
 
 		// Create data layer
-		createDataLayer();
+		dataLayer.value = createDataLayer(
+			config.value.geoJSON,
+			// On each feature
+			(feature, layer) => {
+				const typeKey = makeKey(feature.properties.type);
+				const typeData = getTypeData(getFeatureType(feature), typeKey);
+				const featureType = getFeatureType(feature) + "s";
+
+				// Add to appropriate Type group
+				if (!overlays.value[featureType][typeKey]) {
+					// Needs creating
+					overlays.value[featureType][typeKey] = L.featureGroup();
+				}
+				overlays.value[featureType][typeKey].addLayer(layer);
+
+				// Add events
+				layer.on("click", () => {
+					setActiveLayer(layer);
+				});
+
+				switch (featureType) {
+					case "lines":
+						layer.setStyle({
+							color: typeData.line_colour,
+							weight: parseFloat(typeData.line_weight),
+							opacity: typeData.line_opacity,
+						});
+
+						break;
+
+					default:
+						console.warn("Unknown Feature Type", feature);
+						break;
+				}
+			},
+		);
+
+		// Add Data Layer to Map
+		map.value.addLayer(dataLayer.value);
 
 		// Set initial bounds
 		viewDataBounds();
@@ -65,107 +111,6 @@ export function useMap() {
 	// Get the Div ID for the Map container
 	const getMapContainerID = () => {
 		return `${config.value.map_options.div_id}-map`;
-	};
-
-	const createTileLayerGroup = () => {
-		const layerGroup = L.layerGroup();
-
-		// Create Tile Layers
-		if (Array.isArray(config.value.map_options.tile_layers)) {
-			// Each Tile Layer
-			config.value.map_options.tile_layers.forEach((tile_data) => {
-				// Create Tile Layer
-				layerGroup.addLayer(
-					L.tileLayer(tile_data.layer_url, {
-						maxZoom: parseInt(tile_data.layer_max_zoom),
-						attribution: tile_data.layer_attribution,
-						name: tile_data.layer_name,
-					}),
-				);
-			});
-			// Default to OpenStreetMap
-		} else {
-			layerGroup.addLayer(
-				L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1", {
-					maxZoom: 19,
-					attribution:
-						'\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-					name: "OpenStreetMap",
-				}),
-			);
-		}
-
-		return layerGroup;
-	};
-
-	const createDataLayer = () => {
-		// Create Data Layer
-		dataLayer.value = L.geoJSON(config.value.geoJSON, {
-			pointToLayer,
-			onEachFeature,
-		});
-
-		// Add Data Layer to Map
-		map.value.addLayer(dataLayer.value);
-	};
-
-	// Create Markers
-	const pointToLayer = (feature, latlng) => {
-		const typeKey = makeKey(feature.properties.type);
-		const typeData = getTypeData("marker", typeKey);
-		const iconData = getIconData(typeData);
-
-		// Create a DOM element for the marker
-		const el = document.createElement("div");
-		el.className = iconData.className;
-		el.innerHTML = iconData.html;
-		el.style.width = `${iconData.iconSize[0]}px`;
-		el.style.height = `${iconData.iconSize[1]}px`;
-
-		// Create Marker
-		const marker = L.marker([latlng.lat, latlng.lng], {
-			icon: L.divIcon({
-				className: iconData.className,
-				html: el,
-				iconSize: iconData.iconSize,
-				iconAnchor: iconData.iconAnchor,
-			}),
-		});
-
-		return marker;
-	};
-
-	const onEachFeature = (feature, layer) => {
-		const typeKey = makeKey(feature.properties.type);
-		const typeData = getTypeData(getFeatureType(feature), typeKey);
-		const featureType = getFeatureType(feature) + "s";
-
-		// Add to appropriate Type group
-		if (!overlays.value[featureType][typeKey]) {
-			// Needs creating
-			overlays.value[featureType][typeKey] = L.featureGroup();
-		}
-		overlays.value[featureType][typeKey].addLayer(layer);
-
-		// Add events
-		layer.on("click", () => {
-			setActiveLayer(layer);
-		});
-
-		switch (featureType) {
-			case "lines":
-				layer.setStyle({
-					color: typeData.line_colour,
-					weight: parseFloat(typeData.line_weight),
-					opacity: typeData.line_opacity,
-				});
-
-				break;
-
-			default:
-				console.warn("Unknown Feature Type", feature);
-				break;
-		}
 	};
 
 	const isLayerInBounds = (layer, bounds) => {
@@ -383,7 +328,7 @@ export function useMap() {
 	});
 
 	return {
-		createMap,
+		init,
 		getMapContainerID,
 		isLayerInBounds,
 		focusMapOnLayer,

@@ -2,11 +2,11 @@
 import { onMounted } from "vue";
 
 import { useMap } from "@/composables/useMap.js";
-const { createMap, getMapContainerID } = useMap();
+const { init, getMapContainerID } = useMap();
 
 onMounted(() => {
   // Create Map
-  createMap();
+  init();
 });
 </script>
 
