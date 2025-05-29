@@ -8,7 +8,6 @@ const { filteredLayers } = useMap();
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { map } = storeToRefs(useInstanceStore());
 
-import { getTypeData } from "@/helpers/Overlay.js";
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
 import Preview from "@/components/UI/Common/Overlay/Preview.vue";
@@ -53,7 +52,7 @@ const toggleVisible = () => {
   });
 };
 
-const typeData = getTypeData(props.featureType, props.overlayType);
+const typeData = props.layerGroup.typeData;
 
 const headingStyle = () => {
   let style = ``;

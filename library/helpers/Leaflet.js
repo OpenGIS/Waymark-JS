@@ -100,13 +100,10 @@ export const addLayerHighlight = (layer) => {
       break;
 
     case "line":
-      const typeKey = makeKey(layer.feature.properties.type);
-      const typeData = getTypeData(layer.featureType, typeKey);
-
       // Highlight Layer
       layer.setStyle({
         color: "#ff0000",
-        weight: parseInt(typeData.line_weight) + 2,
+        weight: parseInt(layer.typeData.line_weight) + 2,
         opacity: 1,
       });
 
@@ -126,14 +123,11 @@ export const removeLayerHighlight = (layer) => {
       break;
 
     case "line":
-      const typeKey = makeKey(layer.feature.properties.type);
-      const typeData = getTypeData(layer.featureType, typeKey);
-
       // Highlight Layer
       layer.setStyle({
-        color: typeData.line_colour,
-        weight: parseInt(typeData.line_weight),
-        opacity: typeData.line_opacity,
+        color: layer.typeData.line_colour,
+        weight: parseInt(layer.typeData.line_weight),
+        opacity: layer.typeData.line_opacity,
       });
 
       break;

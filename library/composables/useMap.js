@@ -70,17 +70,23 @@ export function useMap() {
 			config.value.geoJSON,
 			// On each feature
 			(feature, layer) => {
+				// **** Modify the Leaflet Layer ****
+
 				layer.featureType = getFeatureType(feature);
-				const typeKey = makeKey(feature.properties.type);
-				const typeData = getTypeData(layer.featureType, typeKey);
+				layer.typeKey = makeKey(feature.properties.type);
+				layer.typeData = getTypeData(layer.featureType, layer.typeKey);
 
 				// Add to appropriate Type group
-				const featureType = layer.featureType + "s";
-				if (!overlays.value[featureType][typeKey]) {
+				const featuresType = layer.featureType + "s";
+				if (!overlays.value[featuresType][layer.typeKey]) {
 					// Needs creating
-					overlays.value[featureType][typeKey] = L.featureGroup();
+					overlays.value[featuresType][layer.typeKey] = L.featureGroup();
+
+					// **** Modify the Leaflet LayerGroup ****
+
+					overlays.value[featuresType][layer.typeKey].typeData = layer.typeData;
 				}
-				overlays.value[featureType][typeKey].addLayer(layer);
+				overlays.value[featuresType][layer.typeKey].addLayer(layer);
 
 				// Add events
 				layer.on("click", () => {
@@ -88,12 +94,12 @@ export function useMap() {
 				});
 
 				// Create Style
-				switch (featureType) {
+				switch (featuresType) {
 					case "lines":
 						layer.setStyle({
-							color: typeData.line_colour,
-							weight: parseFloat(typeData.line_weight),
-							opacity: typeData.line_opacity,
+							color: layer.typeData.line_colour,
+							weight: parseFloat(layer.typeData.line_weight),
+							opacity: layer.typeData.line_opacity,
 						});
 
 						break;
