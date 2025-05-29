@@ -10,6 +10,7 @@ import {
 	createMap,
 	createTileLayerGroup,
 	createDataLayer,
+	isLayerInBounds,
 } from "@/helpers/Leaflet.js";
 import {
 	getTypeData,
@@ -20,6 +21,11 @@ import { makeKey } from "@/helpers/Common.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
+
+const fitBoundsOptions = {
+	padding: [30, 30],
+	animate: false,
+};
 
 export function useMap() {
 	const {
@@ -97,7 +103,7 @@ export function useMap() {
 		map.value.addLayer(dataLayer.value);
 
 		// Set initial bounds
-		viewDataBounds();
+		map.value.fitBounds(dataLayer.value.getBounds(), fitBoundsOptions);
 
 		// Update bounds on map move & zoom
 		map.value.on("moveend", () => {
@@ -111,38 +117,6 @@ export function useMap() {
 	// Get the Div ID for the Map container
 	const getMapContainerID = () => {
 		return `${config.value.map_options.div_id}-map`;
-	};
-
-	const isLayerInBounds = (layer, bounds) => {
-		const featureType = getFeatureType(layer.feature);
-		let contains = false;
-
-		switch (featureType) {
-			case "marker":
-				//In view
-				contains = bounds.contains(layer.getLatLng());
-
-				break;
-			case "line":
-				// Check if coords are in view
-				layer.feature.geometry.coordinates.forEach((coords) => {
-					if (!contains && bounds.contains(L.latLng(coords[1], coords[0]))) {
-						contains = true;
-
-						return;
-					}
-				});
-
-				break;
-			//In view
-			// return mapBounds.contains()
-
-			// case 'shape':
-			//In view
-			// return mapBounds.contains(overlay.layer.getLatLng())
-		}
-
-		return contains;
 	};
 
 	const focusMapOnLayer = (layer) => {
@@ -265,13 +239,6 @@ export function useMap() {
 
 	const mapResized = () => {
 		map.value.invalidateSize();
-	};
-
-	const viewDataBounds = () => {
-		map.value.fitBounds(dataLayer.value.getBounds(), {
-			padding: [30, 30],
-			animate: false,
-		});
 	};
 
 	const filteredLayers = computed(() => {

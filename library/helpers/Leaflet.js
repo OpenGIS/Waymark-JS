@@ -52,6 +52,38 @@ export const createDataLayer = (geoJSON = [], onEachFeature = () => {}) => {
   });
 };
 
+export const isLayerInBounds = (layer, bounds) => {
+  const featureType = getFeatureType(layer.feature);
+  let contains = false;
+
+  switch (featureType) {
+    case "marker":
+      //In view
+      contains = bounds.contains(layer.getLatLng());
+
+      break;
+    case "line":
+      // Check if coords are in view
+      layer.feature.geometry.coordinates.forEach((coords) => {
+        if (!contains && bounds.contains(L.latLng(coords[1], coords[0]))) {
+          contains = true;
+
+          return;
+        }
+      });
+
+      break;
+    //In view
+    // return mapBounds.contains()
+
+    // case 'shape':
+    //In view
+    // return mapBounds.contains(overlay.layer.getLatLng())
+  }
+
+  return contains;
+};
+
 // Not exported...
 
 // Create Marker
