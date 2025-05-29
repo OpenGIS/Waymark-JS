@@ -7,9 +7,7 @@ import { useMap } from "@/composables/useMap.js";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useUI() {
-	const { mapResized } = useMap();
-
-	const { panelOpen, activePanelKey } = storeToRefs(useInstanceStore());
+	const { panelOpen, activePanelKey, map } = storeToRefs(useInstanceStore());
 
 	const uiContainer = shallowRef(null);
 
@@ -19,7 +17,7 @@ export function useUI() {
 
 		// On resize
 		const resizeObserver = new ResizeObserver(() => {
-			mapResized();
+			map.value.invalidateSize();
 		});
 
 		resizeObserver.observe(uiContainer.value);

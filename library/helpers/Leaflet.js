@@ -150,6 +150,26 @@ export const removeLayerHighlight = (layer) => {
   }
 };
 
+export const flyToLayer = (layer) => {
+  switch (getFeatureType(layer.feature)) {
+    case "marker":
+      layer._map.flyTo(layer.getLatLng(), layer._map.getZoom(), {
+        duration: 0.5,
+      });
+
+      break;
+
+    case "line":
+      // Set to bounds of Line
+      const lineBounds = L.latLngBounds(layer.getLatLngs());
+      layer._map.flyToBounds(lineBounds, {
+        duration: 0.5,
+      });
+
+      break;
+  }
+};
+
 /*
   ======= Private =======
 */

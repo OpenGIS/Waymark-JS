@@ -13,6 +13,7 @@ import {
 	isLayerInBounds,
 	addLayerHighlight,
 	removeLayerHighlight,
+	flyToLayer,
 } from "@/helpers/Leaflet.js";
 import {
 	getTypeData,
@@ -30,6 +31,7 @@ const fitBoundsOptions = {
 };
 
 export function useMap() {
+	// Get the state from the instance store
 	const {
 		config,
 		map,
@@ -84,6 +86,7 @@ export function useMap() {
 					setActiveLayer(layer);
 				});
 
+				// Create Style
 				switch (featureType) {
 					case "lines":
 						layer.setStyle({
@@ -121,26 +124,6 @@ export function useMap() {
 		return `${config.value.map_options.div_id}-map`;
 	};
 
-	const focusMapOnLayer = (layer) => {
-		switch (getFeatureType(layer.feature)) {
-			case "marker":
-				map.value.flyTo(layer.getLatLng(), map.value.getZoom(), {
-					duration: 0.5,
-				});
-
-				break;
-
-			case "line":
-				// Set to bounds of Line
-				const lineBounds = L.latLngBounds(layer.getLatLngs());
-				map.value.flyToBounds(lineBounds, {
-					duration: 0.5,
-				});
-
-				break;
-		}
-	};
-
 	const setActiveLayer = (layer) => {
 		// If active layer is set
 		if (activeLayer.value) {
@@ -153,7 +136,7 @@ export function useMap() {
 
 						break;
 					case "line":
-						focusMapOnLayer(layer);
+						flyToLayer(layer);
 
 						break;
 					case "shape":
@@ -177,12 +160,8 @@ export function useMap() {
 
 		// Make active
 		activeLayer.value = layer;
-		focusMapOnLayer(layer);
+		flyToLayer(layer);
 		addLayerHighlight(layer);
-	};
-
-	const mapResized = () => {
-		map.value.invalidateSize();
 	};
 
 	const filteredLayers = computed(() => {
@@ -241,10 +220,7 @@ export function useMap() {
 	return {
 		init,
 		getMapContainerID,
-		isLayerInBounds,
-		focusMapOnLayer,
 		setActiveLayer,
-		mapResized,
 		filteredLayers,
 	};
 }
