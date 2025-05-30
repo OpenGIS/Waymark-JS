@@ -32,7 +32,7 @@ export function useMap() {
 		config,
 		map,
 		mapReady,
-		filters,
+		layerFilters,
 		mapBounds,
 		dataLayer,
 		layersByType,
@@ -175,7 +175,7 @@ export function useMap() {
 		dataLayer.value.eachLayer((layer) => {
 			// Is it in the current map bounds
 			if (
-				filters.value.inBounds &&
+				layerFilters.value.inBounds &&
 				mapBounds.value &&
 				!isLayerInBounds(layer, mapBounds.value)
 			) {
@@ -183,14 +183,14 @@ export function useMap() {
 			}
 
 			// Text filter
-			if (filters.value.text !== "") {
+			if (layerFilters.value.text !== "") {
 				let matches = 0;
 
 				// Text included in type title
 				matches += layer.typeData[layer.featureType + "_title"]
 					.toString()
 					.toLowerCase()
-					.includes(filters.value.text.toLowerCase());
+					.includes(layerFilters.value.text.toLowerCase());
 
 				// Check all GeoJSON properties VALUES (not keys) for existence of filter text
 				const properties = Object.values(layer.feature.properties);
@@ -199,7 +199,7 @@ export function useMap() {
 					return p
 						.toString()
 						.toLowerCase()
-						.includes(filters.value.text.toLowerCase());
+						.includes(layerFilters.value.text.toLowerCase());
 				});
 
 				// If no matches, skip this layer

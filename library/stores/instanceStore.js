@@ -27,7 +27,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const mapReady = shallowRef(false);
 
-	const filters = ref({
+	const layerFilters = ref({
 		text: "",
 		inBounds: false,
 	});
@@ -63,7 +63,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		layersByType,
 		map,
 		mapBounds,
-		filters,
+		layerFilters,
 		tileLayerGroup,
 		activeTileLayer,
 		activeLayer,

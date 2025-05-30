@@ -6,8 +6,13 @@ import { useMap } from "@/composables/useMap.js";
 const { filteredLayers } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { dataLayer, filters, layersByType, activeFeatureType, activeLayer } =
-	storeToRefs(useInstanceStore());
+const {
+	dataLayer,
+	layerFilters,
+	layersByType,
+	activeFeatureType,
+	activeLayer,
+} = storeToRefs(useInstanceStore());
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
@@ -92,11 +97,11 @@ const lineCount = computed(() => {
 
 				<Button
 					icon="ion-android-expand"
-					@click="filters.inBounds = !filters.inBounds"
-					:active="filters.inBounds"
+					@click="layerFilters.inBounds = !layerFilters.inBounds"
+					:active="layerFilters.inBounds"
 				/>
 
-				<input type="search" placeholder="Search" v-model="filters.text" />
+				<input type="search" placeholder="Search" v-model="layerFilters.text" />
 			</nav>
 			<!-- END Nav -->
 		</header>
