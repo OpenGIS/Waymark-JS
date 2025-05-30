@@ -53,6 +53,9 @@ const lineCount = computed(() => {
 					v-if="activeLayer.feature.properties.description"
 					v-html="activeLayer.feature.properties.description"
 				/>
+
+				<!-- Close -->
+				<Button icon="ion-close" @click="activeLayer = null" />
 			</div>
 			<!-- End Active Layer -->
 
@@ -150,21 +153,36 @@ const lineCount = computed(() => {
 		z-index: 100;
 
 		.active-layer {
+			max-height: 160px;
+			padding: 8px;
+			overflow: scroll;
+			border-bottom: 1px solid #999;
+
 			.title {
-				font-size: 16px;
+				padding-right: 30px;
+				font-size: 20px;
 				font-weight: bold;
-				margin-bottom: 5px;
+				margin-bottom: 10px;
 			}
 
 			.image {
+				float: left;
+				margin-right: 10px;
 				img {
 					max-width: 120px;
 				}
 			}
 
 			.description {
-				font-size: 14px;
+				margin-bottom: 10px;
+				font-size: 15px;
 				color: #555;
+			}
+
+			.button {
+				position: absolute;
+				top: 5px;
+				right: 5px;
 			}
 		}
 
@@ -204,6 +222,7 @@ const lineCount = computed(() => {
 
 					&.icon,
 					&.image {
+						height: 44px;
 						min-width: 44px;
 						img {
 							width: 100%;
@@ -229,18 +248,9 @@ const lineCount = computed(() => {
 
 .instance.has-active-layer.panel-open {
 	.ui {
-		/*height: 400px !important;*/
-
 		.panel.overlay {
 			.panel-top {
-				height: 220px;
-				border: 1px solid red;
-
-				.active-layer {
-					height: 180px;
-					overflow: hidden;
-					border: 1px solid blue;
-				}
+				max-height: 214px;
 			}
 		}
 	}

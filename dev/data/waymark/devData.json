@@ -43,7 +43,8 @@
         "type": "camp",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_14db-150x150.jpg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_14db-300x224.jpg",
-        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_14db-1024x766.jpg"
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_14db-1024x766.jpg",
+        "description": "A great place to camp with a view of Nahwitti Lake. There is a pit toilet and a picnic table."
       }
     },
     {
@@ -54,7 +55,8 @@
         "type": "photo",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15a3-150x150.jpg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15a3-300x200.jpg",
-        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15a3-1024x683.jpg"
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15a3-1024x683.jpg",
+        "description": "A tree with a lot of shoes hanging from it. A great place to take a photo! Though the tree is dead, it is still standing strong. Be careful of the sharp branches!"
       }
     },
     {
@@ -72,7 +74,7 @@
       "properties": {
         "title": "Trailhead",
         "type": "information",
-        "description": "Access to the Cape Scott Park. Foot access only."
+        "description": "Access to the Cape Scott Park. Foot access only. This is a long descent to the beach, so be prepared for a long hike. There is no cell service here, so make sure you have a map and compass. The trail is well marked with orange blazes, but it can be muddy and slippery in places. Bring appropriate footwear and clothing for the weather conditions. The trail is about 5 km to the beach, and it can take 1-2 hours to hike depending on your pace."
       }
     },
     {
@@ -83,25 +85,17 @@
         "type": "photo",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15e1-150x150.jpg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15e1-300x200.jpg",
-        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15e1-1024x683.jpg"
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": { "type": "green", "title": "North North Island" },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [-127.49117, 50.703954],
-          [-127.491177, 50.703963],
-          [-127.491188, 50.70396]
-        ]
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15e1-1024x683.jpg",
+        "description": "A beautiful bay with a sandy beach. A great place to take a break and enjoy the view. There is no cell service here, so make sure you have a map and compass. The beach is about 1 km from the trailhead, and it can take 30 minutes to hike depending on your pace."
       }
     },
     {
       "geometry": { "type": "Point", "coordinates": [-128.013468, 50.656086] },
       "type": "Feature",
-      "properties": { "type": "photo" }
+      "properties": {
+        "type": "photo",
+        "description": "A photo of the area. This is a beautiful area with lush greenery and a serene atmosphere."
+      }
     },
     {
       "geometry": { "type": "Point", "coordinates": [-128.425455, 50.782008] },
@@ -111,7 +105,8 @@
         "type": "photo",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c-450x450.jpeg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c-300x225.jpeg",
-        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg"
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
+        "description": "The Cape Scott Lighthouse is a historic lighthouse located at the northern tip of Vancouver Island. It was built in 1960 and is still operational today. The lighthouse is accessible by foot or by boat, and it offers stunning views of the surrounding area. There is a small museum at the lighthouse that provides information about its history and operation. The lighthouse is a popular spot for photographers and nature enthusiasts, and it is a great place to learn about the maritime history of the area."
       }
     },
     {
@@ -141,7 +136,8 @@
         "type": "green",
         "title": "Port Hardy to Cape Scott",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
-        "direction": "default"
+        "direction": "default",
+        "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
       },
       "geometry": {
         "type": "LineString",
