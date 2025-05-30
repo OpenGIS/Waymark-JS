@@ -131,7 +131,7 @@ export function useMap() {
 	const setActiveLayer = (layer) => {
 		// If active layer is set
 		if (activeLayer.value) {
-			// If already active layer - focus on it
+			//If already active layer - focus on it
 			if (activeLayer.value === layer) {
 				switch (layer.featureType) {
 					case "marker":
@@ -151,7 +151,7 @@ export function useMap() {
 			}
 
 			// Remove highlight
-			removeLayerHighlight(layer);
+			removeLayerHighlight(activeLayer.value);
 
 			// Make inactive
 			activeLayer.value = null;
