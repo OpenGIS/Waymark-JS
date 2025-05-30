@@ -48,6 +48,33 @@ const toggleOnMap = () => {
   }
 };
 
+const overlayStyle = computed(() => {
+  if (isActiveLayer.value) {
+    switch (props.layer.featureType) {
+      case "marker":
+        return `color: ${props.layer.typeData.icon_colour};background-color: ${props.layer.typeData.marker_colour};`;
+      case "line":
+        return `background-color: ${props.layer.typeData.line_colour};`;
+      case "shape":
+        return `background-color: ${props.layer.typeData.shape_colour};`;
+    }
+  }
+});
+
+const overlayClass = computed(() => {
+  let out = props.layer.featureType;
+
+  if (isActiveLayer.value) {
+    out += " active ";
+  }
+
+  if (!inFilteredLayers.value) {
+    out += " hidden ";
+  }
+
+  return out;
+});
+
 const row = useTemplateRef("row");
 
 // When a layer is set as active, scroll to it
@@ -65,7 +92,8 @@ watch(activeLayer, (newLayer) => {
     ref="row"
     class="overlay"
     @click="setActiveLayer(layer)"
-    :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"
+    :class="overlayClass"
+    :style="overlayStyle"
   >
     <!-- Image -->
     <td class="image">
@@ -110,9 +138,17 @@ watch(activeLayer, (newLayer) => {
 
 .overlay {
   &.active {
-    // color: blue !important;
-    border-color: red !important;
     height: auto;
+
+    &.line {
+      .content {
+        color: #fff;
+        text-shadow:
+          0 0 1px #000,
+          0 0 1px #000;
+      }
+    }
+
     .title {
       overflow: visible;
       white-space: normal;

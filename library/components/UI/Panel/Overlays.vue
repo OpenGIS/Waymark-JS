@@ -248,6 +248,14 @@ const lineCount = computed(() => {
 			.panel-top {
 				max-height: 214px;
 			}
+			.panel-content {
+				.heading,
+				.overlay:not(.active) {
+					border-color: transparent !important;
+					filter: grayscale(100%);
+					opacity: 0.4;
+				}
+			}
 		}
 	}
 }
