@@ -181,20 +181,20 @@ const lineCount = computed(() => {
 
 			.button {
 				position: absolute;
-				top: 5px;
+				top: 2px;
 				right: 5px;
 			}
 		}
 
 		.feature-nav {
 			input {
+				margin-left: 5px;
 				height: 30px;
-				width: 110px;
+				width: 115px;
 			}
 
 			.button {
 				display: inline-block;
-				margin: 3px;
 				font-size: 16px;
 				/*width: auto;*/
 				i,
@@ -218,12 +218,9 @@ const lineCount = computed(() => {
 					padding: 0 3px;
 					vertical-align: middle;
 					text-align: center;
-					/*border: 1px solid #999;*/
 
 					&.icon,
 					&.image {
-						height: 50px;
-						width: 50px;
 						img {
 							width: 100%;
 							height: auto;

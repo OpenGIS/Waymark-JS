@@ -41,8 +41,9 @@ const iconClass = (iconString) => {
 
 <style lang="less">
 .button {
-  display: flex;
+  display: inline-block;
   padding: 8px;
+  margin: 3px 0 3px 3px;
   min-width: 16px;
   font-size: 15px;
   color: #444;
@@ -66,6 +67,7 @@ const iconClass = (iconString) => {
     padding-left: 5px;
     margin-left: 5px;
     opacity: 0.8;
+    font-size: 12px;
     border-left: 1px solid #ddd;
   }
 }

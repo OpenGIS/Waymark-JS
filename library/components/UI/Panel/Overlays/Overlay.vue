@@ -112,7 +112,6 @@ watch(activeLayer, (newLayer) => {
   &.active {
     // color: blue !important;
     border-color: red !important;
-
     height: auto;
     .title {
       overflow: visible;

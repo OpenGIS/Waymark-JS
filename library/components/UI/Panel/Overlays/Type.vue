@@ -78,13 +78,13 @@ const headingStyle = () => {
 const headingClick = () => {
   isExpanded.value = !isExpanded.value;
 
-  // Close all other types
-  if (isExpanded.value) {
-    // Set bounds to
-    map.value.fitBounds(props.layerGroup.getBounds(), {
-      padding: [30, 30],
-    });
-  }
+  // // Close all other types
+  // if (isExpanded.value) {
+  //   // Set bounds to
+  //   map.value.fitBounds(props.layerGroup.getBounds(), {
+  //     padding: [30, 30],
+  //   });
+  // }
 };
 
 const headingClass = () => {
@@ -148,7 +148,7 @@ const headingClass = () => {
 
 <style lang="less">
 .heading {
-  height: 40px;
+  // height: 35px;
   // display: flex;
   overflow: hidden;
   align-items: center;
@@ -178,6 +178,9 @@ const headingClass = () => {
   .action {
     &.expand {
       .button {
+        margin-left: 0;
+        margin-right: 0;
+        width: 45px;
         i {
           margin-left: -2px;
         }
