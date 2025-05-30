@@ -6,7 +6,7 @@ import { useMap } from "@/composables/useMap.js";
 const { filteredLayers } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { dataLayer, filters, overlays, activeFeatureType, activeLayer } =
+const { dataLayer, filters, layersByType, activeFeatureType, activeLayer } =
 	storeToRefs(useInstanceStore());
 
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
@@ -111,10 +111,10 @@ const lineCount = computed(() => {
 			>
 				<!-- Iterate over Marker Types -->
 				<Type
-					v-for="typeKey in Object.keys(overlays.markers)"
+					v-for="typeKey in Object.keys(layersByType.markers)"
 					:key="typeKey"
 					featureType="marker"
-					:layerGroup="overlays.markers[typeKey]"
+					:layerGroup="layersByType.markers[typeKey]"
 					:overlayType="typeKey"
 				/>
 			</table>
@@ -123,10 +123,10 @@ const lineCount = computed(() => {
 			<table v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
-					v-for="typeKey in Object.keys(overlays.lines)"
+					v-for="typeKey in Object.keys(layersByType.lines)"
 					:key="typeKey"
 					featureType="line"
-					:layerGroup="overlays.lines[typeKey]"
+					:layerGroup="layersByType.lines[typeKey]"
 					:overlayType="typeKey"
 				/>
 			</table>

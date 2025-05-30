@@ -35,7 +35,7 @@ export function useMap() {
 		filters,
 		mapBounds,
 		dataLayer,
-		overlays,
+		layersByType,
 		activeLayer,
 		activeFeatureType,
 		panelOpen,
@@ -74,15 +74,16 @@ export function useMap() {
 
 				// Add to appropriate Type group
 				const featuresType = layer.featureType + "s";
-				if (!overlays.value[featuresType][layer.typeKey]) {
+				if (!layersByType.value[featuresType][layer.typeKey]) {
 					// Needs creating
-					overlays.value[featuresType][layer.typeKey] = L.featureGroup();
+					layersByType.value[featuresType][layer.typeKey] = L.featureGroup();
 
 					// **** Modify the Leaflet LayerGroup ****
 
-					overlays.value[featuresType][layer.typeKey].typeData = layer.typeData;
+					layersByType.value[featuresType][layer.typeKey].typeData =
+						layer.typeData;
 				}
-				overlays.value[featuresType][layer.typeKey].addLayer(layer);
+				layersByType.value[featuresType][layer.typeKey].addLayer(layer);
 
 				// Add events
 				layer.on("click", () => {
