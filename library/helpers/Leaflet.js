@@ -87,8 +87,6 @@ export const isLayerInBounds = (layer, bounds) => {
 };
 
 export const addLayerHighlight = (layer) => {
-  console.log(layer.featureType);
-
   switch (layer.featureType) {
     case "marker":
       // Get marker
