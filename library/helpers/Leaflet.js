@@ -118,6 +118,8 @@ export const removeLayerHighlight = (layer) => {
       // Remove active class
       element.classList.remove("waymark-active");
 
+      console.log("removeLayerHighlight", element.classList);
+
       break;
 
     case "line":

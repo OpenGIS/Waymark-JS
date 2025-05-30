@@ -36,20 +36,21 @@ const iconClass = computed(() => {
   width: 12px;
   font-size: 16px;
   color: #444;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: linear-gradient(to bottom, #f9f9f9, #eee);
+  box-shadow: inset 0 0 0 1px #ddd;
   border-radius: 5px;
 
   &:hover,
   &.active {
+    font-weight: bold;
     border-width: 2px;
-    border-color: #666;
-    background-color: #eee;
+    box-shadow: inset 0 0 0 1px #666;
+    background: linear-gradient(to bottom, #fff, #ddd);
+    text-shadow: unset;
   }
-
-  &.active&:hover {
-    color: #444;
-    background: red;
+  i {
+    width: inherit;
+    text-align: center;
   }
 }
 </style>

@@ -174,9 +174,25 @@ const headingClass = () => {
     font-size: 14px;
   }
 
-  .count {
-    opacity: 0.7;
-    font-size: 80%;
+  .action {
+    .button {
+      color: #eee;
+      background: transparent;
+      text-shadow:
+        0 0 1px #000,
+        0 0 1px #000;
+      &.active,
+      &:hover {
+        text-shadow: unset;
+        color: #000;
+        box-shadow: inset 0 0 0 1px #000;
+      }
+
+      .count {
+        opacity: 0.7;
+        font-size: 80%;
+      }
+    }
   }
 
   &.line {
@@ -184,7 +200,7 @@ const headingClass = () => {
       color: #fff;
       text-shadow:
         0 0 1px #000,
-        0 0 2px #000;
+        0 0 1px #000;
     }
   }
   &.hidden {
