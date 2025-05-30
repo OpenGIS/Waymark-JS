@@ -94,6 +94,7 @@ onMounted(() => {
 			height: 100%;
 			z-index: 1010;
 			background: #f9f9f9;
+			box-shadow: inset 0 0 0 1px #ddd;
 
 			.button {
 				margin: 5px;
@@ -109,6 +110,7 @@ onMounted(() => {
 	&.panel-open {
 		.ui {
 			width: 320px;
+			box-shadow: inset 0 0 0 1px #ddd;
 
 			.panels-content {
 				padding-right: 44px;

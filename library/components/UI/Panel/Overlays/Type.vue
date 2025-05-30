@@ -170,7 +170,7 @@ const headingClass = () => {
   }
 
   .title {
-    // min-width: 255px;
+    width: 120px;
     padding-left: 5px;
     font-size: 14px;
   }

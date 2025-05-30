@@ -1,9 +1,12 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
+// Import Helpers
+import { removeLayerHighlight } from "@/helpers/Leaflet.js";
+
 import { useMap } from "@/composables/useMap.js";
-const { unHighlightLayer, setActiveLayer, filteredLayers } = useMap();
+const { setActiveLayer, filteredLayers } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
@@ -32,7 +35,7 @@ const toggleOnMap = () => {
   // Close if hiding
   if (isActiveLayer.value) {
     // Remove highlight
-    unHighlightLayer(activeLayer.value);
+    removeLayerHighlight(activeLayer.value);
 
     // Make inactive
     activeLayer.value = null;
@@ -44,11 +47,22 @@ const toggleOnMap = () => {
     map.value.addLayer(props.layer);
   }
 };
+
+const row = useTemplateRef("row");
+
+// When a layer is set as active, scroll to it
+watch(activeLayer, (newLayer) => {
+  if (newLayer == props.layer) {
+    //Scroll to active layer
+    row.value.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
 </script>
 
 <template>
   <!-- START Overlay -->
   <tr
+    ref="row"
     class="overlay"
     @click="setActiveLayer(layer)"
     :class="{ active: isActiveLayer, hidden: !inFilteredLayers }"

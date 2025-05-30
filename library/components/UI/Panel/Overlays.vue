@@ -222,8 +222,8 @@ const lineCount = computed(() => {
 
 					&.icon,
 					&.image {
-						height: 44px;
-						min-width: 44px;
+						height: 50px;
+						width: 50px;
 						img {
 							width: 100%;
 							height: auto;
@@ -232,7 +232,6 @@ const lineCount = computed(() => {
 
 					&.title {
 						text-align: left;
-						width: 120px;
 						.content {
 							width: inherit;
 							white-space: nowrap;
