@@ -12,18 +12,29 @@ const props = defineProps({
   },
 });
 
-const iconClass = computed(() => {
-  if (typeof props.icon == "string" && props.icon.indexOf("ion") === 0) {
-    return `ion ${props.icon}`;
-  } else {
-    return `fa ${props.icon}`;
+const iconClass = (iconString) => {
+  let output = "";
+
+  switch (true) {
+    // Font Awesome icons
+    case iconString.startsWith("fa-"):
+      output += `fa ${iconString} `;
+      break;
+    // Ionic icons
+    case iconString.startsWith("ion-"):
+      output += `ion ${iconString} `;
+      break;
   }
-});
+
+  return output.trim();
+};
 </script>
 
 <template>
   <div class="button" :class="active ? 'active' : ''">
-    <i v-if="icon" :class="`${iconClass}`"></i>
+    <template v-if="icon" v-for="(iconString, index) in icon.split(' ')">
+      <i :class="`${iconClass(iconString)}`"></i>
+    </template>
     <slot />
   </div>
 </template>
@@ -31,15 +42,14 @@ const iconClass = computed(() => {
 <style lang="less">
 .button {
   display: flex;
-  margin: 4px;
-  padding: 8px 10px;
-  width: 12px;
-  font-size: 16px;
+  padding: 8px;
+  min-width: 16px;
+  font-size: 15px;
   color: #444;
   background: linear-gradient(to bottom, #f9f9f9, #eee);
   box-shadow: inset 0 0 0 1px #ddd;
   border-radius: 5px;
-
+  text-align: center;
   &:hover,
   &.active {
     font-weight: bold;
@@ -49,8 +59,14 @@ const iconClass = computed(() => {
     text-shadow: unset;
   }
   i {
-    width: inherit;
+    min-width: inherit;
     text-align: center;
+  }
+  .count {
+    padding-left: 5px;
+    margin-left: 5px;
+    opacity: 0.8;
+    border-left: 1px solid #ddd;
   }
 }
 </style>

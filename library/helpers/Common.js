@@ -17,7 +17,7 @@ export function visibleIcon(isVisble) {
 }
 
 export function expandedIcon(isExpanded) {
-  return isExpanded ? "fa-angle-double-up" : "fa-angle-double-down";
+  return isExpanded ? "fa-chevron-up" : "fa-chevron-down";
 }
 
 export function deepMerge(target, source) {

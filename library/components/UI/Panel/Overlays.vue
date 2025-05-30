@@ -64,7 +64,7 @@ const lineCount = computed(() => {
 							.getLayers()
 							.filter((layer) => layer.featureType === 'marker').length
 					"
-					icon="ion-ios-location-outline"
+					icon="ion-ios-location"
 					@click="activeFeatureType = 'marker'"
 					:active="activeFeatureType === 'marker'"
 				>
@@ -168,30 +168,20 @@ const lineCount = computed(() => {
 			}
 		}
 
-		nav {
-			display: inline-block;
+		.feature-nav {
+			input {
+				height: 30px;
+				width: 110px;
+			}
 
 			.button {
 				display: inline-block;
 				margin: 3px;
-			}
-		}
-
-		.feature-nav {
-			input {
-				height: 30px;
-				width: 80px;
-			}
-
-			.button {
-				width: auto;
+				font-size: 16px;
+				/*width: auto;*/
 				i,
 				.count {
 					display: inline-block;
-				}
-
-				.count {
-					font-size: 12px;
 				}
 			}
 		}

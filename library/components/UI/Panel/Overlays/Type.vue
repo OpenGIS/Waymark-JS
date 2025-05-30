@@ -148,6 +148,7 @@ const headingClass = () => {
 
 <style lang="less">
 .heading {
+  height: 40px;
   // display: flex;
   overflow: hidden;
   align-items: center;
@@ -175,6 +176,14 @@ const headingClass = () => {
   }
 
   .action {
+    &.expand {
+      .button {
+        i {
+          margin-left: -2px;
+        }
+      }
+    }
+
     .button {
       color: #eee;
       background: transparent;
@@ -186,11 +195,10 @@ const headingClass = () => {
         text-shadow: unset;
         color: #000;
         box-shadow: inset 0 0 0 1px #000;
-      }
 
-      .count {
-        opacity: 0.7;
-        font-size: 80%;
+        .count {
+          border-color: #000;
+        }
       }
     }
   }

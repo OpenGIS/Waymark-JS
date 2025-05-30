@@ -94,6 +94,10 @@ onMounted(() => {
 			height: 100%;
 			z-index: 1010;
 			background: #f9f9f9;
+
+			.button {
+				margin: 5px;
+			}
 		}
 
 		.panels-content {
