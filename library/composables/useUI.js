@@ -1,8 +1,6 @@
 import { shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useMap } from "@/composables/useMap.js";
-
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
 

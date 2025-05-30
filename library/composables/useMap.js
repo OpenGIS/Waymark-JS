@@ -1,9 +1,9 @@
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
 
 // Import Leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { storeToRefs } from "pinia";
 
 // Import Helpers
 import {
@@ -15,11 +15,7 @@ import {
 	removeLayerHighlight,
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
-import {
-	getTypeData,
-	getOverlayTypeKey,
-	getFeatureType,
-} from "@/helpers/Overlay.js";
+import { getTypeData, getFeatureType } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 // Import instanceStore
@@ -160,7 +156,7 @@ export function useMap() {
 			activeLayer.value = null;
 		}
 
-		// Go to Overlay in Overlays panel
+		// Go to Overlays Panel
 		activeFeatureType.value = layer.featureType;
 		activePanelKey.value = "overlays";
 		panelOpen.value = true;
@@ -176,10 +172,6 @@ export function useMap() {
 
 		// Iterate over all overlays
 		dataLayer.value.eachLayer((layer) => {
-			const featureType = layer.featureType;
-			const typeKey = getOverlayTypeKey(layer.feature);
-			const typeData = getTypeData(featureType, typeKey);
-
 			// Is it in the current map bounds
 			if (
 				filters.value.inBounds &&
@@ -194,7 +186,7 @@ export function useMap() {
 				let matches = 0;
 
 				// Text included in type title
-				matches += typeData[featureType + "_title"]
+				matches += layer.typeData[layer.featureType + "_title"]
 					.toString()
 					.toLowerCase()
 					.includes(filters.value.text.toLowerCase());
