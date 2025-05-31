@@ -134,7 +134,7 @@
       "type": "Feature",
       "properties": {
         "type": "green",
-        "title": "Port Hardy to Cape Scott",
+        "title": "Section 1 - Port Hardy to Alberni",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
         "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
@@ -413,7 +413,22 @@
           [-127.587533, 50.71212, 251.633763],
           [-127.589676, 50.711887, 258.7756],
           [-127.592232, 50.711753, 252.49748],
-          [-127.593331, 50.711685, 248.867446],
+          [-127.593331, 50.711685, 248.867446]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "green",
+        "title": "Section 2 - Alberni to Port Renfrew",
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
+        "direction": "default",
+        "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
           [-127.594491, 50.711563, 251.387748],
           [-127.595055, 50.711261, 256.671241],
           [-127.595582, 50.710884, 262.637364],
@@ -679,7 +694,22 @@
           [-127.782845, 50.696342, 238.78285],
           [-127.784058, 50.696533, 240.4892],
           [-127.784699, 50.696559, 238.4324],
-          [-127.78537, 50.696544, 234.9272],
+          [-127.78537, 50.696544, 234.9272]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "green",
+        "title": "Section 3 - Renfrew to Cowichan Lake",
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
+        "direction": "default",
+        "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
           [-127.786789, 50.696643, 230.854878],
           [-127.787255, 50.696632, 230.311706],
           [-127.787728, 50.696575, 229.512592],
@@ -964,7 +994,23 @@
           [-127.963303, 50.681053, 225.2184],
           [-127.963501, 50.680858, 225.6572],
           [-127.963608, 50.680652, 222.739423],
-          [-127.963692, 50.680267, 215.8836],
+          [-127.963692, 50.680267, 215.8836]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "green",
+        "title": "Section 4 - Cowichan Lake to Duncan",
+
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
+        "direction": "default",
+        "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
           [-127.963784, 50.680088, 213.9504],
           [-127.96428, 50.67966, 213.644608],
           [-127.96473, 50.679397, 208.970418],
@@ -1312,7 +1358,22 @@
           [-128.19545, 50.673259, 15.8028],
           [-128.196595, 50.673885, 13.972],
           [-128.19751, 50.67432, 17.172],
-          [-128.199036, 50.674972, 20.4368],
+          [-128.199036, 50.674972, 20.4368]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "green",
+        "title": "Section 5 - Duncan to Cape Scott",
+        "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
+        "direction": "default",
+        "description": "A scenic route through the North North Island. Be prepared for rough terrain and changing weather conditions."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
           [-128.200028, 50.675434, 18.54229],
           [-128.200058, 50.675453, 18.606511],
           [-128.200074, 50.675457, 18.574681],

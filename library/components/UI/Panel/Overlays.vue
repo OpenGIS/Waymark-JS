@@ -221,6 +221,7 @@ const lineCount = computed(() => {
 
 					&.icon,
 					&.image {
+						width: 42px;
 						img {
 							width: 100%;
 							height: auto;
@@ -252,7 +253,7 @@ const lineCount = computed(() => {
 				.heading,
 				.overlay:not(.active) {
 					border-color: transparent !important;
-					filter: grayscale(100%);
+					/*filter: grayscale(100%);*/
 					opacity: 0.4;
 				}
 			}
