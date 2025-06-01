@@ -67,6 +67,7 @@ const lineCount = computed(() => {
 							.getLayers()
 							.filter((layer) => layer.featureType === 'marker').length
 					"
+					class="marker"
 					icon="ion-ios-location"
 					@click="activeFeatureType = 'marker'"
 					:active="activeFeatureType === 'marker'"
@@ -80,6 +81,7 @@ const lineCount = computed(() => {
 							.getLayers()
 							.filter((layer) => layer.featureType === 'line').length
 					"
+					class="line"
 					icon="ion-arrow-graph-up-right"
 					@click="activeFeatureType = 'line'"
 					:active="activeFeatureType === 'line'"
@@ -93,6 +95,7 @@ const lineCount = computed(() => {
 							.getLayers()
 							.filter((layer) => layer.featureType === 'shape').length
 					"
+					class="shape"
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeFeatureType = 'shape'"
 					:active="activeFeatureType === 'shape'"
@@ -194,9 +197,27 @@ const lineCount = computed(() => {
 			}
 
 			.button {
+				margin: 0;
 				display: inline-block;
 				font-size: 16px;
-				/*width: auto;*/
+
+				&.marker,
+				&.line,
+				&.shape {
+					position: relative;
+					background: #fff;
+					margin: 0;
+					margin-left: 0;
+					box-shadow: unset;
+					border-radius: unset;
+					border: 1px solid #ddd;
+					border-bottom: none;
+
+					&.active {
+						bottom: -1px;
+					}
+				}
+
 				i,
 				.count {
 					display: inline-block;
