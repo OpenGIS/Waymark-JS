@@ -1,11 +1,20 @@
 <script setup>
+import { computed } from "vue";
+
 import { storeToRefs } from "pinia";
+
+import { getFeatureImages, featureHasImage } from "@/helpers/Overlay.js";
 
 import Preview from "@/components/UI/Common/Overlay/Preview.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { activeLayer } = storeToRefs(useInstanceStore());
+
+const featureImages = computed(() => {
+  if (!activeLayer.value) return {};
+  return getFeatureImages(activeLayer.value.feature);
+});
 </script>
 
 <template>
@@ -31,15 +40,12 @@ const { activeLayer } = storeToRefs(useInstanceStore());
     <!-- START Content -->
     <div class="layer-content">
       <!-- Image -->
-      <div class="image">
-        <img
-          v-if="activeLayer.feature.properties.image_medium_url"
-          :src="activeLayer.feature.properties.image_medium_url"
-        />
+      <div class="image" v-if="featureHasImage(activeLayer.feature)">
+        <img v-if="featureImages.thumbnail" :src="featureImages.thumbnail" />
       </div>
 
       <!-- Coordinates -->
-      <div class="coordinates">
+      <div class="coordinates" v-if="activeLayer.featureType === 'marker'">
         {{ activeLayer.feature.geometry.coordinates[1].toFixed(5) }},
         {{ activeLayer.feature.geometry.coordinates[0].toFixed(5) }}
       </div>
@@ -47,7 +53,10 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       <!-- Elevation -->
       <div
         class="elevation"
-        v-if="activeLayer.feature.geometry.coordinates[2]"
+        v-if="
+          activeLayer.featureType === 'marker' &&
+          activeLayer.feature.geometry.coordinates[2]
+        "
         v-html="
           `Elevation: ${activeLayer.feature.geometry.coordinates[2].toFixed(2)} m`
         "
@@ -67,7 +76,7 @@ const { activeLayer } = storeToRefs(useInstanceStore());
 
 <style lang="less">
 .active-layer {
-  max-height: 160px;
+  max-height: 190px;
   padding: 8px;
   overflow: scroll;
   color: #333;
@@ -77,6 +86,8 @@ const { activeLayer } = storeToRefs(useInstanceStore());
   /* Top */
   .layer-top {
     margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f3f3f3;
     min-height: 34px;
     display: flex;
     align-items: center;
@@ -86,8 +97,8 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       position: absolute;
       top: 0;
       left: 0;
-
       width: 30px;
+      height: 30px;
     }
 
     .title {
@@ -108,8 +119,6 @@ const { activeLayer } = storeToRefs(useInstanceStore());
     /* Self Clear floats */
     height: auto;
     clear: both;
-
-    border: 1px solid blue;
 
     > div {
       margin-bottom: 5px;

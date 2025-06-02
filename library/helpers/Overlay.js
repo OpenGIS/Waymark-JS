@@ -194,3 +194,45 @@ export function getImageURLs(featureProps) {
 
   return urls;
 }
+
+export function featureHasImage(feature) {
+  //Check to ensure we have at least one
+  return (
+    feature.properties.image_thumbnail_url ||
+    feature.properties.image_medium_url ||
+    feature.properties.image_large_url
+  );
+}
+
+export function getFeatureImages(feature) {
+  const images = {
+    thumbnail: null,
+    medium: null,
+    large: null,
+  };
+
+  // Ensure feature has properties
+  if (!featureHasImage(feature)) {
+    return images;
+  }
+
+  if (feature.properties.image_thumbnail_url) {
+    images.thumbnail = feature.properties.image_thumbnail_url;
+  } else if (feature.properties.image_medium_url) {
+    images.thumbnail = feature.properties.image_medium_url;
+  } else if (feature.properties.image_large_url) {
+    images.thumbnail = feature.properties.image_large_url;
+  }
+
+  if (feature.properties.image_medium_url) {
+    images.medium = feature.properties.image_medium_url;
+  } else if (feature.properties.image_large_url) {
+    images.medium = feature.properties.image_large_url;
+  }
+
+  if (feature.properties.image_large_url) {
+    images.large = feature.properties.image_large_url;
+  }
+
+  return images;
+}

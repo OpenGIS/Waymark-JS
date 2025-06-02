@@ -207,7 +207,7 @@ const lineCount = computed(() => {
 	.ui {
 		.panel.overlay {
 			.panel-top {
-				max-height: 214px;
+				max-height: 260px;
 			}
 			.panel-content {
 				.heading,
