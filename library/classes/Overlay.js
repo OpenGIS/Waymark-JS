@@ -2,7 +2,6 @@ import {
   getTypeData,
   getFeatureType,
   getFeatureImages,
-  featureHasImage,
 } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
@@ -16,8 +15,14 @@ export class Overlay {
     this.images = getFeatureImages(feature);
 
     this.typeData = getTypeData(this.featureType, this.typeKey);
+  }
 
-    this.hasImage = featureHasImage(feature);
+  hasImage() {
+    return (
+      this.feature.properties.image_thumbnail_url ||
+      this.feature.properties.image_medium_url ||
+      this.feature.properties.image_large_url
+    );
   }
 
   getTitle() {

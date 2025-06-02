@@ -98,7 +98,7 @@ watch(activeLayer, (newLayer) => {
     <!-- Image -->
     <td class="image">
       <img
-        v-if="layer.overlay.hasImage"
+        v-if="layer.overlay.hasImage()"
         :alt="layer.feature.properties.title"
         :src="layer.overlay.images.thumbnail"
       />

@@ -33,7 +33,7 @@ const { activeLayer } = storeToRefs(useInstanceStore());
     <!-- START Content -->
     <div class="layer-content">
       <!-- Image -->
-      <div class="image" v-if="activeLayer.overlay.hasImage">
+      <div class="image" v-if="activeLayer.overlay.hasImage()">
         <img
           v-if="activeLayer.overlay.images.thumbnail"
           :src="activeLayer.overlay.images.thumbnail"
