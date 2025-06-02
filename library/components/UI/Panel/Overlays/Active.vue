@@ -17,10 +17,7 @@ const { activeLayer } = storeToRefs(useInstanceStore());
     <div class="layer-top">
       <!-- Type Preview -->
       <div class="type">
-        <Preview
-          :featureType="activeLayer.overlay.featureType"
-          :typeData="activeLayer.overlay.type.data"
-        />
+        <Preview :type="activeLayer.overlay.type" />
       </div>
 
       <!-- Title -->

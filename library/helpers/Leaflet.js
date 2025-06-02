@@ -149,8 +149,6 @@ const pointToLayer = (feature, latlng) => {
   const overlay = new Overlay(feature);
   const iconData = overlay.type.iconData;
 
-  console.log("Creating Marker", iconData);
-
   // Create a DOM element for the marker
   const el = document.createElement("div");
   el.className = iconData.className;

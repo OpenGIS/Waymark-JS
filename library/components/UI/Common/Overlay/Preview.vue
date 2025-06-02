@@ -2,11 +2,7 @@
 import { onMounted } from "vue";
 
 const props = defineProps({
-  featureType: {
-    type: String,
-    required: true,
-  },
-  typeData: {
+  type: {
     type: Object,
     required: true,
   },
@@ -24,17 +20,17 @@ onMounted(() => {
       <!-- Icon -->
       <div
         class="waymark-marker"
-        :class="typeData.iconData.className"
-        v-html="typeData.iconData.html"
-        :style="`width:${typeData.iconData.iconSize[0]}px;height:${typeData.iconData.iconSize[1]}px`"
+        :class="type.iconData.className"
+        v-html="type.iconData.html"
+        :style="`width:${type.iconData.iconSize[0]}px;height:${type.iconData.iconSize[1]}px`"
       />
     </div>
 
     <!-- Line -->
-    <div class="line" v-else-if="featureType === 'line'">
+    <div class="line" v-else-if="type.featureType === 'line'">
       <div
         class="inner"
-        :style="`background-color:${typeData.line_colour};height:${typeData.line_weight}px`"
+        :style="`background-color:${type.data.line_colour};height:${type.data.line_weight}px`"
       />
     </div>
   </div>

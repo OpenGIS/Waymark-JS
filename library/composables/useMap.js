@@ -78,8 +78,8 @@ export function useMap() {
 
 					// **** Modify the Leaflet LayerGroup ****
 
-					layersByType.value[featuresType][layer.overlay.typeKey].typeData =
-						layer.overlay.type.data;
+					layersByType.value[featuresType][layer.overlay.typeKey].type =
+						layer.overlay.type;
 				}
 				layersByType.value[featuresType][layer.overlay.typeKey].addLayer(layer);
 

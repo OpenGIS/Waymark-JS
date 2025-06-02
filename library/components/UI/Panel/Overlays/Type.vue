@@ -52,22 +52,22 @@ const toggleVisible = () => {
   });
 };
 
-const typeData = props.layerGroup.typeData;
+const type = props.layerGroup.type;
 
 const headingStyle = () => {
   let style = ``;
 
   switch (props.featureType) {
     case "marker":
-      style += `color:${typeData.icon_colour};`;
-      style += `border-color:${typeData.icon_colour};`;
-      style += `background-color:${typeData.marker_colour};`;
+      style += `color:${type.data.icon_colour};`;
+      style += `border-color:${type.data.icon_colour};`;
+      style += `background-color:${type.data.marker_colour};`;
 
       break;
     case "line":
-      style += `color:${typeData.icon_colour};`;
-      style += `border-color:${typeData.line_colour};`;
-      style += `background-color:${typeData.line_colour};`;
+      style += `color:${type.data.icon_colour};`;
+      style += `border-color:${type.data.line_colour};`;
+      style += `background-color:${type.data.line_colour};`;
 
       break;
   }
@@ -112,13 +112,13 @@ const headingClass = () => {
   >
     <!-- Image -->
     <td class="icon">
-      <Preview :featureType="featureType" :typeData="typeData" />
+      <Preview :type="layerGroup.type" />
     </td>
 
     <!-- Title -->
     <td class="title">
       <div class="content">
-        {{ typeData[props.featureType + "_title"] }}
+        {{ layerGroup.type.data[props.featureType + "_title"] }}
       </div>
     </td>
 
