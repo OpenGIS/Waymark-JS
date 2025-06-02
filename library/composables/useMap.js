@@ -15,8 +15,8 @@ import {
 	removeLayerHighlight,
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
-import { getTypeData, getFeatureType } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
+
+import { Overlay } from "@/classes/Overlay.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -67,10 +67,10 @@ export function useMap() {
 			// On each feature
 			(feature, layer) => {
 				// **** Modify the Leaflet Layer ****
-
-				layer.featureType = getFeatureType(feature);
-				layer.typeKey = makeKey(feature.properties.type);
-				layer.typeData = getTypeData(layer.featureType, layer.typeKey);
+				layer.overlay = new Overlay(feature);
+				// layer.featureType = getFeatureType(feature);
+				// layer.typeKey = makeKey(feature.properties.type);
+				// layer.typeData = getTypeData(layer.featureType, layer.typeKey);
 
 				// Add to appropriate Type group
 				const featuresType = layer.featureType + "s";
