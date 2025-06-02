@@ -64,23 +64,12 @@ export const isLayerInBounds = (layer, bounds) => {
       contains = bounds.contains(layer.getLatLng());
 
       break;
+    case "shape":
     case "line":
-      // Check if coords are in view
-      layer.feature.geometry.coordinates.forEach((coords) => {
-        if (!contains && bounds.contains(L.latLng(coords[1], coords[0]))) {
-          contains = true;
-
-          return;
-        }
-      });
+      // Check if linestring coords are in view
+      contains = layer.getLatLngs().some((coords) => bounds.contains(coords));
 
       break;
-    //In view
-    // return mapBounds.contains()
-
-    // case 'shape':
-    //In view
-    // return mapBounds.contains(overlay.layer.getLatLng())
   }
 
   return contains;
