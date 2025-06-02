@@ -66,24 +66,22 @@ export function useMap() {
 			config.value.geoJSON,
 			// On each feature
 			(feature, layer) => {
-				// **** Modify the Leaflet Layer ****
+				// Create Overlay instance
 				layer.overlay = new Overlay(feature);
-				// layer.featureType = getFeatureType(feature);
-				// layer.typeKey = makeKey(feature.properties.type);
-				// layer.typeData = getTypeData(layer.featureType, layer.typeKey);
 
 				// Add to appropriate Type group
-				const featuresType = layer.featureType + "s";
-				if (!layersByType.value[featuresType][layer.typeKey]) {
+				const featuresType = layer.overlay.featureType + "s";
+				if (!layersByType.value[featuresType][layer.overlay.typeKey]) {
 					// Needs creating
-					layersByType.value[featuresType][layer.typeKey] = L.featureGroup();
+					layersByType.value[featuresType][layer.overlay.typeKey] =
+						L.featureGroup();
 
 					// **** Modify the Leaflet LayerGroup ****
 
-					layersByType.value[featuresType][layer.typeKey].typeData =
-						layer.typeData;
+					layersByType.value[featuresType][layer.overlay.typeKey].typeData =
+						layer.overlay.typeData;
 				}
-				layersByType.value[featuresType][layer.typeKey].addLayer(layer);
+				layersByType.value[featuresType][layer.overlay.typeKey].addLayer(layer);
 
 				// Add events
 				layer.on("click", () => {
@@ -94,9 +92,9 @@ export function useMap() {
 				switch (featuresType) {
 					case "lines":
 						layer.setStyle({
-							color: layer.typeData.line_colour,
-							weight: parseFloat(layer.typeData.line_weight),
-							opacity: layer.typeData.line_opacity,
+							color: layer.overlay.typeData.line_colour,
+							weight: parseFloat(layer.overlay.typeData.line_weight),
+							opacity: layer.overlay.typeData.line_opacity,
 						});
 
 						break;
@@ -133,7 +131,7 @@ export function useMap() {
 		if (activeLayer.value) {
 			//If already active layer - focus on it
 			if (activeLayer.value === layer) {
-				switch (layer.featureType) {
+				switch (layer.overlay.featureType) {
 					case "marker":
 						// Increase zoom to max layer zoom
 						map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
@@ -158,7 +156,7 @@ export function useMap() {
 		}
 
 		// Go to Overlays Panel
-		activeFeatureType.value = layer.featureType;
+		activeFeatureType.value = layer.overlay.featureType;
 		activePanelKey.value = "overlays";
 		panelOpen.value = true;
 
@@ -187,7 +185,7 @@ export function useMap() {
 				let matches = 0;
 
 				// Text included in type title
-				matches += layer.typeData[layer.featureType + "_title"]
+				matches += layer.overlay.typeData[layer.overlay.featureType + "_title"]
 					.toString()
 					.toLowerCase()
 					.includes(layerFilters.value.text.toLowerCase());

@@ -3,18 +3,11 @@ import { computed } from "vue";
 
 import { storeToRefs } from "pinia";
 
-import { getFeatureImages, featureHasImage } from "@/helpers/Overlay.js";
-
 import Preview from "@/components/UI/Common/Overlay/Preview.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { activeLayer } = storeToRefs(useInstanceStore());
-
-const featureImages = computed(() => {
-  if (!activeLayer.value) return {};
-  return getFeatureImages(activeLayer.value.feature);
-});
 </script>
 
 <template>
@@ -25,8 +18,8 @@ const featureImages = computed(() => {
       <!-- Type Preview -->
       <div class="type">
         <Preview
-          :featureType="activeLayer.featureType"
-          :typeData="activeLayer.typeData"
+          :featureType="activeLayer.overlay.featureType"
+          :typeData="activeLayer.overlay.typeData"
         />
       </div>
 
@@ -40,12 +33,18 @@ const featureImages = computed(() => {
     <!-- START Content -->
     <div class="layer-content">
       <!-- Image -->
-      <div class="image" v-if="featureHasImage(activeLayer.feature)">
-        <img v-if="featureImages.thumbnail" :src="featureImages.thumbnail" />
+      <div class="image" v-if="activeLayer.overlay.hasImage">
+        <img
+          v-if="activeLayer.overlay.images.thumbnail"
+          :src="activeLayer.overlay.images.thumbnail"
+        />
       </div>
 
       <!-- Coordinates -->
-      <div class="coordinates" v-if="activeLayer.featureType === 'marker'">
+      <div
+        class="coordinates"
+        v-if="activeLayer.overlay.featureType === 'marker'"
+      >
         {{ activeLayer.feature.geometry.coordinates[1].toFixed(5) }},
         {{ activeLayer.feature.geometry.coordinates[0].toFixed(5) }}
       </div>
@@ -54,7 +53,7 @@ const featureImages = computed(() => {
       <div
         class="elevation"
         v-if="
-          activeLayer.featureType === 'marker' &&
+          activeLayer.overlay.featureType === 'marker' &&
           activeLayer.feature.geometry.coordinates[2]
         "
         v-html="

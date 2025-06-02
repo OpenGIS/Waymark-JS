@@ -16,13 +16,13 @@ import Button from "@/components/UI/Common/Button.vue";
 const markerCount = computed(() => {
 	return filteredLayers.value
 		.getLayers()
-		.filter((layer) => layer.featureType === "marker").length;
+		.filter((layer) => layer.overlay.featureType === "marker").length;
 });
 
 const lineCount = computed(() => {
 	return filteredLayers.value
 		.getLayers()
-		.filter((layer) => layer.featureType === "line").length;
+		.filter((layer) => layer.overlay.featureType === "line").length;
 });
 </script>
 
@@ -38,7 +38,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => layer.featureType === 'marker').length
+							.filter((layer) => layer.overlay.featureType === 'marker').length
 					"
 					class="marker"
 					icon="ion-ios-location"
@@ -52,7 +52,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => layer.featureType === 'line').length
+							.filter((layer) => layer.overlay.featureType === 'line').length
 					"
 					class="line"
 					icon="ion-arrow-graph-up-right"
@@ -66,7 +66,7 @@ const lineCount = computed(() => {
 					v-if="
 						dataLayer
 							.getLayers()
-							.filter((layer) => layer.featureType === 'shape').length
+							.filter((layer) => layer.overlay.featureType === 'shape').length
 					"
 					class="shape"
 					icon="ion-android-checkbox-outline-blank"

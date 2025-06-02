@@ -50,19 +50,19 @@ const toggleOnMap = () => {
 
 const overlayStyle = computed(() => {
   if (isActiveLayer.value) {
-    switch (props.layer.featureType) {
+    switch (props.layer.overlay.featureType) {
       case "marker":
-        return `color: ${props.layer.typeData.icon_colour};background-color: ${props.layer.typeData.marker_colour};`;
+        return `color: ${props.layer.overlay.typeData.icon_colour};background-color: ${props.layer.overlay.typeData.marker_colour};`;
       case "line":
-        return `background-color: ${props.layer.typeData.line_colour};`;
+        return `background-color: ${props.layer.overlay.typeData.line_colour};`;
       case "shape":
-        return `background-color: ${props.layer.typeData.shape_colour};`;
+        return `background-color: ${props.layer.overlay.typeData.shape_colour};`;
     }
   }
 });
 
 const overlayClass = computed(() => {
-  let out = props.layer.featureType;
+  let out = props.layer.overlay.featureType;
 
   if (isActiveLayer.value) {
     out += " active ";
@@ -98,15 +98,15 @@ watch(activeLayer, (newLayer) => {
     <!-- Image -->
     <td class="image">
       <img
-        v-if="props.layer.feature.properties.image_thumbnail_url"
-        :alt="props.layer.feature.properties.title"
-        :src="props.layer.feature.properties.image_thumbnail_url"
+        v-if="layer.overlay.hasImage"
+        :alt="layer.feature.properties.title"
+        :src="layer.overlay.images.thumbnail"
       />
     </td>
 
     <!-- Title -->
     <td class="title" colspan="2">
-      <div class="content">{{ props.layer.feature.properties.title }}</div>
+      <div class="content">{{ layer.feature.properties.title }}</div>
     </td>
 
     <!-- ? -->

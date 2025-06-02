@@ -58,7 +58,7 @@ export const createDataLayer = (geoJSON = [], onEachFeature = () => {}) => {
 export const isLayerInBounds = (layer, bounds) => {
   let contains = false;
 
-  switch (layer.featureType) {
+  switch (layer.overlay.featureType) {
     case "marker":
       //In view
       contains = bounds.contains(layer.getLatLng());
@@ -87,7 +87,7 @@ export const isLayerInBounds = (layer, bounds) => {
 };
 
 export const addLayerHighlight = (layer) => {
-  switch (layer.featureType) {
+  switch (layer.overlay.featureType) {
     case "marker":
       // Get marker
       const element = layer.getElement();
@@ -101,7 +101,7 @@ export const addLayerHighlight = (layer) => {
       // Highlight Layer
       layer.setStyle({
         color: "#ff0000",
-        weight: parseInt(layer.typeData.line_weight) + 2,
+        weight: parseInt(layer.overlay.typeData.line_weight) + 2,
         opacity: 1,
       });
 
@@ -110,7 +110,7 @@ export const addLayerHighlight = (layer) => {
 };
 
 export const removeLayerHighlight = (layer) => {
-  switch (layer.featureType) {
+  switch (layer.overlay.featureType) {
     case "marker":
       // Get marker
       const element = layer.getElement();
@@ -123,9 +123,9 @@ export const removeLayerHighlight = (layer) => {
     case "line":
       // Highlight Layer
       layer.setStyle({
-        color: layer.typeData.line_colour,
-        weight: parseInt(layer.typeData.line_weight),
-        opacity: layer.typeData.line_opacity,
+        color: layer.overlay.typeData.line_colour,
+        weight: parseInt(layer.overlay.typeData.line_weight),
+        opacity: layer.overlay.typeData.line_opacity,
       });
 
       break;
@@ -133,7 +133,7 @@ export const removeLayerHighlight = (layer) => {
 };
 
 export const flyToLayer = (layer) => {
-  switch (layer.featureType) {
+  switch (layer.overlay.featureType) {
     case "marker":
       layer._map.flyTo(layer.getLatLng(), layer._map.getZoom(), {
         duration: 0.5,
