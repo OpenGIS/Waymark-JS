@@ -1,8 +1,5 @@
-import {
-  getTypeData,
-  getFeatureType,
-  getFeatureImages,
-} from "@/helpers/Overlay.js";
+import { Type } from "@/classes/Type.js";
+import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export class Overlay {
@@ -13,8 +10,7 @@ export class Overlay {
     this.title = feature.properties.title || "";
     this.description = feature.properties.description || "";
     this.images = getFeatureImages(feature);
-
-    this.typeData = getTypeData(this.featureType, this.typeKey);
+    this.type = new Type(this.featureType, this.typeKey);
   }
 
   hasImage() {
@@ -41,7 +37,7 @@ export class Overlay {
     let matches = 0;
 
     // Text included in type title
-    matches += this.typeData[this.featureType + "_title"]
+    matches += this.type.data[this.featureType + "_title"]
       .toString()
       .toLowerCase()
       .includes(text.toLowerCase());

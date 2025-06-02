@@ -1,6 +1,5 @@
+import { Overlay } from "@/classes/Overlay.js";
 import L from "leaflet";
-import { getTypeData, getIconData } from "@/helpers/Overlay.js";
-import { makeKey } from "@/helpers/Common.js";
 
 /*
   ======= Creation =======
@@ -90,7 +89,7 @@ export const addLayerHighlight = (layer) => {
       // Highlight Layer
       layer.setStyle({
         color: "#ff0000",
-        weight: parseInt(layer.overlay.typeData.line_weight) + 2,
+        weight: parseInt(layer.overlay.type.data.line_weight) + 2,
         opacity: 1,
       });
 
@@ -112,9 +111,9 @@ export const removeLayerHighlight = (layer) => {
     case "line":
       // Highlight Layer
       layer.setStyle({
-        color: layer.overlay.typeData.line_colour,
-        weight: parseInt(layer.overlay.typeData.line_weight),
-        opacity: layer.overlay.typeData.line_opacity,
+        color: layer.overlay.type.data.line_colour,
+        weight: parseInt(layer.overlay.type.data.line_weight),
+        opacity: layer.overlay.type.data.line_opacity,
       });
 
       break;
@@ -147,9 +146,10 @@ export const flyToLayer = (layer) => {
 
 // Create Marker
 const pointToLayer = (feature, latlng) => {
-  const typeKey = makeKey(feature.properties.type);
-  const typeData = getTypeData("marker", typeKey);
-  const iconData = getIconData(typeData);
+  const overlay = new Overlay(feature);
+  const iconData = overlay.type.iconData;
+
+  console.log("Creating Marker", iconData);
 
   // Create a DOM element for the marker
   const el = document.createElement("div");

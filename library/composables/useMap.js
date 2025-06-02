@@ -79,7 +79,7 @@ export function useMap() {
 					// **** Modify the Leaflet LayerGroup ****
 
 					layersByType.value[featuresType][layer.overlay.typeKey].typeData =
-						layer.overlay.typeData;
+						layer.overlay.type.data;
 				}
 				layersByType.value[featuresType][layer.overlay.typeKey].addLayer(layer);
 
@@ -92,9 +92,9 @@ export function useMap() {
 				switch (featuresType) {
 					case "lines":
 						layer.setStyle({
-							color: layer.overlay.typeData.line_colour,
-							weight: parseFloat(layer.overlay.typeData.line_weight),
-							opacity: layer.overlay.typeData.line_opacity,
+							color: layer.overlay.type.data.line_colour,
+							weight: parseFloat(layer.overlay.type.data.line_weight),
+							opacity: layer.overlay.type.data.line_opacity,
 						});
 
 						break;

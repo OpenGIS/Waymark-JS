@@ -52,11 +52,11 @@ const overlayStyle = computed(() => {
   if (isActiveLayer.value) {
     switch (props.layer.overlay.featureType) {
       case "marker":
-        return `color: ${props.layer.overlay.typeData.icon_colour};background-color: ${props.layer.overlay.typeData.marker_colour};`;
+        return `color: ${props.layer.overlay.type.data.icon_colour};background-color: ${props.layer.overlay.type.data.marker_colour};`;
       case "line":
-        return `background-color: ${props.layer.overlay.typeData.line_colour};`;
+        return `background-color: ${props.layer.overlay.type.data.line_colour};`;
       case "shape":
-        return `background-color: ${props.layer.overlay.typeData.shape_colour};`;
+        return `background-color: ${props.layer.overlay.type.data.shape_colour};`;
     }
   }
 });
