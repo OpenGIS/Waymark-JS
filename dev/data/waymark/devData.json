@@ -2,17 +2,26 @@
   "type": "FeatureCollection",
   "features": [
     {
-      "geometry": { "type": "Point", "coordinates": [-127.497046, 50.720265] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.497046, 50.720265, 6.1692]
+      },
       "type": "Feature",
       "properties": { "title": "Pub Name", "type": "beer" }
     },
     {
-      "geometry": { "type": "Point", "coordinates": [-127.490137, 50.722642] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.490137, 50.722642, 6.1692]
+      },
       "type": "Feature",
       "properties": { "title": "Burger King", "type": "food" }
     },
     {
-      "geometry": { "type": "Point", "coordinates": [-127.49136, 50.703742] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.49136, 50.703742, 16.1692]
+      },
       "type": "Feature",
       "properties": {
         "title": "Holberg Road",
@@ -24,7 +33,10 @@
       }
     },
     {
-      "geometry": { "type": "Point", "coordinates": [-128.009734, 50.653923] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-128.009734, 50.653923, 2.1692]
+      },
       "type": "Feature",
       "properties": {
         "title": "The Scarlet Ibis",
@@ -90,7 +102,10 @@
       }
     },
     {
-      "geometry": { "type": "Point", "coordinates": [-128.013468, 50.656086] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-128.013468, 50.656086, 2.1692]
+      },
       "type": "Feature",
       "properties": {
         "type": "photo",
@@ -120,7 +135,10 @@
       }
     },
     {
-      "geometry": { "type": "Point", "coordinates": [-127.844853, 50.702166] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.844853, 50.702166, 12.1692]
+      },
       "type": "Feature",
       "properties": {
         "title": "Nahwitti Lake",
