@@ -6,14 +6,10 @@ import { useMap } from "@/composables/useMap.js";
 const { filteredLayers } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const {
-	dataLayer,
-	layerFilters,
-	layersByType,
-	activeFeatureType,
-	activeLayer,
-} = storeToRefs(useInstanceStore());
+const { dataLayer, layerFilters, layersByType, activeFeatureType } =
+	storeToRefs(useInstanceStore());
 
+import Active from "@/components/UI/Panel/Overlays/Active.vue";
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
@@ -34,30 +30,7 @@ const lineCount = computed(() => {
 	<div class="panel overlay">
 		<!-- START Panel Top -->
 		<header class="panel-top">
-			<!-- START Active Layer -->
-			<div v-if="activeLayer" class="active-layer">
-				<!-- Title -->
-				<div class="title">{{ activeLayer.feature.properties.title }}</div>
-
-				<!-- Image -->
-				<div class="image">
-					<img
-						v-if="activeLayer.feature.properties.image_medium_url"
-						:src="activeLayer.feature.properties.image_medium_url"
-					/>
-				</div>
-
-				<!-- Description -->
-				<div
-					class="description"
-					v-if="activeLayer.feature.properties.description"
-					v-html="activeLayer.feature.properties.description"
-				/>
-
-				<!-- Close -->
-				<Button icon="ion-close" @click="activeLayer = null" />
-			</div>
-			<!-- End Active Layer -->
+			<Active />
 
 			<!-- START Nav -->
 			<nav class="feature-nav">
@@ -154,40 +127,6 @@ const lineCount = computed(() => {
 		background-color: #fff;
 		border-bottom: 1px solid #999;
 		z-index: 100;
-
-		.active-layer {
-			max-height: 160px;
-			padding: 8px;
-			overflow: scroll;
-			border-bottom: 1px solid #999;
-
-			.title {
-				padding-right: 30px;
-				font-size: 20px;
-				font-weight: bold;
-				margin-bottom: 10px;
-			}
-
-			.image {
-				float: left;
-				margin-right: 10px;
-				img {
-					max-width: 120px;
-				}
-			}
-
-			.description {
-				margin-bottom: 10px;
-				font-size: 15px;
-				color: #555;
-			}
-
-			.button {
-				position: absolute;
-				top: 2px;
-				right: 5px;
-			}
-		}
 
 		.feature-nav {
 			input {
