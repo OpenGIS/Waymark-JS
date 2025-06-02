@@ -19,7 +19,7 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       </div>
 
       <!-- Title -->
-      <div class="title">{{ activeLayer.feature.properties.title }}</div>
+      <div class="title">{{ activeLayer.overlay.getTitle() }}</div>
 
       <Button icon="ion-close" @click="activeLayer = null" />
     </div>
@@ -59,8 +59,8 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       <!-- Description -->
       <div
         class="description"
-        v-if="activeLayer.feature.properties.description"
-        v-html="activeLayer.feature.properties.description"
+        v-if="activeLayer.overlay.getDescription()"
+        v-html="activeLayer.overlay.getDescription()"
       />
     </div>
     <!-- End Content -->

@@ -126,7 +126,7 @@ watch(activeLayer, (newLayer) => {
     &.waymark-active {
       z-index: 1000 !important;
       .waymark-marker-background {
-        border: 4px solid red;
+        border: 4px dashed red;
       }
       .waymark-marker-icon::before {
         padding-top: 8px;
