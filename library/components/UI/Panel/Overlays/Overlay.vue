@@ -99,14 +99,14 @@ watch(activeLayer, (newLayer) => {
     <td class="image">
       <img
         v-if="layer.overlay.hasImage()"
-        :alt="layer.feature.properties.title"
-        :src="layer.overlay.images.thumbnail"
+        :alt="layer.overlay.getTitle()"
+        :src="layer.overlay.getImage('thumbnail')"
       />
     </td>
 
     <!-- Title -->
     <td class="title" colspan="2">
-      <div class="content">{{ layer.feature.properties.title }}</div>
+      <div class="content">{{ layer.overlay.getTitle() }}</div>
     </td>
 
     <!-- ? -->

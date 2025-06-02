@@ -181,29 +181,11 @@ export function useMap() {
 			}
 
 			// Text filter
-			if (layerFilters.value.text !== "") {
-				let matches = 0;
-
-				// Text included in type title
-				matches += layer.overlay.typeData[layer.overlay.featureType + "_title"]
-					.toString()
-					.toLowerCase()
-					.includes(layerFilters.value.text.toLowerCase());
-
-				// Check all GeoJSON properties VALUES (not keys) for existence of filter text
-				const properties = Object.values(layer.feature.properties);
-
-				matches += properties.some((p) => {
-					return p
-						.toString()
-						.toLowerCase()
-						.includes(layerFilters.value.text.toLowerCase());
-				});
-
-				// If no matches, skip this layer
-				if (matches === 0) {
-					return;
-				}
+			if (
+				layerFilters.value.text !== "" &&
+				!layer.overlay.containsText(layerFilters.value.text)
+			) {
+				return;
 			}
 
 			// Add to filtered layers

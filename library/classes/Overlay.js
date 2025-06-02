@@ -25,11 +25,32 @@ export class Overlay {
     );
   }
 
+  getImage(size = "thumbnail") {
+    return this.images[size];
+  }
+
   getTitle() {
     return this.title;
   }
 
   getDescription() {
     return this.description;
+  }
+
+  containsText(text = "") {
+    let matches = 0;
+
+    // Text included in type title
+    matches += this.typeData[this.featureType + "_title"]
+      .toString()
+      .toLowerCase()
+      .includes(text.toLowerCase());
+
+    // Check all GeoJSON properties VALUES (not keys) for existence of filter text
+    matches += Object.values(this.feature.properties).some((p) => {
+      return p.toString().toLowerCase().includes(text.toLowerCase());
+    });
+
+    return matches > 0;
   }
 }
