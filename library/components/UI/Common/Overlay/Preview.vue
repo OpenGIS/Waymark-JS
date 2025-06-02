@@ -1,22 +1,18 @@
 <script setup>
-import { onMounted } from "vue";
+import { Type } from "@/classes/Type.js";
 
 const props = defineProps({
   type: {
-    type: Object,
+    type: Type,
     required: true,
   },
-});
-
-onMounted(() => {
-  // console.log("featureType", props);
 });
 </script>
 
 <template>
   <div class="preview">
     <!-- Marker -->
-    <div class="marker" v-if="featureType === 'marker'">
+    <div class="marker" v-if="type.featureType === 'marker'">
       <!-- Icon -->
       <div
         class="waymark-marker"

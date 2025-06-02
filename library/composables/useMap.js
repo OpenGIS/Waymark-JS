@@ -76,8 +76,7 @@ export function useMap() {
 					layersByType.value[featuresType][layer.overlay.typeKey] =
 						L.featureGroup();
 
-					// **** Modify the Leaflet LayerGroup ****
-
+					// Add Type instance
 					layersByType.value[featuresType][layer.overlay.typeKey].type =
 						layer.overlay.type;
 				}
