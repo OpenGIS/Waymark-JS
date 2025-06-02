@@ -59,15 +59,14 @@ const headingStyle = () => {
 
   switch (props.featureType) {
     case "marker":
-      style += `color:${type.data.icon_colour};`;
-      style += `border-color:${type.data.icon_colour};`;
-      style += `background-color:${type.data.marker_colour};`;
+      style += `color:${type.getIconColour()};`;
+      style += `border-color:${type.getIconColour()};`;
+      style += `background-color:${type.getPrimaryColour()};`;
 
       break;
     case "line":
-      style += `color:${type.data.icon_colour};`;
-      style += `border-color:${type.data.line_colour};`;
-      style += `background-color:${type.data.line_colour};`;
+      style += `border-color:${type.getPrimaryColour()};`;
+      style += `background-color:${type.getPrimaryColour()};`;
 
       break;
   }
@@ -118,7 +117,7 @@ const headingClass = () => {
     <!-- Title -->
     <td class="title">
       <div class="content">
-        {{ layerGroup.type.data[props.featureType + "_title"] }}
+        {{ layerGroup.type.getTitle() }}
       </div>
     </td>
 

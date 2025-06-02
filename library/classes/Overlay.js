@@ -37,7 +37,8 @@ export class Overlay {
     let matches = 0;
 
     // Text included in type title
-    matches += this.type.data[this.featureType + "_title"]
+    matches += this.type
+      .getTitle()
       .toString()
       .toLowerCase()
       .includes(text.toLowerCase());

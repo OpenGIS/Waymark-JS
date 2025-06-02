@@ -26,7 +26,7 @@ const props = defineProps({
     <div class="line" v-else-if="type.featureType === 'line'">
       <div
         class="inner"
-        :style="`background-color:${type.data.line_colour};height:${type.data.line_weight}px`"
+        :style="`background-color:${type.getPrimaryColour()};height:${type.getLineWeight()}px`"
       />
     </div>
   </div>

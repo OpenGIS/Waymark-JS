@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from "vue";
-
 import { storeToRefs } from "pinia";
 
 import Preview from "@/components/UI/Common/Overlay/Preview.vue";

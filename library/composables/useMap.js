@@ -90,11 +90,8 @@ export function useMap() {
 				// Create Style
 				switch (featuresType) {
 					case "lines":
-						layer.setStyle({
-							color: layer.overlay.type.data.line_colour,
-							weight: parseFloat(layer.overlay.type.data.line_weight),
-							opacity: layer.overlay.type.data.line_opacity,
-						});
+						// Set line style
+						layer.setStyle(layer.overlay.type.getLineStyle());
 
 						break;
 

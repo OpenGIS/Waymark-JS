@@ -89,8 +89,7 @@ export const addLayerHighlight = (layer) => {
       // Highlight Layer
       layer.setStyle({
         color: "#ff0000",
-        weight: parseInt(layer.overlay.type.data.line_weight) + 2,
-        opacity: 1,
+        dashArray: [5, 5],
       });
 
       break;
@@ -111,9 +110,8 @@ export const removeLayerHighlight = (layer) => {
     case "line":
       // Highlight Layer
       layer.setStyle({
-        color: layer.overlay.type.data.line_colour,
-        weight: parseInt(layer.overlay.type.data.line_weight),
-        opacity: layer.overlay.type.data.line_opacity,
+        color: layer.overlay.type.getPrimaryColour(),
+        dashArray: null,
       });
 
       break;

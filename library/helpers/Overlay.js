@@ -1,7 +1,3 @@
-import { useInstanceStore } from "@/stores/instanceStore.js";
-import { makeKey } from "@/helpers/Common.js";
-import { storeToRefs } from "pinia";
-
 export function getFeatureType(feature = {}) {
   // Ensure there is a feature & geometry
   if (!feature || !feature.geometry) {

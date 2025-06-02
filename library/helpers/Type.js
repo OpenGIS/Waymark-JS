@@ -32,9 +32,6 @@ export function getTypeData(featureType, typeKey) {
     }
   }
 
-  //Set key
-  type["typeKey"] = makeKey(type[featureType + "_title"]);
-
   return type;
 }
 
