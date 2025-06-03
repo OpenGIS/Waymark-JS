@@ -35,26 +35,38 @@ const { activeLayer } = storeToRefs(useInstanceStore());
         />
       </div>
 
-      <!-- Coordinates -->
+      <!-- START Stats -->
       <div
-        class="coordinates"
+        class="marker-stats"
         v-if="activeLayer.overlay.featureType === 'marker'"
       >
-        {{ activeLayer.feature.geometry.coordinates[1].toFixed(5) }},
-        {{ activeLayer.feature.geometry.coordinates[0].toFixed(5) }}
+        <!-- Coordinates -->
+        <div class="coordinates">
+          {{ activeLayer.feature.geometry.coordinates[1].toFixed(5) }},
+          {{ activeLayer.feature.geometry.coordinates[0].toFixed(5) }}
+        </div>
+
+        <!-- Elevation -->
+        <div
+          class="elevation"
+          v-if="activeLayer.feature.geometry.coordinates[2]"
+          v-html="
+            `Elevation: ${activeLayer.feature.geometry.coordinates[2].toFixed(2)} m`
+          "
+        />
       </div>
 
-      <!-- Elevation -->
       <div
-        class="elevation"
-        v-if="
-          activeLayer.overlay.featureType === 'marker' &&
-          activeLayer.feature.geometry.coordinates[2]
-        "
-        v-html="
-          `Elevation: ${activeLayer.feature.geometry.coordinates[2].toFixed(2)} m`
-        "
-      />
+        class="line-stats"
+        v-else-if="activeLayer.overlay.featureType === 'line'"
+      >
+        <!-- Length -->
+        <div
+          class="length"
+          v-html="`Length: ${activeLayer.overlay.getLength()} km`"
+        />
+      </div>
+      <!-- END Stats -->
 
       <!-- Description -->
       <div

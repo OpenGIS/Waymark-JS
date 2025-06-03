@@ -1,3 +1,4 @@
+import { length } from "@turf/length";
 import { Type } from "@/classes/Type.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
@@ -49,5 +50,13 @@ export class Overlay {
     });
 
     return matches > 0;
+  }
+
+  getLength() {
+    if (this.featureType !== "line") {
+      return 0;
+    }
+
+    return length(this.feature);
   }
 }
