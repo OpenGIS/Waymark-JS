@@ -54,12 +54,24 @@ export class Overlay {
     return matches > 0;
   }
 
-  getLength() {
+  getLengthString() {
+    let out = "";
+
     if (this.featureType !== "line") {
-      return 0;
+      return out;
     }
 
-    return length(this.feature);
+    out += "Length: ";
+
+    // Round to 2 DP
+    const lengthValue = length(this.feature, {
+      units:
+        getItem("map_options", "units") === "metric" ? "kilometers" : "miles",
+    });
+    out += Math.round(lengthValue * 100) / 100;
+    out += getItem("map_options", "units") === "metric" ? "km" : "mi";
+
+    return out;
   }
 
   hasElevationData() {
@@ -69,8 +81,28 @@ export class Overlay {
         return this.feature.geometry.coordinates.length === 3;
       case "shape":
       case "line":
-        // Check first coordinate for elevation
-        console.log(this.feature.geometry);
+        if (this.feature.geometry.type == "MultiLineString") {
+          //Each line
+          for (var i in this.feature.geometry.coordinates) {
+            //Each point
+            for (var j in this.feature.geometry.coordinates[i]) {
+              //If has elevation data
+              if (this.feature.geometry.coordinates[i][j].length == 3) {
+                return true;
+              }
+            }
+          }
+        } else {
+          //Each point
+          for (var j in this.feature.geometry.coordinates) {
+            //If has elevation data
+            if (this.feature.geometry.coordinates[j].length == 3) {
+              return true;
+            }
+          }
+        }
+
+        return false;
     }
   }
 
@@ -81,16 +113,59 @@ export class Overlay {
       return "";
     }
 
-    const unitAppend = getItem("map_options") === "metric" ? "" : "impereal";
+    const unitAppend =
+      getItem("map_options", "units") === "metric" ? "m" : "ft";
 
     switch (this.featureType) {
       case "marker":
-        // Return elevation value from coordinates
-        return this.feature.geometry.coordinates[2] + unitAppend;
+        // Return elevation value from coordinates, rounded to 1 decimal place
+        return (
+          "Elevation: " +
+          Math.round(this.feature.geometry.coordinates[2] * 10) / 10 +
+          unitAppend
+        );
+
       case "line":
-      case "shape":
-        // Return elevation value from first coordinate
-        return this.feature.geometry.coordinates[0][2] + unitAppend;
+        // For the linestring, calculate elevation gain, loss, max and min
+        const coords = this.feature.geometry.coordinates;
+        let elevationGain = 0;
+        let elevationLoss = 0;
+        let maxElevation = coords[0][2];
+        let minElevation = coords[0][2];
+        for (let i = 1; i < coords.length; i++) {
+          const elevationChange = coords[i][2] - coords[i - 1][2];
+          if (elevationChange > 0) {
+            elevationGain += elevationChange;
+          } else {
+            elevationLoss -= elevationChange; // elevationChange is negative here
+          }
+          maxElevation = Math.max(maxElevation, coords[i][2]);
+          minElevation = Math.min(minElevation, coords[i][2]);
+        }
+
+        // Convert to the correct units
+        if (getItem("map_options", "units") === "imperial") {
+          elevationGain *= 3.28084; // Convert meters to feet
+          elevationLoss *= 3.28084; // Convert meters to feet
+          maxElevation *= 3.28084; // Convert meters to feet
+          minElevation *= 3.28084; // Convert meters to feet
+        }
+
+        return (
+          "Elevation Gain: " +
+          Math.round(elevationGain * 10) / 10 +
+          unitAppend +
+          ", Loss: " +
+          Math.round(elevationLoss * 10) / 10 +
+          unitAppend +
+          ", Max: " +
+          Math.round(maxElevation * 10) / 10 +
+          unitAppend +
+          ", Min: " +
+          Math.round(minElevation * 10) / 10 +
+          unitAppend
+        );
+      //return this.feature.geometry.coordinates[0][2] + unitAppend;
     }
   }
 }

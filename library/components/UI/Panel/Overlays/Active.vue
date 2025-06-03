@@ -48,9 +48,7 @@ const { activeLayer } = storeToRefs(useInstanceStore());
 
         <!-- Elevation -->
         <div class="elevation" v-if="activeLayer.overlay.hasElevationData()">
-          Elevation:
           {{ activeLayer.overlay.getElevationString() }}
-          m
         </div>
       </div>
 
@@ -59,10 +57,12 @@ const { activeLayer } = storeToRefs(useInstanceStore());
         v-else-if="activeLayer.overlay.featureType === 'line'"
       >
         <!-- Length -->
-        <div
-          class="length"
-          v-html="`Length: ${activeLayer.overlay.getLength()} km`"
-        />
+        <div class="length" v-html="activeLayer.overlay.getLengthString()" />
+
+        <!-- Elevation -->
+        <div class="elevation" v-if="activeLayer.overlay.hasElevationData()">
+          {{ activeLayer.overlay.getElevationString() }}
+        </div>
       </div>
       <!-- END Stats -->
 
