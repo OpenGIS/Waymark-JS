@@ -6,13 +6,14 @@ import { useConfig } from "@/composables/useConfig.js";
 const { getItem } = useConfig();
 
 export class Overlay {
-  constructor(feature) {
-    this.feature = feature;
-    this.featureType = getFeatureType(feature);
-    this.typeKey = makeKey(feature.properties.type) || "photo";
-    this.title = feature.properties.title || "";
-    this.description = feature.properties.description || "";
-    this.images = getFeatureImages(feature);
+  constructor(layer) {
+    this.layer = layer;
+    this.feature = layer.feature;
+    this.featureType = getFeatureType(this.feature);
+    this.typeKey = makeKey(this.feature.properties.type) || "photo";
+    this.title = this.feature.properties.title || "";
+    this.description = this.feature.properties.description || "";
+    this.images = getFeatureImages(this.feature);
     this.type = new Type(this.featureType, this.typeKey);
   }
 
@@ -167,5 +168,28 @@ export class Overlay {
         );
       //return this.feature.geometry.coordinates[0][2] + unitAppend;
     }
+  }
+
+  getCoordsString() {
+    if (this.featureType === "marker") {
+      // For marker, return the coordinates as a string
+      return (
+        "Lat,Lng: " +
+        this.feature.geometry.coordinates[1].toFixed(6) +
+        ", " +
+        this.feature.geometry.coordinates[0].toFixed(6)
+      );
+    } else if (this.featureType === "line" || this.featureType === "shape") {
+      // Use Leaflet layer to get the bounds and return the centre
+      const bounds = this.layer.getBounds();
+      const center = bounds.getCenter();
+      return (
+        "Centre Lat,Lng: " +
+        center.lat.toFixed(6) +
+        ", " +
+        center.lng.toFixed(6)
+      );
+    }
+    return "";
   }
 }

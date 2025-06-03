@@ -67,7 +67,7 @@ export function useMap() {
 			// On each feature
 			(feature, layer) => {
 				// Create Overlay instance
-				layer.overlay = new Overlay(feature);
+				layer.overlay = new Overlay(layer);
 
 				// Add to appropriate Type group
 				const featuresType = layer.overlay.featureType + "s";

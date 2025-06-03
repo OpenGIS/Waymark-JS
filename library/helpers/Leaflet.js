@@ -144,7 +144,7 @@ export const flyToLayer = (layer) => {
 
 // Create Marker
 const pointToLayer = (feature, latlng) => {
-  const overlay = new Overlay(feature);
+  const overlay = new Overlay({ feature });
   const iconData = overlay.type.iconData;
 
   // Create a DOM element for the marker
