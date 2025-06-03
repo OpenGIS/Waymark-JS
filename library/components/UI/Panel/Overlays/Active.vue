@@ -47,13 +47,11 @@ const { activeLayer } = storeToRefs(useInstanceStore());
         </div>
 
         <!-- Elevation -->
-        <div
-          class="elevation"
-          v-if="activeLayer.feature.geometry.coordinates[2]"
-          v-html="
-            `Elevation: ${activeLayer.feature.geometry.coordinates[2].toFixed(2)} m`
-          "
-        />
+        <div class="elevation" v-if="activeLayer.overlay.hasElevationData()">
+          Elevation:
+          {{ activeLayer.overlay.getElevationString() }}
+          m
+        </div>
       </div>
 
       <div

@@ -2,6 +2,8 @@ import { length } from "@turf/length";
 import { Type } from "@/classes/Type.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import { makeKey } from "@/helpers/Common.js";
+import { useConfig } from "@/composables/useConfig.js";
+const { getItem } = useConfig();
 
 export class Overlay {
   constructor(feature) {
@@ -58,5 +60,37 @@ export class Overlay {
     }
 
     return length(this.feature);
+  }
+
+  hasElevationData() {
+    switch (this.featureType) {
+      case "marker":
+        // Check if feature coordinates has third dimension (elevation)
+        return this.feature.geometry.coordinates.length === 3;
+      case "shape":
+      case "line":
+        // Check first coordinate for elevation
+        console.log(this.feature.geometry);
+    }
+  }
+
+  getElevationString() {
+    console.log("getElevationString");
+
+    if (!this.hasElevationData()) {
+      return "";
+    }
+
+    const unitAppend = getItem("map_options") === "metric" ? "" : "impereal";
+
+    switch (this.featureType) {
+      case "marker":
+        // Return elevation value from coordinates
+        return this.feature.geometry.coordinates[2] + unitAppend;
+      case "line":
+      case "shape":
+        // Return elevation value from first coordinate
+        return this.feature.geometry.coordinates[0][2] + unitAppend;
+    }
   }
 }

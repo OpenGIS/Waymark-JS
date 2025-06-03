@@ -42,6 +42,7 @@ export const useInstanceStore = defineStore("instance", () => {
 				geoJSON: {},
 				map_options: {
 					div_id: "map",
+					units: "metric",
 					leaflet_options: {
 						center: [51.1788144, -1.8261632],
 						zoom: 17,
