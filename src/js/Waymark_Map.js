@@ -263,6 +263,8 @@ function Waymark_Map() {
 		Waymark.shape_parent_group = Waymark_L.layerGroup();
 		Waymark.shape_sub_groups = {};
 
+		Waymark.active_layer = null;
+
 		//Setup...
 		Waymark.pre_map_setup();
 		Waymark.setup_map();
@@ -701,6 +703,14 @@ function Waymark_Map() {
 				}
 			},
 			onEachFeature: function (feature, layer) {
+				// Active
+				layer.on("popupopen", function (e) {
+					Waymark.active_layer = layer;
+				});
+				layer.on("popupclose", function (e) {
+					Waymark.active_layer = null;
+				});
+
 				switch (feature.geometry.type) {
 					// CIRCLES & MARKERS
 
@@ -1415,6 +1425,8 @@ function Waymark_Map() {
 		type = {},
 		ele = "div",
 	) {
+		Waymark = this;
+
 		let out = `<${ele} class="waymark-type-preview waymark-${overlay_type}-type waymark-${overlay_type}-${type.type_key}">`;
 
 		// By overlay type
@@ -1424,7 +1436,7 @@ function Waymark_Map() {
 				const icon_data = Waymark.build_icon_data(type);
 
 				// Add Icon
-				out += `<div class="${icon_data.className}">${icon_data.html}</div>`;
+				out += `<div class="${icon_data.className}" style="width:${icon_data.iconSize[0]}px;height:${icon_data.iconSize[1]}px;">${icon_data.html}</div>`;
 
 				break;
 			case "line":
@@ -1878,6 +1890,24 @@ function Waymark_Map() {
 			[coords[1], coords[0]],
 			[coords[3], coords[2]],
 		);
+	};
+
+	this.clear_json = function () {
+		Waymark = this;
+
+		// Iterate over data layer
+		Waymark.map_data.eachLayer(function (layer) {
+			// Remove it
+			Waymark.map.removeLayer(layer);
+			Waymark.map_data.removeLayer(layer);
+
+			// Direction layer?
+			if (typeof layer.direction_layer === "object") {
+				Waymark.map.removeLayer(layer.direction_layer);
+			}
+		});
+
+		Waymark.map_data.clearLayers();
 	};
 
 	/*

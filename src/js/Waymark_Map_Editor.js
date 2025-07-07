@@ -864,7 +864,7 @@ function Waymark_Map_Editor() {
 					".waymark-" + layer_type + "-wrap",
 					jq_overlay_preview_container,
 				).each(function () {
-					overlay_preview.removeClass("waymark-active");
+					jQuery(this).removeClass("waymark-active");
 				});
 				overlay_preview
 					.parent(".waymark-" + layer_type + "-wrap")
