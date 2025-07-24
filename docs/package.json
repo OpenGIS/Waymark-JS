@@ -2,10 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@nuxt/content": "2.9.0",
