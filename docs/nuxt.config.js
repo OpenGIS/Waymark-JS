@@ -25,6 +25,20 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/js/",
     head: {
+      script: [
+        {
+          src: "https://www.googletagmanager.com/gtag/js?id=G-CXSJLNFJHB",
+          async: true,
+        },
+        {
+          children: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-CXSJLNFJHB');
+          `,
+        },
+      ],
       link: [
         { rel: "icon", type: "image/svg", href: "/js/assets/icon/waymark.svg" },
       ],
