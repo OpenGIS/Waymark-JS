@@ -64,7 +64,7 @@ onMounted(() => {
 	<div :class="`instance ${classAppend}`" :id="`${id}-instance`">
 		<div class="map" :id="`${id}-map`" style="height: 100%"></div>
 
-		<UI v-if="map" />
+		<!-- <UI v-if="map" /> -->
 	</div>
 </template>
 

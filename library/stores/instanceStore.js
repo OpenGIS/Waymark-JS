@@ -43,10 +43,9 @@ export const useInstanceStore = defineStore("instance", () => {
 				map_options: {
 					div_id: "map",
 					units: "metric",
-					leaflet_options: {
+					mapLibreOptions: {
 						center: [51.1788144, -1.8261632],
 						zoom: 17,
-						attributionControl: false,
 					},
 				},
 			}),

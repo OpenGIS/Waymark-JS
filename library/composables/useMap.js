@@ -1,20 +1,26 @@
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
-// Import Leaflet
+// Import Leaflet (old implementation - to be removed)
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// Import MapLibre (new implementation, migrating from Leaflet to MapLibre)
+import { Map, LngLatBounds } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+
 // Import Helpers
 import {
-	createMap,
+	// createMap,
 	createTileLayerGroup,
-	createDataLayer,
+	// createDataLayer,
 	isLayerInBounds,
 	addLayerHighlight,
 	removeLayerHighlight,
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
+
+import { createMap, createMapStyle, createMarker } from "@/helpers/MapLibre.js";
 
 import { Overlay } from "@/classes/Overlay.js";
 
@@ -46,20 +52,89 @@ export function useMap() {
 
 	// Create & Store Map
 	const init = () => {
-		// Create Leaflet instance
+		// Create MapLibre instance
 		map.value = createMap(
 			getMapContainerID(),
-			config.value.map_options.leaflet_options,
+			createMapStyle(config.value.map_options.tile_layers),
+			config.value.map_options.mapLibreOptions,
 		);
 
-		// Create Tile Layers
-		tileLayerGroup.value = createTileLayerGroup(
-			config.value.map_options.tile_layers,
-		);
+		// Add GeoJSON
+		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
+			map.on("load", () => {
+				// // Set Active Tile Layer
+				// updateTileLayer(mapStyle.layers[0].id);
 
-		// Set active Tile Layer
-		activeTileLayer.value = tileLayerGroup.value.getLayers()[0];
-		map.value.addLayer(activeTileLayer.value);
+				// Markers
+				config.geoJSON.features
+					.filter((feature) => {
+						return getFeatureType(feature) === "marker";
+					})
+					.forEach((feature) => {
+						//Extend bounds
+						// mapBounds.extend(feature.geometry.coordinates);
+
+						// Create the Marker
+						const marker = createMarker(feature);
+
+						console.log("Marker", marker, feature);
+
+						// Add Marker to Map
+						marker.addTo(map);
+					});
+
+				/*
+				pointsFeatures.value.forEach((feature) => {
+
+					// Add Marker to Store
+					storeMarker(marker, feature);
+				});
+*/
+				// Lines
+				let count = 0;
+				linesFeatures.value.forEach((feature) => {
+					//Extend bounds
+					feature.geometry.coordinates.forEach((coords) => {
+						dataBounds.extend(coords);
+					});
+
+					const id = `line-${count++}`;
+
+					// Create Source
+					map.addSource(id, {
+						type: "geojson",
+						data: feature,
+					});
+
+					// Create Line Style
+					const line = createLineStyle(feature, id);
+
+					// Add Line to Map
+					map.addLayer(line);
+
+					// Add Line to Store
+					storeLine(line, feature);
+				});
+
+				//Set initial centre and zoom to it
+				map.setCenter(dataBounds.getCenter());
+				map.fitBounds(dataBounds, {
+					padding: 30,
+					animate: false,
+				});
+
+				map.once("moveend", () => {
+					//Set Max bounds
+					// map.setMaxBounds(map.getBounds());
+
+					lng = map.getCenter().lng.toFixed(4);
+					lat = map.getCenter().lat.toFixed(4);
+					zoom = parseInt(map.getZoom());
+				});
+			});
+		}
+
+		/*
 
 		// Create data layer
 		dataLayer.value = createDataLayer(
@@ -112,7 +187,7 @@ export function useMap() {
 		map.value.on("moveend", () => {
 			mapBounds.value = map.value.getBounds();
 		});
-
+*/
 		// Triggers the UI to populate
 		mapReady.value = true;
 	};
