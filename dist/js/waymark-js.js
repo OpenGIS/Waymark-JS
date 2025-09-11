@@ -8370,7 +8370,7 @@ function Waymark_Map() {
 		Waymark_L.control
 			.attribution({
 				prefix:
-					'<a href="https://www.waymark.dev/" target="_blank" title="Make Meaningful Maps">Waymark</a> | <a href="https://leafletjs.com/" target="_blank" title="Leaflet"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a>',
+					'<a href="https://www.waymark.dev/survey/" target="_blank" title="Make Meaningful Maps">Waymark</a>',
 			})
 			.addTo(Waymark.map);
 
