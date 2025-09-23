@@ -44,8 +44,8 @@ export const useInstanceStore = defineStore("instance", () => {
 					div_id: "map",
 					units: "metric",
 					mapLibreOptions: {
-						center: [51.1788144, -1.8261632],
-						zoom: 17,
+						center: [-1.8261632, 51.1788144],
+						zoom: 4,
 					},
 				},
 			}),

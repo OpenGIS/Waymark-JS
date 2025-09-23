@@ -47,11 +47,15 @@ export const createMapStyle = (tileLayers) => {
         id: tile_data.layer_name,
         type: "raster",
         source: tile_data.layer_name,
-        // Will be set to visible on Map load
         layout: {
           visibility: "none",
         },
       });
+
+      // Set first as visible
+      if (style.layers.length === 1) {
+        style.layers[0].layout.visibility = "visible";
+      }
     });
   } else {
     // Default Tile Layer

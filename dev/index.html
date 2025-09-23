@@ -36,9 +36,9 @@
         const testIDs = ["waymark"];
 
         const testSizes = [
-          // [480, 320], // Mobile landscape
+          [480, 320], // Mobile landscape
           // [320, 480], // Mobile portrait
-          [768, 1024], // Tablet landscape
+          // [768, 1024], // Tablet landscape
           // [1024, 768], // Tablet portrait
           // [1440, 900], // Desktop landscape
           // [900, 1440], // Desktop portrait
@@ -63,14 +63,13 @@
             testConfig = Object.assign(testConfig, {
               div_id: div.id,
               units: "metric",
-
-              leaflet_options: {
-                // Default
-                center: [45.0, 20.0],
-                zoom: 12,
-                // Optional
-                zoomControl: false,
-              },
+              // mapLibreOptions: {
+              //   // Default
+              //   center: [45.0, 20.0],
+              //   zoom: 12,
+              //   // Optional
+              //   zoomControl: false,
+              // },
             });
 
             // Read test data (JSON)
