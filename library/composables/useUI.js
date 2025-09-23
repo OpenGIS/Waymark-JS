@@ -15,7 +15,7 @@ export function useUI() {
 
 		// On resize
 		const resizeObserver = new ResizeObserver(() => {
-			map.value.invalidateSize();
+			// map.value.invalidateSize();
 		});
 
 		resizeObserver.observe(uiContainer.value);

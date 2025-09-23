@@ -69,11 +69,11 @@ onMounted(() => {
 
 		<!-- START Panel Content -->
 		<div class="panels-content">
-			<Overlays v-show="showPanel('overlays')" />
+			<!-- 			<Overlays v-show="showPanel('overlays')" />
 
 			<Info v-show="showPanel('info')" />
 
-			<Basemaps v-show="showPanel('basemaps')" />
+			<Basemaps v-show="showPanel('basemaps')" /> -->
 		</div>
 		<!-- END Panel Content -->
 	</div>
