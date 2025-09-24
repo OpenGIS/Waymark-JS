@@ -15,7 +15,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		shapes: {},
 	});
 
-	const panelOpen = shallowRef(true);
+	const panelOpen = shallowRef(false);
 
 	const tileLayerGroup = shallowRef({});
 	const activeTileLayer = shallowRef({});

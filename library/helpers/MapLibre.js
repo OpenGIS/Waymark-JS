@@ -2,9 +2,11 @@
 import L from "leaflet";
 
 // Import MapLibre
-import { Map } from "maplibre-gl";
+import { Map, Marker } from "maplibre-gl";
 
 import { getFeatureType } from "@/helpers/Overlay.js";
+import { getTypeData, getIconData } from "@/helpers/Type.js";
+import { makeKey } from "@/helpers/Common.js";
 
 /*
   ======= Creation =======

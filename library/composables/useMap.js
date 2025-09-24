@@ -19,7 +19,7 @@ import {
 	removeLayerHighlight,
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
-
+import { getFeatureType } from "@/helpers/Overlay.js";
 import { createMap, createMapStyle, createMarker } from "@/helpers/MapLibre.js";
 
 import { Overlay } from "@/classes/Overlay.js";
@@ -60,13 +60,15 @@ export function useMap() {
 		);
 
 		// Add GeoJSON
-		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
+		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
+			console.log("Adding GeoJSON to Map", config.value.geoJSON);
+
 			map.value.on("load", () => {
 				// // Set Active Tile Layer
 				// updateTileLayer(mapStyle.layers[0].id);
 
 				// Markers
-				config.geoJSON.features
+				config.value.geoJSON.features
 					.filter((feature) => {
 						return getFeatureType(feature) === "marker";
 					})
@@ -80,7 +82,7 @@ export function useMap() {
 						console.log("Marker", marker, feature);
 
 						// Add Marker to Map
-						marker.addTo(map);
+						marker.addTo(map.value);
 					});
 
 				/*
@@ -91,6 +93,7 @@ export function useMap() {
 				});
 */
 				// Lines
+				/*
 				let count = 0;
 				linesFeatures.value.forEach((feature) => {
 					//Extend bounds
@@ -131,6 +134,7 @@ export function useMap() {
 					lat = map.value.getCenter().lat.toFixed(4);
 					zoom = parseInt(map.value.getZoom());
 				});
+*/
 			});
 		}
 
