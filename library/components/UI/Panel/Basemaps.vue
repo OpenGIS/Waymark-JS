@@ -1,10 +1,12 @@
 <script setup>
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Button from "@/components/UI/Common/Button.vue";
 
-const { map, tileLayerGroup, activeTileLayer } = storeToRefs(useInstanceStore());
+const { config, map, tileLayerGroup, activeTileLayer } =
+	storeToRefs(useInstanceStore());
 
 const tilePreviewUrl = (tile_url) => {
 	const lon2tile = (lon, zoom) =>
@@ -31,18 +33,22 @@ const tilePreviewUrl = (tile_url) => {
 	return tile_url.replace("{z}", zoom).replace("{x}", x).replace("{y}", y);
 };
 
-const updateTileLayer = (tileLayer) => {
-	// Remove all tile layers
-	tileLayerGroup.value.eachLayer((layer) => {
-		map.value.removeLayer(layer);
+const updateTileLayer = (layer_name) => {
+	// Iterate over all MapLibre style raster layers (map.value.getStyle().layers)
+	map.value.getStyle().layers.forEach((layer) => {
+		if (layer.type === "raster") {
+			// Set as invisible
+			map.value.setLayoutProperty(layer.id, "visibility", "none");
+
+			// If layer name matches, set as visible
+			if (layer.id === layer_name) {
+				map.value.setLayoutProperty(layer.id, "visibility", "visible");
+			}
+		}
 	});
-
-	// Add selected tile layer
-	map.value.addLayer(tileLayer);
-
-	// Set active tile layer
-	activeTileLayer.value = tileLayer;
 };
+
+console.log(config.value);
 </script>
 
 <template>
@@ -50,27 +56,27 @@ const updateTileLayer = (tileLayer) => {
 		<h3>Basemaps</h3>
 
 		<div class="list">
-			<!-- Iterate over Leaflet Tile Layers -->
 			<div
-				v-for="(tileLayer, index) in tileLayerGroup.getLayers()"
+				class="list-item"
+				v-for="(tileLayer, index) in config.map_options.tile_layers"
 				:key="index"
-				:class="`tile-layer ${tileLayer.options.name}`"
+				:class="{
+					active:
+						activeTileLayer &&
+						activeTileLayer.layer_url === tileLayer.layer_url,
+				}"
+				@click="updateTileLayer(tileLayer.layer_name)"
 			>
-				<div class="name">{{ tileLayer.options.name }}</div>
-
-				<div class="preview">
-					{{ tilePreviewUrl(tileLayer._url) }}
-
-					<img :src="tilePreviewUrl(tileLayer._url)" />
-				</div>
-
-				<div class="attribution" v-html="tileLayer.options.attribution"></div>
-
-				<Button
-					icon="ion-checkmark"
-					@click="updateTileLayer(tileLayer)"
-					:active="activeTileLayer == tileLayer"
+				<img
+					:src="tilePreviewUrl(tileLayer.layer_url)"
+					:alt="tileLayer.layer_name"
+					width="160"
+					height="160"
 				/>
+				<div class="info">
+					<h4>{{ tileLayer.layer_name }}</h4>
+					<p v-html="tileLayer.layer_attribution"></p>
+				</div>
 			</div>
 		</div>
 	</div>

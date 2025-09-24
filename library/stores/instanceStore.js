@@ -22,7 +22,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const activeLayer = shallowRef(null);
 
-	const activePanelKey = shallowRef("overlays");
+	const activePanelKey = shallowRef("basemaps");
 	const activeFeatureType = shallowRef("marker");
 
 	const mapReady = shallowRef(false);

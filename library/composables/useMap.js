@@ -61,7 +61,7 @@ export function useMap() {
 
 		// Add GeoJSON
 		if (config.geoJSON && Array.isArray(config.geoJSON.features)) {
-			map.on("load", () => {
+			map.value.on("load", () => {
 				// // Set Active Tile Layer
 				// updateTileLayer(mapStyle.layers[0].id);
 
@@ -101,7 +101,7 @@ export function useMap() {
 					const id = `line-${count++}`;
 
 					// Create Source
-					map.addSource(id, {
+					map.value.addSource(id, {
 						type: "geojson",
 						data: feature,
 					});
@@ -110,29 +110,34 @@ export function useMap() {
 					const line = createLineStyle(feature, id);
 
 					// Add Line to Map
-					map.addLayer(line);
+					map.value.addLayer(line);
 
 					// Add Line to Store
 					storeLine(line, feature);
 				});
 
 				//Set initial centre and zoom to it
-				map.setCenter(dataBounds.getCenter());
-				map.fitBounds(dataBounds, {
+				map.value.setCenter(dataBounds.getCenter());
+				map.value.fitBounds(dataBounds, {
 					padding: 30,
 					animate: false,
 				});
 
-				map.once("moveend", () => {
+				map.value.once("moveend", () => {
 					//Set Max bounds
-					// map.setMaxBounds(map.getBounds());
+					// map.value.setMaxBounds(map.value.getBounds());
 
-					lng = map.getCenter().lng.toFixed(4);
-					lat = map.getCenter().lat.toFixed(4);
-					zoom = parseInt(map.getZoom());
+					lng = map.value.getCenter().lng.toFixed(4);
+					lat = map.value.getCenter().lat.toFixed(4);
+					zoom = parseInt(map.value.getZoom());
 				});
 			});
 		}
+
+		// Triggers the UI to populate
+		map.value.on("load", () => {
+			mapReady.value = true;
+		});
 
 		/*
 
@@ -188,8 +193,6 @@ export function useMap() {
 			mapBounds.value = map.value.getBounds();
 		});
 */
-		// Triggers the UI to populate
-		mapReady.value = true;
 	};
 
 	// Get the Div ID for the Map container
