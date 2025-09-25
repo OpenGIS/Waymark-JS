@@ -20,9 +20,16 @@ import {
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
 import { getFeatureType } from "@/helpers/Overlay.js";
-import { createMap, createMapStyle, createMarker } from "@/helpers/MapLibre.js";
+import {
+	createMap,
+	createMapStyle,
+	createMarker,
+	createLine,
+} from "@/helpers/MapLibre.js";
 
 import { Overlay } from "@/classes/Overlay.js";
+import { getTypeData } from "@/helpers/Type.js";
+import { makeKey } from "@/helpers/Common.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -63,9 +70,33 @@ export function useMap() {
 		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
 			console.log("Adding GeoJSON to Map", config.value.geoJSON);
 
+			const dataBounds = new LngLatBounds();
+
 			map.value.on("load", () => {
 				// // Set Active Tile Layer
 				// updateTileLayer(mapStyle.layers[0].id);
+
+				// Add GeoJSON Source
+				map.value.addSource("data", {
+					type: "geojson",
+					data: config.value.geoJSON,
+				});
+
+				// Lines
+				let lineCount = 0;
+				config.value.geoJSON.features
+					.filter((feature) => {
+						return getFeatureType(feature) === "line";
+					})
+					.forEach((feature) => {
+						//Extend bounds
+						feature.geometry.coordinates.forEach((coords) => {
+							dataBounds.extend(coords);
+						});
+
+						const line = createLine(feature, `line-${lineCount++}`);
+						map.value.addLayer(line);
+					});
 
 				// Markers
 				config.value.geoJSON.features
@@ -74,50 +105,14 @@ export function useMap() {
 					})
 					.forEach((feature) => {
 						//Extend bounds
-						// mapBounds.extend(feature.geometry.coordinates);
+						dataBounds.extend(feature.geometry.coordinates);
 
 						// Create the Marker
 						const marker = createMarker(feature);
 
-						console.log("Marker", marker, feature);
-
 						// Add Marker to Map
 						marker.addTo(map.value);
 					});
-
-				/*
-				pointsFeatures.value.forEach((feature) => {
-
-					// Add Marker to Store
-					storeMarker(marker, feature);
-				});
-*/
-				// Lines
-				/*
-				let count = 0;
-				linesFeatures.value.forEach((feature) => {
-					//Extend bounds
-					feature.geometry.coordinates.forEach((coords) => {
-						dataBounds.extend(coords);
-					});
-
-					const id = `line-${count++}`;
-
-					// Create Source
-					map.value.addSource(id, {
-						type: "geojson",
-						data: feature,
-					});
-
-					// Create Line Style
-					const line = createLineStyle(feature, id);
-
-					// Add Line to Map
-					map.value.addLayer(line);
-
-					// Add Line to Store
-					storeLine(line, feature);
-				});
 
 				//Set initial centre and zoom to it
 				map.value.setCenter(dataBounds.getCenter());
@@ -125,16 +120,6 @@ export function useMap() {
 					padding: 30,
 					animate: false,
 				});
-
-				map.value.once("moveend", () => {
-					//Set Max bounds
-					// map.value.setMaxBounds(map.value.getBounds());
-
-					lng = map.value.getCenter().lng.toFixed(4);
-					lat = map.value.getCenter().lat.toFixed(4);
-					zoom = parseInt(map.value.getZoom());
-				});
-*/
 			});
 		}
 

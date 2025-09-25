@@ -107,6 +107,38 @@ export const createMarker = (feature = {}) => {
   return marker;
 };
 
+export const createLine = (feature = {}, id = false) => {
+  // Ensure is LineString with coordinates
+  if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+    return null;
+  }
+
+  // Ensure ID
+  if (!id) {
+    return null;
+  }
+
+  const typeKey = makeKey(feature.properties.type);
+  const typeData = getTypeData("line", typeKey);
+
+  return {
+    id: id,
+    type: "line",
+    source: {
+      type: "geojson",
+      data: feature,
+    },
+    layout: {
+      "line-join": "round",
+      "line-cap": "round",
+    },
+    paint: {
+      "line-color": typeData.line_colour,
+      "line-width": parseFloat(typeData.line_weight),
+    },
+  };
+};
+
 /*
 
 export const createTileLayerGroup = (tileConfigArray = []) => {
