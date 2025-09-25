@@ -146,8 +146,7 @@ export function useMap() {
 
 		// Make active
 		activeOverlay.value = overlay;
-		// overlay.flyTo();
-		// flyToLayer(layer);
+		overlay.flyTo();
 		overlay.addHighlight();
 	};
 

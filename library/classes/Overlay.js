@@ -291,4 +291,26 @@ export class Overlay {
         break;
     }
   }
+
+  flyTo() {
+    switch (this.featureType) {
+      case "marker":
+        this.map.flyTo({
+          center: [
+            this.feature.geometry.coordinates[0],
+            this.feature.geometry.coordinates[1],
+          ],
+          zoom: Math.min(this.map.getZoom(), this.map.getMaxZoom()),
+          duration: 1000,
+        });
+        break;
+      case "line":
+        const bounds = this.getBounds();
+        this.map.fitBounds(bounds, {
+          padding: 20,
+          duration: 1000,
+        });
+        break;
+    }
+  }
 }
