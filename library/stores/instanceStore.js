@@ -1,4 +1,4 @@
-import { ref, shallowRef } from "vue";
+import { computed, ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
 import { deepMerge } from "@/helpers/Common.js";
 
@@ -10,20 +10,15 @@ export const useInstanceStore = defineStore("instance", () => {
 	const mapBounds = shallowRef(null);
 
 	const overlays = shallowRef([]);
-	const layersByType = shallowRef({
-		markers: {},
-		lines: {},
-		shapes: {},
-	});
 
-	const panelOpen = shallowRef(false);
+	const panelOpen = shallowRef(true);
 
 	const tileLayerGroup = shallowRef({});
 	const activeTileLayer = shallowRef({});
 
 	const activeOverlay = shallowRef(null);
 
-	const activePanelKey = shallowRef("basemaps");
+	const activePanelKey = shallowRef("overlays");
 	const activeFeatureType = shallowRef("marker");
 
 	const mapReady = shallowRef(false);
@@ -54,6 +49,54 @@ export const useInstanceStore = defineStore("instance", () => {
 		);
 	};
 
+	// Computed
+	const overlaysByType = computed(() => {
+		const byType = {
+			marker: {},
+			line: {},
+			shape: {},
+		};
+
+		overlays.value.forEach((overlay) => {
+			const typeKey = overlay.typeKey || "undefined";
+
+			if (!byType[overlay.featureType][typeKey]) {
+				byType[overlay.featureType][typeKey] = [];
+			}
+
+			byType[overlay.featureType][typeKey].push(overlay);
+		});
+
+		return byType;
+	});
+
+	const filteredOverlays = computed(() => {
+		const filtered = [];
+
+		// Iterate over all overlays
+		overlays.value.forEach((overlay) => {
+			// Is it in the current map bounds
+			if (layerFilters.value.inBounds && !overlay.inMapBounds()) {
+				return;
+			}
+
+			// Text filter
+			if (
+				layerFilters.value.text !== "" &&
+				!layer.overlay.containsText(layerFilters.value.text)
+			) {
+				return;
+			}
+
+			// Add to filtered Overlays
+			if (!filtered.includes(overlay)) {
+				filtered.push(overlay);
+			}
+		});
+
+		return filtered;
+	});
+
 	return {
 		// State
 		config,
@@ -61,7 +104,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		container,
 		panelOpen,
 		overlays,
-		layersByType,
+		overlaysByType,
 		map,
 		mapBounds,
 		layerFilters,
@@ -73,5 +116,9 @@ export const useInstanceStore = defineStore("instance", () => {
 
 		// Actions
 		init,
+
+		// Computed
+		overlaysByType,
+		filteredOverlays,
 	};
 });

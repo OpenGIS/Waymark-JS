@@ -153,41 +153,9 @@ export function useMap() {
 		overlay.addHighlight();
 	};
 
-	const filteredOverlays = computed(() => {
-		const filtered = [];
-
-		// Iterate over all overlays
-		overlays.value.forEach((overlay) => {
-			// Is it in the current map bounds
-			// if (
-			// 	layerFilters.value.inBounds &&
-			// 	mapBounds.value &&
-			// 	!isLayerInBounds(layer, mapBounds.value)
-			// ) {
-			// 	return;
-			// }
-
-			// Text filter
-			if (
-				layerFilters.value.text !== "" &&
-				!layer.overlay.containsText(layerFilters.value.text)
-			) {
-				return;
-			}
-
-			// Add to filtered Overlays
-			if (!filtered.includes(overlay)) {
-				filtered.push(overlay);
-			}
-		});
-
-		return filtered;
-	});
-
 	return {
 		init,
 		getMapContainerID,
 		setActiveOverlay,
-		filteredOverlays,
 	};
 }

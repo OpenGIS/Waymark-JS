@@ -6,11 +6,11 @@ import { storeToRefs } from "pinia";
 import { removeLayerHighlight } from "@/helpers/Leaflet.js";
 
 import { useMap } from "@/composables/useMap.js";
-const { setactiveOverlay, filteredOverlays } = useMap();
+const { setActiveOverlay } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { map, activeOverlay } = storeToRefs(instanceStore);
+const { map, activeOverlay, filteredOverlays } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -25,8 +25,8 @@ const isactiveOverlay = computed(() => {
   return activeOverlay.value === props.overlay;
 });
 
-const infilteredOverlays = computed(() => {
-  return filteredOverlays.value.contains(props.overlay);
+const inFilteredOverlays = computed(() => {
+  return filteredOverlays.value.includes(props.overlay);
 });
 
 const toggleOnMap = () => {
@@ -50,25 +50,25 @@ const toggleOnMap = () => {
 
 const overlayStyle = computed(() => {
   if (isactiveOverlay.value) {
-    switch (props.overlay.overlay.featureType) {
+    switch (props.overlay.featureType) {
       case "marker":
-        return `color: ${props.overlay.overlay.type.getIconColour()};background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
+        return `color: ${props.overlay.type.getIconColour()};background-color: ${props.overlay.type.getPrimaryColour()};`;
       case "line":
-        return `background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
+        return `background-color: ${props.overlay.type.getPrimaryColour()};`;
       case "shape":
-        return `background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
+        return `background-color: ${props.overlay.type.getPrimaryColour()};`;
     }
   }
 });
 
 const overlayClass = computed(() => {
-  let out = props.overlay.overlay.featureType;
+  let out = props.overlay.featureType;
 
   if (isactiveOverlay.value) {
     out += " active ";
   }
 
-  if (!infilteredOverlays.value) {
+  if (!inFilteredOverlays.value) {
     out += " hidden ";
   }
 
@@ -77,10 +77,10 @@ const overlayClass = computed(() => {
 
 const row = useTemplateRef("row");
 
-// When a layer is set as active, scroll to it
+// When a overlay is set as active, scroll to it
 watch(activeOverlay, (newLayer) => {
   if (newLayer == props.overlay) {
-    //Scroll to active layer
+    //Scroll to active overlay
     row.value.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 });
@@ -91,22 +91,22 @@ watch(activeOverlay, (newLayer) => {
   <tr
     ref="row"
     class="overlay"
-    @click="setactiveOverlay(layer)"
+    @click="setActiveOverlay(overlay)"
     :class="overlayClass"
     :style="overlayStyle"
   >
     <!-- Image -->
     <td class="image">
       <img
-        v-if="layer.overlay.hasImage()"
-        :alt="layer.overlay.getTitle()"
-        :src="layer.overlay.getImage('thumbnail')"
+        v-if="overlay.hasImage()"
+        :alt="overlay.getTitle()"
+        :src="overlay.getImage('thumbnail')"
       />
     </td>
 
     <!-- Title -->
     <td class="title" colspan="2">
-      <div class="content">{{ layer.overlay.getTitle() }}</div>
+      <div class="content">{{ overlay.getTitle() }}</div>
     </td>
 
     <!-- ? -->

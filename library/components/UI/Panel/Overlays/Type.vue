@@ -3,10 +3,11 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
-const { filteredOverlays } = useMap();
+
+import { Type } from "@/classes/Type.js";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map } = storeToRefs(useInstanceStore());
+const { map, filteredOverlays } = storeToRefs(useInstanceStore());
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
@@ -16,19 +17,19 @@ import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
   featureType: String,
-  overlayType: String,
-  layerGroup: Object,
+  typeKey: String,
+  overlays: Array,
 });
 
 let isExpanded = ref(true);
 let isVisible = ref(true);
 
 const layerCount = computed(() => {
-  //Check occurence of each props.layerGroup layer in filteredOverlays
+  //Check occurence of each type overlay in filteredOverlays
   let count = 0;
-  props.layerGroup.eachLayer((layer) => {
+  props.overlays.forEach((overlay) => {
     // Check if layer is in filteredOverlays
-    if (filteredOverlays.value.hasLayer(layer)) {
+    if (filteredOverlays.value.includes(overlay)) {
       count++;
     }
   });
@@ -52,7 +53,7 @@ const toggleVisible = () => {
   });
 };
 
-const type = props.layerGroup.type;
+const type = new Type(props.featureType, props.typeKey);
 
 const headingStyle = () => {
   let style = ``;
@@ -90,7 +91,7 @@ const headingClass = () => {
   let out = "";
 
   out += ` ${props.featureType}`;
-  out += ` ${props.overlayType}`;
+  out += ` ${props.typeKey}`;
 
   // Check if hidden
   if (!layerCount.value) {
@@ -111,13 +112,13 @@ const headingClass = () => {
   >
     <!-- Image -->
     <td class="icon">
-      <Preview :type="layerGroup.type" />
+      <Preview :type="type" />
     </td>
 
     <!-- Title -->
     <td class="title">
       <div class="content">
-        {{ layerGroup.type.getTitle() }}
+        {{ type.getTitle() }}
       </div>
     </td>
 
@@ -138,11 +139,7 @@ const headingClass = () => {
   </tr>
 
   <!-- List Overlays for this Type -->
-  <Overlay
-    :layer="layer"
-    v-for="layer in layerGroup.getLayers()"
-    v-show="isExpanded"
-  />
+  <Overlay :overlay="overlay" v-for="overlay in overlays" v-show="isExpanded" />
 </template>
 
 <style lang="less">

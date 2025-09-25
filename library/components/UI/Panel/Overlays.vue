@@ -3,11 +3,15 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
-const { filteredOverlays } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { overlays, layerFilters, layersByType, activeFeatureType } =
-	storeToRefs(useInstanceStore());
+const {
+	overlays,
+	layerFilters,
+	overlaysByType,
+	activeFeatureType,
+	filteredOverlays,
+} = storeToRefs(useInstanceStore());
 
 import Active from "@/components/UI/Panel/Overlays/Active.vue";
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
@@ -91,11 +95,11 @@ const shapeCount = computed(() => {
 			>
 				<!-- Iterate over Marker Types -->
 				<Type
-					v-for="typeKey in Object.keys(layersByType.markers)"
+					v-for="typeKey in Object.keys(overlaysByType.marker)"
 					:key="typeKey"
 					featureType="marker"
-					:layerGroup="layersByType.markers[typeKey]"
-					:overlayType="typeKey"
+					:overlays="overlaysByType.marker[typeKey]"
+					:typeKey="typeKey"
 				/>
 			</table>
 
@@ -103,11 +107,11 @@ const shapeCount = computed(() => {
 			<table v-show="activeFeatureType === 'line'" class="line-types type-list">
 				<!-- Iterate over Line Types -->
 				<Type
-					v-for="typeKey in Object.keys(layersByType.lines)"
+					v-for="typeKey in Object.keys(overlaysByType.line)"
 					:key="typeKey"
 					featureType="line"
-					:layerGroup="layersByType.lines[typeKey]"
-					:overlayType="typeKey"
+					:overlays="overlaysByType.line[typeKey]"
+					:typeKey="typeKey"
 				/>
 			</table>
 		</div>
