@@ -15,11 +15,11 @@ const { activeOverlay } = storeToRefs(useInstanceStore());
     <div class="layer-top">
       <!-- Type Preview -->
       <div class="type">
-        <Preview :type="activeOverlay.overlay.type" />
+        <Preview :type="activeOverlay.type" />
       </div>
 
       <!-- Title -->
-      <div class="title">{{ activeOverlay.overlay.getTitle() }}</div>
+      <div class="title">{{ activeOverlay.getTitle() }}</div>
 
       <Button icon="ion-close" @click="activeOverlay = null" />
     </div>
@@ -28,10 +28,10 @@ const { activeOverlay } = storeToRefs(useInstanceStore());
     <!-- START Content -->
     <div class="layer-content">
       <!-- Image -->
-      <div class="image" v-if="activeOverlay.overlay.hasImage()">
+      <div class="image" v-if="activeOverlay.hasImage()">
         <img
-          v-if="activeOverlay.overlay.images.thumbnail"
-          :src="activeOverlay.overlay.images.thumbnail"
+          v-if="activeOverlay.images.thumbnail"
+          :src="activeOverlay.images.thumbnail"
         />
       </div>
 
@@ -39,19 +39,19 @@ const { activeOverlay } = storeToRefs(useInstanceStore());
       <div class="stats">
         <!-- Coordinates -->
         <div class="coordinates">
-          {{ activeOverlay.overlay.getCoordsString() }}
+          {{ activeOverlay.getCoordsString() }}
         </div>
 
         <!-- Length -->
         <div
           class="length"
-          v-if="activeOverlay.overlay.featureType === 'line'"
-          v-html="activeOverlay.overlay.getLengthString()"
+          v-if="activeOverlay.featureType === 'line'"
+          v-html="activeOverlay.getLengthString()"
         />
 
         <!-- Elevation -->
-        <div class="elevation" v-if="activeOverlay.overlay.hasElevationData()">
-          {{ activeOverlay.overlay.getElevationString() }}
+        <div class="elevation" v-if="activeOverlay.hasElevationData()">
+          {{ activeOverlay.getElevationString() }}
         </div>
       </div>
       <!-- END Stats -->
@@ -59,8 +59,8 @@ const { activeOverlay } = storeToRefs(useInstanceStore());
       <!-- Description -->
       <div
         class="description"
-        v-if="activeOverlay.overlay.getDescription()"
-        v-html="activeOverlay.overlay.getDescription()"
+        v-if="activeOverlay.getDescription()"
+        v-html="activeOverlay.getDescription()"
       />
     </div>
     <!-- End Content -->

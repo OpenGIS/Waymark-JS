@@ -16,17 +16,17 @@ import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
-  layer: Object,
+  overlay: Object,
 });
 
 let isOnMap = ref(true);
 
 const isactiveOverlay = computed(() => {
-  return activeOverlay.value === props.layer;
+  return activeOverlay.value === props.overlay;
 });
 
 const infilteredOverlays = computed(() => {
-  return filteredOverlays.value.hasLayer(props.layer);
+  return filteredOverlays.value.contains(props.overlay);
 });
 
 const toggleOnMap = () => {
@@ -41,28 +41,28 @@ const toggleOnMap = () => {
     activeOverlay.value = null;
   }
 
-  map.value.removeLayer(props.layer);
+  map.value.removeLayer(props.overlay);
 
   if (isOnMap.value) {
-    map.value.addLayer(props.layer);
+    map.value.addLayer(props.overlay);
   }
 };
 
 const overlayStyle = computed(() => {
   if (isactiveOverlay.value) {
-    switch (props.layer.overlay.featureType) {
+    switch (props.overlay.overlay.featureType) {
       case "marker":
-        return `color: ${props.layer.overlay.type.getIconColour()};background-color: ${props.layer.overlay.type.getPrimaryColour()};`;
+        return `color: ${props.overlay.overlay.type.getIconColour()};background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
       case "line":
-        return `background-color: ${props.layer.overlay.type.getPrimaryColour()};`;
+        return `background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
       case "shape":
-        return `background-color: ${props.layer.overlay.type.getPrimaryColour()};`;
+        return `background-color: ${props.overlay.overlay.type.getPrimaryColour()};`;
     }
   }
 });
 
 const overlayClass = computed(() => {
-  let out = props.layer.overlay.featureType;
+  let out = props.overlay.overlay.featureType;
 
   if (isactiveOverlay.value) {
     out += " active ";
@@ -79,7 +79,7 @@ const row = useTemplateRef("row");
 
 // When a layer is set as active, scroll to it
 watch(activeOverlay, (newLayer) => {
-  if (newLayer == props.layer) {
+  if (newLayer == props.overlay) {
     //Scroll to active layer
     row.value.scrollIntoView({ behavior: "smooth", block: "center" });
   }
