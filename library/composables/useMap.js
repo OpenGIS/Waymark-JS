@@ -6,14 +6,11 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // Import MapLibre (new implementation, migrating from Leaflet to MapLibre)
-import { Map, LngLatBounds } from "maplibre-gl";
+import { LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 // Import Helpers
 import {
-	// createMap,
-	createTileLayerGroup,
-	// createDataLayer,
 	isLayerInBounds,
 	addLayerHighlight,
 	removeLayerHighlight,
@@ -27,17 +24,8 @@ import {
 	createLine,
 } from "@/helpers/MapLibre.js";
 
-import { Overlay } from "@/classes/Overlay.js";
-import { getTypeData } from "@/helpers/Type.js";
-import { makeKey } from "@/helpers/Common.js";
-
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
-
-const fitBoundsOptions = {
-	padding: [30, 30],
-	animate: false,
-};
 
 export function useMap() {
 	// Get the state from the instance store
@@ -48,13 +36,10 @@ export function useMap() {
 		layerFilters,
 		mapBounds,
 		dataLayer,
-		layersByType,
 		activeLayer,
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
-		tileLayerGroup,
-		activeTileLayer,
 	} = storeToRefs(useInstanceStore());
 
 	// Create & Store Map
@@ -73,9 +58,6 @@ export function useMap() {
 			const dataBounds = new LngLatBounds();
 
 			map.value.on("load", () => {
-				// // Set Active Tile Layer
-				// updateTileLayer(mapStyle.layers[0].id);
-
 				// Add GeoJSON Source
 				map.value.addSource("data", {
 					type: "geojson",
@@ -127,61 +109,6 @@ export function useMap() {
 		map.value.on("load", () => {
 			mapReady.value = true;
 		});
-
-		/*
-
-		// Create data layer
-		dataLayer.value = createDataLayer(
-			config.value.geoJSON,
-			// On each feature
-			(feature, layer) => {
-				// Create Overlay instance
-				layer.overlay = new Overlay(layer);
-
-				// Add to appropriate Type group
-				const featuresType = layer.overlay.featureType + "s";
-				if (!layersByType.value[featuresType][layer.overlay.typeKey]) {
-					// Needs creating
-					layersByType.value[featuresType][layer.overlay.typeKey] =
-						L.featureGroup();
-
-					// Add Type instance
-					layersByType.value[featuresType][layer.overlay.typeKey].type =
-						layer.overlay.type;
-				}
-				layersByType.value[featuresType][layer.overlay.typeKey].addLayer(layer);
-
-				// Add events
-				layer.on("click", () => {
-					setActiveLayer(layer);
-				});
-
-				// Create Style
-				switch (featuresType) {
-					case "lines":
-						// Set line style
-						layer.setStyle(layer.overlay.type.getLineStyle());
-
-						break;
-
-					default:
-						console.warn("Unknown Feature Type", feature);
-						break;
-				}
-			},
-		);
-
-		// Add Data Layer to Map
-		map.value.addLayer(dataLayer.value);
-
-		// Set initial bounds
-		map.value.fitBounds(dataLayer.value.getBounds(), fitBoundsOptions);
-
-		// Update bounds on map move & zoom
-		map.value.on("moveend", () => {
-			mapBounds.value = map.value.getBounds();
-		});
-*/
 	};
 
 	// Get the Div ID for the Map container
