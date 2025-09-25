@@ -68,16 +68,22 @@ export function useMap() {
 					// Create Overlay instance
 					const overlay = new Overlay(feature, `overlay-${overlayCount++}`);
 
-					// Add to Map
+					overlay.addTo(map.value);
+
+					// Handle Events
 					switch (overlay.featureType) {
 						case "marker":
-							overlay.layer.addTo(map.value);
+							overlay.layer.getElement().addEventListener("click", () => {
+								overlay.addHighlight();
+							});
 
 							break;
-						default:
-							map.value.addLayer(overlay.layer);
-
-							break;
+						case "line":
+						case "shape":
+						// overlay.on("click", (e) => {
+						// 	setActiveLayer(overlay);
+						// });
+						// break;
 					}
 
 					// Extend bounds

@@ -13,24 +13,11 @@ export class Overlay {
     this.featureType = getFeatureType(this.feature) || null;
     this.typeKey = makeKey(this.feature.properties.type) || null;
     this.type = new Type(this.featureType, this.typeKey);
-
-    console.log("Overlay Type:", this.type);
-
-    this.id = `${this.featureType}-${this.type.typeKey}-${this.getCoordsString()}`;
+    // Simplified ID to just use a random string to ensure uniqueness
+    this.id = `${this.featureType}-${this.type.typeKey}-${Math.random().toString(36).substring(2, 8)}`;
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
-
-    // Create MapLibre Layer
-    switch (getFeatureType(feature)) {
-      case "marker":
-        this.layer = createMarker(feature);
-
-        break;
-      case "line":
-        this.layer = createLine(feature, this.id);
-        break;
-    }
   }
 
   hasImage() {
@@ -231,5 +218,68 @@ export class Overlay {
       );
     }
     return "";
+  }
+
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    // Create MapLibre Layer
+    switch (getFeatureType(this.feature)) {
+      case "marker":
+        // Create the Marker
+        this.layer = createMarker(this.feature);
+
+        // Add Marker to Map
+        this.layer.addTo(map);
+
+        break;
+      case "line":
+        // Create Line
+        this.layer = createLine(this.feature, this.id);
+
+        // Add Line to Map
+        map.addLayer(this.layer);
+
+        break;
+    }
+  }
+
+  addHighlight() {
+    switch (this.featureType) {
+      case "marker":
+        // Get marker
+        const element = this.layer.getElement();
+
+        // Add active class
+        element.classList.add("waymark-active");
+        break;
+      case "line":
+        // Highlight Layer
+        this.layer.setPaintProperty("line-color", "#ff0000");
+        this.layer.setPaintProperty("line-dasharray", [5, 5]);
+        break;
+    }
+  }
+
+  removeHighlight() {
+    switch (this.featureType) {
+      case "marker":
+        // Get marker
+        const element = this.layer.getElement();
+
+        // Remove active class
+        element.classList.remove("waymark-active");
+
+        break;
+      case "line":
+        // Highlight Layer
+        this.layer.setPaintProperty("line-color", this.type.getPrimaryColour());
+        this.layer.setPaintProperty("line-dasharray", null);
+
+        break;
+    }
   }
 }
