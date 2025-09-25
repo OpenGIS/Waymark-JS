@@ -8,14 +8,18 @@ import { useConfig } from "@/composables/useConfig.js";
 const { getItem } = useConfig();
 
 export class Overlay {
-  constructor(feature, key = "") {
+  constructor(feature) {
     this.feature = feature;
-    this.featureType = getFeatureType(this.feature);
-    this.typeKey = makeKey(this.feature.properties.type) || "photo";
+    this.featureType = getFeatureType(this.feature) || null;
+    this.typeKey = makeKey(this.feature.properties.type) || null;
+    this.type = new Type(this.featureType, this.typeKey);
+
+    console.log("Overlay Type:", this.type);
+
+    this.id = `${this.featureType}-${this.type.typeKey}-${this.getCoordsString()}`;
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
-    this.type = new Type(this.featureType, this.typeKey);
 
     // Create MapLibre Layer
     switch (getFeatureType(feature)) {
@@ -24,7 +28,7 @@ export class Overlay {
 
         break;
       case "line":
-        this.layer = createLine(feature, key);
+        this.layer = createLine(feature, this.id);
         break;
     }
   }
