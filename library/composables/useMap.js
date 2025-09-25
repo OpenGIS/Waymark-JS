@@ -80,10 +80,9 @@ export function useMap() {
 							break;
 						case "line":
 						case "shape":
-						// overlay.on("click", (e) => {
-						// 	setactiveOverlay(overlay);
-						// });
-						// break;
+							map.value.on("click", overlay.id, () => {
+								setActiveOverlay(overlay);
+							});
 					}
 
 					// Extend bounds
@@ -111,6 +110,8 @@ export function useMap() {
 	};
 
 	const setActiveOverlay = (overlay) => {
+		console.log("Set Active Overlay", overlay);
+
 		// If active layer is set
 		if (activeOverlay.value) {
 			//If already active layer - focus on it
@@ -145,6 +146,7 @@ export function useMap() {
 
 		// Make active
 		activeOverlay.value = overlay;
+		// overlay.flyTo();
 		// flyToLayer(layer);
 		overlay.addHighlight();
 	};

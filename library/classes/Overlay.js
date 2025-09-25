@@ -226,6 +226,8 @@ export class Overlay {
       return;
     }
 
+    this.map = map;
+
     // Create MapLibre Layer
     switch (getFeatureType(this.feature)) {
       case "marker":
@@ -233,7 +235,7 @@ export class Overlay {
         this.layer = createMarker(this.feature);
 
         // Add Marker to Map
-        this.layer.addTo(map);
+        this.layer.addTo(this.map);
 
         break;
       case "line":
@@ -241,7 +243,7 @@ export class Overlay {
         this.layer = createLine(this.feature, this.id);
 
         // Add Line to Map
-        map.addLayer(this.layer);
+        this.map.addLayer(this.layer);
 
         break;
     }
@@ -258,8 +260,11 @@ export class Overlay {
         break;
       case "line":
         // Highlight Layer
-        this.layer.setPaintProperty("line-color", "#ff0000");
-        this.layer.setPaintProperty("line-dasharray", [5, 5]);
+        console.log("Highlighting line", this.map.getLayer(this.id));
+
+        this.map.setPaintProperty(this.id, "line-color", "#ff0000");
+        this.map.setPaintProperty(this.id, "line-dasharray", [5, 5]);
+
         break;
     }
   }
@@ -275,9 +280,13 @@ export class Overlay {
 
         break;
       case "line":
-        // Highlight Layer
-        this.layer.setPaintProperty("line-color", this.type.getPrimaryColour());
-        this.layer.setPaintProperty("line-dasharray", null);
+        // UnHighlight Layer
+        this.map.setPaintProperty(
+          this.id,
+          "line-color",
+          this.type.getPrimaryColour(),
+        );
+        this.map.setPaintProperty(this.id, "line-dasharray", null);
 
         break;
     }
