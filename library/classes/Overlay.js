@@ -1,20 +1,32 @@
 import { length } from "@turf/length";
 import { Type } from "@/classes/Type.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
+import { createMarker, createLine } from "@/helpers/MapLibre.js";
+import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
 import { useConfig } from "@/composables/useConfig.js";
 const { getItem } = useConfig();
 
 export class Overlay {
-  constructor(layer) {
-    this.layer = layer;
-    this.feature = layer.feature;
+  constructor(feature, key = "") {
+    this.feature = feature;
     this.featureType = getFeatureType(this.feature);
     this.typeKey = makeKey(this.feature.properties.type) || "photo";
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
     this.type = new Type(this.featureType, this.typeKey);
+
+    // Create MapLibre Layer
+    switch (getFeatureType(feature)) {
+      case "marker":
+        this.layer = createMarker(feature);
+
+        break;
+      case "line":
+        this.layer = createLine(feature, key);
+        break;
+    }
   }
 
   hasImage() {
@@ -170,6 +182,30 @@ export class Overlay {
     }
   }
 
+  getBounds() {
+    let bounds = null;
+
+    switch (this.featureType) {
+      case "marker":
+        bounds = new LngLatBounds(
+          this.feature.geometry.coordinates,
+          this.feature.geometry.coordinates,
+        );
+        break;
+      case "line":
+        // Use turf to get the bounding box of the linestring
+        const coords = this.feature.geometry.coordinates;
+        bounds = coords.reduce(
+          (b, coord) => b.extend(coord),
+          new LngLatBounds(coords[0], coords[0]),
+        );
+
+        break;
+    }
+
+    return bounds;
+  }
+
   getCoordsString() {
     if (this.featureType === "marker") {
       // For marker, return the coordinates as a string
@@ -180,8 +216,8 @@ export class Overlay {
         this.feature.geometry.coordinates[0].toFixed(6)
       );
     } else if (this.featureType === "line" || this.featureType === "shape") {
-      // Use Leaflet layer to get the bounds and return the centre
-      const bounds = this.layer.getBounds();
+      // Use layer to get the bounds and return the centre
+      const bounds = this.getBounds();
       const center = bounds.getCenter();
       return (
         "Centre Lat,Lng: " +

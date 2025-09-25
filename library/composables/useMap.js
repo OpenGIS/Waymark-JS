@@ -17,12 +17,10 @@ import {
 	flyToLayer,
 } from "@/helpers/Leaflet.js";
 import { getFeatureType } from "@/helpers/Overlay.js";
-import {
-	createMap,
-	createMapStyle,
-	createMarker,
-	createLine,
-} from "@/helpers/MapLibre.js";
+import { createMap, createMapStyle } from "@/helpers/MapLibre.js";
+
+// Classes
+import { Overlay } from "@/classes/Overlay.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -51,7 +49,7 @@ export function useMap() {
 			config.value.map_options.mapLibreOptions,
 		);
 
-		// Add GeoJSON
+		// Data Layer - GeoJSON Present?
 		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
 			console.log("Adding GeoJSON to Map", config.value.geoJSON);
 
@@ -64,37 +62,27 @@ export function useMap() {
 					data: config.value.geoJSON,
 				});
 
-				// Lines
-				let lineCount = 0;
-				config.value.geoJSON.features
-					.filter((feature) => {
-						return getFeatureType(feature) === "line";
-					})
-					.forEach((feature) => {
-						//Extend bounds
-						feature.geometry.coordinates.forEach((coords) => {
-							dataBounds.extend(coords);
-						});
+				// Overlays
+				let overlayCount = 0;
+				config.value.geoJSON.features.forEach((feature) => {
+					// Create Overlay instance
+					const overlay = new Overlay(feature, `overlay-${overlayCount++}`);
 
-						const line = createLine(feature, `line-${lineCount++}`);
-						map.value.addLayer(line);
-					});
+					// Add to Map
+					switch (overlay.featureType) {
+						case "marker":
+							overlay.layer.addTo(map.value);
 
-				// Markers
-				config.value.geoJSON.features
-					.filter((feature) => {
-						return getFeatureType(feature) === "marker";
-					})
-					.forEach((feature) => {
-						//Extend bounds
-						dataBounds.extend(feature.geometry.coordinates);
+							break;
+						default:
+							map.value.addLayer(overlay.layer);
 
-						// Create the Marker
-						const marker = createMarker(feature);
+							break;
+					}
 
-						// Add Marker to Map
-						marker.addTo(map.value);
-					});
+					// Extend bounds
+					dataBounds.extend(overlay.getBounds());
+				});
 
 				//Set initial centre and zoom to it
 				map.value.setCenter(dataBounds.getCenter());
