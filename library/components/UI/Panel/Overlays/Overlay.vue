@@ -22,7 +22,7 @@ const props = defineProps({
 let isOnMap = ref(true);
 
 const isActiveLayer = computed(() => {
-  return activeLayer.value === props.layer;
+  return activeOverlay.value === props.layer;
 });
 
 const inFilteredLayers = computed(() => {
@@ -33,12 +33,12 @@ const toggleOnMap = () => {
   isOnMap.value = !isOnMap.value;
 
   // Close if hiding
-  if (isActiveLayer.value) {
+  if (isactiveOverlay.value) {
     // Remove highlight
-    removeLayerHighlight(activeLayer.value);
+    removeLayerHighlight(activeOverlay.value);
 
     // Make inactive
-    activeLayer.value = null;
+    activeOverlay.value = null;
   }
 
   map.value.removeLayer(props.layer);
@@ -49,7 +49,7 @@ const toggleOnMap = () => {
 };
 
 const overlayStyle = computed(() => {
-  if (isActiveLayer.value) {
+  if (isactiveOverlay.value) {
     switch (props.layer.overlay.featureType) {
       case "marker":
         return `color: ${props.layer.overlay.type.getIconColour()};background-color: ${props.layer.overlay.type.getPrimaryColour()};`;
@@ -64,7 +64,7 @@ const overlayStyle = computed(() => {
 const overlayClass = computed(() => {
   let out = props.layer.overlay.featureType;
 
-  if (isActiveLayer.value) {
+  if (isactiveOverlay.value) {
     out += " active ";
   }
 

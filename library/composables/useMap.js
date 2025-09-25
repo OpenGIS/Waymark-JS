@@ -34,7 +34,7 @@ export function useMap() {
 		layerFilters,
 		mapBounds,
 		dataLayer,
-		activeLayer,
+		activeOverlay,
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
@@ -74,14 +74,14 @@ export function useMap() {
 					switch (overlay.featureType) {
 						case "marker":
 							overlay.layer.getElement().addEventListener("click", () => {
-								overlay.addHighlight();
+								setActiveOverlay(overlay);
 							});
 
 							break;
 						case "line":
 						case "shape":
 						// overlay.on("click", (e) => {
-						// 	setActiveLayer(overlay);
+						// 	setactiveOverlay(overlay);
 						// });
 						// break;
 					}
@@ -110,22 +110,21 @@ export function useMap() {
 		return `${config.value.map_options.div_id}-map`;
 	};
 
-	const setActiveLayer = (layer) => {
+	const setActiveOverlay = (overlay) => {
 		// If active layer is set
-		if (activeLayer.value) {
+		if (activeOverlay.value) {
 			//If already active layer - focus on it
-			if (activeLayer.value === layer) {
-				switch (layer.overlay.featureType) {
+			if (activeOverlay.value === overlay) {
+				switch (overlay.featureType) {
 					case "marker":
+						console.log("Focus on Marker");
 						// Increase zoom to max layer zoom
-						map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
+						//map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
 
 						break;
 					case "line":
-						flyToLayer(layer);
-
-						break;
 					case "shape":
+						console.log("Focus on Line/Shape");
 						break;
 				}
 
@@ -133,21 +132,21 @@ export function useMap() {
 			}
 
 			// Remove highlight
-			removeLayerHighlight(activeLayer.value);
+			activeOverlay.value.removeHighlight();
 
 			// Make inactive
-			activeLayer.value = null;
+			activeOverlay.value = null;
 		}
 
 		// Go to Overlays Panel
-		activeFeatureType.value = layer.overlay.featureType;
+		activeFeatureType.value = overlay.featureType;
 		activePanelKey.value = "overlays";
 		panelOpen.value = true;
 
 		// Make active
-		activeLayer.value = layer;
-		flyToLayer(layer);
-		addLayerHighlight(layer);
+		activeOverlay.value = overlay;
+		// flyToLayer(layer);
+		overlay.addHighlight();
 	};
 
 	const filteredLayers = computed(() => {
@@ -184,7 +183,7 @@ export function useMap() {
 	return {
 		init,
 		getMapContainerID,
-		setActiveLayer,
+		setActiveOverlay,
 		filteredLayers,
 	};
 }

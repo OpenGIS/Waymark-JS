@@ -5,33 +5,33 @@ import Preview from "@/components/UI/Common/Overlay/Preview.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { activeLayer } = storeToRefs(useInstanceStore());
+const { activeOverlay } = storeToRefs(useInstanceStore());
 </script>
 
 <template>
   <!-- START Active Layer -->
-  <div v-if="activeLayer" class="active-layer">
+  <div v-if="activeOverlay" class="active-layer">
     <!-- START Top -->
     <div class="layer-top">
       <!-- Type Preview -->
       <div class="type">
-        <Preview :type="activeLayer.overlay.type" />
+        <Preview :type="activeOverlay.overlay.type" />
       </div>
 
       <!-- Title -->
-      <div class="title">{{ activeLayer.overlay.getTitle() }}</div>
+      <div class="title">{{ activeOverlay.overlay.getTitle() }}</div>
 
-      <Button icon="ion-close" @click="activeLayer = null" />
+      <Button icon="ion-close" @click="activeOverlay = null" />
     </div>
     <!-- End Top -->
 
     <!-- START Content -->
     <div class="layer-content">
       <!-- Image -->
-      <div class="image" v-if="activeLayer.overlay.hasImage()">
+      <div class="image" v-if="activeOverlay.overlay.hasImage()">
         <img
-          v-if="activeLayer.overlay.images.thumbnail"
-          :src="activeLayer.overlay.images.thumbnail"
+          v-if="activeOverlay.overlay.images.thumbnail"
+          :src="activeOverlay.overlay.images.thumbnail"
         />
       </div>
 
@@ -39,19 +39,19 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       <div class="stats">
         <!-- Coordinates -->
         <div class="coordinates">
-          {{ activeLayer.overlay.getCoordsString() }}
+          {{ activeOverlay.overlay.getCoordsString() }}
         </div>
 
         <!-- Length -->
         <div
           class="length"
-          v-if="activeLayer.overlay.featureType === 'line'"
-          v-html="activeLayer.overlay.getLengthString()"
+          v-if="activeOverlay.overlay.featureType === 'line'"
+          v-html="activeOverlay.overlay.getLengthString()"
         />
 
         <!-- Elevation -->
-        <div class="elevation" v-if="activeLayer.overlay.hasElevationData()">
-          {{ activeLayer.overlay.getElevationString() }}
+        <div class="elevation" v-if="activeOverlay.overlay.hasElevationData()">
+          {{ activeOverlay.overlay.getElevationString() }}
         </div>
       </div>
       <!-- END Stats -->
@@ -59,8 +59,8 @@ const { activeLayer } = storeToRefs(useInstanceStore());
       <!-- Description -->
       <div
         class="description"
-        v-if="activeLayer.overlay.getDescription()"
-        v-html="activeLayer.overlay.getDescription()"
+        v-if="activeOverlay.overlay.getDescription()"
+        v-html="activeOverlay.overlay.getDescription()"
       />
     </div>
     <!-- End Content -->

@@ -20,7 +20,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const tileLayerGroup = shallowRef({});
 	const activeTileLayer = shallowRef({});
 
-	const activeLayer = shallowRef(null);
+	const activeOverlay = shallowRef(null);
 
 	const activePanelKey = shallowRef("basemaps");
 	const activeFeatureType = shallowRef("marker");
@@ -66,7 +66,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		layerFilters,
 		tileLayerGroup,
 		activeTileLayer,
-		activeLayer,
+		activeOverlay,
 		activePanelKey,
 		activeFeatureType,
 
