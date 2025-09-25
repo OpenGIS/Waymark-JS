@@ -3,10 +3,10 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
-const { filteredLayers } = useMap();
+const { filteredOverlays } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { dataLayer, layerFilters, layersByType, activeFeatureType } =
+const { overlays, layerFilters, layersByType, activeFeatureType } =
 	storeToRefs(useInstanceStore());
 
 import Active from "@/components/UI/Panel/Overlays/Active.vue";
@@ -14,15 +14,21 @@ import Type from "@/components/UI/Panel/Overlays/Type.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
 const markerCount = computed(() => {
-	return filteredLayers.value
-		.getLayers()
-		.filter((layer) => layer.overlay.featureType === "marker").length;
+	return filteredOverlays.value.filter(
+		(overlay) => overlay.featureType === "marker",
+	).length;
 });
 
 const lineCount = computed(() => {
-	return filteredLayers.value
-		.getLayers()
-		.filter((layer) => layer.overlay.featureType === "line").length;
+	return filteredOverlays.value.filter(
+		(overlay) => overlay.featureType === "line",
+	).length;
+});
+
+const shapeCount = computed(() => {
+	return filteredOverlays.value.filter(
+		(overlay) => overlay.featureType === "shape",
+	).length;
 });
 </script>
 
@@ -35,11 +41,7 @@ const lineCount = computed(() => {
 			<!-- START Nav -->
 			<nav class="feature-nav">
 				<Button
-					v-if="
-						dataLayer
-							.getLayers()
-							.filter((layer) => layer.overlay.featureType === 'marker').length
-					"
+					v-if="markerCount"
 					class="marker"
 					icon="ion-ios-location"
 					@click="activeFeatureType = 'marker'"
@@ -49,11 +51,7 @@ const lineCount = computed(() => {
 				</Button>
 
 				<Button
-					v-if="
-						dataLayer
-							.getLayers()
-							.filter((layer) => layer.overlay.featureType === 'line').length
-					"
+					v-if="lineCount"
 					class="line"
 					icon="ion-arrow-graph-up-right"
 					@click="activeFeatureType = 'line'"
@@ -63,16 +61,14 @@ const lineCount = computed(() => {
 				</Button>
 
 				<Button
-					v-if="
-						dataLayer
-							.getLayers()
-							.filter((layer) => layer.overlay.featureType === 'shape').length
-					"
+					v-if="shapeCount"
 					class="shape"
 					icon="ion-android-checkbox-outline-blank"
 					@click="activeFeatureType = 'shape'"
 					:active="activeFeatureType === 'shape'"
-				/>
+				>
+					<span class="count" v-html="shapeCount"></span>
+				</Button>
 
 				<Button
 					icon="ion-android-expand"

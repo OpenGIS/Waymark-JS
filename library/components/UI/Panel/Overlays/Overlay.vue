@@ -6,11 +6,11 @@ import { storeToRefs } from "pinia";
 import { removeLayerHighlight } from "@/helpers/Leaflet.js";
 
 import { useMap } from "@/composables/useMap.js";
-const { setActiveLayer, filteredLayers } = useMap();
+const { setactiveOverlay, filteredOverlays } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const instanceStore = useInstanceStore();
-const { map, activeLayer } = storeToRefs(instanceStore);
+const { map, activeOverlay } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
@@ -21,12 +21,12 @@ const props = defineProps({
 
 let isOnMap = ref(true);
 
-const isActiveLayer = computed(() => {
+const isactiveOverlay = computed(() => {
   return activeOverlay.value === props.layer;
 });
 
-const inFilteredLayers = computed(() => {
-  return filteredLayers.value.hasLayer(props.layer);
+const infilteredOverlays = computed(() => {
+  return filteredOverlays.value.hasLayer(props.layer);
 });
 
 const toggleOnMap = () => {
@@ -68,7 +68,7 @@ const overlayClass = computed(() => {
     out += " active ";
   }
 
-  if (!inFilteredLayers.value) {
+  if (!infilteredOverlays.value) {
     out += " hidden ";
   }
 
@@ -78,7 +78,7 @@ const overlayClass = computed(() => {
 const row = useTemplateRef("row");
 
 // When a layer is set as active, scroll to it
-watch(activeLayer, (newLayer) => {
+watch(activeOverlay, (newLayer) => {
   if (newLayer == props.layer) {
     //Scroll to active layer
     row.value.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -91,7 +91,7 @@ watch(activeLayer, (newLayer) => {
   <tr
     ref="row"
     class="overlay"
-    @click="setActiveLayer(layer)"
+    @click="setactiveOverlay(layer)"
     :class="overlayClass"
     :style="overlayStyle"
   >

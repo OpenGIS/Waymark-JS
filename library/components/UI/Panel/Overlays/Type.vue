@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useMap } from "@/composables/useMap.js";
-const { filteredLayers } = useMap();
+const { filteredOverlays } = useMap();
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { map } = storeToRefs(useInstanceStore());
@@ -24,11 +24,11 @@ let isExpanded = ref(true);
 let isVisible = ref(true);
 
 const layerCount = computed(() => {
-  //Check occurence of each props.layerGroup layer in filteredLayers
+  //Check occurence of each props.layerGroup layer in filteredOverlays
   let count = 0;
   props.layerGroup.eachLayer((layer) => {
-    // Check if layer is in filteredLayers
-    if (filteredLayers.value.hasLayer(layer)) {
+    // Check if layer is in filteredOverlays
+    if (filteredOverlays.value.hasLayer(layer)) {
       count++;
     }
   });

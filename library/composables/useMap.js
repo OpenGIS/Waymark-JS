@@ -33,7 +33,7 @@ export function useMap() {
 		mapReady,
 		layerFilters,
 		mapBounds,
-		dataLayer,
+		overlays,
 		activeOverlay,
 		activeFeatureType,
 		panelOpen,
@@ -67,6 +67,9 @@ export function useMap() {
 				config.value.geoJSON.features.forEach((feature) => {
 					// Create Overlay instance
 					const overlay = new Overlay(feature, `overlay-${overlayCount++}`);
+
+					// Add to store
+					overlays.value.push(overlay);
 
 					overlay.addTo(map.value);
 
@@ -150,19 +153,19 @@ export function useMap() {
 		overlay.addHighlight();
 	};
 
-	const filteredLayers = computed(() => {
-		const filtered = L.featureGroup();
+	const filteredOverlays = computed(() => {
+		const filtered = [];
 
 		// Iterate over all overlays
-		dataLayer.value.eachLayer((layer) => {
+		overlays.value.forEach((overlay) => {
 			// Is it in the current map bounds
-			if (
-				layerFilters.value.inBounds &&
-				mapBounds.value &&
-				!isLayerInBounds(layer, mapBounds.value)
-			) {
-				return;
-			}
+			// if (
+			// 	layerFilters.value.inBounds &&
+			// 	mapBounds.value &&
+			// 	!isLayerInBounds(layer, mapBounds.value)
+			// ) {
+			// 	return;
+			// }
 
 			// Text filter
 			if (
@@ -172,9 +175,9 @@ export function useMap() {
 				return;
 			}
 
-			// Add to filtered layers
-			if (!filtered.hasLayer(layer)) {
-				filtered.addLayer(layer);
+			// Add to filtered Overlays
+			if (!filtered.includes(overlay)) {
+				filtered.push(overlay);
 			}
 		});
 
@@ -185,6 +188,6 @@ export function useMap() {
 		init,
 		getMapContainerID,
 		setActiveOverlay,
-		filteredLayers,
+		filteredOverlays,
 	};
 }
