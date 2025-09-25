@@ -98,6 +98,13 @@ export function useMap() {
 					padding: 30,
 					animate: false,
 				});
+
+				//Track map bounds
+				mapBounds.value = map.value.getBounds();
+				map.value.on("moveend", () => {
+					//Set Max bounds
+					mapBounds.value = map.value.getBounds();
+				});
 			});
 		}
 
