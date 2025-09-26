@@ -57,10 +57,10 @@ export function useMap() {
 
 			map.value.on("load", () => {
 				// Add GeoJSON Source
-				map.value.addSource("data", {
-					type: "geojson",
-					data: config.value.geoJSON,
-				});
+				// map.value.addSource("data", {
+				// 	type: "geojson",
+				// 	data: config.value.geoJSON,
+				// });
 
 				// Overlays
 				let overlayCount = 0;

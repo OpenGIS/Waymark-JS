@@ -29,7 +29,7 @@
   "marker_types": [
     {
       "marker_title": "Photo",
-      "marker_shape": "marker",
+      "marker_shape": "rectangle",
       "marker_size": "medium",
       "icon_type": "icon",
       "marker_icon": "ion-camera",
@@ -62,7 +62,7 @@
     },
     {
       "marker_title": "Information",
-      "marker_shape": "marker",
+      "marker_shape": "circle",
       "marker_size": "medium",
       "icon_type": "icon",
       "marker_icon": "ion-information-circled",
@@ -85,7 +85,7 @@
     {
       "marker_title": "Food",
       "marker_shape": "marker",
-      "marker_size": "medium",
+      "marker_size": "large",
       "icon_type": "icon",
       "marker_icon": "ion-pizza",
       "marker_colour": "#da3d20",
@@ -96,7 +96,7 @@
     {
       "marker_title": "Beer",
       "marker_shape": "marker",
-      "marker_size": "medium",
+      "marker_size": "small",
       "icon_type": "icon",
       "marker_icon": "ion-beer",
       "marker_colour": "#fbfbfb",

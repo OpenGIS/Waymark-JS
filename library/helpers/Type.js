@@ -75,10 +75,7 @@ export function getIconData(typeData = {}) {
 
     //Marker only
     if (typeData.marker_shape == "marker") {
-      icon_data.iconAnchor = [
-        Math.ceil(icon_data.iconSize[0] / 2),
-        Math.ceil(icon_data.iconSize[1] / 1.5),
-      ];
+      icon_data.iconAnchor = [0, -Math.ceil(icon_data.iconSize[1] / 1.5)];
     }
   }
   //CSS Styles

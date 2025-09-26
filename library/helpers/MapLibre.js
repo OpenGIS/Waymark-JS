@@ -96,6 +96,8 @@ export const createMarker = (feature = {}) => {
   el.style.width = `${iconData.iconSize[0]}px`;
   el.style.height = `${iconData.iconSize[1]}px`;
 
+  console.log("Creating Marker", iconData.iconAnchor);
+
   // Create Marker
   const marker = new Marker({
     element: el,
