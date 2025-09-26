@@ -310,7 +310,6 @@ export class Overlay {
             this.feature.geometry.coordinates[0],
             this.feature.geometry.coordinates[1],
           ],
-          zoom: Math.min(this.map.getZoom(), this.map.getMaxZoom()),
           duration: 1000,
         });
         break;
@@ -321,6 +320,27 @@ export class Overlay {
           duration: 1000,
         });
         break;
+    }
+  }
+
+  zoomIn() {
+    if (!this.map) {
+      return;
+    }
+
+    // Zoom to 18
+    const targetZoom = 18;
+    const currentZoom = this.map.getZoom();
+
+    if (currentZoom < targetZoom) {
+      this.map.flyTo({
+        center: [
+          this.feature.geometry.coordinates[0],
+          this.feature.geometry.coordinates[1],
+        ],
+        zoom: targetZoom,
+        duration: 1000,
+      });
     }
   }
 

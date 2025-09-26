@@ -76,16 +76,13 @@ export function useMap() {
 					// Handle Events
 					switch (overlay.featureType) {
 						case "marker":
-							overlay.layer.getElement().addEventListener("click", () => {
+							overlay.layer.getElement().addEventListener("click", (e) => {
+								e.stopPropagation();
 								setActiveOverlay(overlay);
 							});
 
 							break;
 						case "line":
-							// map.value.on("click", overlay.id, () => {
-							// 	setActiveOverlay(overlay);
-							// });
-
 							// Cursor pointer on hover
 							map.value.on("mouseenter", overlay.id, () => {
 								map.value.getCanvas().style.cursor = "pointer";
@@ -163,16 +160,17 @@ export function useMap() {
 				switch (overlay.featureType) {
 					case "marker":
 						console.log("Focus on Marker");
-						// Increase zoom to max layer zoom
-						//map.value.setView(layer.getLatLng(), map.value.getMaxZoom());
+						// Increase maplibre zoom to 18
+						overlay.zoomIn();
 
 						break;
 					case "line":
 					case "shape":
-						console.log("Focus on Line/Shape");
+						// console.log("Focus on Line/Shape");
 						break;
 				}
 
+				// Stop here
 				return;
 			}
 
