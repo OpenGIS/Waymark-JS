@@ -2,9 +2,6 @@
 import { ref, computed, watch, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
-// Import Helpers
-import { removeLayerHighlight } from "@/helpers/Leaflet.js";
-
 import { useMap } from "@/composables/useMap.js";
 const { setActiveOverlay } = useMap();
 

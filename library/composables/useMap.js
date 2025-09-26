@@ -1,22 +1,7 @@
-import { computed } from "vue";
 import { storeToRefs } from "pinia";
-
-// Import Leaflet (old implementation - to be removed)
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-// Import MapLibre (new implementation, migrating from Leaflet to MapLibre)
 import { LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// Import Helpers
-import {
-	isLayerInBounds,
-	addLayerHighlight,
-	removeLayerHighlight,
-	flyToLayer,
-} from "@/helpers/Leaflet.js";
-import { getFeatureType } from "@/helpers/Overlay.js";
 import { createMap, createMapStyle } from "@/helpers/MapLibre.js";
 
 // Classes

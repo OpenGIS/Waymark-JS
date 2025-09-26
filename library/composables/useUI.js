@@ -14,11 +14,13 @@ export function useUI() {
 		uiContainer.value = container;
 
 		// On resize
+		/*
 		const resizeObserver = new ResizeObserver(() => {
-			// map.value.invalidateSize();
+			map.value.invalidateSize();
 		});
 
 		resizeObserver.observe(uiContainer.value);
+*/
 	};
 
 	// Check if the panel is active

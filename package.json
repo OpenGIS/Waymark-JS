@@ -22,7 +22,6 @@
     "@turf/length": "^7.2.0",
     "font-awesome": "^4.7.0",
     "ionicons-npm": "^2.0.1",
-    "leaflet": "^1.9.4",
     "maplibre-gl": "^5.7.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
