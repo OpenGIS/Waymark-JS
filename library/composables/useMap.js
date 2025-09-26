@@ -82,14 +82,48 @@ export function useMap() {
 
 							break;
 						case "line":
-						case "shape":
-							map.value.on("click", overlay.id, () => {
-								setActiveOverlay(overlay);
+							// map.value.on("click", overlay.id, () => {
+							// 	setActiveOverlay(overlay);
+							// });
+
+							// Cursor pointer on hover
+							map.value.on("mouseenter", overlay.id, () => {
+								map.value.getCanvas().style.cursor = "pointer";
 							});
+							map.value.on("mouseleave", overlay.id, () => {
+								map.value.getCanvas().style.cursor = "";
+							});
+
+							break;
+						case "shape":
+							break;
 					}
 
 					// Extend bounds
 					dataBounds.extend(overlay.getBounds());
+				});
+
+				// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
+				map.value.on("click", (e) => {
+					// Create a bounding box to find features within a certain distance of the click
+					const bbox = [
+						[e.point.x - 10, e.point.y - 10],
+						[e.point.x + 10, e.point.y + 10],
+					];
+					const features = map.value.queryRenderedFeatures(bbox, {
+						layers: overlays.value
+							.filter((o) => o.featureType === "line")
+							.map((o) => o.id),
+					});
+
+					if (features.length) {
+						const overlay = overlays.value.find(
+							(o) => o.id === features[0].layer.id,
+						);
+						if (overlay) {
+							setActiveOverlay(overlay);
+						}
+					}
 				});
 
 				//Set initial centre and zoom to it

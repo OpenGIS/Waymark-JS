@@ -1,7 +1,11 @@
 import { length } from "@turf/length";
 import { Type } from "@/classes/Type.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
-import { createMarker, createLine } from "@/helpers/MapLibre.js";
+import {
+  createMarker,
+  createLineStyle,
+  createLineSource,
+} from "@/helpers/MapLibre.js";
 import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
 import { useConfig } from "@/composables/useConfig.js";
@@ -239,10 +243,16 @@ export class Overlay {
 
         break;
       case "line":
-        // Create Line
-        this.layer = createLine(this.feature, this.id);
+        // Create Source
+        this.source = createLineSource(this.feature);
 
-        // Add Line to Map
+        // Add Source to Map
+        this.map.addSource(this.id, this.source);
+
+        // Create Style
+        this.layer = createLineStyle(this.feature, this.id);
+
+        // Add Style to Map
         this.map.addLayer(this.layer);
 
         break;

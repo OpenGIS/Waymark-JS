@@ -107,7 +107,19 @@ export const createMarker = (feature = {}) => {
   return marker;
 };
 
-export const createLine = (feature = {}, id = false) => {
+export const createLineSource = (feature = {}) => {
+  // Ensure is LineString with coordinates
+  if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+    return null;
+  }
+
+  return {
+    type: "geojson",
+    data: feature,
+  };
+};
+
+export const createLineStyle = (feature = {}, id = false) => {
   // Ensure is LineString with coordinates
   if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
     return null;
@@ -124,10 +136,7 @@ export const createLine = (feature = {}, id = false) => {
   return {
     id: id,
     type: "line",
-    source: {
-      type: "geojson",
-      data: feature,
-    },
+    source: id,
     layout: {
       "line-join": "round",
       "line-cap": "round",
