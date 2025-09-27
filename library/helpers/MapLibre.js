@@ -5,6 +5,19 @@ import { getFeatureType } from "@/helpers/Overlay.js";
 import { getTypeData, getIconData } from "@/helpers/Type.js";
 import { makeKey } from "@/helpers/Common.js";
 
+/* 
+  ======= Constants =======
+*/
+
+export const fitBoundsOptions = {
+  padding: { top: 50, bottom: 50, left: 50, right: 50 },
+  duration: 1000,
+};
+
+export const flyToOptions = {
+  duration: 1000,
+};
+
 /*
   ======= Creation =======
 */

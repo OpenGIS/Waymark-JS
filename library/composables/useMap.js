@@ -2,7 +2,11 @@ import { storeToRefs } from "pinia";
 import { LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { createMap, createMapStyle } from "@/helpers/MapLibre.js";
+import {
+	createMap,
+	createMapStyle,
+	fitBoundsOptions,
+} from "@/helpers/MapLibre.js";
 
 // Classes
 import { Overlay } from "@/classes/Overlay.js";
@@ -35,28 +39,60 @@ export function useMap() {
 
 		console.log("Map instance created", config.value);
 
+		// Triggers the UI to populate
+		map.value.on("load", () => {
+			mapReady.value = true;
+			mapBounds.value = map.value.getBounds();
+		});
+
+		//Track map bounds
+		map.value.on("moveend", () => {
+			//Set Max bounds
+			mapBounds.value = map.value.getBounds();
+		});
+
+		// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
+		map.value.on("click", (e) => {
+			// Create a bounding box to find features within a certain distance of the click
+			const bbox = [
+				[e.point.x - 10, e.point.y - 10],
+				[e.point.x + 10, e.point.y + 10],
+			];
+			const features = map.value.queryRenderedFeatures(bbox, {
+				layers: overlays.value
+					.filter((o) => o.featureType === "line")
+					.map((o) => o.id),
+			});
+
+			if (features.length) {
+				const overlay = overlays.value.find(
+					(o) => o.id === features[0].layer.id,
+				);
+				if (overlay) {
+					setActiveOverlay(overlay);
+				}
+			}
+		});
+	};
+
+	const loadGeoJSON = (geoJSON) => {
 		// Data Layer - GeoJSON Present?
-		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
-			console.log("Adding GeoJSON to Map", config.value.geoJSON);
+		if (geoJSON && Array.isArray(geoJSON.features)) {
+			console.log("Adding GeoJSON to Map", geoJSON);
 
 			const dataBounds = new LngLatBounds();
 
 			map.value.on("load", () => {
-				// Add GeoJSON Source
-				// map.value.addSource("data", {
-				// 	type: "geojson",
-				// 	data: config.value.geoJSON,
-				// });
-
 				// Overlays
 				let overlayCount = 0;
-				config.value.geoJSON.features.forEach((feature) => {
+				geoJSON.features.forEach((feature) => {
 					// Create Overlay instance
 					const overlay = new Overlay(feature, `overlay-${overlayCount++}`);
 
 					// Add to store
 					overlays.value.push(overlay);
 
+					// Add to Map
 					overlay.addTo(map.value);
 
 					// Handle Events
@@ -86,49 +122,12 @@ export function useMap() {
 					dataBounds.extend(overlay.getBounds());
 				});
 
-				// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
-				map.value.on("click", (e) => {
-					// Create a bounding box to find features within a certain distance of the click
-					const bbox = [
-						[e.point.x - 10, e.point.y - 10],
-						[e.point.x + 10, e.point.y + 10],
-					];
-					const features = map.value.queryRenderedFeatures(bbox, {
-						layers: overlays.value
-							.filter((o) => o.featureType === "line")
-							.map((o) => o.id),
-					});
-
-					if (features.length) {
-						const overlay = overlays.value.find(
-							(o) => o.id === features[0].layer.id,
-						);
-						if (overlay) {
-							setActiveOverlay(overlay);
-						}
-					}
-				});
-
-				//Set initial centre and zoom to it
-				map.value.setCenter(dataBounds.getCenter());
-				map.value.fitBounds(dataBounds, {
-					padding: 30,
-					animate: false,
-				});
-
-				//Track map bounds
-				mapBounds.value = map.value.getBounds();
-				map.value.on("moveend", () => {
-					//Set Max bounds
-					mapBounds.value = map.value.getBounds();
-				});
+				// Extend current map view to also include data bounds
+				if (dataBounds.isEmpty() === false) {
+					map.value.fitBounds(dataBounds, fitBoundsOptions);
+				}
 			});
 		}
-
-		// Triggers the UI to populate
-		map.value.on("load", () => {
-			mapReady.value = true;
-		});
 	};
 
 	const setActiveOverlay = (overlay) => {
@@ -175,6 +174,7 @@ export function useMap() {
 
 	return {
 		init,
+		loadGeoJSON,
 		setActiveOverlay,
 	};
 }

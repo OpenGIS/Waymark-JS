@@ -5,6 +5,8 @@ import {
   createMarker,
   createLineStyle,
   createLineSource,
+  flyToOptions,
+  fitBoundsOptions,
 } from "@/helpers/MapLibre.js";
 import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
@@ -320,15 +322,12 @@ export class Overlay {
             this.feature.geometry.coordinates[0],
             this.feature.geometry.coordinates[1],
           ],
-          duration: 1000,
+          flyToOptions,
         });
         break;
       case "line":
         const bounds = this.getBounds();
-        this.map.fitBounds(bounds, {
-          padding: 20,
-          duration: 1000,
-        });
+        this.map.fitBounds(bounds, fitBoundsOptions);
         break;
     }
   }
