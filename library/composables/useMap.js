@@ -28,7 +28,7 @@ export function useMap() {
 	const init = () => {
 		// Create MapLibre instance
 		map.value = createMap(
-			config.value.getMapOption("div_id"),
+			`${config.value.getMapOption("div_id")}-map`,
 			createMapStyle(config.value.getMapOption("tile_layers")),
 			config.value.getMapOption("maplibre_options"),
 		);

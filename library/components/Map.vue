@@ -18,7 +18,7 @@ onMounted(() => {
   <!-- Map -->
   <div
     class="map"
-    :id="config.getMapOption('div_id')"
+    :id="`${config.getMapOption('div_id')}-map`"
     style="height: 100%"
   ></div>
 </template>
