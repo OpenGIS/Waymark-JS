@@ -16,7 +16,6 @@ export function useMap() {
 		config,
 		map,
 		mapReady,
-		layerFilters,
 		mapBounds,
 		overlays,
 		activeOverlay,
@@ -29,10 +28,12 @@ export function useMap() {
 	const init = () => {
 		// Create MapLibre instance
 		map.value = createMap(
-			getMapContainerID(),
-			createMapStyle(config.value.map_options.tile_layers),
-			config.value.map_options.mapLibreOptions,
+			config.value.getMapOption("div_id"),
+			createMapStyle(config.value.getMapOption("tile_layers")),
+			config.value.getMapOption("maplibre_options"),
 		);
+
+		console.log("Map instance created", config.value);
 
 		// Data Layer - GeoJSON Present?
 		if (config.value.geoJSON && Array.isArray(config.value.geoJSON.features)) {
@@ -130,11 +131,6 @@ export function useMap() {
 		});
 	};
 
-	// Get the Div ID for the Map container
-	const getMapContainerID = () => {
-		return `${config.value.map_options.div_id}-map`;
-	};
-
 	const setActiveOverlay = (overlay) => {
 		console.log("Set Active Overlay", overlay);
 
@@ -179,7 +175,6 @@ export function useMap() {
 
 	return {
 		init,
-		getMapContainerID,
 		setActiveOverlay,
 	};
 }

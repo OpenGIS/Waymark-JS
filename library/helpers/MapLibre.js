@@ -13,12 +13,12 @@ import { makeKey } from "@/helpers/Common.js";
 export const createMap = (
   containerID = "",
   mapStyle = {},
-  mapLibreOptions = {},
+  maplibre_options = {},
 ) => {
   return new Map({
     container: containerID,
     style: mapStyle,
-    ...mapLibreOptions,
+    ...maplibre_options,
   });
 };
 

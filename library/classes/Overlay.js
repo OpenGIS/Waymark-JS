@@ -8,11 +8,14 @@ import {
 } from "@/helpers/MapLibre.js";
 import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
-import { useConfig } from "@/composables/useConfig.js";
-const { getItem } = useConfig();
+import { storeToRefs } from "pinia";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export class Overlay {
   constructor(feature) {
+    const { config } = storeToRefs(useInstanceStore());
+    this.config = config.value;
+
     this.feature = feature;
     this.featureType = getFeatureType(this.feature) || null;
     this.typeKey = makeKey(this.feature.properties.type) || null;
@@ -74,10 +77,15 @@ export class Overlay {
     // Round to 2 DP
     const lengthValue = length(this.feature, {
       units:
-        getItem("map_options", "units") === "metric" ? "kilometers" : "miles",
+        this.config.getMapOption("map_options", "units") === "metric"
+          ? "kilometers"
+          : "miles",
     });
     out += Math.round(lengthValue * 100) / 100;
-    out += getItem("map_options", "units") === "metric" ? "km" : "mi";
+    out +=
+      this.config.getMapOption("map_options", "units") === "metric"
+        ? "km"
+        : "mi";
 
     return out;
   }
@@ -122,7 +130,9 @@ export class Overlay {
     }
 
     const unitAppend =
-      getItem("map_options", "units") === "metric" ? "m" : "ft";
+      this.config.getMapOption("map_options", "units") === "metric"
+        ? "m"
+        : "ft";
 
     switch (this.featureType) {
       case "marker":
@@ -152,7 +162,7 @@ export class Overlay {
         }
 
         // Convert to the correct units
-        if (getItem("map_options", "units") === "imperial") {
+        if (this.config.getMapOption("map_options", "units") === "imperial") {
           elevationGain *= 3.28084; // Convert meters to feet
           elevationLoss *= 3.28084; // Convert meters to feet
           maxElevation *= 3.28084; // Convert meters to feet

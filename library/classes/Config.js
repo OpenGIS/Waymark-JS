@@ -20,6 +20,8 @@ export class Config {
   constructor(config = {}) {
     // Initialize with default structure
     this.map_options = {
+      // The ID of the Instance container div
+      div_id: "map",
       // Default tile layers
       tile_layers: [
         {

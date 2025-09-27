@@ -10,7 +10,7 @@ const { mapReady, config, container, panelOpen, activeOverlay } =
 
 import "@/assets/css/index.css";
 
-import Map from "@/components/Map/Map.vue";
+import Map from "@/components/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
 const props = defineProps({
