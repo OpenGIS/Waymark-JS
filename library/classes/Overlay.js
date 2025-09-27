@@ -377,31 +377,6 @@ export class Overlay {
       return false;
     }
 
-    const mapBounds = this.map.getBounds();
-    return this.inBounds(mapBounds);
+    return this.inBounds(this.map.getBounds());
   }
-
-  // inMapBounds() {
-  //   if (!this.map) {
-  //     return false;
-  //   }
-
-  //   const mapBounds = this.map.getBounds();
-
-  //   switch (this.featureType) {
-  //     case "marker":
-  //       return mapBounds.contains({
-  //         lng: this.feature.geometry.coordinates[0],
-  //         lat: this.feature.geometry.coordinates[1],
-  //       });
-  //     case "line":
-  //       // Check if any part of the line is within the map bounds
-  //       const coords = this.feature.geometry.coordinates;
-  //       return coords.some((coord) =>
-  //         mapBounds.contains({ lng: coord[0], lat: coord[1] }),
-  //       );
-  //     default:
-  //       return false;
-  //   }
-  // }
 }

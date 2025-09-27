@@ -16,7 +16,6 @@ export function useMap() {
 		config,
 		map,
 		mapReady,
-		mapBounds,
 		overlays,
 		activeOverlay,
 		activeFeatureType,
@@ -114,13 +113,6 @@ export function useMap() {
 				map.value.fitBounds(dataBounds, {
 					padding: 30,
 					animate: false,
-				});
-
-				//Track map bounds
-				mapBounds.value = map.value.getBounds();
-				map.value.on("moveend", () => {
-					//Set Max bounds
-					mapBounds.value = map.value.getBounds();
 				});
 			});
 		}

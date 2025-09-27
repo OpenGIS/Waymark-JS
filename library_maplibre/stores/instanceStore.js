@@ -262,8 +262,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	});
 
 	const updateVisibleOverlays = () => {
-		const mapBounds = map.value.getBounds();
-
 		//Check if overlay is visible
 		visibleOverlays.value = overlays.value.filter((overlay) => {
 			let contains = false;
@@ -271,24 +269,24 @@ export const useInstanceStore = defineStore("instance", () => {
 			switch (overlay.featureType) {
 				case "marker":
 					//In view
-					contains = mapBounds.contains(overlay.layer.getLngLat());
+					contains = map.value.getBounds().contains(overlay.layer.getLngLat());
 
 					break;
 				case "line":
 					// Check if coords are in view
 					overlay.feature.geometry.coordinates.forEach((coords) => {
-						if (!contains && mapBounds.contains(coords)) {
+						if (!contains && map.value.getBounds().contains(coords)) {
 							contains = true;
 						}
 					});
 
 					break;
 				//In view
-				// return mapBounds.contains()
+				// return map.value.getBounds().contains()
 
 				// case 'shape':
 				//In view
-				// return mapBounds.contains(overlay.layer.getLatLng())
+				// return map.value.getBounds().contains(overlay.layer.getLatLng())
 			}
 
 			return contains;
