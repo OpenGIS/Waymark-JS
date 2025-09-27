@@ -7,6 +7,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const config = shallowRef(null);
 	const container = shallowRef(null);
 	const map = shallowRef(null);
+	const mapBounds = shallowRef(null);
 
 	const overlays = shallowRef([]);
 
@@ -94,6 +95,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		overlays,
 		overlaysByType,
 		map,
+		mapBounds,
 		layerFilters,
 		tileLayerGroup,
 		activeTileLayer,
