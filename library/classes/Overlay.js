@@ -29,6 +29,41 @@ export class Overlay {
     this.images = getFeatureImages(this.feature);
   }
 
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    this.map = map;
+
+    // Create MapLibre Layer
+    switch (this.featureType) {
+      case "marker":
+        // Create the Marker
+        this.layer = createMarker(this);
+
+        // Add Marker to Map
+        this.layer.addTo(this.map);
+
+        break;
+      case "line":
+        // Create Source
+        this.source = createLineSource(this);
+
+        // Add Source to Map
+        this.map.addSource(this.id, this.source);
+
+        // Create Style
+        this.layer = createLineStyle(this, this.id);
+
+        // Add Style to Map
+        this.map.addLayer(this.layer);
+
+        break;
+    }
+  }
+
   hasImage() {
     return (
       this.feature.properties.image_thumbnail_url ||
@@ -232,41 +267,6 @@ export class Overlay {
       );
     }
     return "";
-  }
-
-  addTo(map) {
-    // Must be valid MapLibre map
-    if (!map || !map.addLayer) {
-      return;
-    }
-
-    this.map = map;
-
-    // Create MapLibre Layer
-    switch (getFeatureType(this.feature)) {
-      case "marker":
-        // Create the Marker
-        this.layer = createMarker(this.feature);
-
-        // Add Marker to Map
-        this.layer.addTo(this.map);
-
-        break;
-      case "line":
-        // Create Source
-        this.source = createLineSource(this.feature);
-
-        // Add Source to Map
-        this.map.addSource(this.id, this.source);
-
-        // Create Style
-        this.layer = createLineStyle(this.feature, this.id);
-
-        // Add Style to Map
-        this.map.addLayer(this.layer);
-
-        break;
-    }
   }
 
   addHighlight() {

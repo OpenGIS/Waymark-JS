@@ -1,17 +1,52 @@
-import { getTypeData, getIconData } from "@/helpers/Type.js";
+import { storeToRefs } from "pinia";
+import { useInstanceStore } from "@/stores/instanceStore.js";
+
+import { getIconData } from "@/helpers/Type.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export class Type {
-  iconData = {};
-
   constructor(featureType, typeKey) {
+    const { config } = storeToRefs(useInstanceStore());
+    this.config = config.value;
+
     this.featureType = featureType;
     this.typeKey = makeKey(typeKey);
-    this.data = getTypeData(featureType, typeKey);
+    this.data = this.getTypeData(featureType, typeKey);
 
     if (this.featureType === "marker") {
       this.iconData = getIconData(this.data);
     }
+  }
+
+  getTypeData(featureType, typeKey) {
+    var type = {};
+
+    //Iterate over all types
+    for (var i in this.config.map_options[featureType + "_types"]) {
+      //Use first as default
+      if (i == 0) {
+        type = this.config.map_options[featureType + "_types"][i];
+      }
+
+      //Grab title
+      var type_title =
+        this.config.map_options[featureType + "_types"][i][
+          featureType + "_title"
+        ];
+
+      //Has title
+      if (type_title) {
+        //Found (run both through make_key, just to be on safe side)
+        if (makeKey(typeKey) == makeKey(type_title)) {
+          // console.log('Found=' + typeKey)
+          type = this.config.map_options[featureType + "_types"][i];
+        } else {
+          // console.log('Not found=' + typeKey)
+        }
+      }
+    }
+
+    return type;
   }
 
   getTitle() {

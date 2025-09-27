@@ -1,9 +1,6 @@
 // Import MapLibre
 import { Map, Marker } from "maplibre-gl";
-
-import { getFeatureType } from "@/helpers/Overlay.js";
-import { getTypeData, getIconData } from "@/helpers/Type.js";
-import { makeKey } from "@/helpers/Common.js";
+import { Overlay } from "@/classes/Overlay.js";
 
 /* 
   ======= Constants =======
@@ -89,59 +86,47 @@ export const createMapStyle = (tileLayers) => {
   return style;
 };
 
-export const createMarker = (feature = {}) => {
-  // Ensure is Marker with coordinates
-  if (getFeatureType(feature) !== "marker" || !feature.geometry.coordinates) {
+export const createMarker = (overlay = {}) => {
+  // // Checks
+  if (!(overlay instanceof Overlay) || overlay.featureType !== "marker") {
     return null;
   }
 
-  const typeKey = makeKey(feature.properties.type);
-  const typeData = getTypeData("marker", typeKey);
-  const iconData = getIconData(typeData);
-
   // Create a DOM element for the marker
   const el = document.createElement("div");
-  el.className = iconData.className;
-  el.innerHTML = iconData.html;
-  el.style.width = `${iconData.iconSize[0]}px`;
-  el.style.height = `${iconData.iconSize[1]}px`;
+  el.className = overlay.type.iconData.className;
+  el.innerHTML = overlay.type.iconData.html;
+  el.style.width = `${overlay.type.iconData.iconSize[0]}px`;
+  el.style.height = `${overlay.type.iconData.iconSize[1]}px`;
 
   // Create Marker
   const marker = new Marker({
     element: el,
-    offset: iconData.iconAnchor,
+    offset: overlay.type.iconData.iconAnchor,
   });
 
-  marker.setLngLat(feature.geometry.coordinates);
+  marker.setLngLat(overlay.feature.geometry.coordinates);
 
   return marker;
 };
 
-export const createLineSource = (feature = {}) => {
-  // Ensure is LineString with coordinates
-  if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+export const createLineSource = (overlay = {}) => {
+  // Overlay must be an instance of Overlay
+  if (!(overlay instanceof Overlay) || overlay.featureType !== "line") {
     return null;
   }
 
   return {
     type: "geojson",
-    data: feature,
+    data: overlay.feature,
   };
 };
 
-export const createLineStyle = (feature = {}, id = false) => {
-  // Ensure is LineString with coordinates
-  if (getFeatureType(feature) !== "line" || !feature.geometry.coordinates) {
+export const createLineStyle = (overlay = {}, id = "") => {
+  // Checks
+  if (!(overlay instanceof Overlay) || overlay.featureType !== "line" || !id) {
     return null;
   }
-
-  // Ensure ID
-  if (!id) {
-    return null;
-  }
-
-  const typeKey = makeKey(feature.properties.type);
-  const typeData = getTypeData("line", typeKey);
 
   return {
     id: id,
@@ -152,8 +137,8 @@ export const createLineStyle = (feature = {}, id = false) => {
       "line-cap": "round",
     },
     paint: {
-      "line-color": typeData.line_colour,
-      "line-width": parseFloat(typeData.line_weight),
+      "line-color": overlay.type.data.line_colour,
+      "line-width": parseFloat(overlay.type.data.line_weight),
     },
   };
 };
