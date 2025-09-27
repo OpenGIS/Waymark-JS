@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import Instance from "../library/components/Instance.vue";
+import { useMap } from "@/composables/useMap.js";
 
 export function useWaymark() {
 	const createInstance = (config) => {
@@ -18,8 +19,13 @@ export function useWaymark() {
 		const pinia = createPinia();
 		instance.use(pinia);
 
+		// Pinia Loaded
+		instance.loadGeoJSON = useMap().loadGeoJSON;
+
 		// Mount to DOM
 		instance.mount("#" + config.map_options.div_id);
+
+		return instance;
 	};
 
 	return {

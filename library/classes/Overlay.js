@@ -125,8 +125,6 @@ export class Overlay {
   }
 
   getElevationString() {
-    console.log("getElevationString");
-
     if (!this.hasElevationData()) {
       return "";
     }
@@ -281,9 +279,7 @@ export class Overlay {
         element.classList.add("waymark-active");
         break;
       case "line":
-        // Highlight Layer
-        console.log("Highlighting line", this.map.getLayer(this.id));
-
+        // Chanege Layer Paint to highlight
         this.map.setPaintProperty(this.id, "line-color", "#ff0000");
         this.map.setPaintProperty(this.id, "line-dasharray", [5, 5]);
 
@@ -322,7 +318,7 @@ export class Overlay {
             this.feature.geometry.coordinates[0],
             this.feature.geometry.coordinates[1],
           ],
-          flyToOptions,
+          ...flyToOptions,
         });
         break;
       case "line":

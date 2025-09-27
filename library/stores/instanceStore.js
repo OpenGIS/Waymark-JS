@@ -4,6 +4,8 @@ import { Config } from "@/classes/Config.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
+	// Get mode from VITE
+	const MODE = import.meta.env.VITE_WAYMARK_MODE || "production";
 	const config = shallowRef(null);
 	const container = shallowRef(null);
 	const map = shallowRef(null);
@@ -34,8 +36,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	const init = (initConfig = {}) => {
 		// Parse config & set defaults
 		config.value = new Config(initConfig);
-
-		console.log("Instance store initialized", config.value);
 	};
 
 	// Computed

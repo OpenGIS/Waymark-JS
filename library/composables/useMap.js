@@ -131,15 +131,12 @@ export function useMap() {
 	};
 
 	const setActiveOverlay = (overlay) => {
-		console.log("Set Active Overlay", overlay);
-
 		// If active layer is set
 		if (activeOverlay.value) {
 			//If already active layer - focus on it
 			if (activeOverlay.value === overlay) {
 				switch (overlay.featureType) {
 					case "marker":
-						console.log("Focus on Marker");
 						// Increase maplibre zoom to 18
 						overlay.zoomIn();
 
