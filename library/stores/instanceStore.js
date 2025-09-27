@@ -1,10 +1,10 @@
 import { computed, ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
-import { deepMerge } from "@/helpers/Common.js";
+import { Config } from "@/classes/Config.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
-	const config = shallowRef({});
+	const config = shallowRef(null);
 	const container = shallowRef(null);
 	const map = shallowRef(null);
 	const mapBounds = shallowRef(null);
@@ -33,20 +33,9 @@ export const useInstanceStore = defineStore("instance", () => {
 	// Actions
 	const init = (initConfig = {}) => {
 		// Parse config & set defaults
-		config.value = deepMerge(
-			structuredClone({
-				geoJSON: {},
-				map_options: {
-					div_id: "map",
-					units: "metric",
-					mapLibreOptions: {
-						center: [-1.8261632, 51.1788144],
-						zoom: 4,
-					},
-				},
-			}),
-			initConfig,
-		);
+		config.value = new Config(initConfig);
+
+		console.log("Instance store initialized", config.value);
 	};
 
 	// Computed

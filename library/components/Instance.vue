@@ -32,7 +32,9 @@ const props = defineProps({
 instanceStore.init(props);
 
 // Get container
-container.value = document.getElementById(`${config.value.map_options.div_id}`);
+container.value = document.getElementById(
+	`${config.value.getMapOption("div_id")}`,
+);
 
 const classAppend = computed(() => {
 	let classes = [""];

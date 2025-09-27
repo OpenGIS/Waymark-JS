@@ -48,7 +48,7 @@ const updateTileLayer = (layer_name) => {
 	});
 };
 
-console.log(config.value);
+const tile_layers = config.value.getMapOption("tile_layers");
 </script>
 
 <template>
@@ -58,7 +58,7 @@ console.log(config.value);
 		<div class="list">
 			<div
 				class="list-item"
-				v-for="(tileLayer, index) in config.map_options.tile_layers"
+				v-for="(tileLayer, index) in tile_layers"
 				:key="index"
 				:class="{
 					active:
