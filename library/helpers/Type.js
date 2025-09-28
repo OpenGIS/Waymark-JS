@@ -1,23 +1,30 @@
-export function getIconData(typeData = {}) {
+import { Type } from "@/classes/Type.js";
+
+export function getIconData(type = {}) {
+  // Checks
+  if (!(type instanceof Type)) {
+    return null;
+  }
+
   var icon_data = {
-    className: "waymark-marker waymark-marker-" + typeData.typeKey,
+    className: "waymark-marker waymark-marker-" + type.typeKey,
   };
 
   //Shape
   if (
-    typeof typeData.marker_shape !== "undefined" &&
-    typeof typeData.marker_size !== "undefined"
+    typeof type.data.marker_shape !== "undefined" &&
+    typeof type.data.marker_size !== "undefined"
   ) {
-    icon_data.className += " waymark-marker-" + typeData.marker_shape;
-    icon_data.className += " waymark-marker-" + typeData.marker_size;
+    icon_data.className += " waymark-marker-" + type.data.marker_shape;
+    icon_data.className += " waymark-marker-" + type.data.marker_size;
 
-    switch (typeData.marker_shape) {
+    switch (type.data.marker_shape) {
       //Markers & Circles
       case "rectangle":
       case "circle":
       case "marker":
         //Size
-        switch (typeData.marker_size) {
+        switch (type.data.marker_size) {
           case "small":
             icon_data.iconSize = [16, 16];
 
@@ -37,13 +44,13 @@ export function getIconData(typeData = {}) {
     }
 
     //Marker only
-    if (typeData.marker_shape == "marker") {
+    if (type.data.marker_shape == "marker") {
       icon_data.iconAnchor = [0, -Math.ceil(icon_data.iconSize[1] / 1.5)];
     }
   }
   //CSS Styles
-  var background_css = "background:" + typeData.marker_colour + ";";
-  var icon_css = "color:" + typeData.icon_colour + ";";
+  var background_css = "background:" + type.data.marker_colour + ";";
+  var icon_css = "color:" + type.data.icon_colour + ";";
 
   //HTML
   icon_data.html =
@@ -55,7 +62,7 @@ export function getIconData(typeData = {}) {
   var icon_class = "waymark-marker-icon";
 
   //Text, HTML or Icon Name
-  switch (typeData.icon_type) {
+  switch (type.data.icon_type) {
     //Text
     case "text":
       icon_class += " waymark-icon-text";
@@ -66,7 +73,7 @@ export function getIconData(typeData = {}) {
         '" class="' +
         icon_class +
         '">' +
-        typeData.marker_icon +
+        type.data.marker_icon +
         "</div>";
 
       break;
@@ -75,7 +82,7 @@ export function getIconData(typeData = {}) {
     case "html":
       icon_class += " waymark-icon-html";
 
-      var icon_html = "<div>" + typeData.marker_icon + "</div>";
+      var icon_html = "<div>" + type.data.marker_icon + "</div>";
 
       icon_data.html +=
         '<div class="' + icon_class + '">' + icon_html + "</div>";
@@ -88,17 +95,17 @@ export function getIconData(typeData = {}) {
       icon_class += " waymark-icon-icon";
 
       //If Ionic Icons
-      if (typeData.marker_icon.indexOf("ion-") === 0) {
+      if (type.data.marker_icon.indexOf("ion-") === 0) {
         icon_class += " ion ";
-        icon_class += " " + typeData.marker_icon;
+        icon_class += " " + type.data.marker_icon;
         //Font Awesome
-      } else if (typeData.marker_icon.indexOf("fa-") === 0) {
+      } else if (type.data.marker_icon.indexOf("fa-") === 0) {
         icon_class += " fa";
-        icon_class += " " + typeData.marker_icon;
+        icon_class += " " + type.data.marker_icon;
         //Default to Ionic
       } else {
         icon_class += " ion";
-        icon_class += " ion-" + typeData.marker_icon;
+        icon_class += " ion-" + type.data.marker_icon;
       }
 
       icon_data.html +=

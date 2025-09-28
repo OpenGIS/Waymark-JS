@@ -14,7 +14,7 @@ export class Type {
     this.data = this.getTypeData(featureType, typeKey);
 
     if (this.featureType === "marker") {
-      this.iconData = getIconData(this.data);
+      this.iconData = getIconData(this);
     }
   }
 
