@@ -258,6 +258,7 @@ export class Config {
    * @param {Object} config - The new configuration options
    */
   updateConfig(config = {}) {
+    console.log("Updating config", config);
     if (!config) return;
 
     // If config has geoJSON, set it
@@ -267,6 +268,7 @@ export class Config {
 
     // If config has mapLibreMapOptions, merge them with existing ones
     if (config.mapLibreMapOptions) {
+      console.log("Merging mapLibreMapOptions", config.mapLibreMapOptions);
       for (const key in config.mapLibreMapOptions) {
         if (config.mapLibreMapOptions.hasOwnProperty(key)) {
           // Deep clone each value to ensure independence
