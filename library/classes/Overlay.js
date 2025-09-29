@@ -1,5 +1,6 @@
 import { length } from "@turf/length";
 import { Type } from "@/classes/Type.js";
+import { Config } from "@/classes/Config.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import {
   createMarker,
@@ -10,20 +11,31 @@ import {
 } from "@/helpers/MapLibre.js";
 import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
-import { storeToRefs } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export class Overlay {
-  constructor(feature) {
-    const { config } = storeToRefs(useInstanceStore());
-    this.config = config.value;
+  constructor(feature, config, id = null) {
+    if (!feature || feature.type !== "Feature") {
+      throw new Error("Valid GeoJSON Feature required");
+    }
 
     this.feature = feature;
+
+    if (!(config instanceof Config)) {
+      throw new Error("Config instance required");
+    }
+
+    this.config = config;
+
+    if (id == null || typeof id !== "string") {
+      throw new Error("Valid ID string required");
+    }
+
+    this.id = id;
+
     this.featureType = getFeatureType(this.feature) || null;
     this.typeKey = makeKey(this.feature.properties.type) || null;
-    this.type = new Type(this.featureType, this.typeKey);
-    // Simplified ID to just use a random string to ensure uniqueness
-    this.id = `${this.featureType}-${this.type.typeKey}-${Math.random().toString(36).substring(2, 8)}`;
+    this.type = new Type(this.featureType, this.typeKey, this.config);
+
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
@@ -114,15 +126,10 @@ export class Overlay {
     // Round to 2 DP
     const lengthValue = length(this.feature, {
       units:
-        this.config.getMapOption("map_options", "units") === "metric"
-          ? "kilometers"
-          : "miles",
+        this.config.getMapOption("units") === "metric" ? "kilometers" : "miles",
     });
     out += Math.round(lengthValue * 100) / 100;
-    out +=
-      this.config.getMapOption("map_options", "units") === "metric"
-        ? "km"
-        : "mi";
+    out += this.config.getMapOption("units") === "metric" ? "km" : "mi";
 
     return out;
   }
@@ -165,9 +172,7 @@ export class Overlay {
     }
 
     const unitAppend =
-      this.config.getMapOption("map_options", "units") === "metric"
-        ? "m"
-        : "ft";
+      this.config.getMapOption("units") === "metric" ? "m" : "ft";
 
     switch (this.featureType) {
       case "marker":
@@ -197,7 +202,7 @@ export class Overlay {
         }
 
         // Convert to the correct units
-        if (this.config.getMapOption("map_options", "units") === "imperial") {
+        if (this.config.getMapOption("units") === "imperial") {
           elevationGain *= 3.28084; // Convert meters to feet
           elevationLoss *= 3.28084; // Convert meters to feet
           maxElevation *= 3.28084; // Convert meters to feet

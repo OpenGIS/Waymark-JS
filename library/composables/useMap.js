@@ -92,7 +92,8 @@ export function useMap() {
 				let overlayCount = 0;
 				geoJSON.features.forEach((feature) => {
 					// Create Overlay instance
-					const overlay = new Overlay(feature, `overlay-${overlayCount++}`);
+					const overlayId = `overlay-${overlayCount++}`;
+					const overlay = new Overlay(feature, config.value, overlayId);
 
 					// Add to store
 					overlays.value.push(overlay);

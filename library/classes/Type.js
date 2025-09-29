@@ -1,13 +1,14 @@
-import { storeToRefs } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
-
 import { getIconData } from "@/helpers/Type.js";
 import { makeKey } from "@/helpers/Common.js";
+import { Config } from "@/classes/Config.js";
 
 export class Type {
-  constructor(featureType, typeKey) {
-    const { config } = storeToRefs(useInstanceStore());
-    this.config = config.value;
+  constructor(featureType, typeKey, config) {
+    if (!(config instanceof Config)) {
+      throw new Error("Config instance required");
+    }
+
+    this.config = config;
 
     this.featureType = featureType;
     this.typeKey = makeKey(typeKey);
@@ -19,34 +20,25 @@ export class Type {
   }
 
   getTypeData(featureType, typeKey) {
-    var type = {};
+    const types = this.config.getMapOption(featureType + "_types") || [];
 
-    //Iterate over all types
-    for (var i in this.config.map_options[featureType + "_types"]) {
-      //Use first as default
-      if (i == 0) {
-        type = this.config.map_options[featureType + "_types"][i];
-      }
+    if (!types.length) {
+      throw new Error(`No types found for feature type: ${featureType}`);
+    }
 
-      //Grab title
-      var type_title =
-        this.config.map_options[featureType + "_types"][i][
-          featureType + "_title"
-        ];
+    // Default to first type
+    let selectedType = types[0];
 
-      //Has title
-      if (type_title) {
-        //Found (run both through make_key, just to be on safe side)
-        if (makeKey(typeKey) == makeKey(type_title)) {
-          // console.log('Found=' + typeKey)
-          type = this.config.map_options[featureType + "_types"][i];
-        } else {
-          // console.log('Not found=' + typeKey)
-        }
+    // Find matching type by comparing keys
+    for (const typeOption of types) {
+      const typeTitle = typeOption?.[featureType + "_title"];
+      if (typeTitle && makeKey(typeKey) === makeKey(typeTitle)) {
+        selectedType = typeOption;
+        break;
       }
     }
 
-    return type;
+    return selectedType || {};
   }
 
   getTitle() {

@@ -2,12 +2,10 @@
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useMap } from "@/composables/useMap.js";
-
 import { Type } from "@/classes/Type.js";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, filteredOverlays } = storeToRefs(useInstanceStore());
+const { map, filteredOverlays, config } = storeToRefs(useInstanceStore());
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 
@@ -53,7 +51,7 @@ const toggleVisible = () => {
   });
 };
 
-const type = new Type(props.featureType, props.typeKey);
+const type = new Type(props.featureType, props.typeKey, config.value);
 
 const headingStyle = () => {
   let style = ``;
