@@ -12,18 +12,18 @@ export class Type {
 
     this.featureType = featureType;
     this.typeKey = makeKey(typeKey);
-    this.data = this.getTypeData(featureType, typeKey);
+    this.data = this.getTypeData();
 
     if (this.featureType === "marker") {
       this.iconData = getIconData(this);
     }
   }
 
-  getTypeData(featureType, typeKey) {
-    const types = this.config.getMapOption(featureType + "_types") || [];
+  getTypeData() {
+    const types = this.config.getMapOption(this.featureType + "_types") || [];
 
     if (!types.length) {
-      throw new Error(`No types found for feature type: ${featureType}`);
+      throw new Error(`No types found for feature type: ${this.featureType}`);
     }
 
     // Default to first type
@@ -31,14 +31,14 @@ export class Type {
 
     // Find matching type by comparing keys
     for (const typeOption of types) {
-      const typeTitle = typeOption?.[featureType + "_title"];
-      if (typeTitle && makeKey(typeKey) === makeKey(typeTitle)) {
+      const typeTitle = typeOption?.[this.featureType + "_title"];
+      if (typeTitle && makeKey(this.typeKey) === makeKey(typeTitle)) {
         selectedType = typeOption;
         break;
       }
     }
 
-    return selectedType || {};
+    return selectedType;
   }
 
   getTitle() {

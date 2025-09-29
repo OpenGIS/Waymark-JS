@@ -2,6 +2,8 @@
 import { ref, computed, watch, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
+import { Overlay } from "@/classes/Overlay.js";
+
 import { useMap } from "@/composables/useMap.js";
 const { setActiveOverlay } = useMap();
 
@@ -13,7 +15,7 @@ import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
 
 const props = defineProps({
-  overlay: Object,
+  overlay: Overlay,
 });
 
 let isOnMap = ref(true);
