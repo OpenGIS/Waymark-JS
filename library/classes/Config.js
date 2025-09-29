@@ -1,3 +1,5 @@
+import { mapOptions } from "@/helpers/MapLibre.js";
+
 /**
  * Config class
  *
@@ -19,6 +21,8 @@ export class Config {
    */
   constructor(config = {}) {
     this.geoJSON = null;
+
+    this.mapLibreMapOptions = mapOptions;
 
     // Initialize with default structure
     this.map_options = {
@@ -259,6 +263,18 @@ export class Config {
     // If config has geoJSON, set it
     if (config.geoJSON) {
       this.geoJSON = config.geoJSON;
+    }
+
+    // If config has mapLibreMapOptions, merge them with existing ones
+    if (config.mapLibreMapOptions) {
+      for (const key in config.mapLibreMapOptions) {
+        if (config.mapLibreMapOptions.hasOwnProperty(key)) {
+          // Deep clone each value to ensure independence
+          this.mapLibreMapOptions[key] = JSON.parse(
+            JSON.stringify(config.mapLibreMapOptions[key]),
+          );
+        }
+      }
     }
 
     // If config has map_options, merge them with existing ones

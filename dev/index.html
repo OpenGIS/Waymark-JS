@@ -20,72 +20,106 @@
         width: 100%;
         height: 100%;
       }
-      .test-wrap {
-        /*        width: 100%;
-        height: 100%;
-*/
+      .playground .test-wrap {
         margin: 30px;
       }
     </style>
   </head>
   <body>
     <script type="module" lang="ts">
-      import { useWaymark } from "../library/useWaymark.js";
+      let MODE = "app"; // "app" | "playground"
+      // MODE = "playground";
 
+      document.body.classList.add(MODE);
+      console.clear();
+
+      import { useWaymark } from "../library/useWaymark.js";
       const { createInstance, loadGeoJSON } = useWaymark();
 
       const testIDs = ["waymark", "af-ccc", "lemiecime-it", "via-ardeche"];
-      // const testIDs = ["waymark"];
 
-      const testSizes = [
-        [480, 320], // Mobile landscape
-        [320, 480], // Mobile portrait
-        [768, 1024], // Tablet landscape
-        [1024, 768], // Tablet portrait
-        [1440, 900], // Desktop landscape
-        [900, 1440], // Desktop portrait
-      ];
+      // Playground - Multiple instances
+      if (MODE === "playground") {
+        const testSizes = [
+          [480, 320], // Mobile landscape
+          [320, 480], // Mobile portrait
+          [768, 1024], // Tablet landscape
+          [1024, 768], // Tablet portrait
+          [1440, 900], // Desktop landscape
+          [900, 1440], // Desktop portrait
+        ];
 
-      testIDs.forEach((ID, i) => {
-        testSizes.forEach(async (size) => {
-          // Create a div for each test data
-          const div = document.createElement("div");
-          div.id = "dev-" + ID + "-" + size.join("x");
-          div.className = "test-wrap";
-          div.style.height = `${size[1]}px`;
-          div.style.width = `${size[0]}px`;
-          document.body.appendChild(div);
+        testIDs.forEach((ID, i) => {
+          testSizes.forEach(async (size) => {
+            // Create a div for each test data
+            const div = document.createElement("div");
+            div.id = "dev-" + ID + "-" + size.join("x");
+            div.className = "test-wrap";
+            div.style.height = `${size[1]}px`;
+            div.style.width = `${size[0]}px`;
+            document.body.appendChild(div);
 
-          // Read test config (JSON)
-          let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
-            (res) => res.json(),
-          );
+            // Read test config (JSON)
+            let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
+              (res) => res.json(),
+            );
 
-          // Merge Object
-          testConfig = Object.assign(testConfig, {
-            div_id: div.id,
-            units: "metric",
-            // maplibre_options: {
-            //   // Default
-            //   center: [45.0, 20.0],
-            //   zoom: 12,
-            //   // Optional
-            //   zoomControl: false,
-            // },
+            // Merge Object
+            testConfig = Object.assign(testConfig, {
+              div_id: div.id,
+              units: "metric",
+              // maplibre_options: {
+              //   // Default
+              //   center: [45.0, 20.0],
+              //   zoom: 12,
+              //   // Optional
+              //   zoomControl: false,
+              // },
+            });
+
+            // Read test data (JSON)
+            const testData = await fetch(`./data/${ID}/devData.json`).then(
+              (res) => res.json(),
+            );
+
+            const instance = createInstance({
+              map_options: testConfig,
+              geoJSON: testData,
+            });
+            // instance.loadGeoJSON(testData);
           });
-
-          // Read test data (JSON)
-          const testData = await fetch(`./data/${ID}/devData.json`).then(
-            (res) => res.json(),
-          );
-
-          const instance = createInstance({
-            map_options: testConfig,
-            geoJSON: testData,
-          });
-          // instance.loadGeoJSON(testData);
         });
-      });
+        // App - Single instance
+      } else {
+        // Pick random test data
+        const ID = testIDs[Math.floor(Math.random() * testIDs.length)];
+
+        const div = document.createElement("div");
+        div.id = "dev-waymark-app";
+        div.className = "test-wrap";
+        document.body.appendChild(div);
+
+        // Read test config (JSON)
+        let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
+          (res) => res.json(),
+        );
+
+        // Merge Object
+        testConfig = Object.assign(testConfig, {
+          div_id: div.id,
+          units: "metric",
+        });
+
+        // Read test data (JSON)
+        const testData = await fetch(`./data/${ID}/devData.json`).then((res) =>
+          res.json(),
+        );
+
+        const instance = createInstance({
+          map_options: testConfig,
+          // geoJSON: testData,
+        });
+      }
     </script>
   </body>
 </html>

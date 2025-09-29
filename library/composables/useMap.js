@@ -34,7 +34,7 @@ export function useMap() {
 		map.value = createMap(
 			`${config.value.getMapOption("div_id")}-map`,
 			createMapStyle(config.value.getMapOption("tile_layers")),
-			config.value.getMapOption("maplibre_options"),
+			config.value.mapLibreMapOptions,
 		);
 
 		console.log("Map instance created", config.value);
