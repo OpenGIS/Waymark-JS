@@ -9,6 +9,7 @@ const {
 	isActivePanel,
 	getActivePanelKey,
 	setUIContainer,
+	mapHasOverlays,
 } = useUI();
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
@@ -41,6 +42,7 @@ onMounted(() => {
 			<!-- Overlay -->
 			<div class="nav-item nav-overlays">
 				<Button
+					v-if="mapHasOverlays"
 					icon="fa-navicon"
 					@click="handleNavClick('overlays')"
 					:active="isActivePanel('overlays')"
@@ -69,7 +71,7 @@ onMounted(() => {
 
 		<!-- START Panel Content -->
 		<div class="panels-content">
-			<Overlays v-show="showPanel('overlays')" />
+			<Overlays v-show="mapHasOverlays && showPanel('overlays')" />
 
 			<!-- <Info v-show="showPanel('info')" /> -->
 

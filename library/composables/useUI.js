@@ -1,11 +1,12 @@
-import { shallowRef } from "vue";
+import { computed, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useUI() {
-	const { panelOpen, activePanelKey, map } = storeToRefs(useInstanceStore());
+	const { panelOpen, activePanelKey, overlays } =
+		storeToRefs(useInstanceStore());
 
 	const uiContainer = shallowRef(null);
 
@@ -22,6 +23,10 @@ export function useUI() {
 		resizeObserver.observe(uiContainer.value);
 */
 	};
+
+	const mapHasOverlays = computed(() => {
+		return overlays.value.length > 0;
+	});
 
 	// Check if the panel is active
 	const isActivePanel = (panelKey) => {
@@ -52,5 +57,6 @@ export function useUI() {
 		togglePanel,
 		setActivePanel,
 		getActivePanelKey,
+		mapHasOverlays,
 	};
 }

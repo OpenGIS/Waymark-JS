@@ -13,7 +13,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const overlays = shallowRef([]);
 
-	const panelOpen = shallowRef(true);
+	const panelOpen = shallowRef(false);
 
 	const tileLayerGroup = shallowRef({});
 	const activeTileLayer = shallowRef({});
