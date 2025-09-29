@@ -18,10 +18,13 @@ export class Config {
    * @param {Object} config - Optional initial configuration
    */
   constructor(config = {}) {
+    this.geoJSON = null;
+
     // Initialize with default structure
     this.map_options = {
       // The ID of the Instance container div
       div_id: "map",
+
       // Default tile layers
       tile_layers: [
         {
@@ -252,6 +255,11 @@ export class Config {
    */
   updateConfig(config = {}) {
     if (!config) return;
+
+    // If config has geoJSON, set it
+    if (config.geoJSON) {
+      this.geoJSON = config.geoJSON;
+    }
 
     // If config has map_options, merge them with existing ones
     if (config.map_options) {

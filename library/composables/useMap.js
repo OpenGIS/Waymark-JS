@@ -73,6 +73,11 @@ export function useMap() {
 				}
 			}
 		});
+
+		if (config.value.geoJSON) {
+			console.log("GeoJSON found in config - loading", config.value.geoJSON);
+			loadGeoJSON(config.value.geoJSON);
+		}
 	};
 
 	const loadGeoJSON = (geoJSON) => {
