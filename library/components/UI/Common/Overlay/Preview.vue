@@ -1,5 +1,5 @@
 <script setup>
-import { Type } from "@/classes/Type.js";
+import { Type } from "@/classes/Types.js";
 
 const props = defineProps({
   type: {

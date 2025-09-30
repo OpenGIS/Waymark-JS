@@ -14,10 +14,6 @@ import Map from "@/components/Map.vue";
 import UI from "@/components/UI/UI.vue";
 
 const props = defineProps({
-	geoJSON: {
-		type: Object,
-		default: () => ({}),
-	},
 	map_options: {
 		type: Object,
 		default: () => ({}),

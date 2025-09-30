@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 
-import { Type } from "@/classes/Type.js";
+import { Type } from "@/classes/Types.js";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { map, filteredOverlays, config } = storeToRefs(useInstanceStore());

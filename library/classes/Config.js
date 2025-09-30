@@ -1,7 +1,6 @@
 import { mapOptions } from "@/helpers/MapLibre.js";
 import { featureTypes } from "@/helpers/Overlay.js";
-import { MarkerType, LineType, ShapeType } from "@/classes/Type.js";
-import { makeKey } from "@/helpers/Common.js";
+import { MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 
 export class Config {
   constructor(config = {}) {
@@ -29,12 +28,6 @@ export class Config {
       lineTypes: this.lineTypes,
       shapeTypes: this.shapeTypes,
     });
-
-    // Override defaults with provided config
-    // If config has geoJSON, set it
-    // if (config.geoJSON) {
-    //   this.geoJSON = config.geoJSON;
-    // }
 
     // If config has mapLibreMapOptions, merge them with existing ones
     // if (config.mapLibreMapOptions) {

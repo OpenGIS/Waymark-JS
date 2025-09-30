@@ -1,4 +1,4 @@
-import { MarkerType } from "@/classes/Type.js";
+import { MarkerType } from "@/classes/Types.js";
 
 export function getIconData(type = {}) {
   // Checks
