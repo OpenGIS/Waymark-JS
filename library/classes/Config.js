@@ -1,6 +1,7 @@
 import { mapOptions } from "@/helpers/MapLibre.js";
 import { featureTypes } from "@/helpers/Overlay.js";
 import { MarkerType, LineType, ShapeType } from "@/classes/Types.js";
+import { TileLayer } from "@/classes/TileLayer.js";
 
 export class Config {
   constructor(config = {}) {
@@ -43,7 +44,22 @@ export class Config {
     // }
   }
 
-  importTileLayers() {}
+  importTileLayers() {
+    // We have tile layers to accept
+    if (
+      this.map_options.hasOwnProperty("tile_layers") &&
+      Array.isArray(this.map_options["tile_layers"])
+    ) {
+      // Iterate over each type and add to respective array
+      this.map_options["tile_layers"].forEach((tileData) => {
+        this.tileLayers.push(new TileLayer(tileData));
+      });
+    }
+  }
+
+  getTileLayers() {
+    return this.tileLayers;
+  }
 
   // Accept Types from config
   importTypes() {
