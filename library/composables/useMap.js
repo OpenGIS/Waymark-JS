@@ -73,6 +73,7 @@ export function useMap() {
 				if (overlay) {
 					setActiveOverlay(overlay);
 				}
+				// No features found
 			}
 		});
 
@@ -101,7 +102,7 @@ export function useMap() {
 					const type = config.value.getType(featureType, typeKey);
 
 					if (!type) {
-						console.warn(
+						console.error(
 							`Type not found for ${featureType} Type ${typeKey}`,
 							feature,
 						);

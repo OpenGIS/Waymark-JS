@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "voiecyclablenonbitume",
+        "type": "test",
         "title": "Voie cyclable non bitumée (9km)"
       },
       "geometry": {
@@ -1251,7 +1251,7 @@
       "type": "Feature",
       "properties": {
         "title": "Vogüé - Village de caractère",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/©Marina-Geray-135-web-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/©Marina-Geray-135-web-300x200.jpg",
         "description": "<p>Village de caractère et parmi les Plus Beaux Villages de France<a href=\"https://via-ardeche.fr/incontournables/vogue/\"><br />Découvrir</a></p>"
@@ -1262,7 +1262,7 @@
       "type": "Feature",
       "properties": {
         "title": "Aubenas - Cité médiévale",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2022/07/Via-Ardeche06-e1676643501801.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/cite-medievale-daubenas/\">Découvrir</a></p>"
       }
@@ -1272,7 +1272,7 @@
       "type": "Feature",
       "properties": {
         "title": "Jaujac - Coulée basaltique",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Coulee-Basaltique-Jaujac-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Coulee-Basaltique-Jaujac-300x200.jpg",
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Coulee-Basaltique-Jaujac.jpg",
@@ -1284,7 +1284,7 @@
       "type": "Feature",
       "properties": {
         "title": "Meyras - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Meyras-Le-village-SB-CCASV.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/meyras/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1294,7 +1294,7 @@
       "type": "Feature",
       "properties": {
         "title": "Jaujac - Village de caractère",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Jaujac-Le-village-vu-du-Chastelas-SB-CCASV-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Jaujac-Le-village-vu-du-Chastelas-SB-CCASV-300x200.jpg",
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Jaujac-Le-village-vu-du-Chastelas-SB-CCASV.jpg",
@@ -1306,7 +1306,7 @@
       "type": "Feature",
       "properties": {
         "title": "Source intermittente de Vals-les-Bains",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Source-intermittente-Ardeche-e1677599214780.jpg",
         "description": "<p>Source intermittente</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/source-intermittente-de-vals-les-bains/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1316,7 +1316,7 @@
       "type": "Feature",
       "properties": {
         "title": "Saint-Laurent-Sous-Coiron - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Saint-Lauren-sous-Coiron-e1677598911972.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/saint-laurent-sous-coiron/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1326,7 +1326,7 @@
       "type": "Feature",
       "properties": {
         "title": "Ailhon - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Ailhon-©ADT-07.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/ailhon/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1336,7 +1336,7 @@
       "type": "Feature",
       "properties": {
         "title": "Chassiers - Village de caractère",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/mathieu-dupont-chassiers-16-1600x900-1-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/mathieu-dupont-chassiers-16-1600x900-1-300x169.jpg",
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/mathieu-dupont-chassiers-16-1600x900-1-1024x576.jpg",
@@ -1348,7 +1348,7 @@
       "type": "Feature",
       "properties": {
         "title": "Vinezac - Village de caractère",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Vinezac-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Vinezac-300x200.jpg",
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Vinezac.jpg",
@@ -1360,7 +1360,7 @@
       "type": "Feature",
       "properties": {
         "title": "Rochecolombe - Cascade et village médiéval",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Rochecolombe‹©M.Dupont_web.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/cascade-de-rochecolombe/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1370,7 +1370,7 @@
       "type": "Feature",
       "properties": {
         "title": "Balazuc - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/©-Marina-Geray-135-web.jpg",
         "description": "<p>Village de caractère et parmi Les Plus Beaux Villages de France</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/balazuc/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1380,7 +1380,7 @@
       "type": "Feature",
       "properties": {
         "title": "Chauzon - Cirque de Gens",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Cirque-de-Gens-Chauzon-©Marina-Geray-web-1.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/cirque-de-gens/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1390,7 +1390,7 @@
       "type": "Feature",
       "properties": {
         "title": "Ruoms - Route des Défilés",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Defiles-de-Ruoms-Ardeche-©Gerard-Le-Rouzes-3-e1677591040928.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/defiles-de-ruoms/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1400,7 +1400,7 @@
       "type": "Feature",
       "properties": {
         "title": "Saint-Alban-Auriolles - Belvédère de Bourbouillet",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Matthieu-Dupont-55-WEB.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/belvedere-de-bourbouillet/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1410,7 +1410,7 @@
       "type": "Feature",
       "properties": {
         "title": "Grotte Chauvet 2",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/le-panneau-des-lions©Patrick-Aventurier-web-web.jpg",
         "description": "<p>Copie de la Grotte Chauvet classée UNESCO </p>\n<p><a href=\"https://via-ardeche.fr/incontournables/grotte-chauvet-2/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1420,7 +1420,7 @@
       "type": "Feature",
       "properties": {
         "title": "Gorges de l'Ardèche",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/VAE-Gorges-©-Matthieu-Dupont-web.jpg",
         "description": "<p>Réserve Naturelle Protégée</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/gorges-de-lardeche/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1430,7 +1430,7 @@
       "type": "Feature",
       "properties": {
         "title": "Pont d'Arc",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Matthieu-Dupont-7-WEB-1.jpg",
         "description": "<p>Arche minérale naturelle du Pont d'Arc</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/pont-darc/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1440,7 +1440,7 @@
       "type": "Feature",
       "properties": {
         "title": "Aven d'Orgnac",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Aven_orgnac_ardeche_credits_ludovic_fremondiere-6-Copier.jpg",
         "description": "<p>Grotte classée Grand Site de France</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/laven-dorgnac/\">Découvrir</a></p>"
       }
@@ -1450,7 +1450,7 @@
       "type": "Feature",
       "properties": {
         "title": "Labeaume - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/©M.Dupont3-WEB.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/labeaume/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1460,7 +1460,7 @@
       "type": "Feature",
       "properties": {
         "title": "Bois de Païolive",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/MD18_12968-1.jpg",
         "description": "<p>Territoire naturel remarquable</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/le-bois-de-paiolive/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1470,7 +1470,7 @@
       "type": "Feature",
       "properties": {
         "title": "Gorges du Chassezac",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Matthieu-Dupont-18_03350_web.jpg",
         "description": "<p>Gorges creusées par la rivière Chassezac</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/gorges-du-chassezac/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1480,7 +1480,7 @@
       "type": "Feature",
       "properties": {
         "title": "Banne - Village de caractère",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/2019_05_22-Banne-Avelas-Petit-Brahic-Borre-Zimmermann-22-scaled.jpg",
         "description": "<p><a href=\"https://via-ardeche.fr/incontournables/banne/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1490,7 +1490,7 @@
       "type": "Feature",
       "properties": {
         "title": "Commanderie de Jalès",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/jales-2-e1677599269904.jpg",
         "description": "<p>Commanderie établie par les Templiers</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/commanderie-de-jales/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1500,7 +1500,7 @@
       "type": "Feature",
       "properties": {
         "title": "Viaduc du Doulovy",
-        "type": "avoirproximit",
+
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/02/Matthieu-Dupont-17_06714.jpg",
         "description": "<p>Un viaduc de 235 m de long, 2,35 m de large, composé de 24 arches.</p>\n<p><a href=\"https://via-ardeche.fr/incontournables/viaduc-le-doulouvy/\" target=\"_blank\" rel=\"noopener\">Découvrir</a></p>"
       }
@@ -1508,32 +1508,32 @@
     {
       "geometry": { "type": "Point", "coordinates": [4.335617, 44.644878] },
       "type": "Feature",
-      "properties": { "title": "Viaduc", "type": "viaduc" }
+      "properties": { "title": "Viaduc" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.354708, 44.647559] },
       "type": "Feature",
-      "properties": { "title": "Viaduc", "type": "viaduc" }
+      "properties": { "title": "Viaduc" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.413724, 44.545539] },
       "type": "Feature",
-      "properties": { "title": "Viaduc de Vogüé", "type": "viaduc" }
+      "properties": { "title": "Viaduc de Vogüé" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.388877, 44.510905] },
       "type": "Feature",
-      "properties": { "title": "Viaduc de Balazuc", "type": "viaduc" }
+      "properties": { "title": "Viaduc de Balazuc" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.325177, 44.425646] },
       "type": "Feature",
-      "properties": { "title": "Viaduc de Sampzon", "type": "viaduc" }
+      "properties": { "title": "Viaduc de Sampzon" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.190736, 44.382864] },
       "type": "Feature",
-      "properties": { "title": "Viaduc de Banne", "type": "viaduc" }
+      "properties": { "title": "Viaduc de Banne" }
     },
     {
       "geometry": { "type": "Point", "coordinates": [4.365215, 44.664716] },
@@ -1967,7 +1967,7 @@
       "type": "Feature",
       "properties": {
         "title": "Ruoms - Cité médiévale",
-        "type": "avoirproximit",
+
         "image_thumbnail_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Ruoms-Ardeche-©M.-Crus-150x150.jpg",
         "image_medium_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Ruoms-Ardeche-©M.-Crus-300x200.jpg",
         "image_large_url": "https://via-ardeche.fr/wp-content/uploads/2023/03/Ruoms-Ardeche-©M.-Crus.jpg",

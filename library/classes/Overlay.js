@@ -1,6 +1,5 @@
 import { length } from "@turf/length";
 import { Type, MarkerType, LineType, ShapeType } from "@/classes/Type.js";
-import { Config } from "@/classes/Config.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import {
   createMarker,

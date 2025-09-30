@@ -51,7 +51,7 @@ const toggleVisible = () => {
   });
 };
 
-const type = new Type(props.featureType, props.typeKey, config.value);
+const type = config.value.getType(props.featureType, props.typeKey);
 
 const headingStyle = () => {
   let style = ``;

@@ -1,3 +1,5 @@
+export const waymarkPrimaryColour = "#b42714";
+
 export function makeKey(str) {
   if (!str) {
     return str;

@@ -300,27 +300,31 @@ export class Config {
     });
   }
 
+  /**
+   * Get a Type by featureType and typeKey
+   * Returns a default in all cases except where featureType is invalid
+   */
   getType(featureType, typeKey) {
-    if (!featureType || !typeKey) return null;
+    if (!featureType) return null;
 
     switch (featureType) {
       case "marker":
         return (
           this.markerTypes["marker_types"].find(
             (type) => type.typeKey === typeKey,
-          ) || null
+          ) || new MarkerType()
         );
       case "line":
         return (
           this.lineTypes["line_types"].find(
             (type) => type.typeKey === typeKey,
-          ) || null
+          ) || new LineType()
         );
       case "shape":
         return (
           this.shapeTypes["shape_types"].find(
             (type) => type.typeKey === typeKey,
-          ) || null
+          ) || new ShapeType()
         );
       default:
         return null;
