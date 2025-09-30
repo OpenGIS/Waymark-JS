@@ -1,6 +1,7 @@
 // Import MapLibre
 import { Map, Marker } from "maplibre-gl";
 import { Overlay } from "@/classes/Overlay.js";
+import { TileLayer } from "@/classes/TileLayer.js";
 
 /* 
   ======= Constants =======
@@ -26,70 +27,11 @@ export const mapOptions = {
 */
 
 // Creates a MapLibre Map instance
-export const createMap = (
-  containerID = "",
-  mapStyle = {},
-  mapLibreMapOptions = {},
-) => {
+export const createMap = (containerID = "", mapLibreMapOptions = {}) => {
   return new Map({
     container: containerID,
-    style: mapStyle,
     ...mapLibreMapOptions,
   });
-};
-
-export const createMapStyle = (tileLayers) => {
-  const style = {
-    version: 8,
-    sources: {},
-    layers: [],
-  };
-
-  // Tile Layers
-  if (Array.isArray(tileLayers)) {
-    // Each Tile Layer
-    tileLayers.forEach((tile_data) => {
-      // Add Source
-      style.sources[tile_data.layer_name] = {
-        type: "raster",
-        tiles: [tile_data.layer_url],
-        tileSize: 256,
-        attribution: tile_data.layer_attribution,
-      };
-
-      // Add Layer
-      style.layers.push({
-        id: tile_data.layer_name,
-        type: "raster",
-        source: tile_data.layer_name,
-        layout: {
-          visibility: "none",
-        },
-      });
-
-      // Set first as visible
-      if (style.layers.length === 1) {
-        style.layers[0].layout.visibility = "visible";
-      }
-    });
-  } else {
-    // Default Tile Layer
-    style.sources["OpenStreetMap"] = {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png?r=1"],
-      tileSize: 256,
-      attribution:
-        '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    };
-
-    style.layers.push({
-      id: "OpenStreetMap",
-      type: "raster",
-      source: "OpenStreetMap",
-    });
-  }
-
-  return style;
 };
 
 export const createMarker = (overlay = {}) => {
@@ -145,6 +87,35 @@ export const createLineStyle = (overlay = {}, id = "") => {
     paint: {
       "line-color": overlay.type.data.line_colour,
       "line-width": parseFloat(overlay.type.data.line_weight),
+    },
+  };
+};
+
+export const createTileLayerSource = (tileLayer = {}) => {
+  if (!(tileLayer instanceof TileLayer)) {
+    return null;
+  }
+
+  return {
+    type: "raster",
+    tiles: [tileLayer.data.layer_url],
+    tileSize: 256,
+    maxzoom: parseInt(tileLayer.data.layer_max_zoom) || 18,
+  };
+};
+
+export const createTileLayerStyle = (tileLayer = {}) => {
+  if (!(tileLayer instanceof TileLayer)) {
+    return null;
+  }
+
+  return {
+    id: tileLayer.id,
+    type: "raster",
+    source: tileLayer.id,
+    attribution: tileLayer.data.layer_attribution || "",
+    layout: {
+      visibility: "visible",
     },
   };
 };

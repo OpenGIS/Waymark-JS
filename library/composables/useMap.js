@@ -4,11 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { makeKey } from "@/helpers/Common.js";
 import { getFeatureType } from "@/helpers/Overlay.js";
 
-import {
-	createMap,
-	createMapStyle,
-	fitBoundsOptions,
-} from "@/helpers/MapLibre.js";
+import { createMap, fitBoundsOptions } from "@/helpers/MapLibre.js";
 
 // Classes
 import { Overlay } from "@/classes/Overlay.js";
@@ -35,7 +31,6 @@ export function useMap() {
 		// Create MapLibre instance
 		map.value = createMap(
 			`${config.value.getMapOption("div_id")}-map`,
-			createMapStyle(config.value.getMapOption("tile_layers")),
 			config.value.mapLibreMapOptions,
 		);
 
@@ -43,6 +38,11 @@ export function useMap() {
 
 		// Triggers the UI to populate
 		map.value.on("load", () => {
+			// Add Tile Layers
+			config.value.getTileLayers().forEach((tileLayer) => {
+				tileLayer.addTo(map.value);
+			});
+
 			mapReady.value = true;
 			mapBounds.value = map.value.getBounds();
 		});
@@ -52,41 +52,6 @@ export function useMap() {
 			//Set Max bounds
 			mapBounds.value = map.value.getBounds();
 		});
-
-		// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
-		map.value.on("click", (e) => {
-			// Create a bounding box to find features within a certain distance of the click
-			const bbox = [
-				[e.point.x - 10, e.point.y - 10],
-				[e.point.x + 10, e.point.y + 10],
-			];
-			const features = map.value.queryRenderedFeatures(bbox, {
-				layers: overlays.value
-					.filter((o) => o.featureType === "line")
-					.map((o) => o.id),
-			});
-
-			if (features.length) {
-				const overlay = overlays.value.find(
-					(o) => o.id === features[0].layer.id,
-				);
-				if (overlay) {
-					setActiveOverlay(overlay);
-				}
-				// No features found
-			} else {
-				// If active layer is set - remove highlight and make inactive
-				if (activeOverlay.value) {
-					activeOverlay.value.removeHighlight();
-					activeOverlay.value = null;
-				}
-			}
-		});
-
-		if (config.value.geoJSON) {
-			console.log("GeoJSON found in config - loading", config.value.geoJSON);
-			loadGeoJSON(config.value.geoJSON);
-		}
 	};
 
 	const loadGeoJSON = (geoJSON) => {
@@ -155,6 +120,36 @@ export function useMap() {
 				// Extend current map view to also include data bounds
 				if (dataBounds.isEmpty() === false) {
 					map.value.fitBounds(dataBounds, fitBoundsOptions);
+				}
+			});
+
+			// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
+			map.value.on("click", (e) => {
+				// Create a bounding box to find features within a certain distance of the click
+				const bbox = [
+					[e.point.x - 10, e.point.y - 10],
+					[e.point.x + 10, e.point.y + 10],
+				];
+				const features = map.value.queryRenderedFeatures(bbox, {
+					layers: overlays.value
+						.filter((o) => o.featureType === "line")
+						.map((o) => o.id),
+				});
+
+				if (features.length) {
+					const overlay = overlays.value.find(
+						(o) => o.id === features[0].layer.id,
+					);
+					if (overlay) {
+						setActiveOverlay(overlay);
+					}
+					// No features found
+				} else {
+					// If active layer is set - remove highlight and make inactive
+					if (activeOverlay.value) {
+						activeOverlay.value.removeHighlight();
+						activeOverlay.value = null;
+					}
 				}
 			});
 		}
