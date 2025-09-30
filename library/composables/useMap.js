@@ -74,6 +74,12 @@ export function useMap() {
 					setActiveOverlay(overlay);
 				}
 				// No features found
+			} else {
+				// If active layer is set - remove highlight and make inactive
+				if (activeOverlay.value) {
+					activeOverlay.value.removeHighlight();
+					activeOverlay.value = null;
+				}
 			}
 		});
 

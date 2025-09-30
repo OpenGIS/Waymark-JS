@@ -27,7 +27,7 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const layerFilters = ref({
 		text: "",
-		inBounds: false,
+		inBounds: true,
 	});
 
 	// Getters
@@ -65,7 +65,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Iterate over all overlays
 		overlays.value.forEach((overlay) => {
 			// Is it in the current map bounds
-			if (layerFilters.value.inBounds && !overlay.inMapBounds()) {
+			if (layerFilters.value.inBounds && !overlay.inBounds(mapBounds.value)) {
 				return;
 			}
 
