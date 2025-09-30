@@ -1,8 +1,8 @@
-import { Type } from "@/classes/Type.js";
+import { MarkerType } from "@/classes/Type.js";
 
 export function getIconData(type = {}) {
   // Checks
-  if (!(type instanceof Type)) {
+  if (!(type instanceof MarkerType)) {
     return null;
   }
 

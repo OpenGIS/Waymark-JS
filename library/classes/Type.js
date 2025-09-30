@@ -1,44 +1,268 @@
+/*
+
+Map Options:
+
+{
+  "map_height": "640",
+  "tile_layers": [],
+  "marker_types": [
+    {
+      "marker_title": "Photo",
+      "marker_shape": "rectangle",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-camera",
+      "marker_colour": "#70af00",
+      "icon_colour": "#ffffff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Water",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-waterdrop",
+      "marker_colour": "#2aabe1",
+      "icon_colour": "#fff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Trail Access",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-android-car",
+      "marker_colour": "#fbfbfb",
+      "icon_colour": "#707070",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Information",
+      "marker_shape": "circle",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-information-circled",
+      "marker_colour": "#fbfbfb",
+      "icon_colour": "#0069a5",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Alert",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-android-alert",
+      "marker_colour": "#da3d20",
+      "icon_colour": "white",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Food",
+      "marker_shape": "marker",
+      "marker_size": "large",
+      "icon_type": "icon",
+      "marker_icon": "ion-pizza",
+      "marker_colour": "#da3d20",
+      "icon_colour": "#ffba00",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Beer",
+      "marker_shape": "marker",
+      "marker_size": "small",
+      "icon_type": "icon",
+      "marker_icon": "ion-beer",
+      "marker_colour": "#fbfbfb",
+      "icon_colour": "#754423",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Start",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "fa-flag",
+      "marker_colour": "#70af00",
+      "icon_colour": "white",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Finish",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "fa-flag-checkered",
+      "marker_colour": "#a43233",
+      "icon_colour": "white",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Store",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-android-cart",
+      "marker_colour": "#416979",
+      "icon_colour": "#ffffff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Camp",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-android-home",
+      "marker_colour": "#a43233",
+      "icon_colour": "#ffffff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Wildlife",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-ios-paw",
+      "marker_colour": "#a43233",
+      "icon_colour": "#ffffff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Point of Interest",
+      "marker_shape": "marker",
+      "marker_size": "medium",
+      "icon_type": "icon",
+      "marker_icon": "ion-eye",
+      "marker_colour": "#da3d20",
+      "icon_colour": "#e5e5e5",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Waymark",
+      "marker_shape": "marker",
+      "marker_size": "large",
+      "icon_type": "html",
+      "marker_icon": "&lt;img style=&quot;width:24px;height:24px;margin-top:5px&quot; src=&quot;https://www.waymark.dev/wp-content/plugins/waymark/assets/img/waymark-icon-primary.png&quot; /&gt;",
+      "marker_colour": "#ffffff",
+      "icon_colour": "#81d742",
+      "marker_display": "1",
+      "marker_submission": "1"
+    },
+    {
+      "marker_title": "Test",
+      "marker_shape": "marker",
+      "marker_size": "small",
+      "icon_type": "icon",
+      "marker_icon": "ion-camera",
+      "marker_colour": "#dd3333",
+      "icon_colour": "#ffffff",
+      "marker_display": "1",
+      "marker_submission": "1"
+    }
+  ],
+  "line_types": [
+    {
+      "line_title": "Green",
+      "line_colour": "#30d100",
+      "line_weight": "3",
+      "line_opacity": "0.7",
+      "line_display": "1",
+      "line_submission": "1"
+    },
+    {
+      "line_title": "Red",
+      "line_colour": "#dd3333",
+      "line_weight": "3",
+      "line_opacity": "0.7",
+      "line_display": "1",
+      "line_submission": "1"
+    },
+    {
+      "line_title": "Bike Path",
+      "line_colour": "#1e73be",
+      "line_weight": "3",
+      "line_opacity": "0.7",
+      "line_display": "1",
+      "line_submission": "1"
+    },
+    {
+      "line_title": "Foot Path",
+      "line_colour": "#dd9933",
+      "line_weight": "3",
+      "line_opacity": "0.7",
+      "line_display": "1",
+      "line_submission": "1"
+    },
+    {
+      "line_title": "Alternate",
+      "line_colour": "#dd9933",
+      "line_weight": "3",
+      "line_opacity": "0.7",
+      "line_display": "1",
+      "line_submission": "1"
+    }
+  ],
+  "shape_types": [
+    {
+      "shape_title": "Red",
+      "shape_colour": "#d84848",
+      "fill_opacity": "0.5",
+      "shape_display": "1",
+      "shape_submission": "1"
+    },
+    {
+      "shape_title": "Green",
+      "shape_colour": "#3cbc47",
+      "fill_opacity": "0.15",
+      "shape_display": "1",
+      "shape_submission": "1"
+    },
+    {
+      "shape_title": "Blue",
+      "shape_colour": "#487bd9",
+      "fill_opacity": "0.5",
+      "shape_display": "1",
+      "shape_submission": "1"
+    },
+    {
+      "shape_title": "Purple",
+      "shape_colour": "#8224e3",
+      "fill_opacity": "1",
+      "shape_display": "1",
+      "shape_submission": "1"
+    }
+  ],
+  "show_scale": "1",
+  "debug_mode": false,
+  "div_id": "dev-waymark-app",
+  "units": "metric"
+}
+*/
 import { getIconData } from "@/helpers/Type.js";
 import { makeKey } from "@/helpers/Common.js";
-import { Config } from "@/classes/Config.js";
 
 export class Type {
-  constructor(featureType, typeKey, config) {
-    if (!(config instanceof Config)) {
-      throw new Error("Config instance required");
-    }
+  constructor(typeData) {
+    this.data = typeData || {};
 
-    this.config = config;
+    // this.featureType = featureType;
+    // this.typeKey = makeKey(typeKey);
 
-    this.featureType = featureType;
-    this.typeKey = makeKey(typeKey);
-    this.data = this.getTypeData();
-
-    if (this.featureType === "marker") {
-      this.iconData = getIconData(this);
-    }
-  }
-
-  getTypeData() {
-    const types = this.config.getMapOption(this.featureType + "_types") || [];
-
-    if (!types.length) {
-      throw new Error(`No types found for feature type: ${this.featureType}`);
-    }
-
-    // Default to first type
-    let selectedType = types[0];
-
-    // Find matching type by comparing keys
-    for (const typeOption of types) {
-      const typeTitle = typeOption?.[this.featureType + "_title"];
-      if (typeTitle && makeKey(this.typeKey) === makeKey(typeTitle)) {
-        selectedType = typeOption;
-        break;
-      }
-    }
-
-    return selectedType;
+    // if (this.featureType === "marker") {
+    //   this.iconData = getIconData(this);
+    // }
   }
 
   getTitle() {
@@ -62,12 +286,30 @@ export class Type {
         return this.data.shape_colour || "#000000";
     }
   }
+}
+
+export class MarkerType extends Type {
+  constructor(typeData) {
+    super(typeData);
+
+    this.typeKey = makeKey(this.data.marker_title) || null;
+    this.featureType = "marker";
+    this.iconData = getIconData(this);
+
+    console.log(this.iconData);
+  }
 
   getIconColour() {
-    if (this.featureType === "marker") {
-      return this.data.icon_colour || this.getPrimaryColour();
-    }
     return this.getPrimaryColour();
+  }
+}
+
+export class LineType extends Type {
+  constructor(typeData) {
+    super(typeData);
+
+    this.typeKey = makeKey(this.data.line_title) || null;
+    this.featureType = "line";
   }
 
   getLineWeight() {
@@ -83,6 +325,27 @@ export class Type {
       color: this.getPrimaryColour(),
       weight: this.getLineWeight(),
       opacity: this.getLineOpacity(),
+    };
+  }
+}
+
+export class ShapeType extends Type {
+  constructor(typeData) {
+    super(typeData);
+
+    this.typeKey = makeKey(this.data.shape_title) || null;
+    this.featureType = "shape";
+  }
+
+  getFillOpacity() {
+    return parseFloat(this.data.fill_opacity) || 0.5;
+  }
+
+  getShapeStyle() {
+    return {
+      color: this.getPrimaryColour(),
+      fillColor: this.getPrimaryColour(),
+      fillOpacity: this.getFillOpacity(),
     };
   }
 }

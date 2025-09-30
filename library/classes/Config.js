@@ -1,28 +1,56 @@
 import { mapOptions } from "@/helpers/MapLibre.js";
+import { featureTypes } from "@/helpers/Overlay.js";
+import { MarkerType, LineType, ShapeType } from "@/classes/Type.js";
+import { makeKey } from "@/helpers/Common.js";
 
-/**
- * Config class
- *
- * Defines the configuration options for Waymark JS maps.
- * Manages map options including marker types, line types, and tile layers.
- * Provides methods for setting and getting map options with deep cloning to ensure independence.
- *
- * This class is responsible for:
- * - Maintaining configuration structure for Waymark maps
- * - Providing access to specific configuration sections (marker_types, line_types, tile_layers)
- * - Ensuring proper deep cloning of configuration values to maintain state independence
- * - Supporting the undo/redo stack by providing immutable operations
- */
 export class Config {
-  /**
-   * Create a new Waymark_Config instance
-   *
-   * @param {Object} config - Optional initial configuration
-   */
   constructor(config = {}) {
+    // To do!
     this.geoJSON = null;
-
     this.mapLibreMapOptions = mapOptions;
+
+    // Map Options
+    this.map_options = config.map_options || {};
+
+    // Tile Layers
+    this.tileLayers = [];
+
+    // Types
+    this.lineTypes = [];
+    this.shapeTypes = [];
+    this.markerTypes = [];
+
+    // Accept Types from config
+    //Iterate over each featureType and look for _types in config.map_options
+    featureTypes.forEach((featureType) => {
+      const typesKey = featureType + "_types";
+      // We have types to accept
+      if (
+        this.map_options.hasOwnProperty(typesKey) &&
+        Array.isArray(this.map_options[typesKey])
+      ) {
+        // Iterate over each type and add to respective array
+        this.map_options[typesKey].forEach((typeData) => {
+          switch (featureType) {
+            case "marker":
+              this.markerTypes.push(new MarkerType(typeData));
+              break;
+            case "line":
+              this.lineTypes.push(new LineType(typeData));
+              break;
+            case "shape":
+              this.shapeTypes.push(new ShapeType(typeData));
+              break;
+          }
+        });
+      }
+    });
+
+    console.log("Config initialized with types:", {
+      markerTypes: this.markerTypes,
+      lineTypes: this.lineTypes,
+      shapeTypes: this.shapeTypes,
+    });
 
     // Initialize with default structure
     this.map_options = {
