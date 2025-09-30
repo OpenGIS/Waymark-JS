@@ -1,4 +1,5 @@
 import { length } from "@turf/length";
+import { Config } from "@/classes/Config.js";
 import { Type, MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import {
@@ -12,24 +13,26 @@ import { LngLatBounds } from "maplibre-gl";
 import { makeKey } from "@/helpers/Common.js";
 
 export class Overlay {
-  constructor(feature, type, id = null) {
+  constructor(feature, type, config, id = null) {
     if (!feature || feature.type !== "Feature") {
       throw new Error("Valid GeoJSON Feature required");
     }
-
     this.feature = feature;
 
     if (!(type instanceof Type)) {
       throw new Error("Valid Type required");
     }
-
     this.type = type;
 
     if (id == null || typeof id !== "string") {
       throw new Error("Valid ID string required");
     }
-
     this.id = id;
+
+    if (!(config instanceof Config)) {
+      throw new Error("Valid Config required");
+    }
+    this.config = config;
 
     this.featureType = getFeatureType(this.feature) || null;
     this.typeKey = makeKey(this.feature.properties.type) || null;

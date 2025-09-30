@@ -117,7 +117,7 @@ export function useMap() {
 
 					// Create Overlay instance
 					const overlayId = `overlay-${overlayCount++}`;
-					const overlay = new Overlay(feature, type, overlayId);
+					const overlay = new Overlay(feature, type, config.value, overlayId);
 
 					// Add to store
 					overlays.value.push(overlay);
