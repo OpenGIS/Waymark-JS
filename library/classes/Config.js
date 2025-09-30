@@ -16,35 +16,10 @@ export class Config {
     this.tileLayers = [];
 
     // Types
-    this.lineTypes = [];
-    this.shapeTypes = [];
-    this.markerTypes = [];
-
-    // Accept Types from config
-    //Iterate over each featureType and look for _types in config.map_options
-    featureTypes.forEach((featureType) => {
-      const typesKey = featureType + "_types";
-      // We have types to accept
-      if (
-        this.map_options.hasOwnProperty(typesKey) &&
-        Array.isArray(this.map_options[typesKey])
-      ) {
-        // Iterate over each type and add to respective array
-        this.map_options[typesKey].forEach((typeData) => {
-          switch (featureType) {
-            case "marker":
-              this.markerTypes.push(new MarkerType(typeData));
-              break;
-            case "line":
-              this.lineTypes.push(new LineType(typeData));
-              break;
-            case "shape":
-              this.shapeTypes.push(new ShapeType(typeData));
-              break;
-          }
-        });
-      }
-    });
+    this.lineTypes = {};
+    this.shapeTypes = {};
+    this.markerTypes = {};
+    this.importTypes();
 
     console.log("Config initialized with types:", {
       markerTypes: this.markerTypes,
@@ -279,6 +254,79 @@ export class Config {
     };
   }
 
+  // Accept Types from config
+  importTypes() {
+    //Iterate over each featureType and look for _types in config.map_options
+    featureTypes.forEach((featureType) => {
+      const typesKey = featureType + "_types";
+      // We have types to accept
+      if (
+        this.map_options.hasOwnProperty(typesKey) &&
+        Array.isArray(this.map_options[typesKey])
+      ) {
+        // Iterate over each type and add to respective array
+        this.map_options[typesKey].forEach((typeData) => {
+          switch (featureType) {
+            case "marker":
+              // If not array, create it
+              if (!this.markerTypes.hasOwnProperty(typesKey)) {
+                this.markerTypes[typesKey] = [];
+              }
+
+              this.markerTypes[typesKey].push(new MarkerType(typeData));
+
+              break;
+            case "line":
+              // If not array, create it
+              if (!this.lineTypes.hasOwnProperty(typesKey)) {
+                this.lineTypes[typesKey] = [];
+              }
+
+              this.lineTypes[typesKey].push(new LineType(typeData));
+
+              break;
+            case "shape":
+              // If not array, create it
+              if (!this.shapeTypes.hasOwnProperty(typesKey)) {
+                this.shapeTypes[typesKey] = [];
+              }
+
+              this.shapeTypes[typesKey].push(new ShapeType(typeData));
+
+              break;
+          }
+        });
+      }
+    });
+  }
+
+  getType(featureType, typeKey) {
+    if (!featureType || !typeKey) return null;
+
+    switch (featureType) {
+      case "marker":
+        return (
+          this.markerTypes["marker_types"].find(
+            (type) => type.typeKey === typeKey,
+          ) || null
+        );
+      case "line":
+        return (
+          this.lineTypes["line_types"].find(
+            (type) => type.typeKey === typeKey,
+          ) || null
+        );
+      case "shape":
+        return (
+          this.shapeTypes["shape_types"].find(
+            (type) => type.typeKey === typeKey,
+          ) || null
+        );
+      default:
+        return null;
+    }
+  }
+
   /**
    * Update the configuration with new values
    * Creates deep clones of all values to ensure independence
@@ -342,49 +390,5 @@ export class Config {
 
     // Return a deep copy to ensure independence
     return JSON.parse(JSON.stringify(option));
-  }
-
-  /**
-   * Get all map option keys
-   *
-   * @returns {string[]} Array of map option keys
-   */
-  getMapOptionKeys() {
-    return Object.keys(this.map_options);
-  }
-
-  /**
-   * Set specific map option
-   * Creates a deep copy of the value to ensure independence
-   *
-   * @param {string} key - The option key
-   * @param {any} value - The option value
-   */
-  setMapOption(key, value) {
-    if (key) {
-      // Create a deep copy of the value to ensure it's independent
-      this.map_options[key] = JSON.parse(JSON.stringify(value));
-    }
-  }
-
-  /**
-   * Create a clone of this Waymark_Config
-   * Creates a completely new Waymark_Config instance with deep-cloned data
-   *
-   * @returns {Waymark_Config} A new Waymark_Config instance with the same data
-   */
-  clone() {
-    const clonedConfig = new Waymark_Config();
-
-    // Copy all map options from this config
-    for (const key in this.map_options) {
-      if (this.map_options.hasOwnProperty(key)) {
-        // Deep clone each option value to ensure complete independence
-        const value = JSON.parse(JSON.stringify(this.getMapOption(key)));
-        clonedConfig.setMapOption(key, value);
-      }
-    }
-
-    return clonedConfig;
   }
 }
