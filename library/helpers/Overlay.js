@@ -1,3 +1,5 @@
+export const featureTypes = ["marker", "line", "shape"];
+
 export function getFeatureType(feature = {}) {
   // Ensure there is a feature & geometry
   if (!feature || !feature.geometry) {
