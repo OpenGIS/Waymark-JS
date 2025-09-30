@@ -10,10 +10,13 @@ export class Config {
     this.mapLibreMapOptions = mapOptions;
 
     // Map Options
-    this.map_options = config.map_options || {};
+    this.map_options = config.map_options || {
+      div_id: "map",
+    };
 
     // Tile Layers
     this.tileLayers = [];
+    this.importTileLayers();
 
     // Types
     this.lineTypes = {};
@@ -27,33 +30,27 @@ export class Config {
       shapeTypes: this.shapeTypes,
     });
 
-    // Initialize with default structure
-    this.map_options = {
-      // The ID of the Instance container div
-      div_id: "map",
-
-      // Default tile layers
-      tile_layers: [
-        {
-          layer_name: "OpenStreetMap",
-          layer_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          layer_attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors',
-        },
-      ],
-    };
-
     // Override defaults with provided config
-    this.updateConfig(config);
+    // If config has geoJSON, set it
+    // if (config.geoJSON) {
+    //   this.geoJSON = config.geoJSON;
+    // }
 
-    // Make the class itself act like the configuration object
-    // by defining a custom toString method
-    this.toString = function () {
-      return JSON.stringify({
-        map_options: this.map_options,
-      });
-    };
+    // If config has mapLibreMapOptions, merge them with existing ones
+    // if (config.mapLibreMapOptions) {
+    //   console.log("Merging mapLibreMapOptions", config.mapLibreMapOptions);
+    //   for (const key in config.mapLibreMapOptions) {
+    //     if (config.mapLibreMapOptions.hasOwnProperty(key)) {
+    //       // Deep clone each value to ensure independence
+    //       this.mapLibreMapOptions[key] = JSON.parse(
+    //         JSON.stringify(config.mapLibreMapOptions[key]),
+    //       );
+    //     }
+    //   }
+    // }
   }
+
+  importTileLayers() {}
 
   // Accept Types from config
   importTypes() {
@@ -129,47 +126,6 @@ export class Config {
         );
       default:
         return null;
-    }
-  }
-
-  /**
-   * Update the configuration with new values
-   * Creates deep clones of all values to ensure independence
-   *
-   * @param {Object} config - The new configuration options
-   */
-  updateConfig(config = {}) {
-    console.log("Updating config", config);
-    if (!config) return;
-
-    // If config has geoJSON, set it
-    if (config.geoJSON) {
-      this.geoJSON = config.geoJSON;
-    }
-
-    // If config has mapLibreMapOptions, merge them with existing ones
-    if (config.mapLibreMapOptions) {
-      console.log("Merging mapLibreMapOptions", config.mapLibreMapOptions);
-      for (const key in config.mapLibreMapOptions) {
-        if (config.mapLibreMapOptions.hasOwnProperty(key)) {
-          // Deep clone each value to ensure independence
-          this.mapLibreMapOptions[key] = JSON.parse(
-            JSON.stringify(config.mapLibreMapOptions[key]),
-          );
-        }
-      }
-    }
-
-    // If config has map_options, merge them with existing ones
-    if (config.map_options) {
-      for (const key in config.map_options) {
-        if (config.map_options.hasOwnProperty(key)) {
-          // Deep clone each value to ensure independence
-          this.map_options[key] = JSON.parse(
-            JSON.stringify(config.map_options[key]),
-          );
-        }
-      }
     }
   }
 

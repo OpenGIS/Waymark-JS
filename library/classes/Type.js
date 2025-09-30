@@ -47,8 +47,6 @@ export class MarkerType extends Type {
     this.typeKey = makeKey(this.data.marker_title) || null;
     this.featureType = "marker";
     this.iconData = getIconData(this);
-
-    console.log(this.iconData);
   }
 
   getIconColour() {

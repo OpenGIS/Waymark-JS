@@ -34,7 +34,7 @@
       console.clear();
 
       import { useWaymark } from "../library/useWaymark.js";
-      const { createInstance, loadGeoJSON } = useWaymark();
+      const { createInstance } = useWaymark();
 
       const testIDs = ["waymark", "af-ccc", "lemiecime-it", "via-ardeche"];
 
@@ -125,6 +125,7 @@
             // attributionControl: false,
           },
         });
+        instance.loadGeoJSON(testData);
       }
     </script>
   </body>
