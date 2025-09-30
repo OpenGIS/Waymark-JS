@@ -19,12 +19,12 @@ export class TileLayer {
     this.id = makeKey(this.data.layer_name);
   }
 
-  addTo(map) {
+  addTo(map, visible = false) {
     if (!map || !map.addLayer) {
       return;
     }
 
     map.addSource(this.id, createTileLayerSource(this));
-    map.addLayer(createTileLayerStyle(this));
+    map.addLayer(createTileLayerStyle(this, visible));
   }
 }

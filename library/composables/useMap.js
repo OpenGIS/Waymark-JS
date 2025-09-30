@@ -24,6 +24,7 @@ export function useMap() {
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
+		activeTileLayer,
 	} = storeToRefs(useInstanceStore());
 
 	// Create & Store Map
@@ -40,7 +41,11 @@ export function useMap() {
 		map.value.on("load", () => {
 			// Add Tile Layers
 			config.value.getTileLayers().forEach((tileLayer) => {
-				tileLayer.addTo(map.value);
+				// If no active Tile Layer
+				if (!activeTileLayer.value.id) {
+					activeTileLayer.value = tileLayer;
+				}
+				tileLayer.addTo(map.value, tileLayer === activeTileLayer.value);
 			});
 
 			mapReady.value = true;
