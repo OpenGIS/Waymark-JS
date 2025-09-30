@@ -4,8 +4,6 @@ import { Config } from "@/classes/Config.js";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
-	// Get mode from VITE
-	const MODE = import.meta.env.VITE_WAYMARK_MODE || "production";
 	const config = shallowRef(null);
 	const container = shallowRef(null);
 	const map = shallowRef(null);
@@ -15,7 +13,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const panelOpen = shallowRef(false);
 
-	const tileLayerGroup = shallowRef({});
 	const activeTileLayer = shallowRef({});
 
 	const activeOverlay = shallowRef(null);
@@ -97,7 +94,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		map,
 		mapBounds,
 		layerFilters,
-		tileLayerGroup,
 		activeTileLayer,
 		activeOverlay,
 		activePanelKey,

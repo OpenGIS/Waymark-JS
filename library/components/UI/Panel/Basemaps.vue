@@ -5,10 +5,11 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 import Button from "@/components/UI/Common/Button.vue";
 
-const { config, map, tileLayerGroup, activeTileLayer } =
-	storeToRefs(useInstanceStore());
+const { config, map, activeTileLayer } = storeToRefs(useInstanceStore());
 
-const tilePreviewUrl = (tile_url) => {
+const tilePreviewUrl = (tileLayer) => {
+	const tile_url = tileLayer.data.layer_url;
+
 	const lon2tile = (lon, zoom) =>
 		Math.floor(((lon + 180) / 360) * Math.pow(2, zoom));
 
@@ -33,7 +34,7 @@ const tilePreviewUrl = (tile_url) => {
 	return tile_url.replace("{z}", zoom).replace("{x}", x).replace("{y}", y);
 };
 
-const updateTileLayer = (layer_name) => {
+const updateTileLayer = (tileLayer) => {
 	// Iterate over all MapLibre style raster layers (map.value.getStyle().layers)
 	map.value.getStyle().layers.forEach((layer) => {
 		if (layer.type === "raster") {
@@ -41,14 +42,14 @@ const updateTileLayer = (layer_name) => {
 			map.value.setLayoutProperty(layer.id, "visibility", "none");
 
 			// If layer name matches, set as visible
-			if (layer.id === layer_name) {
+			if (tileLayer.id == layer.id) {
 				map.value.setLayoutProperty(layer.id, "visibility", "visible");
 			}
 		}
 	});
 };
 
-const tile_layers = config.value.getMapOption("tile_layers");
+const tileLayers = config.value.getTileLayers();
 </script>
 
 <template>
@@ -58,24 +59,22 @@ const tile_layers = config.value.getMapOption("tile_layers");
 		<div class="list">
 			<div
 				class="list-item"
-				v-for="(tileLayer, index) in tile_layers"
+				v-for="(tileLayer, index) in tileLayers"
 				:key="index"
 				:class="{
-					active:
-						activeTileLayer &&
-						activeTileLayer.layer_url === tileLayer.layer_url,
+					active: activeTileLayer && activetileLayer === tileLayer,
 				}"
-				@click="updateTileLayer(tileLayer.layer_name)"
+				@click="updateTileLayer(tileLayer)"
 			>
 				<img
-					:src="tilePreviewUrl(tileLayer.layer_url)"
-					:alt="tileLayer.layer_name"
+					:src="tilePreviewUrl(tileLayer)"
+					:alt="tileLayer.data.layer_name"
 					width="160"
 					height="160"
 				/>
 				<div class="info">
-					<h4>{{ tileLayer.layer_name }}</h4>
-					<p v-html="tileLayer.layer_attribution"></p>
+					<h4>{{ tileLayer.data.layer_name }}</h4>
+					<p v-html="tileLayer.data.layer_attribution"></p>
 				</div>
 			</div>
 		</div>

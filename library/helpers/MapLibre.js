@@ -104,7 +104,7 @@ export const createTileLayerSource = (tileLayer = {}) => {
   };
 };
 
-export const createTileLayerStyle = (tileLayer = {}) => {
+export const createTileLayerStyle = (tileLayer = {}, visible = false) => {
   if (!(tileLayer instanceof TileLayer)) {
     return null;
   }
@@ -115,7 +115,7 @@ export const createTileLayerStyle = (tileLayer = {}) => {
     source: tileLayer.id,
     attribution: tileLayer.data.layer_attribution || "",
     layout: {
-      visibility: "visible",
+      visibility: visible ? "visible" : "none",
     },
   };
 };
