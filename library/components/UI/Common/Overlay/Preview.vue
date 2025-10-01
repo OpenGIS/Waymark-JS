@@ -1,5 +1,5 @@
 <script setup>
-import { Type } from "@/classes/Types.js";
+import { Type, MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 
 const props = defineProps({
   type: {
@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
   <div class="preview">
     <!-- Marker -->
-    <div class="marker" v-if="type.featureType === 'marker'">
+    <div class="marker" v-if="type instanceof MarkerType">
       <!-- Icon -->
       <div
         class="waymark-marker"
@@ -23,11 +23,23 @@ const props = defineProps({
     </div>
 
     <!-- Line -->
-    <div class="line" v-else-if="type.featureType === 'line'">
+    <div class="line" v-else-if="type instanceof LineType">
       <div
         class="inner"
         :style="`background-color:${type.getPrimaryColour()};height:${type.getLineWeight()}px`"
       />
+    </div>
+
+    <!-- Shape -->
+    <div class="shape" v-else-if="type instanceof ShapeType">
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="50" cy="50" r="40" :fill="type.getPrimaryColour()" />
+      </svg>
     </div>
   </div>
 </template>

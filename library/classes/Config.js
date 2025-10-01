@@ -6,7 +6,6 @@ import { TileLayer } from "@/classes/TileLayer.js";
 export class Config {
   constructor(config = {}) {
     // To do!
-    this.geoJSON = null;
     this.mapLibreMapOptions = mapOptions;
 
     // Map Options

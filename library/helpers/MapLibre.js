@@ -1,6 +1,5 @@
 // Import MapLibre
-import { Map, Marker } from "maplibre-gl";
-import { Overlay } from "@/classes/Overlay.js";
+import { Map } from "maplibre-gl";
 import { TileLayer } from "@/classes/TileLayer.js";
 
 /* 
@@ -21,6 +20,36 @@ export const mapOptions = {
   zoom: 18,
   style: "https://tiles.openfreemap.org/styles/liberty",
 };
+
+/*
+  ======= Helpers =======
+*/
+
+export function doBoundsIntersect(boundsA, boundsB) {
+  // Check if north and south are the same or different
+  const northA = boundsA.getNorth();
+  const southA = boundsA.getSouth();
+  const eastA = boundsA.getEast();
+  const westA = boundsA.getWest();
+
+  const northB = boundsB.getNorth();
+  const southB = boundsB.getSouth();
+  const eastB = boundsB.getEast();
+  const westB = boundsB.getWest();
+
+  // Logic to check for intersection
+  // if one box is entirely above the other, they do not intersect
+  if (northA < southB || southA > northB) {
+    return false;
+  }
+
+  // if one box is entirely to the left of the other, they do not intersect
+  if (eastA < westB || westA > eastB) {
+    return false;
+  }
+
+  return true; // If no non-intersecting condition is met, they intersect
+}
 
 /*
   ======= Creation =======
@@ -59,37 +88,6 @@ export const createTileLayerStyle = (tileLayer = {}, visible = false) => {
     attribution: tileLayer.data.layer_attribution || "",
     layout: {
       visibility: visible ? "visible" : "none",
-    },
-  };
-};
-
-export const createShapeSource = (overlay = {}) => {
-  // Overlay must be an instance of Overlay
-  if (!(overlay instanceof Overlay) || overlay.featureType !== "shape") {
-    return null;
-  }
-
-  return {
-    type: "geojson",
-    data: overlay.feature,
-  };
-};
-
-export const createShapeStyle = (overlay = {}, id = "") => {
-  // Checks
-  if (!(overlay instanceof Overlay) || overlay.featureType !== "shape" || !id) {
-    return null;
-  }
-
-  return {
-    id: id,
-    type: "fill",
-    source: id,
-    layout: {},
-    paint: {
-      "fill-color": overlay.type.data.shape_fill_colour || "#000000",
-      "fill-opacity": parseFloat(overlay.type.data.shape_fill_opacity) || 0.5,
-      "fill-outline-color": overlay.type.data.shape_outline_colour || "#000000",
     },
   };
 };

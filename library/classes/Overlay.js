@@ -1,13 +1,7 @@
 import { length } from "@turf/length";
 import { Config } from "@/classes/Config.js";
-import { Type, MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
-import {
-  createShapeStyle,
-  createShapeSource,
-  flyToOptions,
-  fitBoundsOptions,
-} from "@/helpers/MapLibre.js";
+import { flyToOptions, fitBoundsOptions } from "@/helpers/MapLibre.js";
 import { LngLatBounds, Marker } from "maplibre-gl";
 
 export class Overlay {
@@ -28,6 +22,7 @@ export class Overlay {
     this.config = config;
 
     this.featureType = getFeatureType(this.feature) || null;
+    this.feature.properties = this.feature.properties || {};
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
@@ -422,16 +417,31 @@ export class ShapeOverlay extends Overlay {
     this.map = map;
 
     // Create Source
-    this.source = createShapeSource(this);
+    this.map.addSource(this.id, {
+      type: "geojson",
+      data: this.feature,
+    });
+    this.source = this.map.getSource(this.id);
 
-    // Add Source to Map
-    this.map.addSource(this.id, this.source);
-
-    // Create Style
-    this.layer = createShapeStyle(this, this.id);
+    console.log(this);
 
     // Add Style to Map
-    this.map.addLayer(this.layer);
+    this.map.addLayer(this.toStyle());
+    this.layer = this.map.getLayer(this.id);
+  }
+
+  toStyle() {
+    return {
+      id: this.id,
+      type: "fill",
+      source: this.id,
+      layout: {},
+      paint: {
+        "fill-color": this.type.data.shape_colour || "#000000",
+        "fill-opacity": parseFloat(this.type.data.fill_opacity) || 0.5,
+        "fill-outline-color": this.type.data.shape_colour || "#000000",
+      },
+    };
   }
 
   hasElevationData() {

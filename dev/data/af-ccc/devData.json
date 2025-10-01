@@ -2,6 +2,22 @@
 	"type": "FeatureCollection",
 	"features": [
 		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[6.8, 47.8],
+						[6.9, 47.8],
+						[6.9, 47.7],
+						[6.8, 47.7],
+						[6.8, 47.8]
+					]
+				]
+			},
+			"properties": { "title": "Shape Test", "type": "green" }
+		},
+		{
 			"geometry": { "type": "Point", "coordinates": [7.101957, 47.808313] },
 			"type": "Feature",
 			"properties": { "title": "Thann", "type": "dpart" }

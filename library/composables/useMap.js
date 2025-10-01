@@ -149,7 +149,7 @@ export function useMap() {
 				];
 				const features = map.value.queryRenderedFeatures(bbox, {
 					layers: overlays.value
-						.filter((o) => o.featureType === "line")
+						.filter((o) => o.featureType !== "marker")
 						.map((o) => o.id),
 				});
 
