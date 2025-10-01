@@ -35,46 +35,11 @@ export class Overlay {
     this.config = config;
 
     this.featureType = getFeatureType(this.feature) || null;
-    this.typeKey = makeKey(this.feature.properties.type) || null;
+    this.typeKey = this.type.typeKey || null;
 
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
-  }
-
-  addTo(map) {
-    // Must be valid MapLibre map
-    if (!map || !map.addLayer) {
-      return;
-    }
-
-    this.map = map;
-
-    // Create MapLibre Layer
-    switch (this.featureType) {
-      case "marker":
-        // Create the Marker
-        this.layer = createMarker(this);
-
-        // Add Marker to Map
-        this.layer.addTo(this.map);
-
-        break;
-      case "line":
-        // Create Source
-        this.source = createLineSource(this);
-
-        // Add Source to Map
-        this.map.addSource(this.id, this.source);
-
-        // Create Style
-        this.layer = createLineStyle(this, this.id);
-
-        // Add Style to Map
-        this.map.addLayer(this.layer);
-
-        break;
-    }
   }
 
   hasImage() {
@@ -113,6 +78,35 @@ export class Overlay {
     });
 
     return matches > 0;
+  }
+
+  inMapBounds() {
+    if (!this.map) {
+      return false;
+    }
+
+    return this.inBounds(this.map.getBounds());
+  }
+
+  zoomIn() {
+    if (!this.map) {
+      return;
+    }
+
+    // Zoom to 18
+    const targetZoom = 18;
+    const currentZoom = this.map.getZoom();
+
+    if (currentZoom < targetZoom) {
+      this.map.flyTo({
+        center: [
+          this.feature.geometry.coordinates[0],
+          this.feature.geometry.coordinates[1],
+        ],
+        zoom: targetZoom,
+        duration: 1000,
+      });
+    }
   }
 
   getLengthString() {
@@ -334,27 +328,6 @@ export class Overlay {
     }
   }
 
-  zoomIn() {
-    if (!this.map) {
-      return;
-    }
-
-    // Zoom to 18
-    const targetZoom = 18;
-    const currentZoom = this.map.getZoom();
-
-    if (currentZoom < targetZoom) {
-      this.map.flyTo({
-        center: [
-          this.feature.geometry.coordinates[0],
-          this.feature.geometry.coordinates[1],
-        ],
-        zoom: targetZoom,
-        duration: 1000,
-      });
-    }
-  }
-
   inBounds(bounds) {
     switch (this.featureType) {
       case "marker":
@@ -379,5 +352,40 @@ export class Overlay {
     }
 
     return this.inBounds(this.map.getBounds());
+  }
+
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    this.map = map;
+
+    // Create MapLibre Layer
+    switch (this.featureType) {
+      case "marker":
+        // Create the Marker
+        this.layer = createMarker(this);
+
+        // Add Marker to Map
+        this.layer.addTo(this.map);
+
+        break;
+      case "line":
+        // Create Source
+        this.source = createLineSource(this);
+
+        // Add Source to Map
+        this.map.addSource(this.id, this.source);
+
+        // Create Style
+        this.layer = createLineStyle(this, this.id);
+
+        // Add Style to Map
+        this.map.addLayer(this.layer);
+
+        break;
+    }
   }
 }
