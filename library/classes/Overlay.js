@@ -1,11 +1,6 @@
 import { length } from "@turf/length";
 import { Config } from "@/classes/Config.js";
-import {
-  waymarkPrimaryColour,
-  defaultMarkerColour,
-  defaultLineColour,
-  defaultShapeColour,
-} from "@/helpers/Common.js";
+import { waymarkPrimaryColour } from "@/helpers/Common.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import { flyToOptions, fitBoundsOptions } from "@/helpers/MapLibre.js";
 import { LngLatBounds, Marker } from "maplibre-gl";
