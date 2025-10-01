@@ -15,4 +15,5 @@ export const mapOptions = {
   center: [-1.8261632, 51.1788144], // Default to Stonehenge
   zoom: 18,
   style: "https://tiles.openfreemap.org/styles/liberty",
+  attributionControl: false,
 };
