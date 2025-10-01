@@ -3,7 +3,6 @@ import { Config } from "@/classes/Config.js";
 import { Type, MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import {
-  createMarker,
   createLineStyle,
   createLineSource,
   createShapeStyle,
@@ -11,7 +10,7 @@ import {
   flyToOptions,
   fitBoundsOptions,
 } from "@/helpers/MapLibre.js";
-import { LngLatBounds } from "maplibre-gl";
+import { LngLatBounds, Marker } from "maplibre-gl";
 
 export class Overlay {
   constructor(feature, config, id = null) {
@@ -132,11 +131,31 @@ export class MarkerOverlay extends Overlay {
 
     this.map = map;
 
-    // Create the Marker
-    this.layer = createMarker(this);
+    // Create Source
+    this.map.addSource(this.id, { type: "geojson", data: this.feature });
 
-    // Add Marker to Map
-    this.layer.addTo(this.map);
+    // Create Layer
+    this.marker = this.toMarker();
+    this.marker.addTo(this.map);
+  }
+
+  toMarker() {
+    // Create a DOM element for the marker
+    const el = document.createElement("div");
+    el.className = this.type.iconData.className;
+    el.innerHTML = this.type.iconData.html;
+    el.style.width = `${this.type.iconData.iconSize[0]}px`;
+    el.style.height = `${this.type.iconData.iconSize[1]}px`;
+
+    // Create Marker
+    const marker = new Marker({
+      element: el,
+      offset: this.type.iconData.iconAnchor,
+    });
+
+    marker.setLngLat(this.feature.geometry.coordinates);
+
+    return marker;
   }
 
   hasElevationData() {

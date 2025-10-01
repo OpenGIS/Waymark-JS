@@ -34,30 +34,6 @@ export const createMap = (containerID = "", mapLibreMapOptions = {}) => {
   });
 };
 
-export const createMarker = (overlay = {}) => {
-  // // Checks
-  if (!(overlay instanceof Overlay) || overlay.featureType !== "marker") {
-    return null;
-  }
-
-  // Create a DOM element for the marker
-  const el = document.createElement("div");
-  el.className = overlay.type.iconData.className;
-  el.innerHTML = overlay.type.iconData.html;
-  el.style.width = `${overlay.type.iconData.iconSize[0]}px`;
-  el.style.height = `${overlay.type.iconData.iconSize[1]}px`;
-
-  // Create Marker
-  const marker = new Marker({
-    element: el,
-    offset: overlay.type.iconData.iconAnchor,
-  });
-
-  marker.setLngLat(overlay.feature.geometry.coordinates);
-
-  return marker;
-};
-
 export const createLineSource = (overlay = {}) => {
   // Overlay must be an instance of Overlay
   if (!(overlay instanceof Overlay) || overlay.featureType !== "line") {

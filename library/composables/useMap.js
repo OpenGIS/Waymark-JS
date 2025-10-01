@@ -110,7 +110,7 @@ export function useMap() {
 					// Handle Events
 					switch (overlay.featureType) {
 						case "marker":
-							overlay.layer.getElement().addEventListener("click", (e) => {
+							overlay.marker.getElement().addEventListener("click", (e) => {
 								e.stopPropagation();
 								setActiveOverlay(overlay);
 							});
