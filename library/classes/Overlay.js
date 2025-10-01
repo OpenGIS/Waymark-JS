@@ -433,8 +433,6 @@ export class ShapeOverlay extends Overlay {
     });
     this.source = this.map.getSource(this.id);
 
-    console.log(this);
-
     // Add Style to Map
     this.map.addLayer(this.toStyle());
     this.layer = this.map.getLayer(this.id);
@@ -530,17 +528,7 @@ export class ShapeOverlay extends Overlay {
     this.map.setPaintProperty(
       this.id,
       "fill-color",
-      this.type.data.shape_fill_colour || "#000000",
-    );
-    this.map.setPaintProperty(
-      this.id,
-      "fill-opacity",
-      parseFloat(this.type.data.shape_fill_opacity) || 0.5,
-    );
-    this.map.setPaintProperty(
-      this.id,
-      "fill-outline-color",
-      this.type.data.shape_outline_colour || "#000000",
+      this.type.getPrimaryColour(),
     );
   }
 
