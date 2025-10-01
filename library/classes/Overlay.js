@@ -46,6 +46,34 @@ export class Overlay {
     }
   }
 
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    this.map = map;
+
+    // Create Source
+    this.map.addSource(this.id, {
+      type: "geojson",
+      data: this.feature,
+    });
+    this.source = this.map.getSource(this.id);
+
+    // Create Layer
+    if (this instanceof MarkerOverlay) {
+      this.marker = this.toMarker();
+      this.marker.addTo(this.map);
+    } else {
+      this.style = this.toStyle();
+      this.map.addLayer(this.style);
+    }
+    this.layer = this.map.getLayer(this.id);
+
+    this.addEvents();
+  }
+
   getTypeKey() {
     if (
       !this.feature.properties.type ||
@@ -122,26 +150,6 @@ export class MarkerOverlay extends Overlay {
     super(feature, config, id);
   }
 
-  addTo(map) {
-    // Must be valid MapLibre map
-    if (!map || !map.addLayer) {
-      return;
-    }
-
-    this.map = map;
-
-    // Create Source
-    this.map.addSource(this.id, {
-      type: "geojson",
-      data: this.feature,
-    });
-    this.source = this.map.getSource(this.id);
-
-    // Create Layer
-    this.marker = this.toMarker();
-    this.marker.addTo(this.map);
-  }
-
   toMarker() {
     // Create a DOM element for the marker
     const el = document.createElement("div");
@@ -160,6 +168,8 @@ export class MarkerOverlay extends Overlay {
 
     return marker;
   }
+
+  addEvents() {}
 
   hasElevationData() {
     // Check if feature coordinates has third dimension (elevation)
@@ -240,26 +250,6 @@ export class LineOverlay extends Overlay {
     super(feature, config, id);
   }
 
-  addTo(map) {
-    // Must be valid MapLibre map
-    if (!map || !map.addLayer) {
-      return;
-    }
-
-    this.map = map;
-
-    // Create Source
-    this.map.addSource(this.id, {
-      type: "geojson",
-      data: this.feature,
-    });
-    this.source = this.map.getSource(this.id);
-
-    // Add Style to Map
-    this.map.addLayer(this.toStyle());
-    this.layer = this.map.getLayer(this.id);
-  }
-
   toStyle() {
     return {
       id: this.id,
@@ -275,6 +265,17 @@ export class LineOverlay extends Overlay {
       },
     };
   }
+
+  addEvents() {
+    // Cursor pointer on hover
+    this.map.on("mouseenter", this.id, () => {
+      this.map.getCanvas().style.cursor = "pointer";
+    });
+    this.map.on("mouseleave", this.id, () => {
+      this.map.getCanvas().style.cursor = "";
+    });
+  }
+
   getLengthString() {
     let out = "";
 
@@ -418,26 +419,6 @@ export class ShapeOverlay extends Overlay {
     super(feature, config, id);
   }
 
-  addTo(map) {
-    // Must be valid MapLibre map
-    if (!map || !map.addLayer) {
-      return;
-    }
-
-    this.map = map;
-
-    // Create Source
-    this.map.addSource(this.id, {
-      type: "geojson",
-      data: this.feature,
-    });
-    this.source = this.map.getSource(this.id);
-
-    // Add Style to Map
-    this.map.addLayer(this.toStyle());
-    this.layer = this.map.getLayer(this.id);
-  }
-
   toStyle() {
     return {
       id: this.id,
@@ -450,6 +431,16 @@ export class ShapeOverlay extends Overlay {
         "fill-outline-color": this.type.data.shape_colour || "#000000",
       },
     };
+  }
+
+  addEvents() {
+    // Cursor pointer on hover
+    this.map.on("mouseenter", this.id, () => {
+      this.map.getCanvas().style.cursor = "pointer";
+    });
+    this.map.on("mouseleave", this.id, () => {
+      this.map.getCanvas().style.cursor = "";
+    });
   }
 
   hasElevationData() {

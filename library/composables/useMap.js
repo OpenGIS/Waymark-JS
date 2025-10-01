@@ -101,27 +101,12 @@ export function useMap() {
 					// Add to Map
 					overlay.addTo(map.value);
 
-					// Handle Events
-					switch (overlay.featureType) {
-						case "marker":
-							overlay.marker.getElement().addEventListener("click", (e) => {
-								e.stopPropagation();
-								setActiveOverlay(overlay);
-							});
-
-							break;
-						case "line":
-							// Cursor pointer on hover
-							map.value.on("mouseenter", overlay.id, () => {
-								map.value.getCanvas().style.cursor = "pointer";
-							});
-							map.value.on("mouseleave", overlay.id, () => {
-								map.value.getCanvas().style.cursor = "";
-							});
-
-							break;
-						case "shape":
-							break;
+					// Handle Markers
+					if (overlay instanceof MarkerOverlay) {
+						overlay.marker.getElement().addEventListener("click", (e) => {
+							e.stopPropagation();
+							setActiveOverlay(overlay);
+						});
 					}
 
 					// Extend bounds
