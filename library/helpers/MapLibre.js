@@ -119,3 +119,34 @@ export const createTileLayerStyle = (tileLayer = {}, visible = false) => {
     },
   };
 };
+
+export const createShapeSource = (overlay = {}) => {
+  // Overlay must be an instance of Overlay
+  if (!(overlay instanceof Overlay) || overlay.featureType !== "shape") {
+    return null;
+  }
+
+  return {
+    type: "geojson",
+    data: overlay.feature,
+  };
+};
+
+export const createShapeStyle = (overlay = {}, id = "") => {
+  // Checks
+  if (!(overlay instanceof Overlay) || overlay.featureType !== "shape" || !id) {
+    return null;
+  }
+
+  return {
+    id: id,
+    type: "fill",
+    source: id,
+    layout: {},
+    paint: {
+      "fill-color": overlay.type.data.shape_fill_colour || "#000000",
+      "fill-opacity": parseFloat(overlay.type.data.shape_fill_opacity) || 0.5,
+      "fill-outline-color": overlay.type.data.shape_outline_colour || "#000000",
+    },
+  };
+};

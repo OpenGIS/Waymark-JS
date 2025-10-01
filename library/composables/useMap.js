@@ -2,12 +2,17 @@ import { storeToRefs } from "pinia";
 import { LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { makeKey } from "@/helpers/Common.js";
-import { getFeatureType } from "@/helpers/Overlay.js";
+import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
 import { createMap, fitBoundsOptions } from "@/helpers/MapLibre.js";
 
 // Classes
-import { Overlay } from "@/classes/Overlay.js";
+import {
+	Overlay,
+	MarkerOverlay,
+	LineOverlay,
+	ShapeOverlay,
+} from "@/classes/Overlay.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -71,9 +76,30 @@ export function useMap() {
 				// Overlays
 				let overlayCount = 0;
 				geoJSON.features.forEach((feature) => {
+					// Determine Feature Type
+					const featureType = getFeatureType(feature);
+
+					if (!featureType || !featureTypes.includes(featureType)) {
+						console.warn(
+							"Feature Type not recognised or supported - skipping",
+							feature,
+						);
+						return;
+					}
+
 					// Create Overlay instance
 					const overlayId = `overlay-${overlayCount++}`;
-					const overlay = new Overlay(feature, config.value, overlayId);
+
+					const overlay = (() => {
+						switch (featureType) {
+							case "marker":
+								return new MarkerOverlay(feature, config.value, overlayId);
+							case "line":
+								return new LineOverlay(feature, config.value, overlayId);
+							case "shape":
+								return new ShapeOverlay(feature, config.value, overlayId);
+						}
+					})();
 
 					// Add to store
 					overlays.value.push(overlay);
@@ -132,6 +158,8 @@ export function useMap() {
 						(o) => o.id === features[0].layer.id,
 					);
 					if (overlay) {
+						console.log("Line clicked", overlay);
+
 						setActiveOverlay(overlay);
 					}
 					// No features found

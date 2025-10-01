@@ -6,6 +6,8 @@ import {
   createMarker,
   createLineStyle,
   createLineSource,
+  createShapeStyle,
+  createShapeSource,
   flyToOptions,
   fitBoundsOptions,
 } from "@/helpers/MapLibre.js";
@@ -95,14 +97,6 @@ export class Overlay {
     return matches > 0;
   }
 
-  inMapBounds() {
-    if (!this.map) {
-      return false;
-    }
-
-    return this.inBounds(this.map.getBounds());
-  }
-
   zoomIn() {
     if (!this.map) {
       return;
@@ -123,13 +117,128 @@ export class Overlay {
       });
     }
   }
+}
+
+export class MarkerOverlay extends Overlay {
+  constructor(feature, config, id) {
+    super(feature, config, id);
+  }
+
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    this.map = map;
+
+    // Create the Marker
+    this.layer = createMarker(this);
+
+    // Add Marker to Map
+    this.layer.addTo(this.map);
+  }
+
+  hasElevationData() {
+    // Check if feature coordinates has third dimension (elevation)
+    return this.feature.geometry.coordinates.length === 3;
+  }
+
+  getElevationString() {
+    if (!this.hasElevationData()) {
+      return "";
+    }
+
+    const unitAppend =
+      this.config.getMapOption("units") === "metric" ? "m" : "ft";
+
+    // Return elevation value from coordinates, rounded to 1 decimal place
+    return (
+      "Elevation: " +
+      Math.round(this.feature.geometry.coordinates[2] * 10) / 10 +
+      unitAppend
+    );
+  }
+
+  getBounds() {
+    return new LngLatBounds(
+      this.feature.geometry.coordinates,
+      this.feature.geometry.coordinates,
+    );
+  }
+
+  getCoordsString() {
+    // For marker, return the coordinates as a string
+    return (
+      "Lat,Lng: " +
+      this.feature.geometry.coordinates[1].toFixed(6) +
+      ", " +
+      this.feature.geometry.coordinates[0].toFixed(6)
+    );
+  }
+
+  addHighlight() {
+    // Get marker
+    const element = this.layer.getElement();
+
+    // Add active class
+    element.classList.add("waymark-active");
+  }
+
+  removeHighlight() {
+    // Get marker
+    const element = this.layer.getElement();
+
+    // Remove active class
+    element.classList.remove("waymark-active");
+  }
+
+  flyTo() {
+    this.map.flyTo({
+      center: [
+        this.feature.geometry.coordinates[0],
+        this.feature.geometry.coordinates[1],
+      ],
+      ...flyToOptions,
+    });
+  }
+
+  inBounds(bounds) {
+    return bounds.contains({
+      lng: this.feature.geometry.coordinates[0],
+      lat: this.feature.geometry.coordinates[1],
+    });
+  }
+}
+
+export class LineOverlay extends Overlay {
+  constructor(feature, config, id) {
+    super(feature, config, id);
+  }
+
+  addTo(map) {
+    // Must be valid MapLibre map
+    if (!map || !map.addLayer) {
+      return;
+    }
+
+    this.map = map;
+
+    // Create Source
+    this.source = createLineSource(this);
+
+    // Add Source to Map
+    this.map.addSource(this.id, this.source);
+
+    // Create Style
+    this.layer = createLineStyle(this, this.id);
+
+    // Add Style to Map
+    this.map.addLayer(this.layer);
+  }
 
   getLengthString() {
     let out = "";
-
-    if (this.featureType !== "line") {
-      return out;
-    }
 
     out += "Length: ";
 
@@ -145,35 +254,28 @@ export class Overlay {
   }
 
   hasElevationData() {
-    switch (this.featureType) {
-      case "marker":
-        // Check if feature coordinates has third dimension (elevation)
-        return this.feature.geometry.coordinates.length === 3;
-      case "shape":
-      case "line":
-        if (this.feature.geometry.type == "MultiLineString") {
-          //Each line
-          for (var i in this.feature.geometry.coordinates) {
-            //Each point
-            for (var j in this.feature.geometry.coordinates[i]) {
-              //If has elevation data
-              if (this.feature.geometry.coordinates[i][j].length == 3) {
-                return true;
-              }
-            }
-          }
-        } else {
-          //Each point
-          for (var j in this.feature.geometry.coordinates) {
-            //If has elevation data
-            if (this.feature.geometry.coordinates[j].length == 3) {
-              return true;
-            }
+    if (this.feature.geometry.type == "MultiLineString") {
+      //Each line
+      for (var i in this.feature.geometry.coordinates) {
+        //Each point
+        for (var j in this.feature.geometry.coordinates[i]) {
+          //If has elevation data
+          if (this.feature.geometry.coordinates[i][j].length == 3) {
+            return true;
           }
         }
-
-        return false;
+      }
+    } else {
+      //Each point
+      for (var j in this.feature.geometry.coordinates) {
+        //If has elevation data
+        if (this.feature.geometry.coordinates[j].length == 3) {
+          return true;
+        }
+      }
     }
+
+    return false;
   }
 
   getElevationString() {
@@ -184,189 +286,98 @@ export class Overlay {
     const unitAppend =
       this.config.getMapOption("units") === "metric" ? "m" : "ft";
 
-    switch (this.featureType) {
-      case "marker":
-        // Return elevation value from coordinates, rounded to 1 decimal place
-        return (
-          "Elevation: " +
-          Math.round(this.feature.geometry.coordinates[2] * 10) / 10 +
-          unitAppend
-        );
-
-      case "line":
-        // For the linestring, calculate elevation gain, loss, max and min
-        const coords = this.feature.geometry.coordinates;
-        let elevationGain = 0;
-        let elevationLoss = 0;
-        let maxElevation = coords[0][2];
-        let minElevation = coords[0][2];
-        for (let i = 1; i < coords.length; i++) {
-          const elevationChange = coords[i][2] - coords[i - 1][2];
-          if (elevationChange > 0) {
-            elevationGain += elevationChange;
-          } else {
-            elevationLoss -= elevationChange; // elevationChange is negative here
-          }
-          maxElevation = Math.max(maxElevation, coords[i][2]);
-          minElevation = Math.min(minElevation, coords[i][2]);
-        }
-
-        // Convert to the correct units
-        if (this.config.getMapOption("units") === "imperial") {
-          elevationGain *= 3.28084; // Convert meters to feet
-          elevationLoss *= 3.28084; // Convert meters to feet
-          maxElevation *= 3.28084; // Convert meters to feet
-          minElevation *= 3.28084; // Convert meters to feet
-        }
-
-        return (
-          "Elevation Gain: " +
-          Math.round(elevationGain * 10) / 10 +
-          unitAppend +
-          ", Loss: " +
-          Math.round(elevationLoss * 10) / 10 +
-          unitAppend +
-          ", Max: " +
-          Math.round(maxElevation * 10) / 10 +
-          unitAppend +
-          ", Min: " +
-          Math.round(minElevation * 10) / 10 +
-          unitAppend
-        );
-      //return this.feature.geometry.coordinates[0][2] + unitAppend;
+    // For the linestring, calculate elevation gain, loss, max and min
+    const coords = this.feature.geometry.coordinates;
+    let elevationGain = 0;
+    let elevationLoss = 0;
+    let maxElevation = coords[0][2];
+    let minElevation = coords[0][2];
+    for (let i = 1; i < coords.length; i++) {
+      const elevationChange = coords[i][2] - coords[i - 1][2];
+      if (elevationChange > 0) {
+        elevationGain += elevationChange;
+      } else {
+        elevationLoss -= elevationChange; // elevationChange is negative here
+      }
+      maxElevation = Math.max(maxElevation, coords[i][2]);
+      minElevation = Math.min(minElevation, coords[i][2]);
     }
+
+    // Convert to the correct units
+    if (this.config.getMapOption("units") === "imperial") {
+      elevationGain *= 3.28084; // Convert meters to feet
+      elevationLoss *= 3.28084; // Convert meters to feet
+      maxElevation *= 3.28084; // Convert meters to feet
+      minElevation *= 3.28084; // Convert meters to feet
+    }
+
+    return (
+      "Elevation Gain: " +
+      Math.round(elevationGain * 10) / 10 +
+      unitAppend +
+      ", Loss: " +
+      Math.round(elevationLoss * 10) / 10 +
+      unitAppend +
+      ", Max: " +
+      Math.round(maxElevation * 10) / 10 +
+      unitAppend +
+      ", Min: " +
+      Math.round(minElevation * 10) / 10 +
+      unitAppend
+    );
   }
 
   getBounds() {
-    let bounds = null;
-
-    switch (this.featureType) {
-      case "marker":
-        bounds = new LngLatBounds(
-          this.feature.geometry.coordinates,
-          this.feature.geometry.coordinates,
-        );
-        break;
-      case "line":
-        // Use turf to get the bounding box of the linestring
-        const coords = this.feature.geometry.coordinates;
-        bounds = coords.reduce(
-          (b, coord) => b.extend(coord),
-          new LngLatBounds(coords[0], coords[0]),
-        );
-
-        break;
-    }
-
-    return bounds;
+    // Use turf to get the bounding box of the linestring
+    const coords = this.feature.geometry.coordinates;
+    return coords.reduce(
+      (b, coord) => b.extend(coord),
+      new LngLatBounds(coords[0], coords[0]),
+    );
   }
 
   getCoordsString() {
-    if (this.featureType === "marker") {
-      // For marker, return the coordinates as a string
-      return (
-        "Lat,Lng: " +
-        this.feature.geometry.coordinates[1].toFixed(6) +
-        ", " +
-        this.feature.geometry.coordinates[0].toFixed(6)
-      );
-    } else if (this.featureType === "line" || this.featureType === "shape") {
-      // Use layer to get the bounds and return the centre
-      const bounds = this.getBounds();
-      const center = bounds.getCenter();
-      return (
-        "Centre Lat,Lng: " +
-        center.lat.toFixed(6) +
-        ", " +
-        center.lng.toFixed(6)
-      );
-    }
-    return "";
+    // Use layer to get the bounds and return the centre
+    const bounds = this.getBounds();
+    const center = bounds.getCenter();
+    return (
+      "Centre Lat,Lng: " + center.lat.toFixed(6) + ", " + center.lng.toFixed(6)
+    );
   }
 
   addHighlight() {
-    switch (this.featureType) {
-      case "marker":
-        // Get marker
-        const element = this.layer.getElement();
-
-        // Add active class
-        element.classList.add("waymark-active");
-        break;
-      case "line":
-        // Chanege Layer Paint to highlight
-        this.map.setPaintProperty(this.id, "line-color", "#ff0000");
-        this.map.setPaintProperty(this.id, "line-dasharray", [5, 5]);
-
-        break;
-    }
+    // Chanege Layer Paint to highlight
+    this.map.setPaintProperty(this.id, "line-color", "#ff0000");
+    this.map.setPaintProperty(this.id, "line-dasharray", [5, 5]);
   }
 
   removeHighlight() {
-    switch (this.featureType) {
-      case "marker":
-        // Get marker
-        const element = this.layer.getElement();
-
-        // Remove active class
-        element.classList.remove("waymark-active");
-
-        break;
-      case "line":
-        // UnHighlight Layer
-        this.map.setPaintProperty(
-          this.id,
-          "line-color",
-          this.type.getPrimaryColour(),
-        );
-        this.map.setPaintProperty(this.id, "line-dasharray", null);
-
-        break;
-    }
+    // UnHighlight Layer
+    this.map.setPaintProperty(
+      this.id,
+      "line-color",
+      this.type.getPrimaryColour(),
+    );
+    this.map.setPaintProperty(this.id, "line-dasharray", null);
   }
 
   flyTo() {
-    switch (this.featureType) {
-      case "marker":
-        this.map.flyTo({
-          center: [
-            this.feature.geometry.coordinates[0],
-            this.feature.geometry.coordinates[1],
-          ],
-          ...flyToOptions,
-        });
-        break;
-      case "line":
-        const bounds = this.getBounds();
-        this.map.fitBounds(bounds, fitBoundsOptions);
-        break;
-    }
+    const bounds = this.getBounds();
+    this.map.fitBounds(bounds, fitBoundsOptions);
   }
 
   inBounds(bounds) {
-    switch (this.featureType) {
-      case "marker":
-        return bounds.contains({
-          lng: this.feature.geometry.coordinates[0],
-          lat: this.feature.geometry.coordinates[1],
-        });
-      case "line":
-        // Check if any part of the line is within the map bounds
-        const coords = this.feature.geometry.coordinates;
-        return coords.some((coord) =>
-          bounds.contains({ lng: coord[0], lat: coord[1] }),
-        );
-      default:
-        return false;
-    }
+    // Check if any part of the line is within the map bounds
+    const coords = this.feature.geometry.coordinates;
+    return coords.some((coord) =>
+      bounds.contains({ lng: coord[0], lat: coord[1] }),
+    );
   }
+}
 
-  inMapBounds() {
-    if (!this.map) {
-      return false;
-    }
-
-    return this.inBounds(this.map.getBounds());
+export class ShapeOverlay extends Overlay {
+  constructor(feature, config, id) {
+    super(feature, config, id);
   }
 
   addTo(map) {
@@ -377,30 +388,115 @@ export class Overlay {
 
     this.map = map;
 
-    // Create MapLibre Layer
-    switch (this.featureType) {
-      case "marker":
-        // Create the Marker
-        this.layer = createMarker(this);
+    // Create Source
+    this.source = createShapeSource(this);
 
-        // Add Marker to Map
-        this.layer.addTo(this.map);
+    // Add Source to Map
+    this.map.addSource(this.id, this.source);
 
-        break;
-      case "line":
-        // Create Source
-        this.source = createLineSource(this);
+    // Create Style
+    this.layer = createShapeStyle(this, this.id);
 
-        // Add Source to Map
-        this.map.addSource(this.id, this.source);
+    // Add Style to Map
+    this.map.addLayer(this.layer);
+  }
 
-        // Create Style
-        this.layer = createLineStyle(this, this.id);
-
-        // Add Style to Map
-        this.map.addLayer(this.layer);
-
-        break;
+  hasElevationData() {
+    if (this.feature.geometry.type == "MultiPolygon") {
+      //Each polygon
+      for (var i in this.feature.geometry.coordinates) {
+        //Each line
+        for (var j in this.feature.geometry.coordinates[i]) {
+          //Each point
+          for (var k in this.feature.geometry.coordinates[i][j]) {
+            //If has elevation data
+            if (this.feature.geometry.coordinates[i][j][k].length == 3) {
+              return true;
+            }
+          }
+        }
+      }
+    } else {
+      //Each line
+      for (var j in this.feature.geometry.coordinates) {
+        //Each point
+        for (var k in this.feature.geometry.coordinates[j]) {
+          //If has elevation data
+          if (this.feature.geometry.coordinates[j][k].length == 3) {
+            return true;
+          }
+        }
+      }
     }
+
+    return false;
+  }
+
+  getElevationString() {
+    if (!this.hasElevationData()) {
+      return "";
+    }
+
+    const unitAppend =
+      this.config.getMapOption("units") === "metric" ? "m" : "ft";
+
+    return "Elevation data available";
+  }
+
+  getBounds() {
+    // Use turf to get the bounding box of the polygon
+    const coords = this.feature.geometry.coordinates[0];
+    return coords.reduce(
+      (b, coord) => b.extend(coord),
+      new LngLatBounds(coords[0], coords[0]),
+    );
+  }
+
+  getCoordsString() {
+    // Use layer to get the bounds and return the centre
+    const bounds = this.getBounds();
+    const center = bounds.getCenter();
+    return (
+      "Centre Lat,Lng: " + center.lat.toFixed(6) + ", " + center.lng.toFixed(6)
+    );
+  }
+
+  addHighlight() {
+    // Chanege Layer Paint to highlight
+    this.map.setPaintProperty(this.id, "fill-color", "#ff0000");
+    this.map.setPaintProperty(this.id, "fill-opacity", 0.5);
+    this.map.setPaintProperty(this.id, "fill-outline-color", "#ff0000");
+  }
+
+  removeHighlight() {
+    // UnHighlight Layer
+    this.map.setPaintProperty(
+      this.id,
+      "fill-color",
+      this.type.data.shape_fill_colour || "#000000",
+    );
+    this.map.setPaintProperty(
+      this.id,
+      "fill-opacity",
+      parseFloat(this.type.data.shape_fill_opacity) || 0.5,
+    );
+    this.map.setPaintProperty(
+      this.id,
+      "fill-outline-color",
+      this.type.data.shape_outline_colour || "#000000",
+    );
+  }
+
+  flyTo() {
+    const bounds = this.getBounds();
+    this.map.fitBounds(bounds, fitBoundsOptions);
+  }
+
+  inBounds(bounds) {
+    // Check if any part of the shape is within the map bounds
+    const coords = this.feature.geometry.coordinates[0];
+    return coords.some((coord) =>
+      bounds.contains({ lng: coord[0], lat: coord[1] }),
+    );
   }
 }
