@@ -28,13 +28,13 @@ export function useMap() {
 
 	// Create & Store Map
 	const init = () => {
-		// Create MapLibre instance
-		map.value = new Map({
-			container: `${config.value.getMapOption("div_id")}-map`,
+		const mapOptions = {
 			...config.value.mapLibreMapOptions,
-		});
+			container: `${config.value.getMapOption("div_id")}-map`,
+		};
 
-		console.log("Map instance created", config.value);
+		// Create MapLibre instance
+		map.value = new Map(mapOptions);
 
 		// Triggers the UI to populate
 		map.value.on("load", () => {
@@ -137,17 +137,12 @@ export function useMap() {
 						(o) => o.id === features[0].layer.id,
 					);
 					if (overlay) {
-						console.log("Line clicked", overlay);
-
 						setActiveOverlay(overlay);
 					}
 					// No features found
 				} else {
-					// If active layer is set - remove highlight and make inactive
-					if (activeOverlay.value) {
-						activeOverlay.value.removeHighlight();
-						activeOverlay.value = null;
-					}
+					// Remove active overlay
+					setActiveOverlay(null);
 				}
 			});
 		}

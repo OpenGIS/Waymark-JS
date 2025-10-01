@@ -5,9 +5,6 @@ import { TileLayer } from "@/classes/TileLayer.js";
 
 export class Config {
   constructor(config = {}) {
-    // To do!
-    this.mapLibreMapOptions = mapOptions;
-
     // Map Options
     this.map_options = config.map_options || {
       div_id: "map",
@@ -29,18 +26,7 @@ export class Config {
       shapeTypes: this.shapeTypes,
     });
 
-    // If config has mapLibreMapOptions, merge them with existing ones
-    // if (config.mapLibreMapOptions) {
-    //   console.log("Merging mapLibreMapOptions", config.mapLibreMapOptions);
-    //   for (const key in config.mapLibreMapOptions) {
-    //     if (config.mapLibreMapOptions.hasOwnProperty(key)) {
-    //       // Deep clone each value to ensure independence
-    //       this.mapLibreMapOptions[key] = JSON.parse(
-    //         JSON.stringify(config.mapLibreMapOptions[key]),
-    //       );
-    //     }
-    //   }
-    // }
+    this.mapLibreMapOptions = { ...mapOptions, ...config.mapLibreMapOptions };
   }
 
   importTileLayers() {
