@@ -1,7 +1,3 @@
-// Import MapLibre
-import { Map } from "maplibre-gl";
-import { TileLayer } from "@/classes/TileLayer.js";
-
 /* 
   ======= Constants =======
 */
@@ -50,44 +46,3 @@ export function doBoundsIntersect(boundsA, boundsB) {
 
   return true; // If no non-intersecting condition is met, they intersect
 }
-
-/*
-  ======= Creation =======
-*/
-
-// Creates a MapLibre Map instance
-export const createMap = (containerID = "", mapLibreMapOptions = {}) => {
-  return new Map({
-    container: containerID,
-    ...mapLibreMapOptions,
-  });
-};
-
-export const createTileLayerSource = (tileLayer = {}) => {
-  if (!(tileLayer instanceof TileLayer)) {
-    return null;
-  }
-
-  return {
-    type: "raster",
-    tiles: [tileLayer.data.layer_url],
-    tileSize: 256,
-    maxzoom: parseInt(tileLayer.data.layer_max_zoom) || 18,
-  };
-};
-
-export const createTileLayerStyle = (tileLayer = {}, visible = false) => {
-  if (!(tileLayer instanceof TileLayer)) {
-    return null;
-  }
-
-  return {
-    id: tileLayer.id,
-    type: "raster",
-    source: tileLayer.id,
-    attribution: tileLayer.data.layer_attribution || "",
-    layout: {
-      visibility: visible ? "visible" : "none",
-    },
-  };
-};

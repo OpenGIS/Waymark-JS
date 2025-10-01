@@ -1,18 +1,12 @@
 import { storeToRefs } from "pinia";
-import { LngLatBounds } from "maplibre-gl";
+import { Map, LngLatBounds } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { makeKey } from "@/helpers/Common.js";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
-import { createMap, fitBoundsOptions } from "@/helpers/MapLibre.js";
+import { fitBoundsOptions } from "@/helpers/MapLibre.js";
 
 // Classes
-import {
-	Overlay,
-	MarkerOverlay,
-	LineOverlay,
-	ShapeOverlay,
-} from "@/classes/Overlay.js";
+import { MarkerOverlay, LineOverlay, ShapeOverlay } from "@/classes/Overlay.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
@@ -35,10 +29,10 @@ export function useMap() {
 	// Create & Store Map
 	const init = () => {
 		// Create MapLibre instance
-		map.value = createMap(
-			`${config.value.getMapOption("div_id")}-map`,
-			config.value.mapLibreMapOptions,
-		);
+		map.value = new Map({
+			container: `${config.value.getMapOption("div_id")}-map`,
+			...config.value.mapLibreMapOptions,
+		});
 
 		console.log("Map instance created", config.value);
 

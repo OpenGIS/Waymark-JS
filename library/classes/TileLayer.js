@@ -1,7 +1,3 @@
-import {
-  createTileLayerSource,
-  createTileLayerStyle,
-} from "@/helpers/MapLibre.js";
 import { makeKey } from "@/helpers/Common.js";
 
 export class TileLayer {
@@ -24,7 +20,32 @@ export class TileLayer {
       return;
     }
 
-    map.addSource(this.id, createTileLayerSource(this));
-    map.addLayer(createTileLayerStyle(this, visible));
+    map.addSource(this.id, this.toSource());
+    map.addLayer(this.toStyle(visible));
+  }
+
+  toSource() {
+    return {
+      type: "raster",
+      tiles: [this.data.layer_url],
+      tileSize: 256,
+      maxzoom: parseInt(this.data.layer_max_zoom) || 18,
+    };
+  }
+
+  toStyle(visible = false) {
+    return {
+      id: this.id,
+      type: "raster",
+      source: this.id,
+      attribution: this.data.layer_attribution || "",
+      layout: {
+        visibility: visible ? "visible" : "none",
+      },
+    };
+  }
+
+  getTitle() {
+    return this.data.layer_name || "Tile Layer";
   }
 }
