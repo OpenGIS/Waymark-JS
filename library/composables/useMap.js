@@ -71,24 +71,9 @@ export function useMap() {
 				// Overlays
 				let overlayCount = 0;
 				geoJSON.features.forEach((feature) => {
-					// Check for feature.properties.type
-					const typeKey = makeKey(feature.properties.type);
-					const featureType = getFeatureType(feature);
-
-					// Get Type from config
-					const type = config.value.getType(featureType, typeKey);
-
-					if (!type) {
-						console.error(
-							`Type not found for ${featureType} Type ${typeKey}`,
-							feature,
-						);
-						return;
-					}
-
 					// Create Overlay instance
 					const overlayId = `overlay-${overlayCount++}`;
-					const overlay = new Overlay(feature, type, config.value, overlayId);
+					const overlay = new Overlay(feature, config.value, overlayId);
 
 					// Add to store
 					overlays.value.push(overlay);

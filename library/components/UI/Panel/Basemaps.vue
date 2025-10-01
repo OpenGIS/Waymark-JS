@@ -35,6 +35,9 @@ const tilePreviewUrl = (tileLayer) => {
 };
 
 const updateTileLayer = (tileLayer) => {
+	// Update active tile layer in store
+	activeTileLayer.value = tileLayer;
+
 	// Iterate over all MapLibre style raster layers (map.value.getStyle().layers)
 	map.value.getStyle().layers.forEach((layer) => {
 		if (layer.type === "raster") {
@@ -62,7 +65,7 @@ const tileLayers = config.value.getTileLayers();
 				v-for="(tileLayer, index) in tileLayers"
 				:key="index"
 				:class="{
-					active: activeTileLayer && activetileLayer === tileLayer,
+					active: activeTileLayer === tileLayer,
 				}"
 				@click="updateTileLayer(tileLayer)"
 			>

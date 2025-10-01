@@ -12,16 +12,11 @@ import {
 import { LngLatBounds } from "maplibre-gl";
 
 export class Overlay {
-  constructor(feature, type, config, id = null) {
+  constructor(feature, config, id = null) {
     if (!feature || feature.type !== "Feature") {
       throw new Error("Valid GeoJSON Feature required");
     }
     this.feature = feature;
-
-    if (!(type instanceof Type)) {
-      throw new Error("Valid Type required");
-    }
-    this.type = type;
 
     if (id == null || typeof id !== "string") {
       throw new Error("Valid ID string required");
@@ -34,11 +29,32 @@ export class Overlay {
     this.config = config;
 
     this.featureType = getFeatureType(this.feature) || null;
-    this.typeKey = this.type.typeKey || null;
-
     this.title = this.feature.properties.title || "";
     this.description = this.feature.properties.description || "";
     this.images = getFeatureImages(this.feature);
+
+    // Get Type
+    this.typeKey = this.getTypeKey() || null;
+    this.type = this.config.getType(this.featureType, this.typeKey);
+
+    if (!this.type) {
+      console.error(
+        `Type not found for ${featureType} Type ${typeKey}`,
+        feature,
+      );
+      return;
+    }
+  }
+
+  getTypeKey() {
+    if (
+      !this.feature.properties.type ||
+      typeof this.feature.properties.type !== "string"
+    ) {
+      return null;
+    }
+
+    return this.feature.properties.type;
   }
 
   hasImage() {
