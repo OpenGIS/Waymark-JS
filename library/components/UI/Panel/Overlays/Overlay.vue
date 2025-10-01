@@ -2,7 +2,7 @@
 import { ref, computed, watch, useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
 
-import { Overlay } from "@/classes/Overlay.js";
+import { Overlay } from "@/classes/Overlays.js";
 
 import { useMap } from "@/composables/useMap.js";
 const { setActiveOverlay } = useMap();

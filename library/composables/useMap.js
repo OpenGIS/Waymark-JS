@@ -6,7 +6,11 @@ import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 import { fitBoundsOptions } from "@/helpers/MapLibre.js";
 
 // Classes
-import { MarkerOverlay, LineOverlay, ShapeOverlay } from "@/classes/Overlay.js";
+import {
+	MarkerOverlay,
+	LineOverlay,
+	ShapeOverlay,
+} from "@/classes/Overlays.js";
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
