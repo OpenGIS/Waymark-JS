@@ -3,8 +3,6 @@ import { Config } from "@/classes/Config.js";
 import { Type, MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import {
-  createLineStyle,
-  createLineSource,
   createShapeStyle,
   createShapeSource,
   flyToOptions,
@@ -132,7 +130,11 @@ export class MarkerOverlay extends Overlay {
     this.map = map;
 
     // Create Source
-    this.map.addSource(this.id, { type: "geojson", data: this.feature });
+    this.map.addSource(this.id, {
+      type: "geojson",
+      data: this.feature,
+    });
+    this.source = this.map.getSource(this.id);
 
     // Create Layer
     this.marker = this.toMarker();
@@ -180,10 +182,7 @@ export class MarkerOverlay extends Overlay {
   }
 
   getBounds() {
-    return new LngLatBounds(
-      this.feature.geometry.coordinates,
-      this.feature.geometry.coordinates,
-    );
+    return this.source.getBounds();
   }
 
   getCoordsString() {
@@ -198,7 +197,7 @@ export class MarkerOverlay extends Overlay {
 
   addHighlight() {
     // Get marker
-    const element = this.layer.getElement();
+    const element = this.marker.getElement();
 
     // Add active class
     element.classList.add("waymark-active");
@@ -206,7 +205,7 @@ export class MarkerOverlay extends Overlay {
 
   removeHighlight() {
     // Get marker
-    const element = this.layer.getElement();
+    const element = this.marker.getElement();
 
     // Remove active class
     element.classList.remove("waymark-active");
@@ -244,16 +243,31 @@ export class LineOverlay extends Overlay {
     this.map = map;
 
     // Create Source
-    this.source = createLineSource(this);
-
-    // Add Source to Map
-    this.map.addSource(this.id, this.source);
-
-    // Create Style
-    this.layer = createLineStyle(this, this.id);
+    this.map.addSource(this.id, {
+      type: "geojson",
+      data: this.feature,
+    });
+    this.source = this.map.getSource(this.id);
 
     // Add Style to Map
-    this.map.addLayer(this.layer);
+    this.map.addLayer(this.toStyle());
+    this.layer = this.map.getLayer(this.id);
+  }
+
+  toStyle() {
+    return {
+      id: this.id,
+      type: "line",
+      source: this.id,
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": this.type.data.line_colour,
+        "line-width": parseFloat(this.type.data.line_weight),
+      },
+    };
   }
 
   getLengthString() {

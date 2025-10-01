@@ -34,39 +34,6 @@ export const createMap = (containerID = "", mapLibreMapOptions = {}) => {
   });
 };
 
-export const createLineSource = (overlay = {}) => {
-  // Overlay must be an instance of Overlay
-  if (!(overlay instanceof Overlay) || overlay.featureType !== "line") {
-    return null;
-  }
-
-  return {
-    type: "geojson",
-    data: overlay.feature,
-  };
-};
-
-export const createLineStyle = (overlay = {}, id = "") => {
-  // Checks
-  if (!(overlay instanceof Overlay) || overlay.featureType !== "line" || !id) {
-    return null;
-  }
-
-  return {
-    id: id,
-    type: "line",
-    source: id,
-    layout: {
-      "line-join": "round",
-      "line-cap": "round",
-    },
-    paint: {
-      "line-color": overlay.type.data.line_colour,
-      "line-width": parseFloat(overlay.type.data.line_weight),
-    },
-  };
-};
-
 export const createTileLayerSource = (tileLayer = {}) => {
   if (!(tileLayer instanceof TileLayer)) {
     return null;
