@@ -152,7 +152,16 @@ export function useMap() {
 		}
 	};
 
-	const setActiveOverlay = (overlay) => {
+	const setActiveOverlay = (overlay = null) => {
+		if (!overlay) {
+			// Remove highlight
+			if (activeOverlay.value) {
+				activeOverlay.value.removeHighlight();
+			}
+			activeOverlay.value = null;
+			return;
+		}
+
 		// If active layer is set
 		if (activeOverlay.value) {
 			//If already active layer - focus on it
