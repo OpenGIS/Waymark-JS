@@ -10,7 +10,6 @@ import {
   fitBoundsOptions,
 } from "@/helpers/MapLibre.js";
 import { LngLatBounds } from "maplibre-gl";
-import { makeKey } from "@/helpers/Common.js";
 
 export class Overlay {
   constructor(feature, type, config, id = null) {

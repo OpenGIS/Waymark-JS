@@ -5,28 +5,6 @@ export class Type {
   constructor(typeData) {
     this.data = typeData || {};
   }
-
-  getTitle() {
-    switch (this.featureType) {
-      case "marker":
-        return this.data.marker_title || "Marker";
-      case "line":
-        return this.data.line_title || "Line";
-      case "shape":
-        return this.data.shape_title || "Shape";
-    }
-  }
-
-  getPrimaryColour() {
-    switch (this.featureType) {
-      case "marker":
-        return this.data.marker_colour || "#000000";
-      case "line":
-        return this.data.line_colour || "#000000";
-      case "shape":
-        return this.data.shape_colour || "#000000";
-    }
-  }
 }
 
 export class MarkerType extends Type {
@@ -45,8 +23,15 @@ export class MarkerType extends Type {
     super({ ...defaults, ...typeData });
 
     this.typeKey = makeKey(this.data.marker_title) || null;
-    this.featureType = "marker";
     this.iconData = getIconData(this);
+  }
+
+  getTitle() {
+    return this.data.marker_title || "Marker";
+  }
+
+  getPrimaryColour() {
+    return this.data.marker_colour || "#000000";
   }
 
   getIconColour() {
@@ -66,7 +51,14 @@ export class LineType extends Type {
     super({ ...defaults, ...typeData });
 
     this.typeKey = makeKey(this.data.line_title) || null;
-    this.featureType = "line";
+  }
+
+  getTitle() {
+    return this.data.line_title || "Line";
+  }
+
+  getPrimaryColour() {
+    return this.data.line_colour || "#000000";
   }
 
   getLineWeight() {
@@ -91,7 +83,14 @@ export class ShapeType extends Type {
     super(typeData);
 
     this.typeKey = makeKey(this.data.shape_title) || null;
-    this.featureType = "shape";
+  }
+
+  getTitle() {
+    return this.data.shape_title || "Shape";
+  }
+
+  getPrimaryColour() {
+    return this.data.shape_colour || "#000000";
   }
 
   getFillOpacity() {
