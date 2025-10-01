@@ -2,16 +2,9 @@
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useMap } from "@/composables/useMap.js";
-
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const {
-	overlays,
-	layerFilters,
-	overlaysByType,
-	activeFeatureType,
-	filteredOverlays,
-} = storeToRefs(useInstanceStore());
+const { layerFilters, overlaysByType, activeFeatureType, filteredOverlays } =
+	storeToRefs(useInstanceStore());
 
 import Active from "@/components/UI/Panel/Overlays/Active.vue";
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
@@ -111,6 +104,21 @@ const shapeCount = computed(() => {
 					:key="typeKey"
 					featureType="line"
 					:overlays="overlaysByType.line[typeKey]"
+					:typeKey="typeKey"
+				/>
+			</table>
+
+			<!-- Shapes -->
+			<table
+				v-show="activeFeatureType === 'shape'"
+				class="shape-types type-list"
+			>
+				<!-- Iterate over Shape Types -->
+				<Type
+					v-for="typeKey in Object.keys(overlaysByType.shape)"
+					:key="typeKey"
+					featureType="shape"
+					:overlays="overlaysByType.shape[typeKey]"
 					:typeKey="typeKey"
 				/>
 			</table>
