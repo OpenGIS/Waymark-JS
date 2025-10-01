@@ -1,4 +1,7 @@
 export const waymarkPrimaryColour = "#b42714";
+export const defaultMarkerColour = "#000000";
+export const defaultLineColour = "#000000";
+export const defaultShapeColour = "#000000";
 
 export function makeKey(str) {
   if (!str) {

@@ -1,5 +1,11 @@
 import { length } from "@turf/length";
 import { Config } from "@/classes/Config.js";
+import {
+  waymarkPrimaryColour,
+  defaultMarkerColour,
+  defaultLineColour,
+  defaultShapeColour,
+} from "@/helpers/Common.js";
 import { getFeatureType, getFeatureImages } from "@/helpers/Overlay.js";
 import { flyToOptions, fitBoundsOptions } from "@/helpers/MapLibre.js";
 import { LngLatBounds, Marker } from "maplibre-gl";
@@ -193,6 +199,11 @@ export class MarkerOverlay extends Overlay {
   addHighlight() {
     // Get marker
     const element = this.marker.getElement();
+    const background = element.querySelector(".waymark-marker-background");
+    if (background) {
+      // Change background border colour
+      background.style.borderColor = waymarkPrimaryColour;
+    }
 
     // Add active class
     element.classList.add("waymark-active");
@@ -259,12 +270,11 @@ export class LineOverlay extends Overlay {
         "line-cap": "round",
       },
       paint: {
-        "line-color": this.type.data.line_colour,
+        "line-color": this.type.getPrimaryColour(),
         "line-width": parseFloat(this.type.data.line_weight),
       },
     };
   }
-
   getLengthString() {
     let out = "";
 
@@ -375,8 +385,8 @@ export class LineOverlay extends Overlay {
 
   addHighlight() {
     // Chanege Layer Paint to highlight
-    this.map.setPaintProperty(this.id, "line-color", "#ff0000");
-    this.map.setPaintProperty(this.id, "line-dasharray", [5, 5]);
+    this.map.setPaintProperty(this.id, "line-color", waymarkPrimaryColour);
+    this.map.setPaintProperty(this.id, "line-dasharray", [2, 4]);
   }
 
   removeHighlight() {
@@ -506,9 +516,13 @@ export class ShapeOverlay extends Overlay {
 
   addHighlight() {
     // Chanege Layer Paint to highlight
-    this.map.setPaintProperty(this.id, "fill-color", "#ff0000");
+    this.map.setPaintProperty(this.id, "fill-color", waymarkPrimaryColour);
     this.map.setPaintProperty(this.id, "fill-opacity", 0.5);
-    this.map.setPaintProperty(this.id, "fill-outline-color", "#ff0000");
+    this.map.setPaintProperty(
+      this.id,
+      "fill-outline-color",
+      waymarkPrimaryColour,
+    );
   }
 
   removeHighlight() {

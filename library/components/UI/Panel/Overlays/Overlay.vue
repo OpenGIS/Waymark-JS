@@ -120,21 +120,6 @@ watch(activeOverlay, (newLayer) => {
 </template>
 
 <style lang="less">
-.map {
-  .waymark-marker {
-    &.waymark-active {
-      z-index: 1000 !important;
-      .waymark-marker-background {
-        border: 4px dashed red;
-      }
-      .waymark-marker-icon::before {
-        padding-top: 8px;
-        margin-left: 8px;
-      }
-    }
-  }
-}
-
 .overlay {
   &.active {
     height: auto;
