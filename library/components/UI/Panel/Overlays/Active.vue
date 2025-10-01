@@ -6,6 +6,9 @@ import Button from "@/components/UI/Common/Button.vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
 const { activeOverlay } = storeToRefs(useInstanceStore());
+
+import { useMap } from "@/composables/useMap.js";
+const { setActiveOverlay } = useMap();
 </script>
 
 <template>
@@ -21,7 +24,7 @@ const { activeOverlay } = storeToRefs(useInstanceStore());
       <!-- Title -->
       <div class="title">{{ activeOverlay.getTitle() }}</div>
 
-      <Button icon="ion-close" @click="activeOverlay = null" />
+      <Button icon="ion-close" @click="setActiveOverlay(null)" />
     </div>
     <!-- End Top -->
 
