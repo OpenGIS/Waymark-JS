@@ -19,37 +19,40 @@ import { useWaymark } from "@ogis/waymark-js";
 import "@ogis/waymark-js/dist/waymark-js.css";
 
 const instance = useWaymark().createInstance({
-	map_options: {
-		div_id: "waymark-map",
-		marker_types: [
-			{
-				marker_title: "Pub",
-				marker_shape: "marker",
-				marker_size: "large",
-				icon_type: "icon",
-				marker_icon: "ion-beer",
-				marker_colour: "#fbfbfb",
-				icon_colour: "#754423",
-			},
-		],
-	},
+  map_options: {
+    div_id: "waymark-map",
+    marker_types: [
+      {
+        marker_title: "Pub",
+        marker_shape: "marker",
+        marker_size: "large",
+        icon_type: "icon",
+        marker_icon: "ion-beer",
+        marker_colour: "#fbfbfb",
+        icon_colour: "#754423",
+      },
+    ],
+  },
 });
 
 instance.loadGeoJSON({
-	type: "FeatureCollection",
-	features: [
-		{
-			type: "Feature",
-			geometry: {
-				type: "Point",
-				coordinates: [-2.548828125, 51.46769693762546],
-			},
-			properties: {
-				type: "pub",
-				title: "Great place for a pint!",
-			},
-		},
-	],
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {
+        type: "pub",
+        title: "The Scarlet Ibis",
+        description:
+          "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+        image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [-128.0094, 50.6539],
+      },
+    },
+  ],
 });
 ```
 
@@ -73,6 +76,10 @@ instance.loadGeoJSON({
       const instance = useWaymark().createInstance({
         map_options: {
           div_id: "waymark-map",
+          maplibre_options: {
+            zoom: 16,
+          },
+
           marker_types: [
             {
               marker_title: "Pub",
@@ -92,13 +99,16 @@ instance.loadGeoJSON({
         features: [
           {
             type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [-2.548828125, 51.46769693762546],
-            },
             properties: {
               type: "pub",
-              title: "Great place for a pint!",
+              title: "The Scarlet Ibis",
+              description:
+                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [-128.0094, 50.6539],
             },
           },
         ],
