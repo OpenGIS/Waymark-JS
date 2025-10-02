@@ -33,7 +33,7 @@ export function useMap() {
 	// Create & Store Map
 	const init = () => {
 		const mapOptions = {
-			...config.value.mapLibreMapOptions,
+			...config.value.mapLibreOptions,
 			container: `${config.value.getMapOption("div_id")}-map`,
 		};
 

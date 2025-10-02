@@ -22,10 +22,6 @@ const props = defineProps({
 		type: Object,
 		default: () => ({}),
 	},
-	mapLibreMapOptions: {
-		type: Object,
-		default: () => ({}),
-	},
 });
 
 // Initialise Instance Store

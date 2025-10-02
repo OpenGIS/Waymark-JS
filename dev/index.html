@@ -68,13 +68,6 @@
             testConfig = Object.assign(testConfig, {
               div_id: div.id,
               units: "metric",
-              // maplibre_options: {
-              //   // Default
-              //   center: [45.0, 20.0],
-              //   zoom: 12,
-              //   // Optional
-              //   zoomControl: false,
-              // },
             });
 
             // Read test data (JSON)
@@ -112,6 +105,15 @@
         testConfig = Object.assign(testConfig, {
           div_id: div.id,
           units: "metric",
+          maplibre_options: {
+            // center: [45.0, 20.0],
+            // zoom: 4,
+            // maxZoom: 6,
+            // minZoom: 2,
+            // attributionControl: true,
+            // logoPosition: "top-left",
+            // maplibreLogo: true,
+          },
         });
 
         // Read test data (JSON)
@@ -121,15 +123,6 @@
 
         const { loadGeoJSON, activeOverlay } = createInstance({
           map_options: testConfig,
-          mapLibreMapOptions: {
-            center: [45.0, 20.0],
-            zoom: 4,
-            maxZoom: 6,
-            minZoom: 2,
-            attributionControl: true,
-            logoPosition: "top-left",
-            maplibreLogo: true,
-          },
         });
         loadGeoJSON(testData);
 

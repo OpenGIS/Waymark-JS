@@ -10,6 +10,12 @@ export class Config {
       div_id: "map",
     };
 
+    // Maplibre Options
+    this.mapLibreOptions = {
+      ...mapOptions,
+      ...(this.map_options.maplibre_options || {}),
+    };
+
     // Tile Layers
     this.tileLayers = [];
     this.importTileLayers();
@@ -25,8 +31,6 @@ export class Config {
       lineTypes: this.lineTypes,
       shapeTypes: this.shapeTypes,
     });
-
-    this.mapLibreMapOptions = { ...mapOptions, ...config.mapLibreMapOptions };
   }
 
   importTileLayers() {
