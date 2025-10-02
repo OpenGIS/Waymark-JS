@@ -1,7 +1,7 @@
 {
-  "name": "waymark-js",
+  "name": "@ogis/waymark-js",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.0-alpha.1",
   "type": "module",
   "files": [
     "dist"

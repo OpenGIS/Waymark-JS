@@ -45,130 +45,135 @@
         return testIDs[Math.floor(Math.random() * testIDs.length)];
       }
 
-      // Playground - Multiple instances
-      if (MODE === "playground") {
-        const testSizes = [
-          [480, 320], // Mobile landscape
-          [320, 480], // Mobile portrait
-          [768, 1024], // Tablet landscape
-          [1024, 768], // Tablet portrait
-          [1440, 900], // Desktop landscape
-          [900, 1440], // Desktop portrait
-        ];
+      init(async () => {
+        // Playground - Multiple instances
+        if (MODE === "playground") {
+          const testSizes = [
+            [480, 320], // Mobile landscape
+            [320, 480], // Mobile portrait
+            [768, 1024], // Tablet landscape
+            [1024, 768], // Tablet portrait
+            [1440, 900], // Desktop landscape
+            [900, 1440], // Desktop portrait
+          ];
 
-        testIDs.forEach((ID, i) => {
-          testSizes.forEach(async (size) => {
-            // Create a div for each test data
-            const div = document.createElement("div");
-            div.id = "dev-" + ID + "-" + size.join("x");
-            div.className = "test-wrap";
-            div.style.height = `${size[1]}px`;
-            div.style.width = `${size[0]}px`;
-            document.body.appendChild(div);
+          testIDs.forEach((ID, i) => {
+            testSizes.forEach(async (size) => {
+              // Create a div for each test data
+              const div = document.createElement("div");
+              div.id = "dev-" + ID + "-" + size.join("x");
+              div.className = "test-wrap";
+              div.style.height = `${size[1]}px`;
+              div.style.width = `${size[0]}px`;
+              document.body.appendChild(div);
 
-            // Read test config (JSON)
-            let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
-              (res) => res.json(),
-            );
+              // Read test config (JSON)
+              let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
+                (res) => res.json(),
+              );
 
-            // Merge Object
-            testConfig = Object.assign(testConfig, {
-              div_id: div.id,
-              units: "metric",
+              // Merge Object
+              testConfig = Object.assign(testConfig, {
+                div_id: div.id,
+                units: "metric",
+              });
+
+              // Read test data (JSON)
+              const testData = await fetch(`./data/${ID}/devData.json`).then(
+                (res) => res.json(),
+              );
+
+              const instance = createInstance({
+                map_options: testConfig,
+              });
+              instance.loadGeoJSON(testData);
+
+              watch(instance.activeOverlay, (newVal) => {
+                console.log(`Active Overlay Changed [${div.id}]:`, newVal);
+              });
             });
+          });
+          // App - Single instance
+        } else {
+          // Pick random test data
+          let ID = getTestID();
+          // ID = "af-ccc";
 
-            // Read test data (JSON)
-            const testData = await fetch(`./data/${ID}/devData.json`).then(
-              (res) => res.json(),
-            );
+          const div = document.createElement("div");
+          div.id = "dev-waymark-app";
+          div.className = "test-wrap";
+          document.body.appendChild(div);
 
-            const instance = createInstance({
+          // Read test config (JSON)
+          let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
+            (res) => res.json(),
+          );
+
+          // Merge Object
+          testConfig = Object.assign(testConfig, {
+            div_id: div.id,
+            units: "metric",
+            maplibre_options: {
+              // center: [45.0, 20.0],
+              // zoom: 4,
+              // maxZoom: 6,
+              // minZoom: 2,
+              // attributionControl: true,
+              // logoPosition: "top-left",
+              // maplibreLogo: true,
+            },
+          });
+
+          // Read test data (JSON)
+          const testData = await fetch(`./data/${ID}/devData.json`).then(
+            (res) => res.json(),
+          );
+
+          const { store, loadGeoJSON, clearGeoJSON, toGeoJSON } =
+            createInstance({
               map_options: testConfig,
             });
-            instance.loadGeoJSON(testData);
+          loadGeoJSON(testData);
 
-            watch(instance.activeOverlay, (newVal) => {
-              console.log(`Active Overlay Changed [${div.id}]:`, newVal);
+          watch(store.activeOverlay, (newVal) => {
+            console.log("Active Overlay Changed:", newVal);
+          });
+
+          document
+            .querySelector("button#clear")
+            ?.addEventListener("click", () => {
+              clearGeoJSON();
             });
-          });
-        });
-        // App - Single instance
-      } else {
-        // Pick random test data
-        let ID = getTestID();
-        // ID = "af-ccc";
 
-        const div = document.createElement("div");
-        div.id = "dev-waymark-app";
-        div.className = "test-wrap";
-        document.body.appendChild(div);
+          document
+            .querySelector("button#import")
+            ?.addEventListener("click", async () => {
+              // Reload from new random test data
+              ID = getTestID();
+              const newTestData = await fetch(`./data/${ID}/devData.json`).then(
+                (res) => res.json(),
+              );
+              loadGeoJSON(newTestData);
+            });
 
-        // Read test config (JSON)
-        let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
-          (res) => res.json(),
-        );
+          document
+            .querySelector("button#export")
+            ?.addEventListener("click", () => {
+              const data = JSON.stringify(toGeoJSON(), null, 2);
+              console.log("Exported GeoJSON:", data);
+              // Download the data to a file
+              const blob = new Blob([data], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "waymark-export.geojson";
+              a.click();
+              URL.revokeObjectURL(url);
+            });
+        }
+      });
 
-        // Merge Object
-        testConfig = Object.assign(testConfig, {
-          div_id: div.id,
-          units: "metric",
-          maplibre_options: {
-            // center: [45.0, 20.0],
-            // zoom: 4,
-            // maxZoom: 6,
-            // minZoom: 2,
-            // attributionControl: true,
-            // logoPosition: "top-left",
-            // maplibreLogo: true,
-          },
-        });
-
-        // Read test data (JSON)
-        const testData = await fetch(`./data/${ID}/devData.json`).then((res) =>
-          res.json(),
-        );
-
-        const { store, loadGeoJSON, clearGeoJSON, toGeoJSON } = createInstance({
-          map_options: testConfig,
-        });
-        loadGeoJSON(testData);
-
-        watch(store.activeOverlay, (newVal) => {
-          console.log("Active Overlay Changed:", newVal);
-        });
-
-        document
-          .querySelector("button#clear")
-          ?.addEventListener("click", () => {
-            clearGeoJSON();
-          });
-
-        document
-          .querySelector("button#import")
-          ?.addEventListener("click", async () => {
-            // Reload from new random test data
-            ID = getTestID();
-            const newTestData = await fetch(`./data/${ID}/devData.json`).then(
-              (res) => res.json(),
-            );
-            loadGeoJSON(newTestData);
-          });
-
-        document
-          .querySelector("button#export")
-          ?.addEventListener("click", () => {
-            const data = JSON.stringify(toGeoJSON(), null, 2);
-            console.log("Exported GeoJSON:", data);
-            // Download the data to a file
-            const blob = new Blob([data], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "waymark-export.geojson";
-            a.click();
-            URL.revokeObjectURL(url);
-          });
-      }
+      init();
     </script>
   </body>
 </html>
