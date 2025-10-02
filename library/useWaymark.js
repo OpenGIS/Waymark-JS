@@ -1,7 +1,9 @@
-import { createApp } from "vue";
+import { watch, createApp } from "vue";
 import { createPinia } from "pinia";
 import Instance from "../library/components/Instance.vue";
 import { useMap } from "@/composables/useMap.js";
+import { storeToRefs } from "pinia";
+import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useWaymark() {
 	const createInstance = (config) => {
@@ -12,18 +14,24 @@ export function useWaymark() {
 			return;
 		}
 
-		// Create Instance
-		const instance = createApp(Instance, config);
+		// Create Vue App
+		const app = createApp(Instance, config);
 
 		// Add Pinia
 		const pinia = createPinia();
-		instance.use(pinia);
-
-		// Pinia Loaded
-		instance.loadGeoJSON = useMap().loadGeoJSON;
+		app.use(pinia);
 
 		// Mount to DOM
-		instance.mount("#" + config.map_options.div_id);
+		app.mount("#" + config.map_options.div_id);
+
+		// Create Instance
+		const { overlays, activeOverlay } = storeToRefs(useInstanceStore());
+
+		const instance = {
+			overlays,
+			activeOverlay,
+			loadGeoJSON: useMap().loadGeoJSON,
+		};
 
 		return instance;
 	};

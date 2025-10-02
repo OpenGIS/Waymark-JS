@@ -32,7 +32,7 @@
 
       document.body.classList.add(MODE);
       console.clear();
-
+      import { watch } from "vue";
       import { useWaymark } from "../library/useWaymark.js";
       const { createInstance } = useWaymark();
 
@@ -115,7 +115,7 @@
           res.json(),
         );
 
-        const instance = createInstance({
+        const { loadGeoJSON, activeOverlay } = createInstance({
           map_options: testConfig,
           mapLibreMapOptions: {
             // center: [45.0, 20.0],
@@ -123,7 +123,11 @@
             // attributionControl: false,
           },
         });
-        instance.loadGeoJSON(testData);
+        loadGeoJSON(testData);
+
+        watch(activeOverlay, (newVal) => {
+          console.log("Active Overlay Changed:", newVal);
+        });
       }
     </script>
   </body>
