@@ -1,6 +1,7 @@
 import { computed, ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
 import { Config } from "@/classes/Config.js";
+import { LngLatBounds } from "maplibre-gl";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
@@ -83,6 +84,30 @@ export const useInstanceStore = defineStore("instance", () => {
 		return filtered;
 	});
 
+	// const overlaysBounds = computed(() => {
+	// 	const bounds = new LngLatBounds();
+
+	// 	overlays.value.forEach((overlay) => {
+	// 		bounds.extend(overlay.getBounds());
+	// 	});
+
+	// 	return bounds;
+	// });
+
+	const overlaysBounds = computed(() => {
+		if (overlays.value.length === 0) {
+			return null;
+		}
+
+		const bounds = new LngLatBounds();
+
+		overlays.value.forEach((overlay) => {
+			bounds.extend(overlay.getBounds());
+		});
+
+		return bounds;
+	});
+
 	return {
 		// State
 		config,
@@ -105,5 +130,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Computed
 		overlaysByType,
 		filteredOverlays,
+		overlaysBounds,
 	};
 });

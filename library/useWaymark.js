@@ -25,12 +25,16 @@ export function useWaymark() {
 		app.mount("#" + config.map_options.div_id);
 
 		// Create Instance
-		const { overlays, activeOverlay } = storeToRefs(useInstanceStore());
+		const { overlays, activeOverlay, map, mapReady } =
+			storeToRefs(useInstanceStore());
 
 		const instance = {
 			overlays,
 			activeOverlay,
+			map,
 			loadGeoJSON: useMap().loadGeoJSON,
+			toGeoJSON: useMap().toGeoJSON,
+			clearGeoJSON: useMap().clearGeoJSON,
 		};
 
 		return instance;

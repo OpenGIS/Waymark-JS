@@ -69,6 +69,32 @@ export class Overlay {
     this.addEvents();
   }
 
+  remove() {
+    if (!this.map) {
+      return;
+    }
+    if (this instanceof MarkerOverlay) {
+      if (this.marker) {
+        this.marker.remove();
+        this.marker = null;
+      }
+    }
+    if (this.map.getLayer(this.id)) {
+      this.map.removeLayer(this.id);
+    }
+    if (this.map.getSource(this.id)) {
+      this.map.removeSource(this.id);
+    }
+    this.map = null;
+    this.source = null;
+    this.layer = null;
+    this.style = null;
+  }
+
+  toGeoJSON() {
+    return this.feature;
+  }
+
   getTypeKey() {
     if (
       !this.feature.properties.type ||
@@ -188,7 +214,16 @@ export class MarkerOverlay extends Overlay {
   }
 
   getBounds() {
-    return this.source.getBounds();
+    return new LngLatBounds(
+      [
+        this.feature.geometry.coordinates[0],
+        this.feature.geometry.coordinates[1],
+      ],
+      [
+        this.feature.geometry.coordinates[0],
+        this.feature.geometry.coordinates[1],
+      ],
+    );
   }
 
   getCoordsString() {

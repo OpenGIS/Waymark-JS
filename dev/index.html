@@ -26,6 +26,10 @@
     </style>
   </head>
   <body>
+    <button id="clear">Clear GeoJSON</button>
+    <button id="import">Import</button>
+    <button id="export">Export</button>
+
     <script type="module" lang="ts">
       let MODE = "app"; // "app" | "playground"
       // MODE = "playground";
@@ -37,6 +41,9 @@
       const { createInstance } = useWaymark();
 
       const testIDs = ["waymark", "af-ccc", "lemiecime-it", "via-ardeche"];
+      function getTestID() {
+        return testIDs[Math.floor(Math.random() * testIDs.length)];
+      }
 
       // Playground - Multiple instances
       if (MODE === "playground") {
@@ -88,8 +95,8 @@
         // App - Single instance
       } else {
         // Pick random test data
-        const ID = testIDs[Math.floor(Math.random() * testIDs.length)];
-        //const ID = "af-ccc";
+        let ID = getTestID();
+        // ID = "af-ccc";
 
         const div = document.createElement("div");
         div.id = "dev-waymark-app";
@@ -121,14 +128,47 @@
           res.json(),
         );
 
-        const { loadGeoJSON, activeOverlay } = createInstance({
-          map_options: testConfig,
-        });
+        const { loadGeoJSON, activeOverlay, clearGeoJSON, toGeoJSON } =
+          createInstance({
+            map_options: testConfig,
+          });
         loadGeoJSON(testData);
 
         watch(activeOverlay, (newVal) => {
           console.log("Active Overlay Changed:", newVal);
         });
+
+        document
+          .querySelector("button#clear")
+          ?.addEventListener("click", () => {
+            clearGeoJSON();
+          });
+
+        document
+          .querySelector("button#import")
+          ?.addEventListener("click", async () => {
+            // Reload from new random test data
+            ID = getTestID();
+            const newTestData = await fetch(`./data/${ID}/devData.json`).then(
+              (res) => res.json(),
+            );
+            loadGeoJSON(newTestData);
+          });
+
+        document
+          .querySelector("button#export")
+          ?.addEventListener("click", () => {
+            const data = JSON.stringify(toGeoJSON(), null, 2);
+            console.log("Exported GeoJSON:", data);
+            // Download the data to a file
+            const blob = new Blob([data], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "waymark-export.geojson";
+            a.click();
+            URL.revokeObjectURL(url);
+          });
       }
     </script>
   </body>

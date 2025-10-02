@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { Map, LngLatBounds } from "maplibre-gl";
+import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
@@ -23,6 +23,7 @@ export function useMap() {
 		mapReady,
 		mapBounds,
 		overlays,
+		overlaysBounds,
 		activeOverlay,
 		activeFeatureType,
 		panelOpen,
@@ -56,6 +57,33 @@ export function useMap() {
 			mapBounds.value = map.value.getBounds();
 		});
 
+		// Lines & Shape click handling
+		map.value.on("click", (e) => {
+			// Create a bounding box to find features within a certain distance of the click
+			const bbox = [
+				[e.point.x - 10, e.point.y - 10],
+				[e.point.x + 10, e.point.y + 10],
+			];
+			const features = map.value.queryRenderedFeatures(bbox, {
+				layers: overlays.value
+					.filter((o) => o.featureType !== "marker")
+					.map((o) => o.id),
+			});
+
+			if (features.length) {
+				const overlay = overlays.value.find(
+					(o) => o.id === features[0].layer.id,
+				);
+				if (overlay) {
+					setActiveOverlay(overlay);
+				}
+				// No features found
+			} else {
+				// Remove active overlay
+				setActiveOverlay();
+			}
+		});
+
 		//Track map bounds
 		map.value.on("moveend", () => {
 			//Set Max bounds
@@ -68,88 +96,85 @@ export function useMap() {
 		if (geoJSON && Array.isArray(geoJSON.features)) {
 			console.log("Adding GeoJSON to Map", geoJSON);
 
-			const dataBounds = new LngLatBounds();
-
-			map.value.on("load", () => {
-				// Overlays
-				let overlayCount = 0;
-				geoJSON.features.forEach((feature) => {
-					// Determine Feature Type
-					const featureType = getFeatureType(feature);
-
-					if (!featureType || !featureTypes.includes(featureType)) {
-						console.warn(
-							"Feature Type not recognised or supported - skipping",
-							feature,
-						);
-						return;
-					}
-
-					// Create Overlay instance
-					const overlayId = `overlay-${overlayCount++}`;
-
-					const overlay = (() => {
-						switch (featureType) {
-							case "marker":
-								return new MarkerOverlay(feature, config.value, overlayId);
-							case "line":
-								return new LineOverlay(feature, config.value, overlayId);
-							case "shape":
-								return new ShapeOverlay(feature, config.value, overlayId);
-						}
-					})();
-
-					// Add to store
-					overlays.value.push(overlay);
-
-					// Add to Map
-					overlay.addTo(map.value);
-
-					// Handle Markers
-					if (overlay instanceof MarkerOverlay) {
-						overlay.marker.getElement().addEventListener("click", (e) => {
-							e.stopPropagation();
-							setActiveOverlay(overlay);
-						});
-					}
-
-					// Extend bounds
-					dataBounds.extend(overlay.getBounds());
+			// If ! mapReady then wait till it is
+			if (!mapReady.value) {
+				map.value.on("load", () => {
+					loadGeoJSON(geoJSON);
 				});
+				return;
+			}
 
-				// Extend current map view to also include data bounds
-				if (dataBounds.isEmpty() === false) {
-					map.value.fitBounds(dataBounds, fitBoundsOptions);
-				}
-			});
+			// Overlays
+			geoJSON.features.forEach((feature) => {
+				// Determine Feature Type
+				const featureType = getFeatureType(feature);
 
-			// Make Lines easier to click by listening to Map click event and then finding the nearest Lines
-			map.value.on("click", (e) => {
-				// Create a bounding box to find features within a certain distance of the click
-				const bbox = [
-					[e.point.x - 10, e.point.y - 10],
-					[e.point.x + 10, e.point.y + 10],
-				];
-				const features = map.value.queryRenderedFeatures(bbox, {
-					layers: overlays.value
-						.filter((o) => o.featureType !== "marker")
-						.map((o) => o.id),
-				});
-
-				if (features.length) {
-					const overlay = overlays.value.find(
-						(o) => o.id === features[0].layer.id,
+				if (!featureType || !featureTypes.includes(featureType)) {
+					console.warn(
+						"Feature Type not recognised or supported - skipping",
+						feature,
 					);
-					if (overlay) {
-						setActiveOverlay(overlay);
+					return;
+				}
+
+				// Create Overlay instance
+				const overlayId = `overlay-${overlays.value.length}`;
+
+				const overlay = (() => {
+					switch (featureType) {
+						case "marker":
+							return new MarkerOverlay(feature, config.value, overlayId);
+						case "line":
+							return new LineOverlay(feature, config.value, overlayId);
+						case "shape":
+							return new ShapeOverlay(feature, config.value, overlayId);
 					}
-					// No features found
-				} else {
-					// Remove active overlay
-					setActiveOverlay(null);
+				})();
+
+				// Add to store
+				overlays.value.push(overlay);
+
+				// Add to Map
+				overlay.addTo(map.value);
+
+				// Handle Markers
+				if (overlay instanceof MarkerOverlay) {
+					overlay.marker.getElement().addEventListener("click", (e) => {
+						e.stopPropagation();
+						setActiveOverlay(overlay);
+					});
 				}
 			});
+
+			console.log("Overlays added to map", overlaysBounds.value);
+
+			// Update bounds to encompass new overlays
+			map.value.fitBounds(overlaysBounds.value, fitBoundsOptions);
 		}
+	};
+
+	const clearGeoJSON = () => {
+		// Remove all overlays from map & store
+		overlays.value.forEach((overlay) => {
+			overlay.remove();
+		});
+		overlays.value = [];
+
+		// Clear active overlay
+		activeOverlay.value = null;
+	};
+
+	const toGeoJSON = () => {
+		const featureCollection = {
+			type: "FeatureCollection",
+			features: [],
+		};
+
+		overlays.value.forEach((overlay) => {
+			featureCollection.features.push(overlay.toGeoJSON());
+		});
+
+		return featureCollection;
 	};
 
 	const setActiveOverlay = (overlay = null) => {
@@ -203,6 +228,8 @@ export function useMap() {
 	return {
 		init,
 		loadGeoJSON,
+		clearGeoJSON,
+		toGeoJSON,
 		setActiveOverlay,
 	};
 }
