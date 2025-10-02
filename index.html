@@ -37,7 +37,7 @@
       document.body.classList.add(MODE);
       console.clear();
       import { watch } from "vue";
-      import { useWaymark } from "../library/useWaymark.js";
+      import { useWaymark } from "./library/useWaymark.js";
       const { createInstance } = useWaymark();
 
       const testIDs = ["waymark", "af-ccc", "lemiecime-it", "via-ardeche"];
@@ -45,7 +45,7 @@
         return testIDs[Math.floor(Math.random() * testIDs.length)];
       }
 
-      init(async () => {
+      const init = async () => {
         // Playground - Multiple instances
         if (MODE === "playground") {
           const testSizes = [
@@ -68,9 +68,9 @@
               document.body.appendChild(div);
 
               // Read test config (JSON)
-              let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
-                (res) => res.json(),
-              );
+              let testConfig = await fetch(
+                `./dev/data/${ID}/devConfig.json`,
+              ).then((res) => res.json());
 
               // Merge Object
               testConfig = Object.assign(testConfig, {
@@ -79,9 +79,9 @@
               });
 
               // Read test data (JSON)
-              const testData = await fetch(`./data/${ID}/devData.json`).then(
-                (res) => res.json(),
-              );
+              const testData = await fetch(
+                `./dev/data/${ID}/devData.json`,
+              ).then((res) => res.json());
 
               const instance = createInstance({
                 map_options: testConfig,
@@ -105,7 +105,7 @@
           document.body.appendChild(div);
 
           // Read test config (JSON)
-          let testConfig = await fetch(`./data/${ID}/devConfig.json`).then(
+          let testConfig = await fetch(`./dev/data/${ID}/devConfig.json`).then(
             (res) => res.json(),
           );
 
@@ -125,7 +125,7 @@
           });
 
           // Read test data (JSON)
-          const testData = await fetch(`./data/${ID}/devData.json`).then(
+          const testData = await fetch(`./dev/data/${ID}/devData.json`).then(
             (res) => res.json(),
           );
 
@@ -150,9 +150,9 @@
             ?.addEventListener("click", async () => {
               // Reload from new random test data
               ID = getTestID();
-              const newTestData = await fetch(`./data/${ID}/devData.json`).then(
-                (res) => res.json(),
-              );
+              const newTestData = await fetch(
+                `./dev/data/${ID}/devData.json`,
+              ).then((res) => res.json());
               loadGeoJSON(newTestData);
             });
 
@@ -171,7 +171,7 @@
               URL.revokeObjectURL(url);
             });
         }
-      });
+      };
 
       init();
     </script>

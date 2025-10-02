@@ -25,9 +25,6 @@ export default defineConfig({
       fileName: "waymark-js",
     },
     rollupOptions: {
-      input: {
-        app: "./dev/index.html",
-      },
       // external: ["vue"],
       output: {
         // globals: {
@@ -39,7 +36,7 @@ export default defineConfig({
   },
 
   server: {
-    open: "/dev/index.html",
+    open: "/index.html",
     allowedHosts: ["joe-dev.local"],
   },
 });
