@@ -1,5 +1,10 @@
 # Waymark JS
 
+## Installation
+
+```bash
+npm install @ogis/waymark-js
+```
 ## Development
 
 > [!IMPORTANT]
