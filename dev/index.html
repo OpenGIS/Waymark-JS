@@ -86,6 +86,10 @@
               map_options: testConfig,
             });
             instance.loadGeoJSON(testData);
+
+            watch(instance.activeOverlay, (newVal) => {
+              console.log(`Active Overlay Changed [${div.id}]:`, newVal);
+            });
           });
         });
         // App - Single instance
@@ -118,9 +122,13 @@
         const { loadGeoJSON, activeOverlay } = createInstance({
           map_options: testConfig,
           mapLibreMapOptions: {
-            // center: [45.0, 20.0],
-            // zoom: 12,
-            // attributionControl: false,
+            center: [45.0, 20.0],
+            zoom: 4,
+            maxZoom: 6,
+            minZoom: 2,
+            attributionControl: true,
+            logoPosition: "top-left",
+            maplibreLogo: true,
           },
         });
         loadGeoJSON(testData);
