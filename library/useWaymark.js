@@ -1,4 +1,4 @@
-import { watch, createApp } from "vue";
+import { createApp } from "vue";
 import { createPinia } from "pinia";
 import Instance from "../library/components/Instance.vue";
 import { useMap } from "@/composables/useMap.js";

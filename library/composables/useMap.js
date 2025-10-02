@@ -131,8 +131,8 @@ export function useMap() {
 					}
 				})();
 
-				// Add to store
-				overlays.value.push(overlay);
+				// Add to store (reassign to trigger shallowRef updates)
+				overlays.value = [...overlays.value, overlay];
 
 				// Add to Map
 				overlay.addTo(map.value);
