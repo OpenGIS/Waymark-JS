@@ -128,13 +128,12 @@
           res.json(),
         );
 
-        const { loadGeoJSON, activeOverlay, clearGeoJSON, toGeoJSON } =
-          createInstance({
-            map_options: testConfig,
-          });
+        const { store, loadGeoJSON, clearGeoJSON, toGeoJSON } = createInstance({
+          map_options: testConfig,
+        });
         loadGeoJSON(testData);
 
-        watch(activeOverlay, (newVal) => {
+        watch(store.activeOverlay, (newVal) => {
           console.log("Active Overlay Changed:", newVal);
         });
 

@@ -24,20 +24,12 @@ export function useWaymark() {
 		// Mount to DOM
 		app.mount("#" + config.map_options.div_id);
 
-		// Create Instance
-		const { overlays, activeOverlay, map, mapReady } =
-			storeToRefs(useInstanceStore());
-
-		const instance = {
-			overlays,
-			activeOverlay,
-			map,
+		return {
+			store: storeToRefs(useInstanceStore()),
 			loadGeoJSON: useMap().loadGeoJSON,
 			toGeoJSON: useMap().toGeoJSON,
 			clearGeoJSON: useMap().clearGeoJSON,
 		};
-
-		return instance;
 	};
 
 	return {
