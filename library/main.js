@@ -1,12 +1,12 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import Instance from "../library/components/Instance.vue";
+import App from "../library/components/App.vue";
 import { useMap } from "@/composables/useMap.js";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
-export function useWaymark() {
-	const createInstance = (config) => {
+export class Instance {
+	constructor(config) {
 		// Ensure we have an ID
 		if (typeof config.map_options.div_id === "undefined") {
 			console.error("No Container ID provided for Waymark instance.");
@@ -15,7 +15,7 @@ export function useWaymark() {
 		}
 
 		// Create Vue App
-		const app = createApp(Instance, config);
+		const app = createApp(App, config);
 
 		// Add Pinia
 		const pinia = createPinia();
@@ -24,15 +24,9 @@ export function useWaymark() {
 		// Mount to DOM
 		app.mount("#" + config.map_options.div_id);
 
-		return {
-			store: storeToRefs(useInstanceStore()),
-			loadGeoJSON: useMap().loadGeoJSON,
-			toGeoJSON: useMap().toGeoJSON,
-			clearGeoJSON: useMap().clearGeoJSON,
-		};
-	};
-
-	return {
-		createInstance,
-	};
+		this.store = storeToRefs(useInstanceStore());
+		this.loadGeoJSON = useMap().loadGeoJSON;
+		this.toGeoJSON = useMap().toGeoJSON;
+		this.clearGeoJSON = useMap().clearGeoJSON;
+	}
 }

@@ -37,8 +37,7 @@
       document.body.classList.add(MODE);
       console.clear();
       import { watch } from "vue";
-      import { useWaymark } from "./library/useWaymark.js";
-      const { createInstance } = useWaymark();
+      import { Instance } from "./library/main.js";
 
       const testIDs = ["waymark", "af-ccc", "lemiecime-it", "via-ardeche"];
       function getTestID() {
@@ -83,12 +82,12 @@
                 `./dev/data/${ID}/devData.json`,
               ).then((res) => res.json());
 
-              const instance = createInstance({
+              const instance = new Instance({
                 map_options: testConfig,
               });
               instance.loadGeoJSON(testData);
 
-              watch(instance.activeOverlay, (newVal) => {
+              watch(instance.store.activeOverlay, (newVal) => {
                 console.log(`Active Overlay Changed [${div.id}]:`, newVal);
               });
             });
@@ -129,20 +128,19 @@
             (res) => res.json(),
           );
 
-          const { store, loadGeoJSON, clearGeoJSON, toGeoJSON } =
-            createInstance({
-              map_options: testConfig,
-            });
-          loadGeoJSON(testData);
+          const instance = new Instance({
+            map_options: testConfig,
+          });
+          instance.loadGeoJSON(testData);
 
-          watch(store.activeOverlay, (newVal) => {
+          watch(instance.store.activeOverlay, (newVal) => {
             console.log("Active Overlay Changed:", newVal);
           });
 
           document
             .querySelector("button#clear")
             ?.addEventListener("click", () => {
-              clearGeoJSON();
+              instance.clearGeoJSON();
             });
 
           document
@@ -153,13 +151,13 @@
               const newTestData = await fetch(
                 `./dev/data/${ID}/devData.json`,
               ).then((res) => res.json());
-              loadGeoJSON(newTestData);
+              instance.loadGeoJSON(newTestData);
             });
 
           document
             .querySelector("button#export")
             ?.addEventListener("click", () => {
-              const data = JSON.stringify(toGeoJSON(), null, 2);
+              const data = JSON.stringify(instance.toGeoJSON(), null, 2);
               console.log("Exported GeoJSON:", data);
               // Download the data to a file
               const blob = new Blob([data], { type: "application/json" });
