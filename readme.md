@@ -32,6 +32,8 @@ import "@ogis/waymark-js/dist/waymark-js.css";
 
 ### CDN
 
+#### ES Module
+
 To use via CDN, include the following in your HTML:
 
 ```html
@@ -44,6 +46,37 @@ To use via CDN, include the following in your HTML:
   import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
 </script>
 ```
+
+#### UMD
+
+When you can't rely on native ES modules, you can load the bundled UMD build via a classic `<script>` tag. The bundle exposes a `WaymarkJS` global with the same `Instance` class that the package exports.
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
+    />
+    <script
+      defer
+      src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"
+    ></script>
+  </head>
+  <body>
+    <div id="waymark-instance" style="height: 480px"></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const instance = new WaymarkJS.Instance();
+      });
+    </script>
+  </body>
+</html>
+```
+
+If you're self-hosting the assets, replace the CDN URLs with your local `waymark-js.css` and `waymark-js.umd.cjs` paths.
 
 ## Usage
 
