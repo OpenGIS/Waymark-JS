@@ -1,10 +1,11 @@
 # Waymark JS
 
-> [!IMPORTANT] > **Waymark JS v2 is currently in alpha. Many features are not yet implemented. Please see the [To-Do list](readme.md#to-do) for details.**
+> [!CAUTION]
+> Waymark JS v2 is currently in alpha. Many features are not yet implemented. Please see the [To-Do list](/readme.md#to-do) for details.
 
 _Create, Edit and Share Meaningful Maps_
 
-Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications due to its flexibility and customisation [options](docs/v2/2.instances.md#map-options).
+Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications due to its flexibility and customisation [options](/docs/v2/2.instances.md#map-options). Waymark JS stores data in GeoJSON format.
 
 Built on the shoulders of giants:
 
@@ -41,9 +42,6 @@ To use via CDN, include the following in your HTML:
 
 <script type="module">
   import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
-
-  // Create a Waymark Instance with this configuration
-  const instance = new Instance();
 </script>
 ```
 
@@ -60,7 +58,9 @@ Add a container element for the Instance:
 > [!NOTE]
 > The element that contains the Instance must have a **height** set, either inline or via CSS.
 
-### JavaScript (ESM Module)
+### JavaScript
+
+Create a Waymark Instance with your configuration, then load some GeoJSON data:
 
 ```javascript
 import { Instance } from "@ogis/waymark-js";
