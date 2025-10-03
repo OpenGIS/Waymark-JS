@@ -1,6 +1,6 @@
 {
   "name": "@ogis/waymark-js",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "type": "module",
   "license": "GPL-2.0-only",
   "repository": {
@@ -15,7 +15,7 @@
     "access": "public"
   },
   "files": [
-    "dist/**/*.{js,cjs,css}"
+    "dist"
   ],
   "main": "./dist/waymark-js.umd.cjs",
   "module": "./dist/waymark-js.js",

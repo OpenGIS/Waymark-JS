@@ -25,7 +25,6 @@ export default defineConfig({
       fileName: "waymark-js",
     },
     rollupOptions: {
-      // external: ["vue"],
       output: {
         // globals: {
         //   vue: "Vue",
