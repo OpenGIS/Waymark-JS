@@ -6,16 +6,13 @@
       rel="stylesheet"
       href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
     />
+    <script src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"></script>
   </head>
-
-  <script src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"></script>
 
   <body>
     <div id="waymark-instance" style="height: 100%"></div>
 
-    <script type="module">
-      // import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
-
+    <script>
       // Create a Waymark Instance with this configuration
       const instance = new Waymark.Instance({
         // [Map Options](docs/v2/2.instances.md#map-options)
