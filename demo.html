@@ -6,53 +6,51 @@
       rel="stylesheet"
       href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
     />
-    <script src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"></script>
+    <script
+      defer
+      src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"
+    ></script>
   </head>
-
   <body>
-    <div id="waymark-instance" style="height: 100%"></div>
-
+    <div id="waymark-instance" style="height: 480px"></div>
     <script>
-      // Create a Waymark Instance with this configuration
-      const instance = new WaymarkJS.Instance({
-        // [Map Options](docs/v2/2.instances.md#map-options)
-        map_options: {
-          // [MapLibre MapOptions](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/)
-          maplibre_options: {
-            zoom: 12,
+      window.addEventListener("DOMContentLoaded", () => {
+        const instance = new WaymarkJS.Instance({
+          map_options: {
+            div_id: "waymark-instance",
+            marker_types: [
+              {
+                marker_title: "Pub",
+                marker_shape: "marker",
+                marker_size: "large",
+                icon_type: "icon",
+                marker_icon: "ion-beer",
+                marker_colour: "#fbfbfb",
+                icon_colour: "#754423",
+              },
+            ],
           },
+        });
 
-          // [Marker Types](docs/v2/2.instances.md#marker-types)
-          marker_types: [
+        instance.loadGeoJSON({
+          type: "FeatureCollection",
+          features: [
             {
-              // The Title is used to create the "pub" Type Key
-              marker_title: "Pub",
-              marker_icon: "ion-beer",
-              marker_colour: "brown",
+              type: "Feature",
+              properties: {
+                type: "pub",
+                title: "The Scarlet Ibis",
+                description:
+                  "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+                image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [-128.0094, 50.6539],
+              },
             },
           ],
-        },
-      });
-
-      // Load this GeoJSON, which contains a single "pub" Marker
-      instance.loadGeoJSON({
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {
-              type: "pub",
-              title: "The Scarlet Ibis",
-              description:
-                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
-              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [-128.0094, 50.6539],
-            },
-          },
-        ],
+        });
       });
     </script>
   </body>
