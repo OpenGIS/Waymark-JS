@@ -168,6 +168,7 @@ instance.loadGeoJSON({
   - [ ] `debug_mode`
 - [ ] Viewer Options
 - [ ] Editor Options
+- [ ] Langugage
 
 ### Features
 
