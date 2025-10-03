@@ -28,10 +28,13 @@ To use via CDN, include the following in your HTML:
 
 <!-- To-Do: https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js -->
 
-````html
-## Usage ### HTML ```html
+## Usage
+
+### HTML
+
+```html
 <div id="waymark-instance" style="height: 480px"></div>
-````
+```
 
 > [!NOTE]
 > The element that contains the Instance must have a **height** set, either inline or via CSS.
