@@ -13,6 +13,10 @@ Built on the shoulders of giants:
 - [OpenStreetMap](https://www.openstreetmap.org/) for map data
 - [OpenFreeMap](https://openfreemap.org/) for vector tiles
 
+## Demo
+
+View the **[Demo](https://www.waymark.dev/js/v2.html)**.
+
 ## Installation
 
 ### NPM
