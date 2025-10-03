@@ -22,15 +22,36 @@ To install via NPM, run:
 npm install @ogis/waymark-js
 ```
 
+Then import the library and CSS in your JavaScript:
+
+```javascript
+import { Instance } from "@ogis/waymark-js";
+import "@ogis/waymark-js/dist/waymark-js.css";
+```
+
 ### CDN
 
 To use via CDN, include the following in your HTML:
 
-<!-- To-Do: https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js -->
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
+/>
+
+<script type="module">
+  import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
+
+  // Create a Waymark Instance with this configuration
+  const instance = new Instance(
+</script>
+```
 
 ## Usage
 
 ### HTML
+
+Add a container element for the Instance:
 
 ```html
 <div id="waymark-instance" style="height: 480px"></div>
