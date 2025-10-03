@@ -1,4 +1,19 @@
+![Waymark Logo](library/assets/img/waymark-icon-min.svg)
+
 # Waymark JS
+
+> [!IMPORTANT]
+> Waymark JS v2 is currently in alpha. Many features are not yet implemented. Please see the [To-Do list](readme.md#to-do) for details.
+
+_Create, Edit and Share Meaningful Maps_
+
+Waymark JS is a JavaScript library for creating and sharing geographical information. It is designed to be easy to use and intuitive, and is suitable for a wide range of applications due to its flexibility and customisation [options](docs/v2/2.instances.md#map-options).
+
+Built on the shoulders of giants:
+
+- [MapLibre GL JS](https://maplibre.org/) for map rendering
+- [OpenStreetMap](https://www.openstreetmap.org/) for map data
+- [OpenFreeMap](https://openfreemap.org/) for vector tiles
 
 ## Installation
 
@@ -8,19 +23,34 @@ npm install @ogis/waymark-js
 
 ## Usage
 
-### Using in a build process (ES modules)
+### HTML
 
 ```html
-<div id="waymark-map" style="height: 480px"></div>
+<div id="waymark-instance" style="height: 480px"></div>
 ```
 
+> [!NOTE]
+> The element that contains the Instance must have a **height** set, either inline or via CSS.
+
+### JavaScript (ESM Module)
+
 ```javascript
-import { useWaymark } from "@ogis/waymark-js";
+import { Instance } from "@ogis/waymark-js";
 import "@ogis/waymark-js/dist/waymark-js.css";
 
-const instance = useWaymark().createInstance({
+// Create a Waymark Instance with this configuration
+const instance = new Instance({
+  // See [Map Options](docs/v2/2.instances.md#map-options) for details
   map_options: {
-    div_id: "waymark-map",
+    div_id: "waymark-instance",
+
+    // Passed directly to MapLibre GL JS
+    // See [MapLibre Map Options](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/)
+    maplibre_options: {
+      zoom: 12,
+    },
+
+    // See [Marker Types](docs/v2/2.instances.md#marker-types) for details
     marker_types: [
       {
         marker_title: "Pub",
@@ -35,6 +65,7 @@ const instance = useWaymark().createInstance({
   },
 });
 
+// Load this GeoJSON, which contains a single "pub" Marker
 instance.loadGeoJSON({
   type: "FeatureCollection",
   features: [
@@ -56,81 +87,20 @@ instance.loadGeoJSON({
 });
 ```
 
-### Loading directly from npm (no build step)
+## Documentation
 
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
-    />
-  </head>
-  <body>
-    <div id="waymark-map" style="height: 480px"></div>
-    <script type="module">
-      import { useWaymark } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
+1. [Start Here](docs/v2/1.index.md)
+2. [Instances](docs/v2/2.instances.md)
 
-      const instance = useWaymark().createInstance({
-        map_options: {
-          div_id: "waymark-map",
-          maplibre_options: {
-            zoom: 16,
-          },
+## To-Do
 
-          marker_types: [
-            {
-              marker_title: "Pub",
-              marker_shape: "marker",
-              marker_size: "large",
-              icon_type: "icon",
-              marker_icon: "ion-beer",
-              marker_colour: "#fbfbfb",
-              icon_colour: "#754423",
-            },
-          ],
-        },
-      });
-
-      instance.loadGeoJSON({
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {
-              type: "pub",
-              title: "The Scarlet Ibis",
-              description:
-                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
-              image_large_url: "https://www.waymark.dev/assets/geo/pub.jpeg",
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [-128.0094, 50.6539],
-            },
-          },
-        ],
-      });
-    </script>
-  </body>
-</html>
-```
-
-## Instance API
-
-Calling `createInstance()` returns:
-
-- `store`: a collection of Pinia refs (from `useInstanceStore()`), including reactive state such as `mapReady`, `overlays`, `activeOverlay`, `activeFeatureType`, and panel visibility flags.
-- `loadGeoJSON(geojson)`: queues GeoJSON features for rendering on the map.
-- `clearGeoJSON()`: removes every overlay from the map and resets the active selection.
-- `toGeoJSON()`: exports all current overlays as a fresh GeoJSON `FeatureCollection`.
+- [ ] GPX/KML Import/Export
+- [ ] Use `div_id: "waymark-instance"` by default, no error if missing (update `waymark-map` usage)
 
 ## Development
 
 > [!IMPORTANT]
-> To build Waymark JS from source, you will need [Node and NPM installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+> To build Waymark JS from source, you will need [Node + NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 ```bash
 # Install dependencies
