@@ -1,9 +1,6 @@
-![Waymark Logo](library/assets/img/waymark-icon-min.svg)
-
 # Waymark JS
 
-> [!IMPORTANT]
-> Waymark JS v2 is currently in alpha. Many features are not yet implemented. Please see the [To-Do list](readme.md#to-do) for details.
+> [!IMPORTANT] > **Waymark JS v2 is currently in alpha. Many features are not yet implemented. Please see the [To-Do list](readme.md#to-do) for details.**
 
 _Create, Edit and Share Meaningful Maps_
 
@@ -17,17 +14,24 @@ Built on the shoulders of giants:
 
 ## Installation
 
+### NPM
+
+To install via NPM, run:
+
 ```bash
 npm install @ogis/waymark-js
 ```
 
-## Usage
+### CDN
 
-### HTML
+To use via CDN, include the following in your HTML:
 
-```html
+<!-- To-Do: https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js -->
+
+````html
+## Usage ### HTML ```html
 <div id="waymark-instance" style="height: 480px"></div>
-```
+````
 
 > [!NOTE]
 > The element that contains the Instance must have a **height** set, either inline or via CSS.
@@ -42,6 +46,7 @@ import "@ogis/waymark-js/dist/waymark-js.css";
 const instance = new Instance({
   // See [Map Options](docs/v2/2.instances.md#map-options) for details
   map_options: {
+    // This is the default, so can be omitted
     div_id: "waymark-instance",
 
     // Passed directly to MapLibre GL JS
@@ -94,8 +99,14 @@ instance.loadGeoJSON({
 
 ## To-Do
 
+Alpha
+
+- [ ] Readme CDN Example https://unpkg.com/@ogis/waymark-js@2.0.0-alpha.6/dist/waymark-js.js
+- [ ] Demo PAGE
+
+Later
+
 - [ ] GPX/KML Import/Export
-- [ ] Use `div_id: "waymark-instance"` by default, no error if missing (update `waymark-map` usage)
 
 ## Development
 

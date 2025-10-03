@@ -9,9 +9,16 @@ export class Instance {
 	constructor(config) {
 		// Ensure we have an ID
 		if (typeof config.map_options.div_id === "undefined") {
-			console.error("No Container ID provided for Waymark instance.");
+			config.map_options.div_id = "waymark-instance";
+		}
 
-			return;
+		// Ensure we have a container
+		if (!document.getElementById(config.map_options.div_id)) {
+			const container = document.createElement("div");
+			container.id = config.map_options.div_id;
+			// Add dimensions
+			container.style.height = "100%";
+			document.body.appendChild(container);
 		}
 
 		// Create Vue App

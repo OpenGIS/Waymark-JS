@@ -7,7 +7,7 @@ export class Config {
   constructor(config = {}) {
     // Map Options
     this.map_options = config.map_options || {
-      div_id: "map",
+      div_id: "waymark-instance",
     };
 
     // Maplibre Options

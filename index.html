@@ -33,6 +33,7 @@
     <script type="module" lang="ts">
       let MODE = "app"; // "app" | "playground"
       // MODE = "playground";
+      MODE = "docs";
 
       document.body.classList.add(MODE);
       console.clear();
@@ -93,7 +94,7 @@
             });
           });
           // App - Single instance
-        } else {
+        } else if (MODE === "app") {
           // Pick random test data
           let ID = getTestID();
           // ID = "af-ccc";
@@ -168,6 +169,61 @@
               a.click();
               URL.revokeObjectURL(url);
             });
+          // Docs - Single instance, no buttons
+        } else if (MODE === "docs") {
+          const div = document.createElement("div");
+          div.id = "waymark-map";
+          div.style.height = "500px";
+          document.body.appendChild(div);
+
+          // Create a Waymark Instance with this configuration
+          const instance = new Instance({
+            // See [Map Options](docs/v2/2.instances.md#map-options) for details
+            map_options: {
+              div_id: "waymark-instance",
+
+              // Passed directly to MapLibre GL JS
+              // See [MapLibre Map Options](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/)
+              maplibre_options: {
+                zoom: 12,
+              },
+
+              // See [Marker Types](docs/v2/2.instances.md#marker-types) for details
+              marker_types: [
+                {
+                  marker_title: "Pub",
+                  marker_shape: "marker",
+                  marker_size: "large",
+                  icon_type: "icon",
+                  marker_icon: "ion-beer",
+                  marker_colour: "#fbfbfb",
+                  icon_colour: "#754423",
+                },
+              ],
+            },
+          });
+
+          // Load this GeoJSON, which contains a single "pub" Marker
+          instance.loadGeoJSON({
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                properties: {
+                  type: "pub",
+                  title: "The Scarlet Ibis",
+                  description:
+                    "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+                  image_large_url:
+                    "https://www.waymark.dev/assets/geo/pub.jpeg",
+                },
+                geometry: {
+                  type: "Point",
+                  coordinates: [-128.0094, 50.6539],
+                },
+              },
+            ],
+          });
         }
       };
 
