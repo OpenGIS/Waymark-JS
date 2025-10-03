@@ -125,11 +125,16 @@ instance.loadGeoJSON({
 
 Alpha
 
-- [ ] Readme CDN Example https://unpkg.com/@ogis/waymark-js@2.0.0-alpha.6/dist/waymark-js.js
 - [ ] Demo PAGE
 
 Later
 
+- [ ] Map Options:
+  - [ ] `map_init_basemap`
+  - [ ] `show_scale`
+  - [ ] `debug_mode`
+- [ ] Viewer Options
+- [ ] Editor Options
 - [ ] GPX/KML Import/Export
 
 ## Development
