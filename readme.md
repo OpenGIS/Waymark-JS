@@ -43,7 +43,7 @@ To use via CDN, include the following in your HTML:
   import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
 
   // Create a Waymark Instance with this configuration
-  const instance = new Instance(
+  const instance = new Instance();
 </script>
 ```
 
