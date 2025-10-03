@@ -20,8 +20,8 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
     lib: {
-      entry: resolve(__dirname, "library/useWaymark.js"),
-      name: "Waymark",
+      entry: resolve(__dirname, "library/main.js"),
+      name: "WaymarkJS",
       fileName: "waymark-js",
     },
     rollupOptions: {
@@ -37,6 +37,6 @@ export default defineConfig({
 
   server: {
     open: "/index.html",
-    allowedHosts: ["joe-dev.local"],
+    // allowedHosts: ["joe-dev.local"],
   },
 });
