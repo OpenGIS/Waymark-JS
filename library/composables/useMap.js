@@ -94,8 +94,6 @@ export function useMap() {
 	const loadGeoJSON = (geoJSON) => {
 		// Data Layer - GeoJSON Present?
 		if (geoJSON && Array.isArray(geoJSON.features)) {
-			console.log("Adding GeoJSON to Map", geoJSON);
-
 			// If ! mapReady then wait till it is
 			if (!mapReady.value) {
 				map.value.on("load", () => {
@@ -103,6 +101,8 @@ export function useMap() {
 				});
 				return;
 			}
+
+			console.log("Adding GeoJSON to Map", geoJSON);
 
 			// Overlays
 			geoJSON.features.forEach((feature) => {
