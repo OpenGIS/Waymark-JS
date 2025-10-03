@@ -160,11 +160,7 @@ instance.loadGeoJSON({
 
 ## To-Do
 
-Alpha
-
-- [ ] Demo PAGE
-
-Later
+### Configuration
 
 - [ ] Map Options:
   - [ ] `map_init_basemap`
@@ -172,7 +168,12 @@ Later
   - [ ] `debug_mode`
 - [ ] Viewer Options
 - [ ] Editor Options
+
+### Features
+
 - [ ] GPX/KML Import/Export
+- [ ] Marker Clustering
+- [ ] Locate button
 
 ## Development
 
