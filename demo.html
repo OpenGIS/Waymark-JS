@@ -7,14 +7,17 @@
       href="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.css"
     />
   </head>
+
+  <script src="https://unpkg.com/@ogis/waymark-js/dist/waymark-js.umd.cjs"></script>
+
   <body>
     <div id="waymark-instance" style="height: 100%"></div>
 
     <script type="module">
-      import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
+      // import { Instance } from "https://unpkg.com/@ogis/waymark-js/dist/waymark-js.js";
 
       // Create a Waymark Instance with this configuration
-      const instance = new Instance({
+      const instance = new Waymark.Instance({
         // [Map Options](docs/v2/2.instances.md#map-options)
         map_options: {
           // [MapLibre MapOptions](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/)
