@@ -1,7 +1,6 @@
 # Waymark JS
 
-> [!TIP]
-> [Version 2 Pre-Release](https://github.com/OpenGIS/Waymark-JS/tree/2.0.0-alpha) available!
+> [!TIP] > [Version 2 Pre-Release](https://github.com/OpenGIS/Waymark-JS/tree/two) available!
 > Please note that Version 2 is currently in Alpha and may contain bugs or incomplete features. It is not recommended for production use at this time.
 
 Create, share and edit _meaningful_ Maps.
