@@ -70,4 +70,28 @@ describe("Instance", () => {
     expect(mapContainer).toBeTruthy();
     expect(mapCanvas).toBeTruthy();
   });
+
+  it("mounts into an existing container when map_options.div_id is provided", () => {
+    const customContainer = document.createElement("div");
+    customContainer.id = "custom-container";
+    document.body.appendChild(customContainer);
+
+    new Instance({
+      map_options: {
+        div_id: "custom-container",
+      },
+    });
+
+    const defaultContainer = document.getElementById("waymark-instance");
+    const container = document.getElementById("custom-container");
+    const mapContainer = document.getElementById("custom-container-map");
+    const mapCanvas = document.querySelector(
+      "#custom-container-map .maplibregl-canvas",
+    );
+
+    expect(defaultContainer).toBeFalsy();
+    expect(container).toBe(customContainer);
+    expect(mapContainer).toBeTruthy();
+    expect(mapCanvas).toBeTruthy();
+  });
 });
