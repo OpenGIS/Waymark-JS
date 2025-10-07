@@ -5,6 +5,14 @@ vi.mock("maplibre-gl", () => {
     constructor(options = {}) {
       this.handlers = {};
       this.options = options;
+      this.sources = {};
+      this.layers = [];
+      this._styleLayers = [];
+      const [defaultLng, defaultLat] = Array.isArray(options.center)
+        ? options.center
+        : [0, 0];
+      this._zoom = options.zoom ?? 0;
+      this._center = { lat: defaultLat, lng: defaultLng };
 
       const containerOption = options.container;
       const containerElement =
@@ -43,6 +51,41 @@ vi.mock("maplibre-gl", () => {
     }
 
     fitBounds() {}
+
+    getZoom() {
+      return this._zoom;
+    }
+
+    getCenter() {
+      return this._center;
+    }
+
+    addSource(id, source) {
+      this.sources[id] = source;
+    }
+
+    addLayer(layer) {
+      const layerCopy = JSON.parse(JSON.stringify(layer));
+      this.layers.push(layerCopy);
+      this._styleLayers.push(JSON.parse(JSON.stringify(layerCopy)));
+    }
+
+    getStyle() {
+      return {
+        layers: this._styleLayers,
+      };
+    }
+
+    setLayoutProperty(id, property, value) {
+      const updateLayer = (target) => {
+        if (!target) return;
+        target.layout = target.layout || {};
+        target.layout[property] = value;
+      };
+
+      updateLayer(this.layers.find((layer) => layer.id === id));
+      updateLayer(this._styleLayers.find((layer) => layer.id === id));
+    }
   }
 
   class MockLngLatBounds {
@@ -58,6 +101,7 @@ vi.mock("maplibre-gl", () => {
 });
 
 import { Instance } from "../library/main.js";
+import { TileLayer } from "../library/classes/TileLayer.js";
 
 describe("Instance", () => {
   beforeEach(() => {
@@ -170,5 +214,85 @@ describe("Instance", () => {
         "#waymark-instance-map .maplibregl-ctrl-bottom-right",
       ),
     ).toBeTruthy();
+  });
+
+  it("registers configured tile layers on the map and activates the first entry", () => {
+    const tileLayerConfig = [
+      {
+        layer_name: "Layer One",
+        layer_url: "https://tiles.example.com/one/{z}/{x}/{y}.png",
+        layer_attribution: "Layer One Attribution",
+        layer_max_zoom: "17",
+      },
+      {
+        layer_name: "Layer Two",
+        layer_url: "https://tiles.example.com/two/{z}/{x}/{y}.png",
+        layer_attribution: "Layer Two Attribution",
+        layer_max_zoom: "16",
+      },
+    ];
+
+    const instance = new Instance({
+      map_options: {
+        tile_layers: tileLayerConfig,
+      },
+    });
+
+    const map = instance.store.map.value;
+    const activeTileLayerRef = instance.store.activeTileLayer;
+    const [tileLayerOne, tileLayerTwo] = instance.store.config.value.getTileLayers();
+
+    expect(tileLayerOne).toBeInstanceOf(TileLayer);
+    expect(tileLayerTwo).toBeInstanceOf(TileLayer);
+    expect(activeTileLayerRef.value).toBe(tileLayerOne);
+
+    const firstLayer = map.layers.find((layer) => layer.id === tileLayerOne.id);
+    const secondLayer = map.layers.find((layer) => layer.id === tileLayerTwo.id);
+
+    expect(map.sources).toHaveProperty(tileLayerOne.id);
+    expect(map.sources[tileLayerOne.id]).toEqual(
+      expect.objectContaining({
+        type: "raster",
+        tiles: [tileLayerOne.data.layer_url],
+      }),
+    );
+
+    expect(map.sources).toHaveProperty(tileLayerTwo.id);
+    expect(map.sources[tileLayerTwo.id]).toEqual(
+      expect.objectContaining({
+        type: "raster",
+        tiles: [tileLayerTwo.data.layer_url],
+      }),
+    );
+
+    expect(firstLayer?.layout.visibility).toBe("visible");
+    expect(secondLayer?.layout.visibility).toBe("none");
+  });
+
+  it("merges tile layer defaults when optional fields are omitted", () => {
+    const instance = new Instance({
+      map_options: {
+        tile_layers: [
+          {
+            layer_name: "Layer Defaults",
+          },
+        ],
+      },
+    });
+
+    const [tileLayer] = instance.store.config.value.getTileLayers();
+
+    expect(tileLayer).toBeInstanceOf(TileLayer);
+    expect(tileLayer.data.layer_url).toBe(
+      "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    );
+    expect(tileLayer.data.layer_attribution).toContain("OpenStreetMap");
+    expect(tileLayer.data.layer_max_zoom).toBe("18");
+    expect(tileLayer.toSource()).toEqual(
+      expect.objectContaining({
+        maxzoom: 18,
+        tiles: ["http://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      }),
+    );
   });
 });
