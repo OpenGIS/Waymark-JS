@@ -35,7 +35,7 @@
     <script type="module" lang="ts">
       let MODE = "app"; // "app" | "playground"
       // MODE = "playground";
-      // MODE = "docs";
+      MODE = "docs";
 
       document.body.classList.add(MODE);
       console.clear();
@@ -173,23 +173,23 @@
             });
           // Docs - Single instance, no buttons
         } else if (MODE === "docs") {
-          const div = document.createElement("div");
-          div.id = "waymark-instance";
-          div.className = "test-wrap";
-          div.style.height = "300px";
-          document.body.appendChild(div);
+          // const div = document.createElement("div");
+          // div.id = "waymark-instance";
+          // div.className = "test-wrap";
+          // div.style.height = "300px";
+          // document.body.appendChild(div);
 
           // Create a Waymark Instance with this configuration
           const instance = new Instance({
             // See [Map Options](docs/v2/2.instances.md#map-options) for details
             map_options: {
-              div_id: "waymark-instance",
+              // div_id: "waymark-instance",
 
               // Passed directly to MapLibre GL JS
               // See [MapLibre Map Options](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/)
-              maplibre_options: {
-                zoom: 16,
-              },
+              // maplibre_options: {
+              //   zoom: 16,
+              // },
 
               // See [Marker Types](docs/v2/2.instances.md#marker-types) for details
               marker_types: [
@@ -206,7 +206,7 @@
             },
           });
 
-          // instance.map.value.setCenter([-128.0094, 50.6539]);
+          //instance.map.value.setCenter([-128.0094, 50.6539]);
 
           // Load this GeoJSON, which contains a single "pub" Marker
           // instance.loadGeoJSON({

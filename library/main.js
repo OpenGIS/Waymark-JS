@@ -6,11 +6,12 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export class Instance {
-	constructor(config) {
-		// Ensure we have an ID
-		if (typeof config.map_options.div_id === "undefined") {
-			config.map_options.div_id = "waymark-instance";
-		}
+	constructor(config = {}) {
+		// Normalise configuration object
+		config.map_options = {
+			div_id: "waymark-instance",
+			...(config.map_options || {}),
+		};
 
 		// Ensure we have a container
 		if (!document.getElementById(config.map_options.div_id)) {

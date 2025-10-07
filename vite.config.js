@@ -34,6 +34,11 @@ export default defineConfig({
     },
   },
 
+  test: {
+    environment: "jsdom",
+    globals: true,
+  },
+
   server: {
     open: "/index.html",
     // allowedHosts: ["joe-dev.local"],
