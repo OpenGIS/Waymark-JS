@@ -158,6 +158,45 @@ instance.loadGeoJSON({
 1. [Start Here](docs/v2/1.index.md)
 2. [Instances](docs/v2/2.instances.md)
 
+## Project Structure
+
+- `library/` — Source library (Vue app entry, components, composables, helpers, Pinia store)
+  - `components/App.vue` — Root component bootstrapped by each Instance
+  - `components/Map.vue` & `components/UI/` — Map canvas and supporting UI panels
+  - `composables/useMap.js` — Instance methods (`loadGeoJSON`, `toGeoJSON`, `clearGeoJSON`)
+  - `stores/instanceStore.js` — Shared Pinia store holding instance state
+  - `classes/` — Configuration and type helpers for overlays, tile layers, and map types
+  - `assets/css/` — Packaged stylesheets (`index.css`, marker theming, reset)
+- `docs/v2/` — End-user documentation (Getting started, Instance configuration, map/marker options)
+- `dev/` — Sample datasets and configuration snapshots used during development
+- `index.html` — Local playground entry when running the dev server
+- `vite.config.js` — Library build configuration (outputs ESM + UMD bundles to `dist/`)
+
+## Instance API
+
+Calling `new Instance(config)` mounts the Vue application, normalises configuration via `Config`, and returns an object for managing overlays.
+
+### Instantiation
+
+- `const instance = new Instance(config)` — Targets `config.map_options.div_id` (default `waymark-instance`). If the element is missing, a full-height container is appended to `document.body`.
+- Configuration is parsed through `library/classes/Config.js`, which merges defaults and constructs helper classes for tile layers and overlay types.
+
+### Constructor configuration (`config`)
+
+- `map_options.div_id` _(string)_ — DOM ID for the map container.
+- `map_options.maplibre_options` _(object)_ — Overrides MapLibre defaults (center `[-1.8261632, 51.1788144]`, zoom `14`, maxZoom `18`, style `https://tiles.openfreemap.org/styles/bright`, attributionControl `false`).
+- `map_options.tile_layers` _(array)_ — Basemap definitions converted into `TileLayer` instances (`layer_name`, `layer_url`, `layer_attribution`, `layer_max_zoom`).
+- `map_options.marker_types` _(array)_ — Marker presets mapped to `MarkerType` objects (defaults: title `Marker`, shape `marker`, size `large`, icon `ion-pin`, colours from `defaultMarkerColour`).
+- `map_options.line_types` _(array)_ — Line presets mapped to `LineType` objects (defaults: title `Line`, colour `defaultLineColour`, weight `3`, opacity `1`).
+- `map_options.shape_types` _(array)_ — Polygon presets mapped to `ShapeType` objects (defaults: title `Shape`, colour `defaultShapeColour`, fill opacity `0.5`).
+- Omitted sections fall back to safe defaults; planned options (`map_init_basemap`, `show_scale`, `debug_mode`) are not yet available.
+
+### Methods on the Instance
+
+- `loadGeoJSON(featureCollection)` — Replaces overlays with the supplied GeoJSON FeatureCollection. Features are typed as markers, lines, or shapes based on geometry and can reference defined type keys.
+- `toGeoJSON()` — Returns the current overlays as a GeoJSON FeatureCollection for export or persistence.
+- `clearGeoJSON()` — Removes all overlays, leaving the map canvas and basemaps intact.
+
 ## To-Do
 
 ### Configuration
