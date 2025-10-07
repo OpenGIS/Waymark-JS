@@ -21,7 +21,7 @@ const props = defineProps({
 
 let isOnMap = ref(true);
 
-const isactiveOverlay = computed(() => {
+const isActiveOverlay = computed(() => {
   return activeOverlay.value === props.overlay;
 });
 
@@ -33,31 +33,31 @@ const toggleOnMap = () => {
   isOnMap.value = !isOnMap.value;
 
   // Close if hiding
-  if (isactiveOverlay.value) {
+  if (isActiveOverlay.value) {
     // Remove highlight
-    removeLayerHighlight(activeOverlay.value);
+    activeOverlay.value.removeHighlight();
 
     // Make inactive
     activeOverlay.value = null;
   }
 
-  map.value.removeLayer(props.overlay);
-
   if (isOnMap.value) {
-    map.value.addLayer(props.overlay);
+    props.overlay.show();
+  } else {
+    props.overlay.hide();
   }
 };
 
 const overlayStyle = computed(() => {
-  if (isactiveOverlay.value) {
-    return `color: ${waymarkPrimaryColour};`;
+  if (isActiveOverlay.value) {
+    return `color: ${waymarkPrimaryColour};border-color: ${waymarkPrimaryColour};`;
   }
 });
 
 const overlayClass = computed(() => {
   let out = props.overlay.featureType;
 
-  if (isactiveOverlay.value) {
+  if (isActiveOverlay.value) {
     out += " active ";
   }
 

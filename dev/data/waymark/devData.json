@@ -2,6 +2,26 @@
   "type": "FeatureCollection",
   "features": [
     {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-127.490044, 50.722499, 6.1692],
+            [-128.425455, 50.782008, 6.1692],
+            [-128.425455, 50.653923, 6.1692],
+            [-127.490044, 50.653923, 6.1692],
+            [-127.490044, 50.722499, 6.1692]
+          ]
+        ]
+      },
+      "properties": {
+        "title": "North North Island",
+        "type": "red",
+        "description": "The North North Island route takes you from Port Hardy to Cape Scott and back, covering some of the most remote and scenic areas of Vancouver Island. Be prepared for rough terrain and changing weather conditions."
+      }
+    },
+    {
       "geometry": {
         "type": "Point",
         "coordinates": [-127.497046, 50.720265, 6.1692]

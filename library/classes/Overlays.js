@@ -192,6 +192,18 @@ export class MarkerOverlay extends Overlay {
 
   addEvents() {}
 
+  show() {
+    if (this.marker) {
+      this.marker.getElement().style.visibility = "visible";
+    }
+  }
+
+  hide() {
+    if (this.marker) {
+      this.marker.getElement().style.visibility = "hidden";
+    }
+  }
+
   hasElevationData() {
     // Check if feature coordinates has third dimension (elevation)
     return this.feature.geometry.coordinates.length === 3;
@@ -304,6 +316,18 @@ export class LineOverlay extends Overlay {
     this.map.on("mouseleave", this.id, () => {
       this.map.getCanvas().style.cursor = "";
     });
+  }
+
+  show() {
+    if (this.map.getLayer(this.id)) {
+      this.map.setLayoutProperty(this.id, "visibility", "visible");
+    }
+  }
+
+  hide() {
+    if (this.map.getLayer(this.id)) {
+      this.map.setLayoutProperty(this.id, "visibility", "none");
+    }
   }
 
   getLengthString() {
@@ -471,6 +495,18 @@ export class ShapeOverlay extends Overlay {
     };
   }
 
+  show() {
+    if (this.map.getLayer(this.id)) {
+      this.map.setLayoutProperty(this.id, "visibility", "visible");
+    }
+  }
+
+  hide() {
+    if (this.map.getLayer(this.id)) {
+      this.map.setLayoutProperty(this.id, "visibility", "none");
+    }
+  }
+
   addEvents() {
     // Cursor pointer on hover
     this.map.on("mouseenter", this.id, () => {
@@ -571,10 +607,15 @@ export class ShapeOverlay extends Overlay {
   }
 
   inBounds(bounds) {
-    // Check if any part of the shape is within the map bounds
-    const coords = this.feature.geometry.coordinates[0];
-    return coords.some((coord) =>
-      bounds.contains({ lng: coord[0], lat: coord[1] }),
+    // Check if shape bounds and provided bounds overlap
+    const shapeBounds = this.getBounds();
+
+    // Manually check for overlap
+    return !(
+      shapeBounds.getNorth() < bounds.getSouth() ||
+      shapeBounds.getSouth() > bounds.getNorth() ||
+      shapeBounds.getEast() < bounds.getWest() ||
+      shapeBounds.getWest() > bounds.getEast()
     );
   }
 }
