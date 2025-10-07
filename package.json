@@ -27,8 +27,9 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite --host",
-    "test": "vitest run"
+    "dev": "concurrently \"vite --host\" \"npm run test:watch\"",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@turf/length": "^7.2.0",
@@ -40,10 +41,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "concurrently": "^9.2.1",
+    "jsdom": "^24.1.0",
     "less": "^4.2.0",
     "prettier": "^3.2.5",
     "vite": "^6.3.5",
-    "vitest": "^2.1.1",
-    "jsdom": "^24.1.0"
+    "vitest": "^2.1.1"
   }
 }
