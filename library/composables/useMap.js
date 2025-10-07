@@ -79,8 +79,15 @@ export function useMap() {
 				}
 				// No features found
 			} else {
-				// Remove active overlay
-				setActiveOverlay();
+				// If Active overlay
+				if (activeOverlay.value) {
+					// Remove active overlay
+					setActiveOverlay();
+				} else {
+					// Close Panel
+					panelOpen.value = false;
+					activePanelKey.value = null;
+				}
 			}
 		});
 
