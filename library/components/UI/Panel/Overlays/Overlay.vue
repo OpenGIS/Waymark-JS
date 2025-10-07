@@ -13,6 +13,7 @@ const { map, activeOverlay, filteredOverlays } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
+import { waymarkPrimaryColour } from "@/helpers/Common.js";
 
 const props = defineProps({
   overlay: Overlay,
@@ -49,14 +50,7 @@ const toggleOnMap = () => {
 
 const overlayStyle = computed(() => {
   if (isactiveOverlay.value) {
-    switch (props.overlay.featureType) {
-      case "marker":
-        return `color: ${props.overlay.type.getIconColour()};background-color: ${props.overlay.type.getPrimaryColour()};`;
-      case "line":
-        return `background-color: ${props.overlay.type.getPrimaryColour()};`;
-      case "shape":
-        return `background-color: ${props.overlay.type.getPrimaryColour()};`;
-    }
+    return `color: ${waymarkPrimaryColour};`;
   }
 });
 
@@ -124,14 +118,14 @@ watch(activeOverlay, (newLayer) => {
   &.active {
     height: auto;
 
-    &.line {
-      .content {
-        color: #fff;
-        text-shadow:
-          0 0 1px #000,
-          0 0 1px #000;
-      }
-    }
+    // &.line {
+    //   .content {
+    //     color: #fff;
+    //     text-shadow:
+    //       0 0 1px #000,
+    //       0 0 1px #000;
+    //   }
+    // }
 
     .title {
       overflow: visible;

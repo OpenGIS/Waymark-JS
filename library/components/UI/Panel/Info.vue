@@ -7,13 +7,9 @@ const { activeTileLayer } = storeToRefs(useInstanceStore());
 
 <template>
 	<div class="panel info">
-		<h3>Key</h3>
-
 		<h3>Basemap</h3>
 
-		<div class="name">{{ activeTileLayer.options.name }}</div>
-
-		<div class="attribution" v-html="activeTileLayer.options.attribution"></div>
+		{{ JSON.stringify(activeTileLayer) }}
 	</div>
 </template>
 

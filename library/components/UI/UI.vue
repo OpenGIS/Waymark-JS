@@ -73,7 +73,7 @@ onMounted(() => {
 		<div class="panels-content">
 			<Overlays v-show="mapHasOverlays && showPanel('overlays')" />
 
-			<!-- <Info v-show="showPanel('info')" /> -->
+			<Info v-show="showPanel('info')" />
 
 			<Basemaps v-show="showPanel('basemaps')" />
 		</div>

@@ -220,8 +220,6 @@ const shapeCount = computed(() => {
 			.panel-content {
 				.heading,
 				.overlay:not(.active) {
-					border-color: transparent !important;
-					/*filter: grayscale(100%);*/
 					opacity: 0.4;
 				}
 			}
