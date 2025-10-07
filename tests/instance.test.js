@@ -2,8 +2,22 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("maplibre-gl", () => {
   class MockMap {
-    constructor() {
+    constructor(options = {}) {
       this.handlers = {};
+      this.options = options;
+
+      const containerOption = options.container;
+      const containerElement =
+        typeof containerOption === "string"
+          ? document.getElementById(containerOption)
+          : containerOption;
+
+      if (containerElement) {
+        this.canvas = document.createElement("div");
+        this.canvas.className = "maplibregl-canvas";
+        this.canvas.dataset.testid = "mock-maplibre-canvas";
+        containerElement.appendChild(this.canvas);
+      }
     }
 
     on(event, callback) {
@@ -43,12 +57,17 @@ describe("Instance", () => {
     document.body.innerHTML = "";
   });
 
-  it("mounts into the default container when constructed without configuration", () => {
+  it("instantiates MapLibre inside the default container when constructed without configuration", () => {
     new Instance();
 
     const container = document.getElementById("waymark-instance");
+    const mapContainer = document.getElementById("waymark-instance-map");
+    const mapCanvas = document.querySelector(
+      "#waymark-instance-map .maplibregl-canvas",
+    );
 
     expect(container).toBeTruthy();
-    expect(container?.style.height).toBe("100%");
+    expect(mapContainer).toBeTruthy();
+    expect(mapCanvas).toBeTruthy();
   });
 });
