@@ -10,6 +10,18 @@
   text-align: center;
   cursor: pointer;
 
+  &.waymark-active {
+    z-index: 1000 !important;
+    .waymark-marker-background {
+      border-width: 2px;
+      border-style: solid;
+    }
+    .waymark-marker-icon::before {
+      padding-top: 4px;
+      margin-left: 4px;
+    }
+  }
+
   .waymark-marker-background {
     width: inherit;
     height: inherit;

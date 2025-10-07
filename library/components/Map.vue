@@ -25,18 +25,5 @@ onMounted(() => {
 
 <style lang="less">
 .map {
-  .waymark-marker {
-    &.waymark-active {
-      z-index: 1000 !important;
-      .waymark-marker-background {
-        border-width: 4px;
-        border-style: dotted;
-      }
-      .waymark-marker-icon::before {
-        padding-top: 8px;
-        margin-left: 8px;
-      }
-    }
-  }
 }
 </style>

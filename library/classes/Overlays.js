@@ -415,19 +415,27 @@ export class LineOverlay extends Overlay {
   }
 
   addHighlight() {
-    // Chanege Layer Paint to highlight
-    this.map.setPaintProperty(this.id, "line-color", waymarkPrimaryColour);
-    this.map.setPaintProperty(this.id, "line-dasharray", [2, 4]);
+    // Add a new highlight layer below this layer that has the highlight style
+    this.map.addLayer(
+      {
+        id: `${this.id}-highlight`,
+        type: "line",
+        source: this.id,
+        layout: {},
+        paint: {
+          "line-color": waymarkPrimaryColour,
+          "line-width": parseFloat(this.type.data.line_weight) + 2,
+        },
+      },
+      this.id,
+    );
   }
 
   removeHighlight() {
-    // UnHighlight Layer
-    this.map.setPaintProperty(
-      this.id,
-      "line-color",
-      this.type.getPrimaryColour(),
-    );
-    this.map.setPaintProperty(this.id, "line-dasharray", null);
+    // Remove highlight layer
+    if (this.map.getLayer(`${this.id}-highlight`)) {
+      this.map.removeLayer(`${this.id}-highlight`);
+    }
   }
 
   flyTo() {
@@ -534,23 +542,27 @@ export class ShapeOverlay extends Overlay {
   }
 
   addHighlight() {
-    // Chanege Layer Paint to highlight
-    this.map.setPaintProperty(this.id, "fill-color", waymarkPrimaryColour);
-    this.map.setPaintProperty(this.id, "fill-opacity", 0.5);
-    this.map.setPaintProperty(
+    // Add highlight layer below this layer to mimic adding a border
+    this.map.addLayer(
+      {
+        id: `${this.id}-highlight`,
+        type: "line",
+        source: this.id,
+        layout: {},
+        paint: {
+          "line-color": waymarkPrimaryColour,
+          "line-width": 2,
+        },
+      },
       this.id,
-      "fill-outline-color",
-      waymarkPrimaryColour,
     );
   }
 
   removeHighlight() {
-    // UnHighlight Layer
-    this.map.setPaintProperty(
-      this.id,
-      "fill-color",
-      this.type.getPrimaryColour(),
-    );
+    // Remove highlight layer
+    if (this.map.getLayer(`${this.id}-highlight`)) {
+      this.map.removeLayer(`${this.id}-highlight`);
+    }
   }
 
   flyTo() {
