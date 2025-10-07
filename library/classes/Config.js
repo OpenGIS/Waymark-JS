@@ -64,30 +64,32 @@ export class Config {
         this.map_options[typesKey].forEach((typeData) => {
           switch (featureType) {
             case "marker":
-              // If not array, create it
-              if (!this.markerTypes.hasOwnProperty(typesKey)) {
-                this.markerTypes[typesKey] = [];
-              }
+              var type = new MarkerType(typeData);
+              var typeKey = type.typeKey;
 
-              this.markerTypes[typesKey].push(new MarkerType(typeData));
+              if (!this.markerTypes.hasOwnProperty(typeKey)) {
+                this.markerTypes[typeKey] = type;
+              }
 
               break;
             case "line":
-              // If not array, create it
-              if (!this.lineTypes.hasOwnProperty(typesKey)) {
-                this.lineTypes[typesKey] = [];
-              }
+              var type = new LineType(typeData);
+              var typeKey = type.typeKey;
 
-              this.lineTypes[typesKey].push(new LineType(typeData));
+              console.log("Importing line type:", typeKey, type);
+
+              if (!this.lineTypes.hasOwnProperty(typeKey)) {
+                this.lineTypes[typeKey] = type;
+              }
 
               break;
             case "shape":
-              // If not array, create it
-              if (!this.shapeTypes.hasOwnProperty(typesKey)) {
-                this.shapeTypes[typesKey] = [];
-              }
+              var type = new ShapeType(typeData);
+              var typeKey = type.typeKey;
 
-              this.shapeTypes[typesKey].push(new ShapeType(typeData));
+              if (!this.shapeTypes.hasOwnProperty(typeKey)) {
+                this.shapeTypes[typeKey] = type;
+              }
 
               break;
           }
@@ -103,29 +105,48 @@ export class Config {
   getType(featureType, typeKey) {
     if (!featureType) return null;
 
+    if (featureType === "line") {
+      console.log("Getting line type for key:", typeKey, this.lineTypes);
+    }
+
     switch (featureType) {
       case "marker":
-        return (
-          this.markerTypes["marker_types"].find(
-            (type) => type.typeKey === typeKey,
-          ) || new MarkerType()
-        );
+        return this.markerTypes[typeKey] || new MarkerType();
       case "line":
-        return (
-          this.lineTypes["line_types"].find(
-            (type) => type.typeKey === typeKey,
-          ) || new LineType()
-        );
+        return this.lineTypes[typeKey] || new LineType();
       case "shape":
-        return (
-          this.shapeTypes["shape_types"].find(
-            (type) => type.typeKey === typeKey,
-          ) || new ShapeType()
-        );
+        return this.shapeTypes[typeKey] || new ShapeType();
       default:
         return null;
     }
   }
+
+  // getType(featureType, typeKey) {
+  //   if (!featureType) return null;
+
+  //   switch (featureType) {
+  //     case "marker":
+  //       return (
+  //         this.markerTypes["marker_types"].find(
+  //           (type) => type.typeKey === typeKey,
+  //         ) || new MarkerType()
+  //       );
+  //     case "line":
+  //       return (
+  //         this.lineTypes["line_types"].find(
+  //           (type) => type.typeKey === typeKey,
+  //         ) || new LineType()
+  //       );
+  //     case "shape":
+  //       return (
+  //         this.shapeTypes["shape_types"].find(
+  //           (type) => type.typeKey === typeKey,
+  //         ) || new ShapeType()
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // }
 
   /**
    * Get specific map option
