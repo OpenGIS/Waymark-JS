@@ -42,11 +42,11 @@ const toggleVisible = () => {
     isExpanded.value = false;
   }
 
-  props.layerGroup.eachLayer((layer) => {
-    map.value.removeLayer(layer);
-
+  props.overlays.forEach((overlay) => {
     if (isVisible.value) {
-      map.value.addLayer(layer);
+      overlay.show();
+    } else {
+      overlay.hide();
     }
   });
 };
