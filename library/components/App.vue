@@ -56,7 +56,7 @@ const classAppend = computed(() => {
 
 	// Has active layer
 	if (activeOverlay.value) {
-		classes.push("has-active-layer");
+		classes.push("has-active-overlay");
 	}
 
 	return classes.join(" ");
@@ -123,7 +123,7 @@ const classAppend = computed(() => {
 				// height: 480px;
 			}
 
-			&.has-active-layer {
+			&.has-active-overlay {
 				.ui {
 					height: 480px;
 				}

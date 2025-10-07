@@ -211,7 +211,7 @@ const shapeCount = computed(() => {
 	}
 }
 
-.instance.has-active-layer.panel-open {
+.instance.has-active-overlay.panel-open {
 	.ui {
 		.panel.overlay {
 			.panel-top {

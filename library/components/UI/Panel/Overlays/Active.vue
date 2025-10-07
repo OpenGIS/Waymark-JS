@@ -12,10 +12,13 @@ const { setActiveOverlay } = useMap();
 </script>
 
 <template>
-  <!-- START Active Layer -->
-  <div v-if="activeOverlay" class="active-layer">
+  <!-- START Active Overlay -->
+  <div
+    v-if="activeOverlay"
+    :class="`active-overlay feature-${activeOverlay.featureType}`"
+  >
     <!-- START Top -->
-    <div class="layer-top">
+    <div class="overlay-top">
       <!-- Type Preview -->
       <div class="type">
         <Preview :type="activeOverlay.type" />
@@ -29,7 +32,7 @@ const { setActiveOverlay } = useMap();
     <!-- End Top -->
 
     <!-- START Content -->
-    <div class="layer-content">
+    <div class="overlay-content">
       <!-- Image -->
       <div class="image" v-if="activeOverlay.hasImage()">
         <img
@@ -68,11 +71,11 @@ const { setActiveOverlay } = useMap();
     </div>
     <!-- End Content -->
   </div>
-  <!-- End Active Layer -->
+  <!-- End Active Overlay -->
 </template>
 
 <style lang="less">
-.active-layer {
+.active-overlay {
   max-height: 190px;
   padding: 8px;
   overflow: scroll;
@@ -81,13 +84,14 @@ const { setActiveOverlay } = useMap();
   border-bottom: 1px solid #999;
 
   /* Top */
-  .layer-top {
+  .overlay-top {
     margin-bottom: 5px;
     padding-bottom: 5px;
+    padding-right: 32px;
     border-bottom: 1px solid #f3f3f3;
     min-height: 34px;
     display: flex;
-    align-items: center;
+    // align-items: center;
     position: relative;
 
     // .type {
@@ -99,7 +103,9 @@ const { setActiveOverlay } = useMap();
     // }
 
     .type {
-      margin-right: 10px;
+      width: 36px;
+      height: 36px;
+      margin-right: 5px;
     }
 
     .title {
@@ -116,7 +122,7 @@ const { setActiveOverlay } = useMap();
   }
 
   /* Content */
-  .layer-content {
+  .overlay-content {
     /* Self Clear floats */
     height: auto;
     clear: both;
@@ -148,6 +154,15 @@ const { setActiveOverlay } = useMap();
       position: absolute;
       top: 2px;
       right: 5px;
+    }
+  }
+
+  /* Lines */
+  &.feature-line {
+    .overlay-top {
+      .type {
+        width: 30px;
+      }
     }
   }
 }
