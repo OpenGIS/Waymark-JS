@@ -8,6 +8,7 @@ vi.mock("maplibre-gl", () => {
       this.sources = {};
       this.layers = [];
       this._styleLayers = [];
+      this.markers = [];
       const [defaultLng, defaultLat] = Array.isArray(options.center)
         ? options.center
         : [0, 0];
@@ -19,6 +20,7 @@ vi.mock("maplibre-gl", () => {
         typeof containerOption === "string"
           ? document.getElementById(containerOption)
           : containerOption;
+      this.containerElement = containerElement;
 
       if (containerElement) {
         this.canvas = document.createElement("div");
@@ -32,6 +34,8 @@ vi.mock("maplibre-gl", () => {
             "maplibregl-ctrl-bottom-right maplibregl-ctrl attribution";
           containerElement.appendChild(this.attributionControl);
         }
+      } else {
+        this.canvas = document.createElement("div");
       }
     }
 
@@ -47,10 +51,24 @@ vi.mock("maplibre-gl", () => {
     }
 
     getBounds() {
-      return {};
+      return new MockLngLatBounds([-180, -90], [180, 90]);
     }
 
-    fitBounds() {}
+    fitBounds(bounds) {
+      if (bounds instanceof MockLngLatBounds) {
+        const center = bounds.getCenter();
+        this._center = center;
+      }
+    }
+
+    flyTo(options = {}) {
+      if (typeof options.zoom === "number") {
+        this._zoom = options.zoom;
+      }
+      if (Array.isArray(options.center)) {
+        this._center = { lng: options.center[0], lat: options.center[1] };
+      }
+    }
 
     getZoom() {
       return this._zoom;
@@ -60,14 +78,29 @@ vi.mock("maplibre-gl", () => {
       return this._center;
     }
 
+    getCanvas() {
+      return this.canvas;
+    }
+
     addSource(id, source) {
       this.sources[id] = source;
     }
 
-    addLayer(layer) {
+    addLayer(layer, beforeId) {
       const layerCopy = JSON.parse(JSON.stringify(layer));
-      this.layers.push(layerCopy);
-      this._styleLayers.push(JSON.parse(JSON.stringify(layerCopy)));
+      const insert = (targetArray) => {
+        if (beforeId) {
+          const index = targetArray.findIndex((l) => l.id === beforeId);
+          if (index >= 0) {
+            targetArray.splice(index, 0, JSON.parse(JSON.stringify(layerCopy)));
+            return;
+          }
+        }
+        targetArray.push(JSON.parse(JSON.stringify(layerCopy)));
+      };
+
+      insert(this.layers);
+      insert(this._styleLayers);
     }
 
     getStyle() {
@@ -86,22 +119,144 @@ vi.mock("maplibre-gl", () => {
       updateLayer(this.layers.find((layer) => layer.id === id));
       updateLayer(this._styleLayers.find((layer) => layer.id === id));
     }
+
+    getLayer(id) {
+      return (
+        this.layers.find((layer) => layer.id === id) ||
+        this._styleLayers.find((layer) => layer.id === id)
+      );
+    }
+
+    getSource(id) {
+      return this.sources[id];
+    }
+
+    removeLayer(id) {
+      const removeFrom = (arr) => {
+        const index = arr.findIndex((layer) => layer.id === id);
+        if (index >= 0) {
+          arr.splice(index, 1);
+        }
+      };
+      removeFrom(this.layers);
+      removeFrom(this._styleLayers);
+    }
+
+    removeSource(id) {
+      delete this.sources[id];
+    }
   }
 
   class MockLngLatBounds {
-    extend() {
+    constructor(sw = [0, 0], ne = sw) {
+      const normalise = (value) => {
+        if (Array.isArray(value)) {
+          return { lng: value[0], lat: value[1] };
+        }
+        return value || { lng: 0, lat: 0 };
+      };
+
+      this.sw = normalise(sw);
+      this.ne = normalise(ne);
+    }
+
+    extend(coord) {
+      if (!coord) {
+        return this;
+      }
+
+      if (
+        coord instanceof MockLngLatBounds ||
+        (coord.sw && coord.ne)
+      ) {
+        this.extend(coord.sw);
+        this.extend(coord.ne);
+        return this;
+      }
+
+      const point = Array.isArray(coord)
+        ? { lng: coord[0], lat: coord[1] }
+        : coord;
+      this.sw.lng = Math.min(this.sw.lng, point.lng);
+      this.sw.lat = Math.min(this.sw.lat, point.lat);
+      this.ne.lng = Math.max(this.ne.lng, point.lng);
+      this.ne.lat = Math.max(this.ne.lat, point.lat);
       return this;
+    }
+
+    contains(coord) {
+      const point = Array.isArray(coord)
+        ? { lng: coord[0], lat: coord[1] }
+        : coord;
+      return (
+        point.lng >= this.sw.lng &&
+        point.lng <= this.ne.lng &&
+        point.lat >= this.sw.lat &&
+        point.lat <= this.ne.lat
+      );
+    }
+
+    getCenter() {
+      return {
+        lng: (this.sw.lng + this.ne.lng) / 2,
+        lat: (this.sw.lat + this.ne.lat) / 2,
+      };
+    }
+  }
+
+  class MockMarker {
+    constructor({ element } = {}) {
+      this.element = element || document.createElement("div");
+      this.lngLat = null;
+      this.map = null;
+    }
+
+    setLngLat(lngLat) {
+      this.lngLat = lngLat;
+      return this;
+    }
+
+    addTo(map) {
+      this.map = map;
+      map.markers.push(this);
+      if (map.containerElement && this.element) {
+        map.containerElement.appendChild(this.element);
+      }
+      return this;
+    }
+
+    remove() {
+      if (this.element?.parentNode) {
+        this.element.parentNode.removeChild(this.element);
+      }
+      if (this.map) {
+        const index = this.map.markers.indexOf(this);
+        if (index >= 0) {
+          this.map.markers.splice(index, 1);
+        }
+      }
+      this.map = null;
+    }
+
+    getElement() {
+      return this.element;
     }
   }
 
   return {
     Map: MockMap,
     LngLatBounds: MockLngLatBounds,
+    Marker: MockMarker,
   };
 });
 
 import { Instance } from "../library/main.js";
 import { TileLayer } from "../library/classes/TileLayer.js";
+import {
+  MarkerOverlay,
+  LineOverlay,
+  ShapeOverlay,
+} from "../library/classes/Overlays.js";
 
 describe("Instance", () => {
   beforeEach(() => {
@@ -294,5 +449,160 @@ describe("Instance", () => {
         tiles: ["http://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       }),
     );
+  });
+
+  it("renders marker overlays using configured marker types", () => {
+    const instance = new Instance({
+      map_options: {
+        marker_types: [
+          {
+            marker_title: "Cafe",
+            marker_colour: "#123456",
+            icon_colour: "#abcdef",
+            marker_shape: "marker",
+            marker_size: "medium",
+            icon_type: "icon",
+            marker_icon: "ion-coffee",
+          },
+        ],
+      },
+    });
+
+    instance.loadGeoJSON({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [13.41, 52.52],
+          },
+          properties: {
+            type: "cafe",
+            title: "Test Cafe",
+          },
+        },
+      ],
+    });
+
+    const overlays = instance.store.overlays.value;
+    const map = instance.store.map.value;
+
+    expect(overlays).toHaveLength(1);
+    expect(overlays[0]).toBeInstanceOf(MarkerOverlay);
+    expect(map.markers).toHaveLength(1);
+
+    const markerElement = map.markers[0].getElement();
+    expect(markerElement.className).toContain("waymark-marker-cafe");
+
+    const background = markerElement.querySelector(
+      ".waymark-marker-background",
+    );
+    expect(background).toBeTruthy();
+    expect(background.getAttribute("style")).toContain("#123456");
+  });
+
+  it("renders line overlays using configured line types", () => {
+    const instance = new Instance({
+      map_options: {
+        line_types: [
+          {
+            line_title: "Trail",
+            line_colour: "#ff9900",
+            line_weight: "5",
+          },
+        ],
+      },
+    });
+
+    instance.loadGeoJSON({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              [
+                -0.1357,
+                51.509,
+              ],
+              [
+                -0.1,
+                51.52,
+              ],
+            ],
+          },
+          properties: {
+            type: "trail",
+            title: "City Trail",
+          },
+        },
+      ],
+    });
+
+    const overlays = instance.store.overlays.value;
+    const map = instance.store.map.value;
+
+    expect(overlays).toHaveLength(1);
+    expect(overlays[0]).toBeInstanceOf(LineOverlay);
+
+    const lineLayer = map.layers.find((layer) => layer.id === "overlay-0");
+    expect(lineLayer).toBeTruthy();
+    expect(lineLayer.type).toBe("line");
+    expect(lineLayer.paint["line-color"]).toBe("#ff9900");
+    expect(lineLayer.paint["line-width"]).toBe(5);
+  });
+
+  it("renders shape overlays using configured shape types", () => {
+    const instance = new Instance({
+      map_options: {
+        shape_types: [
+          {
+            shape_title: "Park",
+            shape_colour: "#228B22",
+            fill_opacity: "0.3",
+          },
+        ],
+      },
+    });
+
+    instance.loadGeoJSON({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [-0.15, 51.5],
+                [-0.14, 51.5],
+                [-0.14, 51.51],
+                [-0.15, 51.51],
+                [-0.15, 51.5],
+              ],
+            ],
+          },
+          properties: {
+            type: "park",
+            title: "Central Park",
+          },
+        },
+      ],
+    });
+
+    const overlays = instance.store.overlays.value;
+    const map = instance.store.map.value;
+
+    expect(overlays).toHaveLength(1);
+    expect(overlays[0]).toBeInstanceOf(ShapeOverlay);
+
+    const shapeLayer = map.layers.find((layer) => layer.id === "overlay-0");
+    expect(shapeLayer).toBeTruthy();
+    expect(shapeLayer.type).toBe("fill");
+    expect(shapeLayer.paint["fill-color"]).toBe("#228B22");
+    expect(shapeLayer.paint["fill-opacity"]).toBe(0.3);
+    expect(shapeLayer.paint["fill-outline-color"]).toBe("#228B22");
   });
 });
