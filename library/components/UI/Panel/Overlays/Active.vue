@@ -90,16 +90,20 @@ const { setActiveOverlay } = useMap();
     align-items: center;
     position: relative;
 
+    // .type {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 30px;
+    //   height: 30px;
+    // }
+
     .type {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 30px;
-      height: 30px;
+      margin-right: 10px;
     }
 
     .title {
-      padding: 0 35px;
+      // padding: 0 35px;
       font-size: 20px;
       font-weight: bold;
     }
