@@ -92,6 +92,7 @@ const { setActiveOverlay } = useMap();
     display: flex;
     align-items: center;
     position: relative;
+    vertical-align: middle;
 
     // .type {
     //   position: absolute;
@@ -102,15 +103,13 @@ const { setActiveOverlay } = useMap();
     // }
 
     .type {
-      // width: 32px;
-      // height: 32px;
-      margin-top: -5px;
-      margin-right: 10px;
+      width: 32px;
+      margin-right: 5px;
     }
 
     .title {
       // padding: 0 35px;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: bold;
     }
     .button {
