@@ -12,7 +12,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: "lg", // sm, md, lg
+    default: "medium", // small, medium, large
   },
 });
 
@@ -42,15 +42,15 @@ const buttonClass = computed(() => {
   }
 
   switch (props.size) {
-    case "sm":
-      classes.push("button-sm");
+    case "small":
+      classes.push("button-small");
       break;
-    case "lg":
-      classes.push("button-lg");
-      break;
-    case "md":
+    case "medium":
     default:
-      classes.push("button-md");
+      classes.push("button-medium");
+      break;
+    case "large":
+      classes.push("button-large");
       break;
   }
 
@@ -68,42 +68,6 @@ const buttonClass = computed(() => {
 </template>
 
 <style lang="less">
-// This represents the "medium" size:
-
-// .button {
-//   display: inline-block;
-//   padding: 8px;
-//   margin: 3px 0 3px 3px;
-//   min-width: 16px;
-//   font-size: 15px;
-//   color: #444;
-//   background: linear-gradient(to bottom, #f9f9f9, #eee);
-//   box-shadow: inset 0 0 0 1px #ddd;
-//   border-radius: 5px;
-//   text-align: center;
-//   &:hover,
-//   &.button-active {
-//     font-weight: bold;
-//     border-width: 2px;
-//     box-shadow: inset 0 0 0 1px #666;
-//     background: linear-gradient(to bottom, #fff, #ddd);
-//     text-shadow: unset;
-//   }
-//   i {
-//     min-width: inherit;
-//     text-align: center;
-//   }
-//   .count {
-//     padding-left: 5px;
-//     margin-left: 5px;
-//     opacity: 0.8;
-//     font-size: 12px;
-//     border-left: 1px solid #ddd;
-//   }
-// }
-
-// Re-written using LESS nested to make it easier to manage sizes
-
 .button {
   display: inline-block;
   padding: 8px;
@@ -138,7 +102,7 @@ const buttonClass = computed(() => {
     border-left: 1px solid #ddd;
   }
 
-  &.button-sm {
+  &.button-small {
     padding: 4px;
     font-size: 12px;
     border-radius: 3px;
@@ -148,11 +112,10 @@ const buttonClass = computed(() => {
     }
   }
 
-  &.button-md {
-    // Medium is the default size, so no changes needed
+  &.button-medium {
   }
 
-  &.button-lg {
+  &.button-large {
     padding: 12px;
     font-size: 18px;
     border-radius: 7px;

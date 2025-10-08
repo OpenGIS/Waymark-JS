@@ -36,27 +36,30 @@ const handleNavClick = (panelKey = "overlays") => {
 			<div class="nav-item nav-overlays">
 				<Button
 					v-if="mapHasOverlays"
+					size="large"
 					icon="fa-navicon"
 					@click="handleNavClick('overlays')"
 					:active="isActivePanel('overlays')"
 				/>
 			</div>
 
-			<!-- Info -->
-			<div class="nav-item nav-info">
-				<Button
-					icon="fa-info"
-					@click="handleNavClick('info')"
-					:active="isActivePanel('info')"
-				/>
-			</div>
-
 			<!-- Basemaps -->
 			<div class="nav-item nav-basemaps">
 				<Button
+					size="large"
 					icon="fa-map"
 					@click="handleNavClick('basemaps')"
 					:active="isActivePanel('basemaps')"
+				/>
+			</div>
+
+			<!-- Info -->
+			<div class="nav-item nav-info">
+				<Button
+					size="large"
+					icon="fa-info"
+					@click="handleNavClick('info')"
+					:active="isActivePanel('info')"
 				/>
 			</div>
 		</nav>
@@ -66,7 +69,7 @@ const handleNavClick = (panelKey = "overlays") => {
 		<div class="panels-content">
 			<Overlays v-show="mapHasOverlays && showPanel('overlays')" />
 
-			<Info v-show="showPanel('info')">{{ JSON.stringify(uiSize) }}</Info>
+			<Info v-show="showPanel('info')" />
 
 			<Basemaps v-show="showPanel('basemaps')" />
 		</div>
@@ -85,7 +88,7 @@ const handleNavClick = (panelKey = "overlays") => {
 			position: absolute;
 			top: 0;
 			right: 0;
-			width: 44px;
+			width: 52px;
 			height: 100%;
 			z-index: 1010;
 			background: #f9f9f9;
@@ -115,7 +118,7 @@ const handleNavClick = (panelKey = "overlays") => {
 			box-shadow: inset 0 0 0 1px #ddd;
 
 			.panels-content {
-				padding-right: 44px;
+				padding-right: 52px;
 			}
 		}
 	}
@@ -123,19 +126,25 @@ const handleNavClick = (panelKey = "overlays") => {
 	&.display-narrow {
 		.map {
 			width: 100%;
-			height: calc(100% - 44px);
+			height: calc(100% - 52px);
 		}
 
 		.ui {
-			height: 44px;
+			height: 52px;
 			width: 100%;
 
 			.panels-nav {
 				display: flex;
 				top: unset;
 				bottom: 0;
-				height: 44px;
+				height: 52px;
 				width: 100%;
+				.nav-item {
+					&.nav-info {
+						position: absolute;
+						right: 0;
+					}
+				}
 			}
 		}
 

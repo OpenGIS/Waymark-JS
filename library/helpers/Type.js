@@ -30,12 +30,12 @@ export function getIconData(type = {}) {
 
             break;
           case "medium":
-            icon_data.iconSize = [25, 25];
+            icon_data.iconSize = [20, 20];
 
             break;
           default:
           case "large":
-            icon_data.iconSize = [32, 32];
+            icon_data.iconSize = [24, 24];
 
             break;
         }

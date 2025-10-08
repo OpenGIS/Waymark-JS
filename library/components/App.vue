@@ -59,6 +59,18 @@ const classAppend = computed(() => {
 		classes.push("has-active-overlay");
 	}
 
+	// Small / Medium / Large
+	if (container.value.clientWidth <= 640) {
+		classes.push("size-small");
+	} else if (
+		container.value.clientWidth > 640 &&
+		container.value.clientWidth <= 1024
+	) {
+		classes.push("size-medium");
+	} else {
+		classes.push("size-large");
+	}
+
 	return classes.join(" ");
 });
 </script>

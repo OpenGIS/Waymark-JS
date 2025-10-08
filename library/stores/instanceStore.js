@@ -70,15 +70,12 @@ export const useInstanceStore = defineStore("instance", () => {
 			// Text filter
 			if (
 				layerFilters.value.text !== "" &&
-				!layer.overlay.containsText(layerFilters.value.text)
+				!overlay.containsText(layerFilters.value.text)
 			) {
 				return;
 			}
 
-			// Add to filtered Overlays
-			if (!filtered.includes(overlay)) {
-				filtered.push(overlay);
-			}
+			filtered.push(overlay);
 		});
 
 		return filtered;

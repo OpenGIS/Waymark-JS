@@ -41,6 +41,6 @@ export default defineConfig({
 
   server: {
     open: "/index.html",
-    // allowedHosts: ["joe-dev.local"],
+    allowedHosts: ["joe-dev.local"],
   },
 });
