@@ -198,17 +198,7 @@ export function useMap() {
 		if (activeOverlay.value) {
 			//If already active layer - focus on it
 			if (activeOverlay.value === overlay) {
-				switch (overlay.featureType) {
-					case "marker":
-						// Increase maplibre zoom to 18
-						overlay.zoomIn();
-
-						break;
-					case "line":
-					case "shape":
-						// console.log("Focus on Line/Shape");
-						break;
-				}
+				overlay.zoomIn();
 
 				// Stop here
 				return;

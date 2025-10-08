@@ -157,6 +157,7 @@ tr.overlay {
     }
 
     &.title {
+      width: 170px;
       text-align: left;
       .content {
         width: inherit;

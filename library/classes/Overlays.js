@@ -160,7 +160,7 @@ export class Overlay {
           this.feature.geometry.coordinates[1],
         ],
         zoom: targetZoom,
-        duration: 1000,
+        ...flyToOptions,
       });
     }
   }
@@ -464,7 +464,7 @@ export class LineOverlay extends Overlay {
 
   flyTo() {
     const bounds = this.getBounds();
-    this.map.fitBounds(bounds, fitBoundsOptions);
+    this.map.fitBounds(bounds, flyToOptions);
   }
 
   inBounds(bounds) {
@@ -473,6 +473,24 @@ export class LineOverlay extends Overlay {
     return coords.some((coord) =>
       bounds.contains({ lng: coord[0], lat: coord[1] }),
     );
+  }
+
+  zoomIn() {
+    // Zoom to 18
+    const targetZoom = 18;
+    const currentZoom = this.map.getZoom();
+
+    if (currentZoom < targetZoom) {
+      // Fly to first coordinate
+      this.map.flyTo({
+        center: [
+          this.feature.geometry.coordinates[0][0],
+          this.feature.geometry.coordinates[0][1],
+        ],
+        zoom: targetZoom,
+        ...flyToOptions,
+      });
+    }
   }
 }
 
@@ -603,7 +621,7 @@ export class ShapeOverlay extends Overlay {
 
   flyTo() {
     const bounds = this.getBounds();
-    this.map.fitBounds(bounds, fitBoundsOptions);
+    this.map.fitBounds(bounds, flyToOptions);
   }
 
   inBounds(bounds) {
@@ -617,5 +635,23 @@ export class ShapeOverlay extends Overlay {
       shapeBounds.getEast() < bounds.getWest() ||
       shapeBounds.getWest() > bounds.getEast()
     );
+  }
+
+  zoomIn() {
+    // Zoom to 18
+    const targetZoom = 18;
+    const currentZoom = this.map.getZoom();
+
+    if (currentZoom < targetZoom) {
+      // Fly to first coordinate
+      this.map.flyTo({
+        center: [
+          this.feature.geometry.coordinates[0][0][0],
+          this.feature.geometry.coordinates[0][0][1],
+        ],
+        zoom: targetZoom,
+        ...flyToOptions,
+      });
+    }
   }
 }
