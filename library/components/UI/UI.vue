@@ -11,6 +11,9 @@ const {
 	mapHasOverlays,
 } = useUI();
 
+import { useMap } from "@/composables/useMap.js";
+const { resetView } = useMap();
+
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
@@ -51,6 +54,11 @@ const handleNavClick = (panelKey = "overlays") => {
 					@click="handleNavClick('basemaps')"
 					:active="isActivePanel('basemaps')"
 				/>
+			</div>
+
+			<!-- Reset -->
+			<div class="nav-item nav-reset">
+				<Button size="large" icon="fa-home" @click="resetView" />
 			</div>
 
 			<!-- Info -->

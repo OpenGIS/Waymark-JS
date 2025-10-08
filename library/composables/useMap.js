@@ -3,7 +3,7 @@ import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
-import { fitBoundsOptions } from "@/helpers/MapLibre.js";
+import { fitBoundsOptions, flyToOptions } from "@/helpers/MapLibre.js";
 
 // Classes
 import {
@@ -232,11 +232,16 @@ export function useMap() {
 		overlay.addHighlight();
 	};
 
+	const resetView = () => {
+		map.value.fitBounds(overlaysBounds.value, flyToOptions);
+	};
+
 	return {
 		init,
 		loadGeoJSON,
 		clearGeoJSON,
 		toGeoJSON,
 		setActiveOverlay,
+		resetView,
 	};
 }
