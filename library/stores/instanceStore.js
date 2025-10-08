@@ -81,16 +81,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		return filtered;
 	});
 
-	// const overlaysBounds = computed(() => {
-	// 	const bounds = new LngLatBounds();
-
-	// 	overlays.value.forEach((overlay) => {
-	// 		bounds.extend(overlay.getBounds());
-	// 	});
-
-	// 	return bounds;
-	// });
-
 	const overlaysBounds = computed(() => {
 		if (overlays.value.length === 0) {
 			return null;

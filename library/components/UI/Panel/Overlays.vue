@@ -50,7 +50,7 @@ const shapeCount = computed(() => {
 				<Button
 					v-if="lineCount"
 					class="line"
-					icon="ion-arrow-graph-up-right"
+					icon="ion-android-share-alt"
 					@click="activeFeatureType = 'line'"
 					:active="activeFeatureType === 'line'"
 				>
@@ -142,7 +142,7 @@ const shapeCount = computed(() => {
 			input {
 				margin-left: 5px;
 				height: 30px;
-				width: 115px;
+				width: 65px;
 			}
 
 			.button {
