@@ -11,6 +11,9 @@ const { activeTileLayer } = storeToRefs(useInstanceStore());
 
 		{{ JSON.stringify(activeTileLayer) }}
 	</div>
+
+	<!-- Include the children passed to the component -->
+	<slot></slot>
 </template>
 
 <style></style>

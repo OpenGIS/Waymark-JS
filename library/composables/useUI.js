@@ -8,22 +8,6 @@ export function useUI() {
 	const { panelOpen, activePanelKey, overlays } =
 		storeToRefs(useInstanceStore());
 
-	const uiContainer = shallowRef(null);
-
-	// Set the UI container
-	const setUIContainer = (container) => {
-		uiContainer.value = container;
-
-		// On resize
-		/*
-		const resizeObserver = new ResizeObserver(() => {
-			map.value.invalidateSize();
-		});
-
-		resizeObserver.observe(uiContainer.value);
-*/
-	};
-
 	const mapHasOverlays = computed(() => {
 		return overlays.value.length > 0;
 	});
@@ -51,7 +35,6 @@ export function useUI() {
 	};
 
 	return {
-		setUIContainer,
 		isActivePanel,
 		showPanel,
 		togglePanel,

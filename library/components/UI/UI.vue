@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, useTemplateRef } from "vue";
+import { ref, onMounted, useTemplateRef } from "vue";
 
 import { useUI } from "@/composables/useUI.js";
 const {
@@ -8,7 +8,6 @@ const {
 	setActivePanel,
 	isActivePanel,
 	getActivePanelKey,
-	setUIContainer,
 	mapHasOverlays,
 } = useUI();
 
@@ -26,12 +25,6 @@ const handleNavClick = (panelKey = "overlays") => {
 		setActivePanel(panelKey);
 	}
 };
-
-const container = useTemplateRef("container");
-
-onMounted(() => {
-	setUIContainer(container.value);
-});
 </script>
 
 <template>
@@ -73,7 +66,7 @@ onMounted(() => {
 		<div class="panels-content">
 			<Overlays v-show="mapHasOverlays && showPanel('overlays')" />
 
-			<Info v-show="showPanel('info')" />
+			<Info v-show="showPanel('info')">{{ JSON.stringify(uiSize) }}</Info>
 
 			<Basemaps v-show="showPanel('basemaps')" />
 		</div>
@@ -98,8 +91,15 @@ onMounted(() => {
 			background: #f9f9f9;
 			box-shadow: inset 0 0 0 1px #ddd;
 
-			.button {
-				margin: 5px;
+			.nav-item {
+				&.nav-info {
+					position: absolute;
+					bottom: 0;
+				}
+
+				.button {
+					margin: 5px;
+				}
 			}
 		}
 
