@@ -141,7 +141,7 @@ const headingClass = () => {
 </template>
 
 <style lang="less">
-.heading {
+tr.heading {
   // height: 35px;
   // display: flex;
   overflow: hidden;
@@ -149,52 +149,57 @@ const headingClass = () => {
   border-bottom-width: 3px;
   border-bottom-style: solid;
 
-  .icon {
-    position: relative;
-    .waymark-marker {
-      .waymark-marker-background {
-        display: none;
-      }
+  td {
+    // padding: 0;
 
-      .waymark-marker-icon::before {
-        padding-top: 0 !important;
-        font-size: 18px !important;
-      }
-    }
-  }
+    &.icon {
+      position: relative;
+      vertical-align: middle;
+      .waymark-marker {
+        .waymark-marker-background {
+          display: none;
+        }
 
-  .title {
-    width: 120px;
-    padding-left: 5px;
-    font-size: 14px;
-  }
-
-  .action {
-    &.expand {
-      .button {
-        margin-left: 0;
-        margin-right: 0;
-        width: 45px;
-        i {
-          margin-left: -2px;
+        .waymark-marker-icon::before {
+          padding-top: 0 !important;
+          font-size: 18px !important;
         }
       }
     }
 
-    .button {
-      color: #eee;
-      background: transparent;
-      text-shadow:
-        0 0 1px #000,
-        0 0 1px #000;
-      &.active,
-      &:hover {
-        text-shadow: unset;
-        color: #000;
-        box-shadow: inset 0 0 0 1px #000;
+    &.title {
+      // padding-left: 5px;
+      width: 120px;
+      font-size: 13px;
+    }
 
-        .count {
-          border-color: #000;
+    &.action {
+      &.expand {
+        .button {
+          margin-left: 0;
+          margin-right: 0;
+          width: 45px;
+          i {
+            margin-left: -2px;
+          }
+        }
+      }
+
+      .button {
+        color: #eee;
+        background: transparent;
+        text-shadow:
+          0 0 1px #000,
+          0 0 1px #000;
+        &.active,
+        &:hover {
+          text-shadow: unset;
+          color: #000;
+          box-shadow: inset 0 0 0 1px #000;
+
+          .count {
+            border-color: #000;
+          }
         }
       }
     }

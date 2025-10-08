@@ -114,9 +114,11 @@ watch(activeOverlay, (newLayer) => {
 </template>
 
 <style lang="less">
-.overlay {
+tr.overlay {
+  border-bottom: 1px solid #eee;
+
   &.active {
-    height: auto;
+    // height: auto;
 
     // &.line {
     //   .content {
@@ -136,6 +138,32 @@ watch(activeOverlay, (newLayer) => {
 
   &.hidden {
     display: none;
+  }
+
+  td {
+    height: 42px;
+    // padding: 0 3px;
+    vertical-align: middle;
+    text-align: center;
+
+    &.icon,
+    &.image {
+      width: 42px;
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    &.title {
+      text-align: left;
+      .content {
+        width: inherit;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 }
 </style>

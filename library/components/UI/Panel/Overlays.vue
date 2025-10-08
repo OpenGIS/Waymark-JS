@@ -178,38 +178,6 @@ const shapeCount = computed(() => {
 	.panel-content {
 		padding-bottom: 44px;
 		overflow-y: auto;
-
-		table {
-			tr {
-				&.overlay {
-					border-bottom: 1px solid #eee;
-				}
-				td {
-					padding: 0 3px;
-					vertical-align: middle;
-					text-align: center;
-
-					&.icon,
-					&.image {
-						width: 42px;
-						img {
-							width: 100%;
-							height: auto;
-						}
-					}
-
-					&.title {
-						text-align: left;
-						.content {
-							width: inherit;
-							white-space: nowrap;
-							overflow: hidden;
-							text-overflow: ellipsis;
-						}
-					}
-				}
-			}
-		}
 	}
 }
 
