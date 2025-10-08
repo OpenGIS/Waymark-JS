@@ -40,6 +40,12 @@ const { setActiveOverlay } = useMap();
           :src="activeOverlay.images.thumbnail"
         />
       </div>
+      <!-- Description -->
+      <div
+        class="description"
+        v-if="activeOverlay.getDescription()"
+        v-html="activeOverlay.getDescription()"
+      />
 
       <!-- START Stats -->
       <div class="stats">
@@ -61,13 +67,6 @@ const { setActiveOverlay } = useMap();
         </div>
       </div>
       <!-- END Stats -->
-
-      <!-- Description -->
-      <div
-        class="description"
-        v-if="activeOverlay.getDescription()"
-        v-html="activeOverlay.getDescription()"
-      />
     </div>
     <!-- End Content -->
   </div>
@@ -91,7 +90,7 @@ const { setActiveOverlay } = useMap();
     border-bottom: 1px solid #f3f3f3;
     min-height: 34px;
     display: flex;
-    // align-items: center;
+    align-items: center;
     position: relative;
 
     // .type {
@@ -103,9 +102,10 @@ const { setActiveOverlay } = useMap();
     // }
 
     .type {
-      width: 36px;
-      height: 36px;
-      margin-right: 5px;
+      // width: 32px;
+      // height: 32px;
+      margin-top: -5px;
+      margin-right: 10px;
     }
 
     .title {
@@ -137,7 +137,7 @@ const { setActiveOverlay } = useMap();
 
     .image {
       float: left;
-      margin-right: 5px;
+      margin-right: 10px;
       margin-bottom: 5px;
 
       img {
@@ -148,6 +148,7 @@ const { setActiveOverlay } = useMap();
     .description {
       margin-bottom: 10px;
       font-size: 14px;
+      line-height: 1.15em;
     }
 
     .button {

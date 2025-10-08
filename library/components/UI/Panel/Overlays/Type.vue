@@ -158,7 +158,7 @@ const headingClass = () => {
 
       .waymark-marker-icon::before {
         padding-top: 0 !important;
-        font-size: 24px !important;
+        font-size: 18px !important;
       }
     }
   }

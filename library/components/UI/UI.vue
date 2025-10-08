@@ -84,6 +84,8 @@ const handleNavClick = (panelKey = "overlays") => {
 		position: relative;
 		z-index: 1000;
 
+		font-family: "Helvetica Neue", Arial, sans-serif;
+
 		.panels-nav {
 			position: absolute;
 			top: 0;

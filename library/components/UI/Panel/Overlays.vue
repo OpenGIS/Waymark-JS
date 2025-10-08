@@ -137,6 +137,8 @@ const shapeCount = computed(() => {
 		z-index: 100;
 
 		.feature-nav {
+			padding: 3px;
+			background: #333;
 			input {
 				margin-left: 5px;
 				height: 30px;
@@ -152,12 +154,12 @@ const shapeCount = computed(() => {
 				&.line,
 				&.shape {
 					position: relative;
-					background: #fff;
+					background: none;
+					color: #fff;
 					margin: 0;
 					margin-left: 0;
 					box-shadow: unset;
 					border-radius: unset;
-					border: 1px solid #ddd;
 					border-bottom: none;
 
 					&.active {

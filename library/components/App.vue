@@ -137,7 +137,7 @@ const classAppend = computed(() => {
 
 			&.has-active-overlay {
 				.ui {
-					height: 480px;
+					height: 400px;
 				}
 			}
 		}
