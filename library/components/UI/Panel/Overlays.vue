@@ -162,7 +162,7 @@ const shapeCount = computed(() => {
 					border-radius: unset;
 					border-bottom: none;
 
-					&.active {
+					&.button-active {
 						bottom: -1px;
 					}
 				}

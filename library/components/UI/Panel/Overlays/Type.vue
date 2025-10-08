@@ -150,7 +150,7 @@ tr.heading {
   border-bottom-style: solid;
 
   td {
-    // padding: 0;
+    padding: 0;
 
     &.icon {
       position: relative;
@@ -174,6 +174,7 @@ tr.heading {
     }
 
     &.action {
+      text-align: center;
       &.expand {
         .button {
           margin-left: 0;

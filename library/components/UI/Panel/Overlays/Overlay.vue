@@ -141,13 +141,14 @@ tr.overlay {
   }
 
   td {
-    height: 42px;
-    // padding: 0 3px;
+    // height: 42px;
+    padding: 0 3px;
     vertical-align: middle;
     text-align: center;
 
     &.icon,
     &.image {
+      padding: 3px;
       width: 42px;
       img {
         width: 100%;
