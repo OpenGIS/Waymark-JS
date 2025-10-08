@@ -116,6 +116,7 @@ watch(activeOverlay, (newLayer) => {
 <style lang="less">
 tr.overlay {
   border-bottom: 1px solid #eee;
+  cursor: pointer;
 
   &.active {
     // height: auto;

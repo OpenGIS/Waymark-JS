@@ -79,6 +79,7 @@ const buttonClass = computed(() => {
   box-shadow: inset 0 0 0 1px #ddd;
   border-radius: 5px;
   text-align: center;
+  cursor: pointer;
 
   &:hover,
   &.button-active {

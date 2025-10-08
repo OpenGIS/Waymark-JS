@@ -40,7 +40,7 @@ const handleNavClick = (panelKey = "overlays") => {
 				<Button
 					v-if="mapHasOverlays"
 					size="large"
-					icon="fa-navicon"
+					icon="ion-social-buffer-outline"
 					@click="handleNavClick('overlays')"
 					:active="isActivePanel('overlays')"
 				/>
@@ -91,6 +91,7 @@ const handleNavClick = (panelKey = "overlays") => {
 	.ui {
 		position: relative;
 		z-index: 1000;
+		cursor: default;
 
 		font-family: "Helvetica Neue", Arial, sans-serif;
 

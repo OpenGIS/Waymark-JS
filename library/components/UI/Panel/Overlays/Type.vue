@@ -148,6 +148,7 @@ tr.heading {
   align-items: center;
   border-bottom-width: 3px;
   border-bottom-style: solid;
+  cursor: pointer;
 
   td {
     padding: 0;
