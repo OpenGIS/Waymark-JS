@@ -151,6 +151,8 @@ tr.overlay {
     &.image {
       padding: 3px;
       width: 42px;
+      height: 42px;
+
       img {
         width: 100%;
         height: auto;
