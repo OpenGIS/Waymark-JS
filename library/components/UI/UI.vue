@@ -92,6 +92,7 @@ const handleNavClick = (panelKey = "overlays") => {
 		position: relative;
 		z-index: 1000;
 		cursor: default;
+		background: #f9f9f9;
 
 		font-family: "Helvetica Neue", Arial, sans-serif;
 

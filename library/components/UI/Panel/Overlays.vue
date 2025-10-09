@@ -143,7 +143,7 @@ const shapeCount = computed(() => {
 		position: sticky;
 		top: 0;
 		right: 0;
-		background-color: #fff;
+		background-color: #f9f9f9;
 		border-bottom: 1px solid #999;
 		z-index: 100;
 
@@ -234,8 +234,6 @@ const shapeCount = computed(() => {
 				max-height: 260px;
 			}
 			.panel-content {
-				padding-top: 44px;
-
 				.heading,
 				.overlay:not(.active) {
 					// opacity: 0.6;
