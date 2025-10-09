@@ -68,7 +68,7 @@ const shapeCount = computed(() => {
 				</Button>
 
 				<Button
-					icon="ion-android-expand"
+					icon="fa-object-group"
 					@click="layerFilters.inBounds = !layerFilters.inBounds"
 					:active="layerFilters.inBounds"
 				/>

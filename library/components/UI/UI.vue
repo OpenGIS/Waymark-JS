@@ -40,7 +40,7 @@ const handleNavClick = (panelKey = "overlays") => {
 				<Button
 					v-if="mapHasOverlays"
 					size="large"
-					icon="ion-social-buffer-outline"
+					icon="fa-navicon"
 					@click="handleNavClick('overlays')"
 					:active="isActivePanel('overlays')"
 				/>
