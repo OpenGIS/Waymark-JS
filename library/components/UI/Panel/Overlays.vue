@@ -227,19 +227,19 @@ const shapeCount = computed(() => {
 	}
 }
 
-.instance.has-active-overlay.panel-open {
-	.ui {
-		.panel.overlay {
-			.panel-top {
-				max-height: 260px;
-			}
-			.panel-content {
-				.heading,
-				.overlay:not(.active) {
-					// opacity: 0.6;
-				}
-			}
-		}
-	}
-}
+// .instance.has-active-overlay.panel-open {
+// 	.ui {
+// 		.panel.overlay {
+// 			.panel-top {
+// 				max-height: 260px;
+// 			}
+// 			.panel-content {
+// 				.heading,
+// 				.overlay:not(.active) {
+// 					// opacity: 0.6;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 </style>
