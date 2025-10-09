@@ -16,6 +16,15 @@ export default defineConfig({
 
   plugins: [vue()],
 
+  css: {
+    preprocessorOptions: {
+      less: {
+        // This injects the content of variables.less into every LESS file
+        additionalData: `@import "@/assets/css/variables.less";`,
+      },
+    },
+  },
+
   build: {
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,

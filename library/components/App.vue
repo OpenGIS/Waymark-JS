@@ -8,7 +8,7 @@ const instanceStore = useInstanceStore();
 const { mapReady, config, container, panelOpen, activeOverlay } =
 	storeToRefs(instanceStore);
 
-import "@/assets/css/index.css";
+import "@/assets/css/index.less";
 
 import Map from "@/components/Map.vue";
 import UI from "@/components/UI/UI.vue";

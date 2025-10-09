@@ -13,7 +13,6 @@ const { map, activeOverlay, filteredOverlays } = storeToRefs(instanceStore);
 
 import { visibleIcon } from "@/helpers/Common.js";
 import Button from "@/components/UI/Common/Button.vue";
-import { waymarkPrimaryColour } from "@/helpers/Common.js";
 
 const props = defineProps({
   overlay: Overlay,
@@ -48,12 +47,6 @@ const toggleOnMap = () => {
   }
 };
 
-const overlayStyle = computed(() => {
-  if (isActiveOverlay.value) {
-    return `color: ${waymarkPrimaryColour};border-color: ${waymarkPrimaryColour};`;
-  }
-});
-
 const overlayClass = computed(() => {
   let out = props.overlay.featureType;
 
@@ -73,8 +66,10 @@ const row = useTemplateRef("row");
 // When a overlay is set as active, scroll to it
 watch(activeOverlay, (newLayer) => {
   if (newLayer == props.overlay) {
-    //Scroll to active overlay
-    row.value.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => {
+      //Scroll to active overlay
+      row.value.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 500);
   }
 });
 </script>
@@ -86,7 +81,6 @@ watch(activeOverlay, (newLayer) => {
     class="overlay"
     @click="setActiveOverlay(overlay)"
     :class="overlayClass"
-    :style="overlayStyle"
   >
     <!-- Image -->
     <td class="image">
@@ -119,7 +113,10 @@ tr.overlay {
   cursor: pointer;
 
   &.active {
-    // height: auto;
+    margin-top: 2px;
+    color: @waymark-primary-colour;
+    border: 2px solid @waymark-primary-colour;
+    border-bottom: 2px solid @waymark-primary-colour;
 
     // &.line {
     //   .content {
@@ -151,7 +148,7 @@ tr.overlay {
     &.image {
       padding: 3px;
       width: 42px;
-      height: 42px;
+      height: 40px;
 
       img {
         width: 100%;

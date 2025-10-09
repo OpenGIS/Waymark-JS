@@ -37,43 +37,54 @@ const shapeCount = computed(() => {
 
 			<!-- START Nav -->
 			<nav class="feature-nav">
-				<Button
-					v-if="markerCount"
-					class="marker"
-					icon="ion-ios-location"
-					@click="activeFeatureType = 'marker'"
-					:active="activeFeatureType === 'marker'"
-				>
-					<span class="count" v-html="markerCount"></span>
-				</Button>
+				<!-- START Feature Type Buttons -->
+				<div class="feature-types">
+					<Button
+						v-if="markerCount"
+						class="marker"
+						icon="ion-ios-location"
+						@click="activeFeatureType = 'marker'"
+						:active="activeFeatureType === 'marker'"
+					>
+						<span class="count" v-html="markerCount"></span>
+					</Button>
 
-				<Button
-					v-if="lineCount"
-					class="line"
-					icon="ion-android-share-alt"
-					@click="activeFeatureType = 'line'"
-					:active="activeFeatureType === 'line'"
-				>
-					<span class="count" v-html="lineCount"></span>
-				</Button>
+					<Button
+						v-if="lineCount"
+						class="line"
+						icon="ion-android-share-alt"
+						@click="activeFeatureType = 'line'"
+						:active="activeFeatureType === 'line'"
+					>
+						<span class="count" v-html="lineCount"></span>
+					</Button>
 
-				<Button
-					v-if="shapeCount"
-					class="shape"
-					icon="ion-android-checkbox-outline-blank"
-					@click="activeFeatureType = 'shape'"
-					:active="activeFeatureType === 'shape'"
-				>
-					<span class="count" v-html="shapeCount"></span>
-				</Button>
+					<Button
+						v-if="shapeCount"
+						class="shape"
+						icon="ion-android-checkbox-outline-blank"
+						@click="activeFeatureType = 'shape'"
+						:active="activeFeatureType === 'shape'"
+					>
+						<span class="count" v-html="shapeCount"></span>
+					</Button>
+				</div>
+				<!-- END Feature Type Buttons -->
 
-				<Button
-					icon="fa-object-group"
-					@click="layerFilters.inBounds = !layerFilters.inBounds"
-					:active="layerFilters.inBounds"
-				/>
+				<!-- START Filters -->
+				<div class="feature-filters">
+					<Button
+						icon="fa-object-group"
+						@click="layerFilters.inBounds = !layerFilters.inBounds"
+						:active="layerFilters.inBounds"
+					/>
 
-				<input type="search" placeholder="Search" v-model="layerFilters.text" />
+					<input
+						type="search"
+						placeholder="Search"
+						v-model="layerFilters.text"
+					/>
+				</div>
 			</nav>
 			<!-- END Nav -->
 		</header>
@@ -126,7 +137,7 @@ const shapeCount = computed(() => {
 	</div>
 </template>
 
-<style>
+<style lang="less">
 .panel.overlay {
 	.panel-top {
 		position: sticky;
@@ -137,39 +148,74 @@ const shapeCount = computed(() => {
 		z-index: 100;
 
 		.feature-nav {
-			padding: 3px;
-			background: #333;
-			input {
-				margin-left: 5px;
-				height: 30px;
-				width: 65px;
-			}
+			height: 30px;
+			padding: 5px;
+			background: #444;
 
 			.button {
-				margin: 0;
+				padding: 6px;
+				margin: 0 5px 0 0;
 				display: inline-block;
 				font-size: 16px;
 
-				&.marker,
-				&.line,
-				&.shape {
-					position: relative;
-					background: none;
-					color: #fff;
-					margin: 0;
-					margin-left: 0;
-					box-shadow: unset;
-					border-radius: unset;
-					border-bottom: none;
-
-					&.button-active {
-						bottom: -1px;
-					}
+				&.button-active {
+					color: @waymark-primary-colour;
 				}
 
 				i,
 				.count {
 					display: inline-block;
+				}
+			}
+
+			/* Feature Type Buttons */
+			.feature-types {
+				margin-right: 5px;
+				display: inline-block;
+				border: 1px solid #666;
+				border-radius: 5px;
+				overflow: hidden;
+
+				.button {
+					margin: 0;
+					background: #333;
+					color: #fff;
+					box-shadow: unset;
+					border-radius: 0 !important;
+
+					&:hover,
+					&.button-active {
+						background: #fff;
+						color: @waymark-primary-colour;
+					}
+				}
+			}
+
+			/* Filters */
+			.feature-filters {
+				float: right;
+
+				input {
+					height: 30px;
+					width: 100px;
+
+					padding: 5px 10px;
+					font-size: 14px;
+					border: 1px solid #666;
+					border-radius: 5px;
+					background: #333;
+					color: #fff;
+
+					&::placeholder {
+						color: #ccc;
+					}
+
+					&:focus {
+						outline: none;
+						border-color: @waymark-primary-colour;
+						background: #fff;
+						color: #333;
+					}
 				}
 			}
 		}
@@ -188,9 +234,11 @@ const shapeCount = computed(() => {
 				max-height: 260px;
 			}
 			.panel-content {
+				padding-top: 44px;
+
 				.heading,
 				.overlay:not(.active) {
-					opacity: 0.4;
+					// opacity: 0.6;
 				}
 			}
 		}

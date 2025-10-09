@@ -150,7 +150,7 @@ export class Overlay {
     }
 
     // Zoom to 18
-    const targetZoom = 18;
+    const targetZoom = 16;
     const currentZoom = this.map.getZoom();
 
     if (currentZoom < targetZoom) {
@@ -477,7 +477,7 @@ export class LineOverlay extends Overlay {
 
   zoomIn() {
     // Zoom to 18
-    const targetZoom = 18;
+    const targetZoom = 16;
     const currentZoom = this.map.getZoom();
 
     if (currentZoom < targetZoom) {
@@ -639,7 +639,7 @@ export class ShapeOverlay extends Overlay {
 
   zoomIn() {
     // Zoom to 18
-    const targetZoom = 18;
+    const targetZoom = 16;
     const currentZoom = this.map.getZoom();
 
     if (currentZoom < targetZoom) {

@@ -142,13 +142,12 @@ const headingClass = () => {
 
 <style lang="less">
 tr.heading {
-  // height: 35px;
-  // display: flex;
   overflow: hidden;
   align-items: center;
   border-bottom-width: 3px;
   border-bottom-style: solid;
   cursor: pointer;
+  color: #333;
 
   td {
     padding: 0;

@@ -76,18 +76,19 @@ const { setActiveOverlay } = useMap();
 <style lang="less">
 .active-overlay {
   max-height: 190px;
-  padding: 8px;
   overflow: scroll;
   color: #333;
 
-  border-bottom: 1px solid #999;
+  border-left: 1px solid #999;
 
   /* Top */
   .overlay-top {
+    padding: 5px;
+    background: linear-gradient(to bottom, #f9f9f9, #eee);
     margin-bottom: 5px;
     padding-bottom: 5px;
     padding-right: 32px;
-    border-bottom: 1px solid #f3f3f3;
+    border-bottom: 1px solid #999;
     min-height: 34px;
     display: flex;
     align-items: center;
@@ -114,14 +115,15 @@ const { setActiveOverlay } = useMap();
     }
     .button {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 5px;
+      right: 5px;
       margin: 0;
     }
   }
 
   /* Content */
   .overlay-content {
+    padding: 5px 7px;
     /* Self Clear floats */
     height: auto;
     clear: both;
