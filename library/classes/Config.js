@@ -98,6 +98,21 @@ export class Config {
     });
   }
 
+  getInitialView() {
+    // Check actual maplibre_options for user provided center and zoom
+    if (
+      this.map_options.maplibre_options.hasOwnProperty("center") &&
+      this.map_options.maplibre_options.hasOwnProperty("zoom")
+    ) {
+      return {
+        center: this.map_options.maplibre_options.center,
+        zoom: this.map_options.maplibre_options.zoom,
+      };
+    }
+
+    return null;
+  }
+
   /**
    * Get a Type by featureType and typeKey
    * Returns a default in all cases except where featureType is invalid

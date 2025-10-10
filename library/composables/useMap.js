@@ -155,8 +155,11 @@ export function useMap() {
 
 			console.log("Overlays added to map", overlaysBounds.value);
 
-			// Update bounds to encompass new overlays
-			map.value.fitBounds(overlaysBounds.value, fitBoundsOptions);
+			// If there is not an initial view
+			if (!config.value.getInitialView()) {
+				// Update bounds to encompass new Overlays
+				map.value.fitBounds(overlaysBounds.value, fitBoundsOptions);
+			}
 		}
 	};
 
