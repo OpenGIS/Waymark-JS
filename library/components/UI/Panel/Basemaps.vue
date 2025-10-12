@@ -25,7 +25,11 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 const { config, mapBounds, map } = storeToRefs(useInstanceStore());
 
 const tileLayers = ref([]);
-tileLayers.value = config.value.getTileLayers();
+
+//Reverse order to have the first one on top
+tileLayers.value = config.value.getTileLayers().slice().reverse();
+
+//config.value.getTileLayers();
 
 console.log("tileLayers", tileLayers.value);
 </script>
@@ -62,6 +66,16 @@ console.log("tileLayers", tileLayers.value);
 						disabled
 						:checked="tileLayer.isVisible()"
 						title="Active"
+					/>
+
+					<!-- Opacity Slider -->
+					<input
+						type="range"
+						min="0"
+						max="1"
+						step="0.01"
+						@input="tileLayer.setOpacity($event.target.value)"
+						title="Opacity"
 					/>
 				</div>
 

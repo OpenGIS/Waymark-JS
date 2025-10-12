@@ -108,4 +108,16 @@ export class TileLayer {
     this.map.setLayoutProperty(this.id, "visibility", visibility);
     this.data.layer_visible = !this.isVisible();
   }
+
+  setOpacity(opacity) {
+    if (!this.map || !this.layer) {
+      return;
+    }
+    opacity = parseFloat(opacity);
+    if (isNaN(opacity) || opacity < 0 || opacity > 1) {
+      return;
+    }
+    this.map.setPaintProperty(this.id, "raster-opacity", opacity);
+    this.data.layer_opacity = opacity;
+  }
 }
