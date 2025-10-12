@@ -41,6 +41,7 @@
       let MODE = "app"; // "app" | "playground"
       // MODE = "playground";
       // MODE = "docs";
+      MODE = "survey";
 
       document.body.classList.add(MODE);
       console.clear();
@@ -176,6 +177,59 @@
               a.click();
               URL.revokeObjectURL(url);
             });
+          // Docs - Single instance, no buttons
+        } else if (MODE === "survey") {
+          // Pick random test data
+          let ID = getTestID();
+          ID = "waymark";
+
+          const div = document.createElement("div");
+          div.id = "waymark-instance";
+          // Set width and height for survey
+          // div.style.width = "100%";
+          div.style.height = "300px";
+
+          div.className = "test-wrap";
+          document.body.appendChild(div);
+
+          // Read test config (JSON)
+          let testConfig = await fetch(`./dev/data/${ID}/devConfig.json`).then(
+            (res) => res.json(),
+          );
+
+          // Merge Object
+          testConfig = Object.assign(testConfig, {
+            units: "metric",
+            maplibre_options: {
+              center: [-128.023468, 50.656086],
+              // center: [-128.009734, 50.653923],
+              zoom: 13.5,
+              // pitch: 85,
+              // bearing: 350,
+              // maxZoom: 6,
+              // minZoom: 2,
+              // attributionControl: true,
+              // logoPosition: "top-left",
+              // maplibreLogo: true,
+            },
+          });
+
+          // Read test data (JSON)
+          const testData = await fetch(`./dev/data/${ID}/devData.json`).then(
+            (res) => res.json(),
+          );
+
+          const instance = new Instance({
+            map_options: testConfig,
+          });
+          instance.loadGeoJSON(testData);
+
+          // Open the Basemap panel
+          setTimeout(() => {
+            instance.store.activePanelKey.value = "basemaps";
+            instance.store.panelOpen.value = true;
+          }, 1000);
+
           // Docs - Single instance, no buttons
         } else if (MODE === "docs") {
           // const div = document.createElement("div");
