@@ -9,20 +9,27 @@ export class TileLayer {
       layer_attribution:
         '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       layer_max_zoom: "18",
-      layer_opacity: "1.0",
+      layer_visible: true,
+      layer_opacity: 1.0,
     };
 
     this.data = { ...defaults, ...layerData };
-    this.id = makeKey(this.data.layer_name);
+    this.id = `tile-layer-` + makeKey(this.data.layer_name);
   }
 
   addTo(map, visible = false) {
     if (!map || !map.addLayer) {
       return;
     }
+    this.map = map;
 
-    map.addSource(this.id, this.toSource());
-    map.addLayer(this.toStyle(visible));
+    // Create Source
+    this.map.addSource(this.id, this.toSource());
+    this.source = this.map.getSource(this.id);
+
+    // Create Layer
+    this.map.addLayer(this.toStyle());
+    this.layer = this.map.getLayer(this.id);
   }
 
   toSource() {
@@ -34,23 +41,35 @@ export class TileLayer {
     };
   }
 
-  toStyle(visible = false) {
+  toStyle() {
+    const opacity = parseFloat(this.data.layer_opacity);
+
     return {
       id: this.id,
       type: "raster",
       source: this.id,
       attribution: this.data.layer_attribution || "",
       layout: {
-        visibility: visible ? "visible" : "none",
+        visibility: this.isVisible() ? "visible" : "none",
       },
       paint: {
-        "raster-opacity": parseFloat(this.data.layer_opacity) || 1.0,
+        "raster-opacity": isNaN(opacity) ? 1.0 : opacity,
       },
     };
   }
 
   getTitle() {
     return this.data.layer_name || "Tile Layer";
+  }
+
+  isVisible() {
+    // Boolean or String true/false
+    return (
+      this.data.layer_visible === true ||
+      this.data.layer_visible === "true" ||
+      this.data.layer_visible === "1" ||
+      this.data.layer_visible === 1
+    );
   }
 
   /* tileLayer.previewCoords(map.getCenter().lat, map.getCenter().lng) */
@@ -79,5 +98,14 @@ export class TileLayer {
       .replace("{z}", zoom)
       .replace("{x}", tileX)
       .replace("{y}", tileY);
+  }
+
+  toggleVisibility() {
+    if (!this.map || !this.layer) {
+      return;
+    }
+    const visibility = this.isVisible() ? "none" : "visible";
+    this.map.setLayoutProperty(this.id, "visibility", visibility);
+    this.data.layer_visible = !this.isVisible();
   }
 }

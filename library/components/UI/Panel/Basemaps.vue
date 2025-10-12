@@ -9,41 +9,25 @@ Tile Layer Example...
   layer_attribution:
     '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   layer_max_zoom: "18",
-  layer_opacity: "1.0",
+  layer_visible: true,
+  layer_opacity: 1.0,
 }
-
 */
 
-import { computed } from "vue";
+import { ref } from "vue";
+
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
-import { TileLayer } from "@/classes/TileLayer.js";
+// import { TileLayer } from "@/classes/TileLayer.js";
 
-import Button from "@/components/UI/Common/Button.vue";
+// import Button from "@/components/UI/Common/Button.vue";
 
-const { config, mapBounds, map, activeTileLayer } =
-	storeToRefs(useInstanceStore());
+const { config, mapBounds, map } = storeToRefs(useInstanceStore());
 
-const updateTileLayer = (tileLayer) => {
-	// Update active tile layer in store
-	activeTileLayer.value = tileLayer;
+const tileLayers = ref([]);
+tileLayers.value = config.value.getTileLayers();
 
-	// Iterate over all MapLibre style raster layers (map.value.getStyle().layers)
-	map.value.getStyle().layers.forEach((layer) => {
-		if (layer.type === "raster") {
-			// Set as invisible
-			map.value.setLayoutProperty(layer.id, "visibility", "none");
-
-			// If layer name matches, set as visible
-			if (tileLayer.id == layer.id) {
-				map.value.setLayoutProperty(layer.id, "visibility", "visible");
-			}
-		}
-	});
-};
-
-const tileLayers = config.value.getTileLayers();
-console.log("tileLayers", tileLayers);
+console.log("tileLayers", tileLayers.value);
 </script>
 
 <template>
@@ -54,9 +38,9 @@ console.log("tileLayers", tileLayers);
 				v-for="(tileLayer, index) in tileLayers"
 				:key="index"
 				:class="{
-					active: activeTileLayer === tileLayer,
+					isVisible: tileLayer.isVisible(),
 				}"
-				@click="updateTileLayer(tileLayer)"
+				@click="tileLayer.toggleVisibility()"
 			>
 				<img
 					:src="
@@ -69,6 +53,17 @@ console.log("tileLayers", tileLayers);
 					width="160"
 					height="160"
 				/>
+
+				<!-- Controls -->
+				<div class="controls">
+					<!-- Checkbox -->
+					<input
+						type="checkbox"
+						disabled
+						:checked="tileLayer.isVisible()"
+						title="Active"
+					/>
+				</div>
 
 				<div class="info">
 					<h4>{{ tileLayer.data.layer_name }}</h4>
