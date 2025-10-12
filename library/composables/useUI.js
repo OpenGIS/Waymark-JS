@@ -30,6 +30,11 @@ export function useUI() {
 		panelOpen.value = true;
 	};
 
+	const closePanel = () => {
+		panelOpen.value = false;
+		activePanelKey.value = "";
+	};
+
 	const getActivePanelKey = () => {
 		return activePanelKey.value;
 	};
@@ -41,5 +46,6 @@ export function useUI() {
 		setActivePanel,
 		getActivePanelKey,
 		mapHasOverlays,
+		closePanel,
 	};
 }

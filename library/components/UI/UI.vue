@@ -3,6 +3,7 @@ import { ref, onMounted, useTemplateRef } from "vue";
 
 import { useUI } from "@/composables/useUI.js";
 const {
+	closePanel,
 	showPanel,
 	togglePanel,
 	setActivePanel,
@@ -19,7 +20,10 @@ import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
 
-const handleNavClick = (panelKey = "overlays") => {
+const openPanel = (panelKey = "overlays") => {
+	// Close nav
+	closeNav();
+
 	// Toggle existing panel
 	if (panelKey === getActivePanelKey()) {
 		togglePanel();
@@ -27,6 +31,26 @@ const handleNavClick = (panelKey = "overlays") => {
 	} else {
 		setActivePanel(panelKey);
 	}
+};
+
+const activeNav = ref("");
+
+const openNav = (navKey = "") => {
+	// Close other panels
+	closePanel();
+
+	// Toggle nav
+	activeNav.value = activeNav.value === navKey ? "" : navKey;
+
+	console.log("activeNav", activeNav.value);
+};
+
+const closeNav = () => {
+	activeNav.value = "";
+};
+
+const showNav = (navKey = "") => {
+	return activeNav.value === navKey;
 };
 </script>
 
@@ -41,7 +65,7 @@ const handleNavClick = (panelKey = "overlays") => {
 					v-if="mapHasOverlays"
 					size="large"
 					icon="fa-navicon"
-					@click="handleNavClick('overlays')"
+					@click="openPanel('overlays')"
 					:active="isActivePanel('overlays')"
 				/>
 			</div>
@@ -51,14 +75,19 @@ const handleNavClick = (panelKey = "overlays") => {
 				<Button
 					size="large"
 					icon="fa-map"
-					@click="handleNavClick('basemaps')"
+					@click="openPanel('basemaps')"
 					:active="isActivePanel('basemaps')"
 				/>
 			</div>
 
-			<!-- Reset -->
-			<div class="nav-item nav-reset">
-				<Button size="large" icon="fa-home" @click="resetView" />
+			<!-- View -->
+			<div class="nav-item nav-view">
+				<Button size="large" icon="fa-eye" @click="openNav('view')" />
+
+				<!-- Reset -->
+				<div class="nav-panel panel-view" v-if="showNav('view')">
+					<Button size="large" icon="fa-home" @click="resetView" />
+				</div>
 			</div>
 
 			<!-- Info -->
@@ -66,7 +95,7 @@ const handleNavClick = (panelKey = "overlays") => {
 				<Button
 					size="large"
 					icon="fa-info"
-					@click="handleNavClick('info')"
+					@click="openPanel('info')"
 					:active="isActivePanel('info')"
 				/>
 			</div>
@@ -100,11 +129,11 @@ const handleNavClick = (panelKey = "overlays") => {
 			position: absolute;
 			top: 0;
 			right: 0;
-			width: 52px;
+			width: 51px;
 			height: 100%;
 			z-index: 1010;
 			background: #f9f9f9;
-			box-shadow: inset 0 0 0 1px #ddd;
+			border-left: 1px solid #ddd;
 
 			.nav-item {
 				&.nav-info {
@@ -114,6 +143,17 @@ const handleNavClick = (panelKey = "overlays") => {
 
 				.button {
 					margin: 5px;
+				}
+
+				.nav-panel {
+					width: 52px;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					right: 52px;
+					// background: #f9f9f9;
+					background: rgba(249, 249, 249, 0.8);
+					border-left: 1px solid #ddd;
 				}
 			}
 		}
