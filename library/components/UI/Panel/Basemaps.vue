@@ -36,6 +36,13 @@ console.log("tileLayers", tileLayers.value);
 
 <template>
 	<div class="panel basemaps">
+		<!-- 
+			Rasters are displayed as a scrollable compact list and can be quickly
+			toggled on/off, opacity adjusted, and previewed. They are ordered to
+			the reverse order of how they are defined in the config, so
+			the last one defined appears on top. Giving an intuative way to
+			control visibility of multiple layers.
+		-->
 		<div class="list" v-if="tileLayers && tileLayers.length">
 			<div
 				class="list-item"
@@ -54,8 +61,6 @@ console.log("tileLayers", tileLayers.value);
 						)
 					"
 					:alt="tileLayer.data.layer_name"
-					width="160"
-					height="160"
 				/>
 
 				<!-- Controls -->
@@ -92,45 +97,54 @@ console.log("tileLayers", tileLayers.value);
 .panel.basemaps {
 	padding: 10px;
 
-	h3 {
-		margin-top: 0;
-		margin-bottom: 10px;
-		font-size: 18px;
-		font-weight: bold;
-		border-bottom: 1px solid #ddd;
-		padding-bottom: 5px;
-	}
-
 	.list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-
 		.list-item {
-			flex: 1 1 calc(50% - 10px);
-			box-sizing: border-box;
-			border: 2px solid transparent;
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+			padding: 5px;
+			border: 1px solid #ddd;
 			border-radius: 4px;
+			background: #fff;
 			cursor: pointer;
-			transition: border-color 0.3s;
 
-			&.active {
-				border-color: #0078a8;
+			&.isVisible {
+				border-color: #007bff;
+				background: #e7f1ff;
 			}
 
 			img {
-				width: 100%;
-				height: auto;
-				border-bottom: 1px solid #ddd;
-				border-top-left-radius: 4px;
-				border-top-right-radius: 4px;
+				width: 80px;
+				height: 80px;
+				object-fit: cover;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				margin-right: 10px;
+			}
+
+			.controls {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin-right: 10px;
+
+				input[type="checkbox"] {
+					margin-bottom: 10px;
+					width: 16px;
+					height: 16px;
+					cursor: not-allowed;
+				}
+
+				input[type="range"] {
+					width: 80px;
+				}
 			}
 
 			.info {
-				padding: 5px;
+				flex: 1;
 
 				h4 {
-					margin: 5px 0;
+					margin: 0 0 5px 0;
 					font-size: 16px;
 				}
 
@@ -138,6 +152,15 @@ console.log("tileLayers", tileLayers.value);
 					margin: 0;
 					font-size: 12px;
 					color: #666;
+
+					a {
+						color: #007bff;
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 		}
