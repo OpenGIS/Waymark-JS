@@ -52,4 +52,32 @@ export class TileLayer {
   getTitle() {
     return this.data.layer_name || "Tile Layer";
   }
+
+  /* tileLayer.previewCoords(map.getCenter().lat, map.getCenter().lng) */
+
+  previewCoords(lat, lng) {
+    if (!lat || !lng) {
+      return this.data.layer_url;
+    }
+
+    const zoom = Math.min(
+      Math.max(parseInt(this.data.layer_max_zoom) - 4, 0),
+      18,
+    );
+    const tileX = Math.floor(((lng + 180) / 360) * Math.pow(2, zoom));
+    const tileY = Math.floor(
+      ((1 -
+        Math.log(
+          Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180),
+        ) /
+          Math.PI) /
+        2) *
+        Math.pow(2, zoom),
+    );
+
+    return this.data.layer_url
+      .replace("{z}", zoom)
+      .replace("{x}", tileX)
+      .replace("{y}", tileY);
+  }
 }
