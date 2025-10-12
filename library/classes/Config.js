@@ -6,15 +6,13 @@ import { TileLayer } from "@/classes/TileLayer.js";
 export class Config {
   constructor(config = {}) {
     // Map Options
-    this.map_options = config.map_options || {
+    this.map_options = {
       div_id: "waymark-instance",
+      ...(config.map_options || {}),
     };
 
     // Maplibre Options
-    this.mapLibreOptions = {
-      ...mapOptions,
-      ...(this.map_options.maplibre_options || {}),
-    };
+    this.map_options.maplibre_options = this.map_options.maplibre_options || {};
 
     // Tile Layers
     this.tileLayers = [];
@@ -31,6 +29,13 @@ export class Config {
       lineTypes: this.lineTypes,
       shapeTypes: this.shapeTypes,
     });
+  }
+
+  getMapLibreOptions() {
+    return {
+      ...mapOptions,
+      ...(this.map_options.maplibre_options || {}),
+    };
   }
 
   importTileLayers() {

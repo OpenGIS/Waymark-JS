@@ -28,13 +28,12 @@ export function useMap() {
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
-		activeTileLayer,
 	} = storeToRefs(useInstanceStore());
 
 	// Create & Store Map
 	const init = () => {
 		const mapOptions = {
-			...config.value.mapLibreOptions,
+			...config.value.getMapLibreOptions(),
 			container: `${config.value.getMapOption("div_id")}-map`,
 		};
 
@@ -45,12 +44,7 @@ export function useMap() {
 		map.value.on("load", () => {
 			// Add Tile Layers
 			config.value.getTileLayers().forEach((tileLayer) => {
-				// If no active Tile Layer
-				if (!activeTileLayer.value.id) {
-					// Set the first one as active
-					activeTileLayer.value = tileLayer;
-				}
-				tileLayer.addTo(map.value, tileLayer === activeTileLayer.value);
+				tileLayer.addTo(map.value);
 			});
 
 			mapReady.value = true;
