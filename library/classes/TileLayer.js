@@ -9,6 +9,7 @@ export class TileLayer {
       layer_attribution:
         '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       layer_max_zoom: "18",
+      layer_opacity: "1.0",
     };
 
     this.data = { ...defaults, ...layerData };
@@ -41,6 +42,9 @@ export class TileLayer {
       attribution: this.data.layer_attribution || "",
       layout: {
         visibility: visible ? "visible" : "none",
+      },
+      paint: {
+        "raster-opacity": parseFloat(this.data.layer_opacity) || 1.0,
       },
     };
   }

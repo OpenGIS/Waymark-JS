@@ -1,13 +1,34 @@
 <script setup>
-import { onMounted } from "vue";
+/* 
+
+Tile Layer Example...
+
+{
+  layer_name: "Open Street Map",
+  layer_url: "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  layer_attribution:
+    '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  layer_max_zoom: "18",
+  layer_opacity: "1.0",
+}
+
+*/
+
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
+import { TileLayer } from "@/classes/TileLayer.js";
 
 import Button from "@/components/UI/Common/Button.vue";
 
 const { config, map, activeTileLayer } = storeToRefs(useInstanceStore());
 
-const tilePreviewUrl = (tileLayer) => {
+const tilePreviewUrl = computed((tileLayer) => {
+	if (!(tileLayer instanceof TileLayer)) {
+		console.warn("tileLayer is not an instance of TileLayer", tileLayer);
+		return "";
+	}
+
 	const tile_url = tileLayer.data.layer_url;
 
 	const lon2tile = (lon, zoom) =>
@@ -32,7 +53,7 @@ const tilePreviewUrl = (tileLayer) => {
 
 	// Replace {z}, {x}, {y} with actual values
 	return tile_url.replace("{z}", zoom).replace("{x}", x).replace("{y}", y);
-};
+});
 
 const updateTileLayer = (tileLayer) => {
 	// Update active tile layer in store
@@ -53,13 +74,12 @@ const updateTileLayer = (tileLayer) => {
 };
 
 const tileLayers = config.value.getTileLayers();
+console.log("tileLayers", tileLayers);
 </script>
 
 <template>
 	<div class="panel basemaps">
-		<h3>Basemaps</h3>
-
-		<div class="list">
+		<div class="list" v-if="tileLayers && tileLayers.length">
 			<div
 				class="list-item"
 				v-for="(tileLayer, index) in tileLayers"
@@ -84,4 +104,59 @@ const tileLayers = config.value.getTileLayers();
 	</div>
 </template>
 
-<style></style>
+<style lang="less">
+.panel.basemaps {
+	padding: 10px;
+
+	h3 {
+		margin-top: 0;
+		margin-bottom: 10px;
+		font-size: 18px;
+		font-weight: bold;
+		border-bottom: 1px solid #ddd;
+		padding-bottom: 5px;
+	}
+
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+
+		.list-item {
+			flex: 1 1 calc(50% - 10px);
+			box-sizing: border-box;
+			border: 2px solid transparent;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: border-color 0.3s;
+
+			&.active {
+				border-color: #0078a8;
+			}
+
+			img {
+				width: 100%;
+				height: auto;
+				border-bottom: 1px solid #ddd;
+				border-top-left-radius: 4px;
+				border-top-right-radius: 4px;
+			}
+
+			.info {
+				padding: 5px;
+
+				h4 {
+					margin: 5px 0;
+					font-size: 16px;
+				}
+
+				p {
+					margin: 0;
+					font-size: 12px;
+					color: #666;
+				}
+			}
+		}
+	}
+}
+</style>

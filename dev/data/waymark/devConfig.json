@@ -1,6 +1,31 @@
 {
   "map_height": "640",
-  "tile_layers": [],
+  "tile_layers": [
+    {
+      "layer_name": "Open Street Map",
+      "layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+      "layer_max_zoom": "18"
+    },
+    {
+      "layer_name": "Open Topo Map",
+      "layer_url": "https://tile.opentopomap.org/{z}/{x}/{y}.png",
+      "layer_attribution": "Map data: \u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: \u00a9 <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)",
+      "layer_max_zoom": "17"
+    },
+    {
+      "layer_name": "Relief",
+      "layer_url": "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=91872755ecf54e42a47a8982b3dc922a",
+      "layer_attribution": "Maps \u00a9 <a href=\"http://www.thunderforest.com\">Thunderforest</a>, Data \u00a9 <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>",
+      "layer_max_zoom": "18"
+    },
+    {
+      "layer_name": "Outdoors",
+      "layer_url": "https:\/\/tile.thunderforest.com\/outdoors\/{z}\/{x}\/{y}@2x.png?apikey=4550655437ba47fda736e7898339c95f",
+      "layer_attribution": "Maps \u00a9 Thunderforest | Data \u00a9 OSM",
+      "layer_max_zoom": "18"
+    }
+  ],
   "marker_types": [
     {
       "marker_title": "Photo",

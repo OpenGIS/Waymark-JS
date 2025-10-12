@@ -75,11 +75,11 @@ const handleNavClick = (panelKey = "overlays") => {
 
 		<!-- START Panel Content -->
 		<div class="panels-content">
-			<Overlays v-show="mapHasOverlays && showPanel('overlays')" />
+			<Overlays v-if="mapHasOverlays && showPanel('overlays')" />
 
-			<Info v-show="showPanel('info')" />
+			<Info v-if="showPanel('info')" />
 
-			<Basemaps v-show="showPanel('basemaps')" />
+			<Basemaps v-if="showPanel('basemaps')" />
 		</div>
 		<!-- END Panel Content -->
 	</div>
