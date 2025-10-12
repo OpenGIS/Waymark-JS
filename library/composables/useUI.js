@@ -1,4 +1,4 @@
-import { computed, shallowRef } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 // Import instanceStore
@@ -12,7 +12,9 @@ export function useUI() {
 		return overlays.value.length > 0;
 	});
 
-	// Check if the panel is active
+	/* 
+		Content Panels
+	*/
 	const isActivePanel = (panelKey) => {
 		return panelOpen.value && activePanelKey.value === panelKey;
 	};
@@ -30,6 +32,19 @@ export function useUI() {
 		panelOpen.value = true;
 	};
 
+	const openPanel = (panelKey = "overlays") => {
+		// Close nav
+		closeNav();
+
+		// Toggle existing panel
+		if (panelKey === activePanelKey.value) {
+			togglePanel();
+			// Switch to a different panel
+		} else {
+			setActivePanel(panelKey);
+		}
+	};
+
 	const closePanel = () => {
 		panelOpen.value = false;
 		activePanelKey.value = "";
@@ -39,13 +54,41 @@ export function useUI() {
 		return activePanelKey.value;
 	};
 
+	/*
+		Nav Panels
+	*/
+
+	const activeNavKey = ref("");
+
+	const showNav = (navKey = "") => {
+		// Close other panels
+		closePanel();
+
+		// Toggle nav
+		activeNavKey.value = activeNavKey.value === navKey ? "" : navKey;
+
+		console.log("activeNavKey", activeNavKey.value);
+	};
+
+	const closeNav = () => {
+		activeNavKey.value = "";
+	};
+
+	const isActiveNav = (navKey = "") => {
+		return activeNavKey.value === navKey;
+	};
+
 	return {
 		isActivePanel,
+		openPanel,
 		showPanel,
+		closePanel,
 		togglePanel,
 		setActivePanel,
 		getActivePanelKey,
 		mapHasOverlays,
-		closePanel,
+		showNav,
+		closeNav,
+		isActiveNav,
 	};
 }

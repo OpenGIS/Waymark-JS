@@ -3,12 +3,11 @@ import { ref, onMounted, useTemplateRef } from "vue";
 
 import { useUI } from "@/composables/useUI.js";
 const {
-	closePanel,
+	showNav,
+	openPanel,
+	isActiveNav,
 	showPanel,
-	togglePanel,
-	setActivePanel,
 	isActivePanel,
-	getActivePanelKey,
 	mapHasOverlays,
 } = useUI();
 
@@ -19,39 +18,6 @@ import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
-
-const openPanel = (panelKey = "overlays") => {
-	// Close nav
-	closeNav();
-
-	// Toggle existing panel
-	if (panelKey === getActivePanelKey()) {
-		togglePanel();
-		// Switch to a different panel
-	} else {
-		setActivePanel(panelKey);
-	}
-};
-
-const activeNav = ref("");
-
-const openNav = (navKey = "") => {
-	// Close other panels
-	closePanel();
-
-	// Toggle nav
-	activeNav.value = activeNav.value === navKey ? "" : navKey;
-
-	console.log("activeNav", activeNav.value);
-};
-
-const closeNav = () => {
-	activeNav.value = "";
-};
-
-const showNav = (navKey = "") => {
-	return activeNav.value === navKey;
-};
 </script>
 
 <template>
@@ -82,10 +48,10 @@ const showNav = (navKey = "") => {
 
 			<!-- View -->
 			<div class="nav-item nav-view">
-				<Button size="large" icon="fa-eye" @click="openNav('view')" />
+				<Button size="large" icon="fa-eye" @click="showNav('view')" />
 
 				<!-- Reset -->
-				<div class="nav-panel panel-view" v-if="showNav('view')">
+				<div class="nav-panel panel-view" v-if="isActiveNav('view')">
 					<Button size="large" icon="fa-home" @click="resetView" />
 				</div>
 			</div>
