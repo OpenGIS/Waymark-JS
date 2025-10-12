@@ -38,10 +38,7 @@ console.log("tileLayers", tileLayers.value);
 	<div class="panel basemaps">
 		<!-- 
 			Rasters are displayed as a scrollable compact list and can be quickly
-			toggled on/off, opacity adjusted, and previewed. They are ordered to
-			the reverse order of how they are defined in the config, so
-			the last one defined appears on top. Giving an intuative way to
-			control visibility of multiple layers.
+			toggled on/off, opacity adjusted, and previewed. 
 		-->
 		<div class="list" v-if="tileLayers && tileLayers.length">
 			<div
@@ -51,29 +48,32 @@ console.log("tileLayers", tileLayers.value);
 				:class="{
 					isVisible: tileLayer.isVisible(),
 				}"
-				@click="tileLayer.toggleVisibility()"
 			>
-				<img
-					:src="
-						tileLayer.previewCoords(
-							mapBounds.getCenter().lat,
-							mapBounds.getCenter().lng,
-						)
-					"
-					:alt="tileLayer.data.layer_name"
-				/>
-
-				<!-- Controls -->
 				<div class="controls">
-					<!-- Checkbox -->
-					<input
-						type="checkbox"
-						disabled
-						:checked="tileLayer.isVisible()"
-						title="Active"
-					/>
+					<!-- Preview Image -->
+					<div class="preview" @click="tileLayer.toggleVisibility()">
+						<img
+							:src="
+								tileLayer.previewCoords(
+									mapBounds.getCenter().lat,
+									mapBounds.getCenter().lng,
+								)
+							"
+							:alt="tileLayer.data.layer_name"
+						/>
 
-					<!-- Opacity Slider -->
+						<!-- Visibility Checkbox - should appear over the image, bottom left -->
+						<input
+							type="checkbox"
+							disabled
+							:checked="tileLayer.isVisible()"
+							title="Active"
+						/>
+					</div>
+				</div>
+
+				<div class="info">
+					<!-- Opacity Slider - should appear below the image, match width -->
 					<input
 						type="range"
 						min="0"
@@ -82,9 +82,7 @@ console.log("tileLayers", tileLayers.value);
 						@input="tileLayer.setOpacity($event.target.value)"
 						title="Opacity"
 					/>
-				</div>
-
-				<div class="info">
+					<!-- Title Aligned to top -->
 					<h4>{{ tileLayer.data.layer_name }}</h4>
 					<p v-html="tileLayer.data.layer_attribution"></p>
 				</div>
@@ -95,53 +93,62 @@ console.log("tileLayers", tileLayers.value);
 
 <style lang="less">
 .panel.basemaps {
-	padding: 10px;
+	// padding: 10px;
 
 	.list {
 		.list-item {
 			display: flex;
-			align-items: center;
-			margin-bottom: 10px;
+			// align-items: center;
+			// margin-bottom: 10px;
 			padding: 5px;
 			border: 1px solid #ddd;
+			border-bottom: none;
+
 			border-radius: 4px;
 			background: #fff;
 			cursor: pointer;
 
-			&.isVisible {
-				border-color: #007bff;
-				background: #e7f1ff;
-			}
-
-			img {
-				width: 80px;
-				height: 80px;
-				object-fit: cover;
-				border: 1px solid #ccc;
-				border-radius: 4px;
-				margin-right: 10px;
-			}
+			// &.isVisible {
+			// 	border-color: #007bff;
+			// 	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+			// }
 
 			.controls {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				margin-right: 10px;
+				margin-right: 5px;
 
-				input[type="checkbox"] {
-					margin-bottom: 10px;
-					width: 16px;
-					height: 16px;
-					cursor: not-allowed;
+				.preview {
+					position: relative;
+
+					img {
+						width: 80px;
+						height: 80px;
+						object-fit: cover;
+						border: 1px solid #ccc;
+						border-radius: 4px;
+					}
+
+					input[type="checkbox"] {
+						position: absolute;
+						bottom: 5px;
+						left: 5px;
+						transform: scale(1.5);
+						background: rgba(255, 255, 255, 0.7);
+						border-radius: 4px;
+					}
 				}
 
 				input[type="range"] {
 					width: 80px;
+					// margin-top: 5px;
 				}
 			}
 
 			.info {
 				flex: 1;
+				margin-top: 3px;
 
 				h4 {
 					margin: 0 0 5px 0;
@@ -150,11 +157,11 @@ console.log("tileLayers", tileLayers.value);
 
 				p {
 					margin: 0;
-					font-size: 12px;
+					font-size: 11px;
 					color: #666;
 
 					a {
-						color: #007bff;
+						color: @waymark-primary-colour;
 						text-decoration: none;
 
 						&:hover {
