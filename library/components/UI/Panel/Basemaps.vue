@@ -65,8 +65,8 @@ console.log("tileLayers", tileLayers.value);
 						<!-- Visibility Checkbox - should appear over the image, bottom left -->
 						<input
 							type="checkbox"
-							disabled
 							:checked="tileLayer.isVisible()"
+							@click.stop="tileLayer.toggleVisibility()"
 							title="Active"
 						/>
 					</div>
