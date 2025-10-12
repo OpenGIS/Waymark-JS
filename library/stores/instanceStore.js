@@ -14,8 +14,6 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	const panelOpen = shallowRef(false);
 
-	const activeTileLayer = shallowRef({});
-
 	const activeOverlay = shallowRef(null);
 
 	const activePanelKey = shallowRef("overlays");
@@ -106,7 +104,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		map,
 		mapBounds,
 		layerFilters,
-		activeTileLayer,
 		activeOverlay,
 		activePanelKey,
 		activeFeatureType,

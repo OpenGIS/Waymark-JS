@@ -165,10 +165,7 @@ vi.mock("maplibre-gl", () => {
         return this;
       }
 
-      if (
-        coord instanceof MockLngLatBounds ||
-        (coord.sw && coord.ne)
-      ) {
+      if (coord instanceof MockLngLatBounds || (coord.sw && coord.ne)) {
         this.extend(coord.sw);
         this.extend(coord.ne);
         return this;
@@ -394,15 +391,16 @@ describe("Instance", () => {
     });
 
     const map = instance.store.map.value;
-    const activeTileLayerRef = instance.store.activeTileLayer;
-    const [tileLayerOne, tileLayerTwo] = instance.store.config.value.getTileLayers();
+    const [tileLayerOne, tileLayerTwo] =
+      instance.store.config.value.getTileLayers();
 
     expect(tileLayerOne).toBeInstanceOf(TileLayer);
     expect(tileLayerTwo).toBeInstanceOf(TileLayer);
-    expect(activeTileLayerRef.value).toBe(tileLayerOne);
 
     const firstLayer = map.layers.find((layer) => layer.id === tileLayerOne.id);
-    const secondLayer = map.layers.find((layer) => layer.id === tileLayerTwo.id);
+    const secondLayer = map.layers.find(
+      (layer) => layer.id === tileLayerTwo.id,
+    );
 
     expect(map.sources).toHaveProperty(tileLayerOne.id);
     expect(map.sources[tileLayerOne.id]).toEqual(
@@ -523,14 +521,8 @@ describe("Instance", () => {
           geometry: {
             type: "LineString",
             coordinates: [
-              [
-                -0.1357,
-                51.509,
-              ],
-              [
-                -0.1,
-                51.52,
-              ],
+              [-0.1357, 51.509],
+              [-0.1, 51.52],
             ],
           },
           properties: {

@@ -1,15 +1,8 @@
-<script setup>
-import { storeToRefs } from "pinia";
-import { useInstanceStore } from "@/stores/instanceStore.js";
-
-const { activeTileLayer } = storeToRefs(useInstanceStore());
-</script>
+<script setup></script>
 
 <template>
 	<div class="panel info">
-		<h3>Basemap</h3>
-
-		{{ JSON.stringify(activeTileLayer) }}
+		<h3>Info</h3>
 	</div>
 </template>
 
