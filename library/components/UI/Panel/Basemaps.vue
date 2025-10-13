@@ -40,7 +40,7 @@ console.log("tileLayers", tileLayers.value);
 			Rasters are displayed as a scrollable compact list and can be quickly
 			toggled on/off, opacity adjusted, and previewed. 
 		-->
-		<div class="list" v-if="tileLayers && tileLayers.length">
+		<div class="rasters list" v-if="tileLayers && tileLayers.length">
 			<div
 				class="list-item"
 				v-for="(tileLayer, index) in tileLayers"
@@ -88,6 +88,8 @@ console.log("tileLayers", tileLayers.value);
 				</div>
 			</div>
 		</div>
+
+		<!-- One Vector, displayed sticky at bottom -->
 	</div>
 </template>
 
@@ -152,7 +154,7 @@ console.log("tileLayers", tileLayers.value);
 
 				h4 {
 					margin: 0 0 5px 0;
-					font-size: 16px;
+					font-size: 14px;
 				}
 
 				p {

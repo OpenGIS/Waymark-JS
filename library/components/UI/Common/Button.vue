@@ -14,6 +14,14 @@ const props = defineProps({
     type: String,
     default: "medium", // small, medium, large
   },
+  rotate: {
+    type: Number,
+    default: 0, // degrees
+  },
+  mirror: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const iconClass = (iconString) => {
@@ -56,14 +64,30 @@ const buttonClass = computed(() => {
 
   return classes.join(" ");
 });
+
+const iconStyle = () => {
+  let style = "";
+
+  if (props.rotate) {
+    style += `transform: rotate(${props.rotate}deg);`;
+  }
+
+  if (props.mirror) {
+    style += `transform: scaleX(-1);`;
+  }
+
+  return style;
+};
 </script>
 
 <template>
   <div :class="buttonClass">
     <template v-if="icon" v-for="(iconString, index) in icon.split(' ')">
-      <i :class="`${iconClass(iconString)}`"></i>
+      <i :class="`${iconClass(iconString)}`" :style="iconStyle()" />
     </template>
-    <slot />
+    <span class="content">
+      <slot />
+    </span>
   </div>
 </template>
 

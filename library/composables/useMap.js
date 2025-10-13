@@ -3,7 +3,11 @@ import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
-import { fitBoundsOptions, flyToOptions } from "@/helpers/MapLibre.js";
+import {
+	fitBoundsOptions,
+	flyToOptions,
+	rotateOptions,
+} from "@/helpers/MapLibre.js";
 
 // Classes
 import {
@@ -28,6 +32,7 @@ export function useMap() {
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
+		view,
 	} = storeToRefs(useInstanceStore());
 
 	// Create & Store Map
@@ -47,7 +52,29 @@ export function useMap() {
 				tileLayer.addTo(map.value);
 			});
 
+			mapBounds.value = map.value.getBounds();
+
+			// Track View
+			view.value.bearing = map.value.getBearing();
+			view.value.pitch = map.value.getPitch();
+
+			// Map is ready
 			mapReady.value = true;
+		});
+
+		// Track Bearing
+		map.value.on("rotateend", () => {
+			view.value.bearing = map.value.getBearing();
+		});
+
+		// Track Pitch
+		map.value.on("pitchend", () => {
+			view.value.pitch = map.value.getPitch();
+		});
+
+		//Track map bounds
+		map.value.on("moveend", () => {
+			//Set Max bounds
 			mapBounds.value = map.value.getBounds();
 		});
 
@@ -83,12 +110,6 @@ export function useMap() {
 					activePanelKey.value = null;
 				}
 			}
-		});
-
-		//Track map bounds
-		map.value.on("moveend", () => {
-			//Set Max bounds
-			mapBounds.value = map.value.getBounds();
 		});
 	};
 
@@ -223,6 +244,21 @@ export function useMap() {
 		map.value.fitBounds(overlaysBounds.value, flyToOptions);
 	};
 
+	const rotateMap = (direction = "cw", degrees = 90) => {
+		// Ensure not currently roating
+		if (map.value.isRotating()) {
+			return;
+		}
+
+		const currentBearing = map.value.getBearing();
+		const newBearing =
+			direction === "cw" ? currentBearing + degrees : currentBearing - degrees;
+
+		console.log("Rotating map to bearing", newBearing);
+
+		map.value.rotateTo(newBearing, rotateOptions);
+	};
+
 	return {
 		init,
 		loadGeoJSON,
@@ -230,5 +266,6 @@ export function useMap() {
 		toGeoJSON,
 		setActiveOverlay,
 		resetView,
+		rotateMap,
 	};
 }

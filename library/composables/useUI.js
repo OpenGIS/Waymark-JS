@@ -58,7 +58,7 @@ export function useUI() {
 		Nav Panels
 	*/
 
-	const activeNavKey = ref("");
+	const activeNavKey = ref("view");
 
 	const showNav = (navKey = "") => {
 		// Close other panels

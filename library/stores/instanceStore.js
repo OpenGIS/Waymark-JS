@@ -26,6 +26,11 @@ export const useInstanceStore = defineStore("instance", () => {
 		inBounds: true,
 	});
 
+	const view = ref({
+		bearing: null,
+		pitch: null,
+	});
+
 	// Getters
 
 	// Actions
@@ -107,6 +112,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		activeOverlay,
 		activePanelKey,
 		activeFeatureType,
+		view,
 
 		// Actions
 		init,

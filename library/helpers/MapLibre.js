@@ -1,6 +1,13 @@
 /* 
   ======= Constants =======
 */
+export const mapOptions = {
+  center: [-1.8261632, 51.1788144], // Default to Stonehenge
+  zoom: 14,
+  maxZoom: 18,
+  style: "https://tiles.openfreemap.org/styles/bright",
+  attributionControl: false,
+};
 
 export const fitBoundsOptions = {
   padding: { top: 50, bottom: 50, left: 50, right: 50 },
@@ -12,10 +19,6 @@ export const flyToOptions = {
   duration: 0,
 };
 
-export const mapOptions = {
-  center: [-1.8261632, 51.1788144], // Default to Stonehenge
-  zoom: 14,
-  maxZoom: 18,
-  style: "https://tiles.openfreemap.org/styles/bright",
-  attributionControl: false,
+export const rotateOptions = {
+  duration: 500,
 };

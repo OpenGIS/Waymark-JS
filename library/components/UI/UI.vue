@@ -1,5 +1,9 @@
 <script setup>
-import { ref, onMounted, useTemplateRef } from "vue";
+import { watch, computed } from "vue";
+import { storeToRefs } from "pinia";
+
+import { useInstanceStore } from "@/stores/instanceStore.js";
+const { view, map } = storeToRefs(useInstanceStore());
 
 import { useUI } from "@/composables/useUI.js";
 const {
@@ -12,12 +16,27 @@ const {
 } = useUI();
 
 import { useMap } from "@/composables/useMap.js";
-const { resetView } = useMap();
+const { resetView, rotateMap } = useMap();
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
 import Button from "@/components/UI/Common/Button.vue";
+
+const northIconAngle = computed(() => {
+	const offsetToNorth = 315;
+	const mapBearing = view.value.bearing || 0;
+
+	return offsetToNorth - mapBearing;
+});
+
+const pointNorth = () => {
+	if (!map.value) return;
+	map.value.easeTo({
+		bearing: 0,
+		duration: 1000,
+	});
+};
 </script>
 
 <template>
@@ -52,7 +71,40 @@ import Button from "@/components/UI/Common/Button.vue";
 
 				<!-- Reset -->
 				<div class="nav-panel panel-view" v-if="isActiveNav('view')">
-					<Button size="large" icon="fa-home" @click="resetView" />
+					<!-- Reset View -->
+					<Button
+						class="view-reset"
+						size="medium"
+						icon="fa-home"
+						@click="resetView"
+					/>
+
+					<!-- North Indicator -->
+					<Button
+						class="view-north"
+						size="medium"
+						icon="fa-location-arrow"
+						:rotate="northIconAngle"
+						@click="pointNorth()"
+						>N</Button
+					>
+
+					<!-- Rotate Counter-Clockwise -->
+					<Button
+						class="view-rotate-ccw"
+						size="medium"
+						icon="fa-undo"
+						@click="rotateMap('ccw', 45)"
+					/>
+
+					<!-- Rotate Clockwise -->
+					<Button
+						class="view-rotate-cw"
+						size="medium"
+						icon="fa-undo"
+						mirror="true"
+						@click="rotateMap('cw', 45)"
+					/>
 				</div>
 			</div>
 
@@ -107,19 +159,49 @@ import Button from "@/components/UI/Common/Button.vue";
 					bottom: 0;
 				}
 
+				&.nav-view {
+					.view-reset {
+						position: absolute;
+						bottom: 3px;
+						left: 0;
+					}
+					.view-north {
+						// position: absolute;
+						// bottom: 3px;
+						// left: 0;
+						position: relative;
+
+						.content {
+							position: absolute;
+							top: 3px;
+							left: 3px;
+							color: #d33;
+							font-size: 10px;
+						}
+					}
+				}
+
 				.button {
 					margin: 5px;
 				}
 
 				.nav-panel {
-					width: 52px;
+					width: 38px;
 					height: 100%;
 					position: absolute;
 					top: 0;
 					right: 52px;
 					// background: #f9f9f9;
-					background: rgba(249, 249, 249, 0.8);
+					background: rgba(249, 249, 249, 0.66);
 					border-left: 1px solid #ddd;
+
+					.button {
+						margin: 3px 0 3px 3px;
+
+						&:first-child {
+							margin-top: 5px;
+						}
+					}
 				}
 			}
 		}
@@ -157,10 +239,40 @@ import Button from "@/components/UI/Common/Button.vue";
 				bottom: 0;
 				height: 52px;
 				width: 100%;
+				border-left: none;
+
 				.nav-item {
 					&.nav-info {
 						position: absolute;
 						right: 0;
+					}
+
+					&.nav-view {
+						.view-reset {
+							position: relative;
+							top: unset;
+							bottom: unset;
+							float: right;
+							margin-right: 5px;
+						}
+					}
+
+					.nav-panel {
+						width: 100%;
+						height: 38px;
+						bottom: 52px;
+						top: unset;
+						left: 0;
+						right: unset;
+						border-left: none;
+
+						.button {
+							margin-top: 3px;
+
+							&.view-north {
+								margin-left: 5px;
+							}
+						}
 					}
 				}
 			}
