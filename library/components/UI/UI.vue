@@ -127,6 +127,7 @@ const northIconAngle = computed(() => {
 						size="medium"
 						icon="fa-angle-down"
 						@click="pitchMap('down')"
+						:disabled="view.pitch === 60"
 					/>
 				</div>
 			</div>
