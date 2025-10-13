@@ -57,6 +57,7 @@ console.log("tileLayers", tileLayers.value);
 								tileLayer.previewCoords(
 									mapBounds.getCenter().lat,
 									mapBounds.getCenter().lng,
+									parseInt(map.getZoom()),
 								)
 							"
 							:alt="tileLayer.data.layer_name"

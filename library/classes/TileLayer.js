@@ -74,15 +74,11 @@ export class TileLayer {
 
   /* tileLayer.previewCoords(map.getCenter().lat, map.getCenter().lng) */
 
-  previewCoords(lat, lng) {
+  previewCoords(lat, lng, zoom = 12) {
     if (!lat || !lng) {
       return this.data.layer_url;
     }
 
-    const zoom = Math.min(
-      Math.max(parseInt(this.data.layer_max_zoom) - 4, 0),
-      18,
-    );
     const tileX = Math.floor(((lng + 180) / 360) * Math.pow(2, zoom));
     const tileY = Math.floor(
       ((1 -
