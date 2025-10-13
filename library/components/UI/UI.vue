@@ -221,7 +221,7 @@ const northIconAngle = computed(() => {
 					.button {
 						margin: 3px 0 3px 3px;
 
-						&:first-child {
+						&.view-north {
 							margin-top: 5px;
 						}
 					}

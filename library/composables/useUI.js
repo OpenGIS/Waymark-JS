@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useUI() {
-	const { panelOpen, activePanelKey, overlays } =
+	const { panelOpen, activePanelKey, activeNavKey, overlays } =
 		storeToRefs(useInstanceStore());
 
 	const mapHasOverlays = computed(() => {
@@ -57,8 +57,6 @@ export function useUI() {
 	/*
 		Nav Panels
 	*/
-
-	const activeNavKey = ref("view");
 
 	const showNav = (navKey = "") => {
 		// Close other panels

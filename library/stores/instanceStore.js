@@ -17,6 +17,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeOverlay = shallowRef(null);
 
 	const activePanelKey = shallowRef("overlays");
+	const activeNavKey = shallowRef("view");
 	const activeFeatureType = shallowRef("marker");
 
 	const mapReady = shallowRef(false);
@@ -111,6 +112,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		layerFilters,
 		activeOverlay,
 		activePanelKey,
+		activeNavKey,
 		activeFeatureType,
 		view,
 

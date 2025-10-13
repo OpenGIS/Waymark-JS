@@ -33,6 +33,7 @@ export function useMap() {
 		activeFeatureType,
 		panelOpen,
 		activePanelKey,
+		activeNavKey,
 		view,
 	} = storeToRefs(useInstanceStore());
 
@@ -231,6 +232,7 @@ export function useMap() {
 		}
 
 		// Go to Overlays Panel
+		activeNavKey.value = "";
 		activeFeatureType.value = overlay.featureType;
 		activePanelKey.value = "overlays";
 		panelOpen.value = true;
