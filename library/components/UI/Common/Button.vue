@@ -22,6 +22,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const iconClass = (iconString) => {
@@ -62,6 +66,10 @@ const buttonClass = computed(() => {
       break;
   }
 
+  if (props.disabled) {
+    classes.push("button-disabled");
+  }
+
   return classes.join(" ");
 });
 
@@ -81,7 +89,7 @@ const iconStyle = () => {
 </script>
 
 <template>
-  <div :class="buttonClass">
+  <div :class="buttonClass" :aria-disabled="disabled">
     <template v-if="icon" v-for="(iconString, index) in icon.split(' ')">
       <i :class="`${iconClass(iconString)}`" :style="iconStyle()" />
     </template>
@@ -105,11 +113,18 @@ const iconStyle = () => {
   text-align: center;
   cursor: pointer;
 
+  &.button-disabled {
+    color: #aaa;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    box-shadow: inset 0 0 0 1px #ccc;
+    cursor: not-allowed;
+  }
+
   &:hover,
   &.button-active {
     font-weight: bold;
     border-width: 2px;
-    box-shadow: inset 0 0 0 1px #666;
+    box-shadow: inset 0 0 0 1px @waymark-primary-colour;
     background: linear-gradient(to bottom, #fff, #ddd);
     text-shadow: unset;
   }

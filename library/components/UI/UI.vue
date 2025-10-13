@@ -16,7 +16,7 @@ const {
 } = useUI();
 
 import { useMap } from "@/composables/useMap.js";
-const { resetView, rotateMap } = useMap();
+const { resetView, rotateMap, toggle3D, pointNorth, pitchMap } = useMap();
 
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
@@ -29,14 +29,6 @@ const northIconAngle = computed(() => {
 
 	return offsetToNorth - mapBearing;
 });
-
-const pointNorth = () => {
-	if (!map.value) return;
-	map.value.easeTo({
-		bearing: 0,
-		duration: 1000,
-	});
-};
 </script>
 
 <template>
@@ -67,7 +59,12 @@ const pointNorth = () => {
 
 			<!-- View -->
 			<div class="nav-item nav-view">
-				<Button size="large" icon="fa-eye" @click="showNav('view')" />
+				<Button
+					size="large"
+					icon="fa-eye"
+					@click="showNav('view')"
+					:active="isActiveNav('view')"
+				/>
 
 				<!-- Reset -->
 				<div class="nav-panel panel-view" v-if="isActiveNav('view')">
@@ -104,6 +101,32 @@ const pointNorth = () => {
 						icon="fa-undo"
 						mirror="true"
 						@click="rotateMap('cw', 45)"
+					/>
+
+					<!-- 3D View -->
+					<Button
+						class="view-3d"
+						size="medium"
+						@click="toggle3D('3d')"
+						:active="view.pitch"
+						>3D</Button
+					>
+
+					<!-- Pitch Up -->
+					<Button
+						class="view-pitch-up"
+						size="medium"
+						icon="fa-angle-up"
+						@click="pitchMap('up')"
+						:disabled="view.pitch === 0"
+					/>
+
+					<!-- Pitch Down -->
+					<Button
+						class="view-pitch-down"
+						size="medium"
+						icon="fa-angle-down"
+						@click="pitchMap('down')"
 					/>
 				</div>
 			</div>

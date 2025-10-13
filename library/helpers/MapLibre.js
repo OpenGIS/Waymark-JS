@@ -22,3 +22,7 @@ export const flyToOptions = {
 export const rotateOptions = {
   duration: 500,
 };
+
+export const easeToOptions = {
+  duration: 500,
+};

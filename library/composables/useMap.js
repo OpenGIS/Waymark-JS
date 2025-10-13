@@ -7,6 +7,7 @@ import {
 	fitBoundsOptions,
 	flyToOptions,
 	rotateOptions,
+	easeToOptions,
 } from "@/helpers/MapLibre.js";
 
 // Classes
@@ -259,6 +260,55 @@ export function useMap() {
 		map.value.rotateTo(newBearing, rotateOptions);
 	};
 
+	const pitchMap = (direction = "down", degrees = 15) => {
+		const currentPitch = map.value.getPitch();
+		let newPitch =
+			direction === "down" ? currentPitch + degrees : currentPitch - degrees;
+
+		// Constrain pitch to 0-60
+		newPitch = Math.max(0, Math.min(60, newPitch));
+
+		console.log("Pitching map to", newPitch);
+
+		map.value.easeTo(
+			{
+				pitch: newPitch,
+				...easeToOptions,
+			},
+			{ easing: (t) => t * (2 - t) },
+		);
+	};
+
+	const pointNorth = () => {
+		if (!map.value) return;
+		map.value.easeTo({
+			bearing: 0,
+			...easeToOptions,
+		});
+	};
+
+	const toggle3D = () => {
+		if (view.value.pitch > 0) {
+			// Reset to 2D
+			map.value.easeTo(
+				{
+					pitch: 0,
+					...easeToOptions,
+				},
+				{ easing: (t) => t * (2 - t) },
+			);
+		} else {
+			// Set to 3D
+			map.value.easeTo(
+				{
+					pitch: 60,
+					...easeToOptions,
+				},
+				{ easing: (t) => t * (2 - t) },
+			);
+		}
+	};
+
 	return {
 		init,
 		loadGeoJSON,
@@ -267,5 +317,8 @@ export function useMap() {
 		setActiveOverlay,
 		resetView,
 		rotateMap,
+		pointNorth,
+		pitchMap,
+		toggle3D,
 	};
 }
