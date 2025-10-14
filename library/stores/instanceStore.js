@@ -17,7 +17,7 @@ export const useInstanceStore = defineStore("instance", () => {
 	const activeOverlay = shallowRef(null);
 
 	const activePanelKey = shallowRef("overlays");
-	const activeNavKey = shallowRef("view");
+	const activeNavKey = shallowRef();
 	const activeFeatureType = shallowRef("marker");
 
 	const mapReady = shallowRef(false);

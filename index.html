@@ -205,11 +205,11 @@
           testConfig = Object.assign(testConfig, {
             units: "metric",
             maplibre_options: {
-              center: [-128.013468, 50.656086],
+              center: [-127.844853, 50.702166],
               // center: [-128.009734, 50.653923],
-              zoom: 12,
+              zoom: 12.5,
               pitch: 60,
-              // bearing: 350,
+              bearing: 180,
               // maxZoom: 6,
               // minZoom: 2,
               // attributionControl: true,
@@ -336,10 +336,10 @@
           });
 
           // Open the Basemap panel
-          // setTimeout(() => {
-          //   instance.store.activePanelKey.value = "basemaps";
-          //   instance.store.panelOpen.value = true;
-          // }, 1000);
+          setTimeout(() => {
+            instance.store.activePanelKey.value = "basemaps";
+            instance.store.panelOpen.value = true;
+          }, 1000);
 
           // Docs - Single instance, no buttons
         } else if (MODE === "docs") {

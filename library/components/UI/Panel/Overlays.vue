@@ -40,6 +40,7 @@ const shapeCount = computed(() => {
 				<!-- START Feature Type Buttons -->
 				<div class="feature-types">
 					<Button
+						title="Show only Markers"
 						v-if="markerCount"
 						class="marker"
 						icon="ion-ios-location"
@@ -50,6 +51,7 @@ const shapeCount = computed(() => {
 					</Button>
 
 					<Button
+						title="Show only Lines"
 						v-if="lineCount"
 						class="line"
 						icon="ion-android-share-alt"
@@ -60,6 +62,7 @@ const shapeCount = computed(() => {
 					</Button>
 
 					<Button
+						title="Show only Shapes"
 						v-if="shapeCount"
 						class="shape"
 						icon="ion-android-checkbox-outline-blank"
@@ -74,6 +77,7 @@ const shapeCount = computed(() => {
 				<!-- START Filters -->
 				<div class="feature-filters">
 					<Button
+						title="Show only overlays in view"
 						icon="fa-object-group"
 						@click="layerFilters.inBounds = !layerFilters.inBounds"
 						:active="layerFilters.inBounds"

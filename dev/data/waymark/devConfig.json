@@ -2,13 +2,6 @@
   "map_height": "640",
   "tile_layers": [
     {
-      "layer_name": "Open Topo Map",
-      "layer_url": "https://tile.opentopomap.org/{z}/{x}/{y}.png",
-      "layer_attribution": "Map data: \u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: \u00a9 <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)",
-      "layer_max_zoom": "17",
-      "layer_visible": "0"
-    },
-    {
       "layer_name": "Open Street Map",
       "layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
       "layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
@@ -28,13 +21,6 @@
       "layer_attribution": "\u00a9 Esri, Maxar, Earthstar Geographics, and the GIS User Community",
       "layer_max_zoom": "18",
       "layer_visible": "0"
-    },
-    {
-      "layer_name": "Waymarked trails",
-      "layer_url": "https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png",
-      "layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-      "layer_max_zoom": "18",
-      "layer_visible": "1"
     }
   ],
   "marker_types": [
