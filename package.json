@@ -1,6 +1,6 @@
 {
   "name": "@ogis/waymark-js",
-  "version": "2.0.0-alpha.10",
+  "version": "2.0.0-alpha.12",
   "type": "module",
   "license": "GPL-2.0-only",
   "repository": {
@@ -23,7 +23,8 @@
     ".": {
       "import": "./dist/waymark-js.js",
       "require": "./dist/waymark-js.umd.cjs"
-    }
+    },
+    "./dist/waymark-js.css": "./dist/waymark-js.css"
   },
   "scripts": {
     "build": "vite build",
