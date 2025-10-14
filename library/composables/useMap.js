@@ -49,6 +49,8 @@ export function useMap() {
 
 		// Triggers the UI to populate
 		map.value.on("load", () => {
+			mapReady.value = true;
+
 			// Add Tile Layers
 			config.value.getTileLayers().forEach((tileLayer) => {
 				tileLayer.addTo(map.value);
@@ -59,9 +61,6 @@ export function useMap() {
 			// Track View
 			view.value.bearing = map.value.getBearing();
 			view.value.pitch = map.value.getPitch();
-
-			// Map is ready
-			mapReady.value = true;
 		});
 
 		// Track Bearing
