@@ -49,9 +49,14 @@ const classAppend = computed(() => {
 		classes.push("orientation-portrait");
 	}
 
-	// Small display
+	// Narrow display
 	if (container.value.clientWidth <= 375) {
 		classes.push("display-narrow");
+	}
+
+	// Short display
+	if (container.value.clientHeight <= 375) {
+		classes.push("display-short");
 	}
 
 	// Has active layer
@@ -93,6 +98,7 @@ const classAppend = computed(() => {
 	height: 100%;
 	width: 100%;
 	display: flex;
+	overflow: hidden;
 
 	/* Transitions */
 	.map,

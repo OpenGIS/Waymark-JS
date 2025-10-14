@@ -167,6 +167,10 @@ const northIconAngle = computed(() => {
 
 		font-family: "Helvetica Neue", Arial, sans-serif;
 
+		input {
+			accent-color: @waymark-primary-colour;
+		}
+
 		.panels-nav {
 			position: absolute;
 			top: 0;
@@ -199,7 +203,7 @@ const northIconAngle = computed(() => {
 							position: absolute;
 							top: 3px;
 							left: 3px;
-							color: #d33;
+							color: @waymark-primary-colour;
 							font-size: 10px;
 						}
 					}
@@ -247,7 +251,29 @@ const northIconAngle = computed(() => {
 		}
 	}
 
+	/* Narrow */
 	&.display-narrow {
+		/* Short & Narrow */
+		&.display-short {
+			.ui {
+				max-height: 200px !important;
+			}
+
+			&.has-active-overlay {
+				.panel.overlay {
+					.overlay-content {
+						padding-bottom: 52px;
+						overflow-y: auto;
+					}
+
+					.feature-nav,
+					.panel-content {
+						display: none;
+					}
+				}
+			}
+		}
+
 		.map {
 			width: 100%;
 			height: calc(100% - 52px);
@@ -256,6 +282,10 @@ const northIconAngle = computed(() => {
 		.ui {
 			height: 52px;
 			width: 100%;
+
+			.active-overlay {
+				border-left: none;
+			}
 
 			.panels-nav {
 				display: flex;

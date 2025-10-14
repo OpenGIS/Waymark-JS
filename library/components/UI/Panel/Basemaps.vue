@@ -142,11 +142,6 @@ console.log("tileLayers", tileLayers.value);
 						border-radius: 4px;
 					}
 				}
-
-				input[type="range"] {
-					width: 80px;
-					// margin-top: 5px;
-				}
 			}
 
 			.info {
