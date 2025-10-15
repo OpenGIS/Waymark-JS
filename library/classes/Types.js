@@ -20,7 +20,7 @@ export class MarkerType extends Type {
       marker_shape: "marker",
       marker_size: "large",
       icon_type: "icon",
-      marker_icon: "ion-pin",
+      marker_icon: "fa-map-marker",
       marker_colour: defaultMarkerColour,
       icon_colour: "#ffffff",
       marker_display: "1",

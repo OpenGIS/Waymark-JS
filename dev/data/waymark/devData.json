@@ -7,7 +7,11 @@
         "coordinates": [-127.497046, 50.720265]
       },
       "type": "Feature",
-      "properties": { "title": "Pub Name", "type": "beer" }
+      "properties": {
+        "title": "The Rusty Anchor Pub",
+        "description": "A great place to stop for food and drink after a long ride!",
+        "type": "beer"
+      }
     },
     {
       "geometry": {
@@ -15,7 +19,11 @@
         "coordinates": [-127.490137, 50.722642]
       },
       "type": "Feature",
-      "properties": { "title": "Burger King", "type": "food" }
+      "properties": {
+        "title": "Burger King",
+        "type": "start",
+        "description": "Start of the North North Island Route"
+      }
     },
     {
       "geometry": {
@@ -109,6 +117,7 @@
       "type": "Feature",
       "properties": {
         "type": "photo",
+        "title": "Forested Area",
         "description": "A photo of the area. This is a beautiful area with lush greenery and a serene atmosphere."
       }
     },
@@ -117,7 +126,7 @@
       "type": "Feature",
       "properties": {
         "title": "Cape Scott Lighthouse",
-        "type": "photo",
+        "type": "finish",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c-450x450.jpeg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c-300x225.jpeg",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
@@ -129,6 +138,7 @@
       "type": "Feature",
       "properties": {
         "type": "photo",
+        "title": "Cape Scott Beach",
         "image_thumbnail_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c-450x450.jpeg",
         "image_medium_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c-300x225.jpeg",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2020\/06\/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg"
@@ -151,7 +161,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 1 - Port Hardy to Alberni",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -438,7 +448,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 2 - Alberni to Port Renfrew",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -719,7 +729,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 3 - Renfrew to Cowichan Lake",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -1019,7 +1029,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 4 - Cowichan Lake to Duncan",
 
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
@@ -1383,7 +1393,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 5 - Duncan to Cape Scott",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",

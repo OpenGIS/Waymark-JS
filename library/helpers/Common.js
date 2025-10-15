@@ -18,7 +18,7 @@ export function makeKey(str) {
 }
 
 export function visibleIcon(isVisble) {
-  return isVisble ? "ion-eye" : "ion-eye-disabled";
+  return isVisble ? "fa-eye" : "fa-eye-slash";
 }
 
 export function expandedIcon(isExpanded) {

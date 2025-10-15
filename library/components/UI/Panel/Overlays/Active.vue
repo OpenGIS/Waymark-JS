@@ -27,7 +27,7 @@ const { setActiveOverlay } = useMap();
       <!-- Title -->
       <div class="title">{{ activeOverlay.getTitle() }}</div>
 
-      <Button icon="ion-close" @click="setActiveOverlay(null)" />
+      <Button icon="fa-close" @click="setActiveOverlay(null)" />
     </div>
     <!-- End Top -->
 
@@ -75,7 +75,8 @@ const { setActiveOverlay } = useMap();
 
 <style lang="less">
 .active-overlay {
-  max-height: 160px;
+  min-height: 100px;
+  max-height: 185px;
   overflow: scroll;
   color: #333;
 
@@ -83,13 +84,13 @@ const { setActiveOverlay } = useMap();
 
   /* Top */
   .overlay-top {
-    padding: 5px;
+    padding: 3px;
     background: linear-gradient(to bottom, #f9f9f9, #eee);
     margin-bottom: 5px;
     padding-bottom: 5px;
     padding-right: 40px;
     border-bottom: 1px solid #999;
-    min-height: 34px;
+    min-height: 30px;
     display: flex;
     align-items: center;
     position: relative;
@@ -110,13 +111,13 @@ const { setActiveOverlay } = useMap();
 
     .title {
       // padding: 0 35px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
     }
     .button {
       position: absolute;
-      top: 5px;
-      right: 5px;
+      top: 3px;
+      right: 3px;
       margin: 0;
     }
   }

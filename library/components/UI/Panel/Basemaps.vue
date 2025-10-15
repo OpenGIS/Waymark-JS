@@ -48,7 +48,6 @@ console.log("tileLayers", tileLayers.value);
 				:class="{
 					isVisible: tileLayer.isVisible(),
 				}"
-				@click="tileLayer.toggleVisibility()"
 			>
 				<div class="controls">
 					<!-- Preview Image -->
@@ -74,7 +73,7 @@ console.log("tileLayers", tileLayers.value);
 					</div>
 				</div>
 
-				<div class="info">
+				<div class="info" @click="tileLayer.toggleVisibility()">
 					<!-- Opacity Slider - should appear below the image, match width -->
 					<input
 						type="range"

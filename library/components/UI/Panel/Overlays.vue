@@ -43,7 +43,7 @@ const shapeCount = computed(() => {
 						title="Show only Markers"
 						v-if="markerCount"
 						class="marker"
-						icon="ion-ios-location"
+						icon="fa-map-marker"
 						@click="activeFeatureType = 'marker'"
 						:active="activeFeatureType === 'marker'"
 					>
@@ -54,7 +54,7 @@ const shapeCount = computed(() => {
 						title="Show only Lines"
 						v-if="lineCount"
 						class="line"
-						icon="ion-android-share-alt"
+						icon="fa-share-alt"
 						@click="activeFeatureType = 'line'"
 						:active="activeFeatureType === 'line'"
 					>
@@ -65,7 +65,7 @@ const shapeCount = computed(() => {
 						title="Show only Shapes"
 						v-if="shapeCount"
 						class="shape"
-						icon="ion-android-checkbox-outline-blank"
+						icon="fa-square-o"
 						@click="activeFeatureType = 'shape'"
 						:active="activeFeatureType === 'shape'"
 					>
