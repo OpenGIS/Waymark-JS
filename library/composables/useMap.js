@@ -1,6 +1,8 @@
 import { storeToRefs } from "pinia";
-import { Map } from "maplibre-gl";
+// import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import maplibregl from "maplibre-gl";
+import mlcontour from "maplibre-contour";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
 import {
@@ -44,7 +46,7 @@ export function useMap() {
 		};
 
 		// Create MapLibre instance
-		map.value = new Map(mapOptions);
+		map.value = new maplibregl.Map(mapOptions);
 
 		// Triggers the UI to populate
 		map.value.on("load", () => {
@@ -113,6 +115,109 @@ export function useMap() {
 					activePanelKey.value = null;
 				}
 			}
+		});
+
+		// Terrain and Contours
+		map.value.on("style.load", () => {
+			map.value.addSource("terrainSource", {
+				type: "raster-dem",
+				tiles: [
+					"https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+				],
+				encoding: "terrarium",
+				tileSize: 256,
+				maxzoom: 14,
+			});
+
+			map.value.setTerrain({
+				source: "terrainSource",
+				exaggeration: 1,
+			});
+
+			map.value.addSource("hillshadeSource", {
+				type: "raster-dem",
+				tiles: [
+					"https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+				],
+				encoding: "terrarium",
+				tileSize: 256,
+				maxzoom: 14,
+			});
+
+			map.value.addLayer({
+				id: "hillshade-layer",
+				type: "hillshade",
+				source: "hillshadeSource",
+				paint: {
+					"hillshade-shadow-color": "#333333",
+				},
+			});
+
+			var demSource = new mlcontour.DemSource({
+				url: "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+				encoding: "terrarium", // "mapbox" or "terrarium" default="terrarium"
+				maxzoom: 13,
+				worker: true, // offload isoline computation to a web worker to reduce jank
+				cacheSize: 100, // number of most-recent tiles to cache
+				timeoutMs: 10_000, // timeout on fetch requests
+			});
+			demSource.setupMaplibre(maplibregl);
+
+			map.value.addSource("contour-source", {
+				type: "vector",
+				minzoom: 12,
+				// maxzoom: 14,
+				tiles: [
+					demSource.contourProtocolUrl({
+						// convert meters to feet, default=1 for meters
+						// multiplier: 3.28084,
+						thresholds: {
+							// zoom: [minor, major]
+							// We want a very subtle contour effect
+							0: [100, 500],
+							5: [50, 250],
+							10: [25, 100],
+							15: [10, 50],
+						},
+						// optional, override vector tile parameters:
+						contourLayer: "contours",
+						elevationKey: "ele",
+						levelKey: "level",
+						extent: 4096,
+						buffer: 1,
+					}),
+				],
+				maxzoom: 15,
+			});
+
+			map.value.addLayer({
+				id: "contour-lines",
+				type: "line",
+				source: "contour-source",
+				"source-layer": "contours",
+				paint: {
+					"line-color": "rgba(0,0,0, 30%)",
+					// level = highest index in thresholds array the elevation is a multiple of
+					"line-width": ["match", ["get", "level"], 1, 1, 0.5],
+				},
+			});
+			map.value.addLayer({
+				id: "contour-labels",
+				type: "symbol",
+				source: "contour-source",
+				"source-layer": "contours",
+				filter: [">", ["get", "level"], 0],
+				layout: {
+					"symbol-placement": "line",
+					"text-size": 10,
+					"text-field": ["concat", ["number-format", ["get", "ele"], {}], "m"],
+					"text-font": ["Noto Sans Bold"],
+				},
+				paint: {
+					"text-halo-color": "white",
+					"text-halo-width": 1,
+				},
+			});
 		});
 	};
 
