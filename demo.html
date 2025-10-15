@@ -29,6 +29,9 @@
     <div id="waymark-instance" style="height: 100%"></div>
 
     <script>
+      // Detect if iframed
+      const isIframed = window.location !== window.parent.location;
+
       // Once the DOM is loaded
       window.addEventListener("DOMContentLoaded", () => {
         // Create a new instance of WaymarkJS
@@ -39,6 +42,7 @@
               zoom: 13.27,
               pitch: 60,
               bearing: -135,
+              cooperativeGestures: isIframed,
             },
             tile_layers: [
               {
