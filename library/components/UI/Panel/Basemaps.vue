@@ -22,7 +22,7 @@ import { useInstanceStore } from "@/stores/instanceStore.js";
 
 // import Button from "@/components/UI/Common/Button.vue";
 
-const { config, mapBounds, map } = storeToRefs(useInstanceStore());
+const { config, view, map } = storeToRefs(useInstanceStore());
 
 const tileLayers = ref([]);
 
@@ -48,6 +48,7 @@ console.log("tileLayers", tileLayers.value);
 				:class="{
 					isVisible: tileLayer.isVisible(),
 				}"
+				@click="tileLayer.toggleVisibility()"
 			>
 				<div class="controls">
 					<!-- Preview Image -->
@@ -55,8 +56,8 @@ console.log("tileLayers", tileLayers.value);
 						<img
 							:src="
 								tileLayer.previewCoords(
-									mapBounds.getCenter().lat,
-									mapBounds.getCenter().lng,
+									view.bounds.getCenter().lat,
+									view.bounds.getCenter().lng,
 									parseInt(map.getZoom()),
 								)
 							"

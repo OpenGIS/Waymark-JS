@@ -26,7 +26,6 @@ export function useMap() {
 		config,
 		map,
 		mapReady,
-		mapBounds,
 		overlays,
 		overlaysBounds,
 		activeOverlay,
@@ -56,11 +55,12 @@ export function useMap() {
 				tileLayer.addTo(map.value);
 			});
 
-			mapBounds.value = map.value.getBounds();
-
-			// Track View
+			// Set Initial View
+			view.value.bounds = map.value.getBounds();
 			view.value.bearing = map.value.getBearing();
 			view.value.pitch = map.value.getPitch();
+			view.value.zoom = map.value.getZoom();
+			view.value.center = map.value.getCenter();
 		});
 
 		// Track Bearing
@@ -76,7 +76,9 @@ export function useMap() {
 		//Track map bounds
 		map.value.on("moveend", () => {
 			//Set Max bounds
-			mapBounds.value = map.value.getBounds();
+			view.value.bounds = map.value.getBounds();
+			view.value.center = map.value.getCenter();
+			view.value.zoom = map.value.getZoom();
 		});
 
 		// Lines & Shape click handling

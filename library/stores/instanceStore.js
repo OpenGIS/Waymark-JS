@@ -8,7 +8,6 @@ export const useInstanceStore = defineStore("instance", () => {
 	const config = shallowRef(null);
 	const container = shallowRef(null);
 	const map = shallowRef(null);
-	const mapBounds = shallowRef(null);
 
 	const overlays = shallowRef([]);
 
@@ -30,6 +29,9 @@ export const useInstanceStore = defineStore("instance", () => {
 	const view = ref({
 		bearing: null,
 		pitch: null,
+		bounds: null,
+		zoom: null,
+		center: null,
 	});
 
 	// Getters
@@ -67,7 +69,7 @@ export const useInstanceStore = defineStore("instance", () => {
 		// Iterate over all overlays
 		overlays.value.forEach((overlay) => {
 			// Is it in the current map bounds
-			if (layerFilters.value.inBounds && !overlay.inBounds(mapBounds.value)) {
+			if (layerFilters.value.inBounds && !overlay.inBounds(view.value.bounds)) {
 				return;
 			}
 
@@ -108,7 +110,6 @@ export const useInstanceStore = defineStore("instance", () => {
 		overlays,
 		overlaysByType,
 		map,
-		mapBounds,
 		layerFilters,
 		activeOverlay,
 		activePanelKey,

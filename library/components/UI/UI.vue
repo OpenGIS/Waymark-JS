@@ -133,14 +133,14 @@ const northIconAngle = computed(() => {
 			</div>
 
 			<!-- Info -->
-			<div class="nav-item nav-info">
+			<!-- 			<div class="nav-item nav-info">
 				<Button
 					size="large"
 					icon="fa-info"
 					@click="openPanel('info')"
 					:active="isActivePanel('info')"
 				/>
-			</div>
+			</div> -->
 		</nav>
 		<!-- END Panel Nav -->
 

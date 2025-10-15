@@ -75,7 +75,7 @@ const { setActiveOverlay } = useMap();
 
 <style lang="less">
 .active-overlay {
-  max-height: 190px;
+  max-height: 160px;
   overflow: scroll;
   color: #333;
 
@@ -87,7 +87,7 @@ const { setActiveOverlay } = useMap();
     background: linear-gradient(to bottom, #f9f9f9, #eee);
     margin-bottom: 5px;
     padding-bottom: 5px;
-    padding-right: 32px;
+    padding-right: 40px;
     border-bottom: 1px solid #999;
     min-height: 34px;
     display: flex;

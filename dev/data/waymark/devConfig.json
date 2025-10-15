@@ -18,7 +18,7 @@
     {
       "layer_name": "Satellite",
       "layer_url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      "layer_attribution": "\u00a9 Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+      "layer_attribution": "\u00a9 Esri, Maxar &amp; the GIS User Community",
       "layer_max_zoom": "18",
       "layer_visible": "0"
     }
