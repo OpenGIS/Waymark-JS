@@ -44,7 +44,7 @@
       let MODE = "app"; // "app" | "playground"
       // MODE = "playground";
       // MODE = "docs";
-      MODE = "survey";
+      // MODE = "survey";
 
       document.body.classList.add(MODE);
       console.clear();
@@ -80,7 +80,7 @@
 
               // Read test config (JSON)
               let testConfig = await fetch(
-                `./dev/data/${ID}/devConfig.json`,
+                `./assets/data/${ID}/devConfig.json`,
               ).then((res) => res.json());
 
               // Merge Object
@@ -91,7 +91,7 @@
 
               // Read test data (JSON)
               const testData = await fetch(
-                `./dev/data/${ID}/devData.json`,
+                `./assets/data/${ID}/devData.json`,
               ).then((res) => res.json());
 
               const instance = new Instance({
@@ -116,9 +116,9 @@
           document.body.appendChild(div);
 
           // Read test config (JSON)
-          let testConfig = await fetch(`./dev/data/${ID}/devConfig.json`).then(
-            (res) => res.json(),
-          );
+          let testConfig = await fetch(
+            `./assets/data/${ID}/devConfig.json`,
+          ).then((res) => res.json());
 
           // Merge Object
           testConfig = Object.assign(testConfig, {
@@ -136,7 +136,7 @@
           });
 
           // Read test data (JSON)
-          const testData = await fetch(`./dev/data/${ID}/devData.json`).then(
+          const testData = await fetch(`./assets/data/${ID}/devData.json`).then(
             (res) => res.json(),
           );
 
@@ -161,7 +161,7 @@
               // Reload from new random test data
               ID = getTestID();
               const newTestData = await fetch(
-                `./dev/data/${ID}/devData.json`,
+                `./assets/data/${ID}/devData.json`,
               ).then((res) => res.json());
               instance.loadGeoJSON(newTestData);
             });
@@ -197,9 +197,9 @@
           document.body.appendChild(div);
 
           // Read test config (JSON)
-          let testConfig = await fetch(`./dev/data/${ID}/devConfig.json`).then(
-            (res) => res.json(),
-          );
+          let testConfig = await fetch(
+            `./assets/data/${ID}/devConfig.json`,
+          ).then((res) => res.json());
 
           // Merge Object
           testConfig = Object.assign(testConfig, {
@@ -219,7 +219,7 @@
           });
 
           // Read test data (JSON)
-          const testData = await fetch(`./dev/data/${ID}/devData.json`).then(
+          const testData = await fetch(`./assets/data/${ID}/devData.json`).then(
             (res) => res.json(),
           );
 
