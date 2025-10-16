@@ -33,7 +33,7 @@ const northIconAngle = computed(() => {
 
 <template>
 	<!-- START UI -->
-	<div class="ui" ref="container">
+	<div class="ui">
 		<!-- START Panel Nav -->
 		<nav class="panels-nav">
 			<!-- Overlay -->

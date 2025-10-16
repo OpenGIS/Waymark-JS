@@ -83,7 +83,6 @@ const classAppend = computed(() => {
 <template>
 	<!-- Instance -->
 	<div
-		ref="container"
 		:class="`instance ${classAppend}`"
 		:id="`${config.map_options.div_id}-instance`"
 	>
