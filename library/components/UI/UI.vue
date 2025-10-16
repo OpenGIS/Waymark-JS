@@ -344,6 +344,10 @@ const northIconAngle = computed(() => {
 				.panels-content {
 					min-height: 260px;
 					padding-right: 0;
+
+					.panel {
+						margin-bottom: 52px;
+					}
 				}
 			}
 		}
