@@ -73,7 +73,7 @@ console.log("tileLayers", tileLayers.value);
 					</div>
 				</div>
 
-				<div class="info" @click="tileLayer.toggleVisibility()">
+				<div class="info">
 					<!-- Opacity Slider - should appear below the image, match width -->
 					<input
 						type="range"
@@ -84,7 +84,9 @@ console.log("tileLayers", tileLayers.value);
 						title="Opacity"
 					/>
 					<!-- Title Aligned to top -->
-					<h4>{{ tileLayer.data.layer_name }}</h4>
+					<h4 @click="tileLayer.toggleVisibility()">
+						{{ tileLayer.data.layer_name }}
+					</h4>
 					<p v-html="tileLayer.data.layer_attribution"></p>
 				</div>
 			</div>
