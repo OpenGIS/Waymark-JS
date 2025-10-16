@@ -61,17 +61,8 @@ const overlayClass = computed(() => {
   return out;
 });
 
-const row = useTemplateRef("row");
-
-// When a overlay is set as active, scroll to it
-watch(activeOverlay, (newLayer) => {
-  if (newLayer == props.overlay) {
-    setTimeout(() => {
-      //Scroll to active overlay
-      row.value.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 500);
-  }
-});
+// Set row element ref
+props.overlay.rowElement = useTemplateRef("row");
 </script>
 
 <template>

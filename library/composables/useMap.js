@@ -347,6 +347,24 @@ export function useMap() {
 		activeOverlay.value = overlay;
 		overlay.flyTo();
 		overlay.addHighlight();
+
+		setTimeout(() => {
+			// Scroll to in UI
+			if (overlay.rowElement) {
+				// Sticky panel at top of content
+				const panelTop = document.querySelector(".panel.overlay .panel-top");
+				const panelHeight = panelTop.clientHeight;
+
+				// Set scroll margin
+				overlay.rowElement.value.style.scrollMarginTop = `${panelHeight}px`;
+
+				// Scroll to view
+				overlay.rowElement.value.scrollIntoView({
+					behavior: "smooth",
+					block: "start",
+				});
+			}
+		}, 750);
 	};
 
 	const resetView = () => {
