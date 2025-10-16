@@ -361,7 +361,7 @@ export function useMap() {
 				// Scroll to view
 				overlay.rowElement.value.scrollIntoView({
 					behavior: "smooth",
-					block: "start",
+					block: "nearest",
 				});
 			}
 		}, 750);
