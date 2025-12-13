@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 // import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
-import mlcontour from "maplibre-contour";
+// import mlcontour from "maplibre-contour";
 import { featureTypes, getFeatureType } from "@/helpers/Overlay.js";
 
 import {
@@ -118,6 +118,7 @@ export function useMap() {
 		});
 
 		// Terrain and Contours
+		/*
 		map.value.on("style.load", () => {
 			map.value.addSource("terrainSource", {
 				type: "raster-dem",
@@ -219,6 +220,7 @@ export function useMap() {
 				},
 			});
 		});
+*/
 	};
 
 	const loadGeoJSON = (geoJSON) => {
