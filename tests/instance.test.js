@@ -240,11 +240,13 @@ vi.mock("maplibre-gl", () => {
     }
   }
 
-  return {
+  const exports = {
     Map: MockMap,
     LngLatBounds: MockLngLatBounds,
     Marker: MockMarker,
   };
+  exports.default = exports;
+  return exports;
 });
 
 import { Instance } from "../library/main.js";
