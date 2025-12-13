@@ -145,6 +145,14 @@ vi.mock("maplibre-gl", () => {
     removeSource(id) {
       delete this.sources[id];
     }
+
+    getBearing() {
+      return this._bearing || 0;
+    }
+
+    getPitch() {
+      return this._pitch || 0;
+    }
   }
 
   class MockLngLatBounds {
@@ -198,6 +206,22 @@ vi.mock("maplibre-gl", () => {
         lng: (this.sw.lng + this.ne.lng) / 2,
         lat: (this.sw.lat + this.ne.lat) / 2,
       };
+    }
+
+    getNorth() {
+      return this.ne.lat;
+    }
+
+    getSouth() {
+      return this.sw.lat;
+    }
+
+    getEast() {
+      return this.ne.lng;
+    }
+
+    getWest() {
+      return this.sw.lng;
     }
   }
 
