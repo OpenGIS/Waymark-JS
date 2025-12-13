@@ -273,6 +273,12 @@ vi.mock("maplibre-gl", () => {
   return exports;
 });
 
+// Silence console.log/info/debug during tests
+const noop = () => {};
+console.log = noop;
+console.info = noop;
+console.debug = noop;
+
 import { Instance } from "../library/main.js";
 import { TileLayer } from "../library/classes/TileLayer.js";
 import {

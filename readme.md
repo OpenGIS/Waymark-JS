@@ -226,7 +226,7 @@ Calling `new Instance(config)` mounts the Vue application, normalises configurat
 # Install dependencies
 npm install
 
-# Run the development server
+# Run the dev server (& tests)
 npm run dev
 
 # Build for production

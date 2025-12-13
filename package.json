@@ -1,6 +1,6 @@
 {
   "name": "@ogis/waymark-js",
-  "version": "2.0.0-alpha.14",
+  "version": "2.0.0-beta.1",
   "type": "module",
   "license": "GPL-2.0-only",
   "repository": {
@@ -31,6 +31,9 @@
     "dev": "concurrently \"vite --host\" \"npm run test:watch\"",
     "test": "vitest run",
     "test:watch": "vitest watch"
+  },
+  "vitest": {
+    "setupFiles": "./tests/setupTests.js"
   },
   "dependencies": {
     "@turf/length": "^7.2.0",
