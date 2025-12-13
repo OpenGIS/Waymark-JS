@@ -29,13 +29,54 @@
     <div id="waymark-instance" style="height: 100%"></div>
 
     <script type="module">
-      import { Instance } from "./library/main.js";
+      // Mode detection
+      const isDev =
+        typeof import.meta !== "undefined" &&
+        import.meta.env &&
+        import.meta.env.DEV;
+      const libPath = isDev ? "./library/main.js" : "./dist/waymark-js.js";
+
+      // Load production CSS
+      if (!isDev) {
+        const l = document.createElement("link");
+        l.rel = "stylesheet";
+        l.href = "./dist/waymark-js.css";
+        document.head.appendChild(l);
+      }
 
       // Detect if iframed
       const isIframed = window.location !== window.parent.location;
 
       // Once the DOM is loaded
-      window.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("DOMContentLoaded", async () => {
+        let Instance;
+
+        // Development import
+        if (isDev) {
+          const mod = await import("./library/main.js");
+          Instance =
+            mod &&
+            (mod.Instance ||
+              (mod.default && (mod.default.Instance || mod.default)));
+          // Production import
+        } else {
+          try {
+            const mod = await import("./dist/waymark-js.js");
+            Instance =
+              mod &&
+              (mod.Instance ||
+                (mod.default && (mod.default.Instance || mod.default)));
+          } catch (e) {
+            Instance =
+              window.Waymark && (window.Waymark.Instance || window.Waymark);
+          }
+        }
+
+        if (!Instance) {
+          console.error("Failed to load Waymark Instance");
+          return;
+        }
+
         // Create a new instance of WaymarkJS
         const instance = new Instance({
           map_options: {
