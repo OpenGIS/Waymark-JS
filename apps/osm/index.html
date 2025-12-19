@@ -33,7 +33,7 @@
       style="
         position: absolute;
         top: 10px;
-        right: 10px;
+        left: 10px;
         width: 300px;
         max-height: 80vh;
         background: rgba(255, 255, 255, 0.9);
@@ -48,15 +48,33 @@
       "
     >
       <h3 style="margin-top: 0">Tile Debugger</h3>
-      <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 8px;">
+      <label
+        style="
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          margin-bottom: 8px;
+        "
+      >
         <input id="view-filter-toggle" type="checkbox" checked />
         <span>Only show tiles in view</span>
       </label>
-      <div id="filters" style="margin-bottom: 10px;">
-        <div style="font-weight: bold; margin-bottom: 4px;">Geometry Filters</div>
-        <div id="geom-filters" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;"></div>
-        <div style="font-weight: bold; margin-bottom: 4px;">Layer Filters</div>
-        <div id="layer-filters" style="display: flex; flex-direction: column; gap: 4px;">No layers seen yet.</div>
+      <div id="filters" style="margin-bottom: 10px">
+        <div style="font-weight: bold; margin-bottom: 4px">
+          Geometry Filters
+        </div>
+        <div
+          id="geom-filters"
+          style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px"
+        ></div>
+        <div style="font-weight: bold; margin-bottom: 4px">Layer Filters</div>
+        <div
+          id="layer-filters"
+          style="display: flex; flex-direction: column; gap: 4px"
+        >
+          No layers seen yet.
+        </div>
       </div>
       <div id="tile-list">Waiting for tiles...</div>
     </div>
@@ -176,7 +194,8 @@
       function geometryAllowed(geometry) {
         if (!geometry || !geometry.type) return false;
         if (!enabledGeometry.has(geometry.type)) return false;
-        if (geometry.coordinates === undefined || geometry.coordinates === null) return false;
+        if (geometry.coordinates === undefined || geometry.coordinates === null)
+          return false;
         // Basic emptiness guard to avoid invalid coords
         const coords = geometry.coordinates;
         if (Array.isArray(coords) && coords.length === 0) return false;
@@ -233,7 +252,7 @@
       window.loadTileData = async (url) => {
         try {
           console.log("Fetching tile:", url);
-          
+
           // 1. Extract Z/X/Y
           const match = url.match(/\/(\d+)\/(\d+)\/(\d+)\.pbf/);
           if (!match) {
@@ -265,10 +284,10 @@
               // 5. Convert to GeoJSON
               const geojson = feature.toGeoJSON(x, y, z);
               // Add properties for styling/debugging
-              geojson.properties = { 
-                ...geojson.properties, 
+              geojson.properties = {
+                ...geojson.properties,
                 _layer: layerName,
-                _tile: `${z}/${x}/${y}`
+                _tile: `${z}/${x}/${y}`,
               };
               if (geometryAllowed(geojson.geometry)) {
                 features.push(geojson);
@@ -280,16 +299,22 @@
 
           // 6. Load into Waymark
           const fc = { type: "FeatureCollection", features };
-          // We need to access the instance. Since it's created in the module scope, 
+          // We need to access the instance. Since it's created in the module scope,
           // we can assign it to window or use a closure if we restructure.
           // For now, let's assume 'window.waymarkInstance' is available.
           if (window.waymarkInstance) {
+            // Clear existing overlays so only the current tile's geometries remain
+            window.waymarkInstance.clearGeoJSON();
             window.waymarkInstance.loadGeoJSON(fc);
-            alert(`Loaded ${features.length} features from tile ${z}/${x}/${y}`);
-          } else {
-            console.error("Waymark instance not found on window.waymarkInstance");
-          }
 
+            console.log(
+              `Loaded ${features.length} features from tile ${z}/${x}/${y}`,
+            );
+          } else {
+            console.error(
+              "Waymark instance not found on window.waymarkInstance",
+            );
+          }
         } catch (e) {
           console.error("Error loading tile data:", e);
           alert("Error loading tile data. Check console.");
@@ -314,7 +339,8 @@
           .slice()
           .reverse()
           .map(({ url, z, x, y }) => {
-            const label = z !== undefined ? `Tile ${z}/${x}/${y}` : url.split("/").pop();
+            const label =
+              z !== undefined ? `Tile ${z}/${x}/${y}` : url.split("/").pop();
 
             return `<div style="margin-bottom: 6px; word-break: break-all; border-bottom: 1px solid #eee; padding-bottom: 6px; display: flex; align-items: flex-start; justify-content: space-between;">
                 <div style="flex-grow: 1; margin-right: 10px;">
@@ -334,7 +360,11 @@
           maplibre_options: {
             transformRequest: (url, resourceType) => {
               // Filter for OpenFreeMap PBF tiles
-              if (resourceType === "Tile" && url.includes("openfreemap") && url.endsWith(".pbf")) {
+              if (
+                resourceType === "Tile" &&
+                url.includes("openfreemap") &&
+                url.endsWith(".pbf")
+              ) {
                 const coords = parseTileCoords(url);
                 tileRequests.set(url, { url, ...coords });
                 // Keep list size manageable
@@ -353,9 +383,9 @@
       // Demo data
       const instance = await loadWaymark(
         config, // Pass our config with the hook
-        "../../assets/data/waymark/devData.json" // Use devData directly
+        "../../assets/data/waymark/devData.json", // Use devData directly
       );
-      
+
       // Expose instance globally for the onclick handler
       window.waymarkInstance = instance;
 
