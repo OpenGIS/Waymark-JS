@@ -202,6 +202,26 @@
         return true;
       }
 
+      const escapeHtml = (value) =>
+        String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+
+      function buildDescriptionTable(properties = {}) {
+        const entries = Object.entries(properties);
+        if (!entries.length) return "";
+        const rows = entries
+          .map(
+            ([key, val]) =>
+              `<tr><th style="text-align:left;padding:4px 6px;border-bottom:1px solid #ddd;white-space:nowrap;">${escapeHtml(key)}</th><td style="padding:4px 6px;border-bottom:1px solid #ddd;">${escapeHtml(val)}</td></tr>`,
+          )
+          .join("");
+        return `<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px;">${rows}</table></div>`;
+      }
+
       renderGeometryFilters();
 
       viewFilterToggle.addEventListener("change", () => {
@@ -289,6 +309,10 @@
                 _layer: layerName,
                 _tile: `${z}/${x}/${y}`,
               };
+              // Populate description with an HTML table of all properties
+              geojson.properties.description = buildDescriptionTable(
+                geojson.properties,
+              );
               if (geometryAllowed(geojson.geometry)) {
                 features.push(geojson);
               }
