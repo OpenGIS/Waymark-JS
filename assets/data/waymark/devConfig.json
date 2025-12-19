@@ -1,125 +1,127 @@
 {
-  "tile_layers": [
-    {
-      "layer_name": "Open Street Map",
-      "layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
-      "layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-      "layer_max_zoom": "18",
-      "layer_visible": "0"
-    },
-    {
-      "layer_name": "Outdoors",
-      "layer_url": "https:\/\/tile.thunderforest.com\/outdoors\/{z}\/{x}\/{y}@2x.png?apikey=4550655437ba47fda736e7898339c95f",
-      "layer_attribution": "Maps \u00a9 Thunderforest | Data \u00a9 OSM",
-      "layer_max_zoom": "18",
-      "layer_visible": "0"
-    },
-    {
-      "layer_name": "Satellite",
-      "layer_url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      "layer_attribution": "\u00a9 Esri, Maxar &amp; the GIS User Community",
-      "layer_max_zoom": "18",
-      "layer_visible": "0"
-    }
-  ],
-  "marker_types": [
-    {
-      "marker_title": "Photo",
-      "marker_shape": "rectangle",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-camera-retro",
-      "marker_colour": "#70af00",
-      "icon_colour": "#ffffff",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Information",
-      "marker_shape": "circle",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-fa",
-      "marker_colour": "#fbfbfb",
-      "icon_colour": "#0069a5",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Alert",
-      "marker_shape": "marker",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-exclamation-circle",
-      "marker_colour": "#da3d20",
-      "icon_colour": "white",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Food",
-      "marker_shape": "marker",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-cart-plus",
-      "marker_colour": "#da3d20",
-      "icon_colour": "#ffba00",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Beer",
-      "marker_shape": "marker",
-      "marker_size": "small",
-      "icon_type": "icon",
-      "marker_icon": "fa-beer",
-      "marker_colour": "#fbfbfb",
-      "icon_colour": "#754423",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Start",
-      "marker_shape": "marker",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-flag",
-      "marker_colour": "#70af00",
-      "icon_colour": "white",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Finish",
-      "marker_shape": "marker",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-flag-checkered",
-      "marker_colour": "#a43233",
-      "icon_colour": "white",
-      "marker_display": "1",
-      "marker_submission": "1"
-    },
-    {
-      "marker_title": "Camp",
-      "marker_shape": "marker",
-      "marker_size": "medium",
-      "icon_type": "icon",
-      "marker_icon": "fa-home",
-      "marker_colour": "#a43233",
-      "icon_colour": "#ffffff",
-      "marker_display": "1",
-      "marker_submission": "1"
-    }
-  ],
-  "line_types": [
-    {
-      "line_title": "Route",
-      "line_colour": "#30d100",
-      "line_weight": "3",
-      "line_opacity": "0.7",
-      "line_display": "1",
-      "line_submission": "1"
-    }
-  ]
+  "map_options": {
+    "tile_layers": [
+      {
+        "layer_name": "Open Street Map",
+        "layer_url": "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "layer_attribution": "\u00a9 <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+        "layer_max_zoom": "18",
+        "layer_visible": "0"
+      },
+      {
+        "layer_name": "Outdoors",
+        "layer_url": "https:\/\/tile.thunderforest.com\/outdoors\/{z}\/{x}\/{y}@2x.png?apikey=4550655437ba47fda736e7898339c95f",
+        "layer_attribution": "Maps \u00a9 Thunderforest | Data \u00a9 OSM",
+        "layer_max_zoom": "18",
+        "layer_visible": "0"
+      },
+      {
+        "layer_name": "Satellite",
+        "layer_url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "layer_attribution": "\u00a9 Esri, Maxar &amp; the GIS User Community",
+        "layer_max_zoom": "18",
+        "layer_visible": "0"
+      }
+    ],
+    "marker_types": [
+      {
+        "marker_title": "Photo",
+        "marker_shape": "rectangle",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-camera-retro",
+        "marker_colour": "#70af00",
+        "icon_colour": "#ffffff",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Information",
+        "marker_shape": "circle",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-fa",
+        "marker_colour": "#fbfbfb",
+        "icon_colour": "#0069a5",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Alert",
+        "marker_shape": "marker",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-exclamation-circle",
+        "marker_colour": "#da3d20",
+        "icon_colour": "white",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Food",
+        "marker_shape": "marker",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-cart-plus",
+        "marker_colour": "#da3d20",
+        "icon_colour": "#ffba00",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Beer",
+        "marker_shape": "marker",
+        "marker_size": "small",
+        "icon_type": "icon",
+        "marker_icon": "fa-beer",
+        "marker_colour": "#fbfbfb",
+        "icon_colour": "#754423",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Start",
+        "marker_shape": "marker",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-flag",
+        "marker_colour": "#70af00",
+        "icon_colour": "white",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Finish",
+        "marker_shape": "marker",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-flag-checkered",
+        "marker_colour": "#a43233",
+        "icon_colour": "white",
+        "marker_display": "1",
+        "marker_submission": "1"
+      },
+      {
+        "marker_title": "Camp",
+        "marker_shape": "marker",
+        "marker_size": "medium",
+        "icon_type": "icon",
+        "marker_icon": "fa-home",
+        "marker_colour": "#a43233",
+        "icon_colour": "#ffffff",
+        "marker_display": "1",
+        "marker_submission": "1"
+      }
+    ],
+    "line_types": [
+      {
+        "line_title": "Route",
+        "line_colour": "#30d100",
+        "line_weight": "3",
+        "line_opacity": "0.7",
+        "line_display": "1",
+        "line_submission": "1"
+      }
+    ]
+  }
 }
