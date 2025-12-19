@@ -347,28 +347,7 @@ export class LineOverlay extends Overlay {
   }
 
   hasElevationData() {
-    if (this.feature.geometry.type == "MultiLineString") {
-      //Each line
-      for (var i in this.feature.geometry.coordinates) {
-        //Each point
-        for (var j in this.feature.geometry.coordinates[i]) {
-          //If has elevation data
-          if (this.feature.geometry.coordinates[i][j].length == 3) {
-            return true;
-          }
-        }
-      }
-    } else {
-      //Each point
-      for (var j in this.feature.geometry.coordinates) {
-        //If has elevation data
-        if (this.feature.geometry.coordinates[j].length == 3) {
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return this.getLinePositions().some((coord) => coord.length === 3);
   }
 
   getElevationString() {
@@ -380,7 +359,10 @@ export class LineOverlay extends Overlay {
       this.config.getMapOption("units") === "metric" ? "m" : "ft";
 
     // For the linestring, calculate elevation gain, loss, max and min
-    const coords = this.feature.geometry.coordinates;
+    const coords = this.getLinePositions();
+    if (coords.length === 0) {
+      return "";
+    }
     let elevationGain = 0;
     let elevationLoss = 0;
     let maxElevation = coords[0][2];
@@ -421,11 +403,14 @@ export class LineOverlay extends Overlay {
   }
 
   getBounds() {
-    // Use turf to get the bounding box of the linestring
-    const coords = this.feature.geometry.coordinates;
+    const coords = this.getLinePositions();
+    if (!coords.length) {
+      return new LngLatBounds([0, 0], [0, 0]);
+    }
+
     return coords.reduce(
-      (b, coord) => b.extend(coord),
-      new LngLatBounds(coords[0], coords[0]),
+      (b, coord) => b.extend({ lng: coord[0], lat: coord[1] }),
+      new LngLatBounds({ lng: coords[0][0], lat: coords[0][1] }, { lng: coords[0][0], lat: coords[0][1] }),
     );
   }
 
@@ -469,7 +454,7 @@ export class LineOverlay extends Overlay {
 
   inBounds(bounds) {
     // Check if any part of the line is within the map bounds
-    const coords = this.feature.geometry.coordinates;
+    const coords = this.getLinePositions();
     return coords.some((coord) =>
       bounds.contains({ lng: coord[0], lat: coord[1] }),
     );
@@ -481,16 +466,22 @@ export class LineOverlay extends Overlay {
     const currentZoom = this.map.getZoom();
 
     if (currentZoom < targetZoom) {
-      // Fly to first coordinate
+      const coords = this.getLinePositions();
+      const center = coords.length ? coords[0] : [0, 0];
       this.map.flyTo({
-        center: [
-          this.feature.geometry.coordinates[0][0],
-          this.feature.geometry.coordinates[0][1],
-        ],
+        center: [center[0], center[1]],
         zoom: targetZoom,
         ...flyToOptions,
       });
     }
+  }
+
+  getLinePositions() {
+    const geom = this.feature.geometry;
+    if (geom.type === "MultiLineString") {
+      return geom.coordinates.reduce((acc, line) => acc.concat(line), []);
+    }
+    return geom.coordinates || [];
   }
 }
 
@@ -536,34 +527,7 @@ export class ShapeOverlay extends Overlay {
   }
 
   hasElevationData() {
-    if (this.feature.geometry.type == "MultiPolygon") {
-      //Each polygon
-      for (var i in this.feature.geometry.coordinates) {
-        //Each line
-        for (var j in this.feature.geometry.coordinates[i]) {
-          //Each point
-          for (var k in this.feature.geometry.coordinates[i][j]) {
-            //If has elevation data
-            if (this.feature.geometry.coordinates[i][j][k].length == 3) {
-              return true;
-            }
-          }
-        }
-      }
-    } else {
-      //Each line
-      for (var j in this.feature.geometry.coordinates) {
-        //Each point
-        for (var k in this.feature.geometry.coordinates[j]) {
-          //If has elevation data
-          if (this.feature.geometry.coordinates[j][k].length == 3) {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
+    return this.getPolygonPositions().some((coord) => coord.length === 3);
   }
 
   getElevationString() {
@@ -578,11 +542,14 @@ export class ShapeOverlay extends Overlay {
   }
 
   getBounds() {
-    // Use turf to get the bounding box of the polygon
-    const coords = this.feature.geometry.coordinates[0];
+    const coords = this.getPolygonPositions();
+    if (!coords.length) {
+      return new LngLatBounds([0, 0], [0, 0]);
+    }
+
     return coords.reduce(
-      (b, coord) => b.extend(coord),
-      new LngLatBounds(coords[0], coords[0]),
+      (b, coord) => b.extend({ lng: coord[0], lat: coord[1] }),
+      new LngLatBounds({ lng: coords[0][0], lat: coords[0][1] }, { lng: coords[0][0], lat: coords[0][1] }),
     );
   }
 
@@ -619,39 +586,45 @@ export class ShapeOverlay extends Overlay {
     }
   }
 
-  flyTo() {
-    const bounds = this.getBounds();
-    this.map.fitBounds(bounds, flyToOptions);
-  }
-
-  inBounds(bounds) {
-    // Check if shape bounds and provided bounds overlap
-    const shapeBounds = this.getBounds();
-
-    // Manually check for overlap
-    return !(
-      shapeBounds.getNorth() < bounds.getSouth() ||
-      shapeBounds.getSouth() > bounds.getNorth() ||
-      shapeBounds.getEast() < bounds.getWest() ||
-      shapeBounds.getWest() > bounds.getEast()
-    );
-  }
-
-  zoomIn() {
-    // Zoom to 18
-    const targetZoom = 16;
-    const currentZoom = this.map.getZoom();
-
-    if (currentZoom < targetZoom) {
-      // Fly to first coordinate
+    zoomIn() {
+      const bounds = this.getBounds();
+      const center = bounds.getCenter();
       this.map.flyTo({
-        center: [
-          this.feature.geometry.coordinates[0][0][0],
-          this.feature.geometry.coordinates[0][0][1],
-        ],
-        zoom: targetZoom,
+        center: [center.lng, center.lat],
+        zoom: Math.max(this.map.getZoom(), 16),
         ...flyToOptions,
       });
     }
+
+    getPolygonPositions() {
+      const geom = this.feature.geometry;
+      if (geom.type === "MultiPolygon") {
+        return geom.coordinates.reduce((acc, polygon) => {
+          polygon.forEach((ring) => acc.push(...ring));
+          return acc;
+        }, []);
+      }
+
+      return geom.coordinates
+        ? geom.coordinates.reduce((acc, ring) => acc.concat(ring), [])
+        : [];
+    }
+
+    flyTo() {
+      const bounds = this.getBounds();
+      this.map.fitBounds(bounds, flyToOptions);
+    }
+
+    inBounds(bounds) {
+      // Check if shape bounds and provided bounds overlap
+      const shapeBounds = this.getBounds();
+
+      // Manually check for overlap
+      return !(
+        shapeBounds.getNorth() < bounds.getSouth() ||
+        shapeBounds.getSouth() > bounds.getNorth() ||
+        shapeBounds.getEast() < bounds.getWest() ||
+        shapeBounds.getWest() > bounds.getEast()
+      );
+    }
   }
-}
