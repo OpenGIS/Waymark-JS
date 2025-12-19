@@ -55,10 +55,71 @@
     <script type="module">
       // Helper loads Waymark JS for both dev & production
       import { loadWaymark } from "./../../assets/js/dev.js";
+      import Pbf from "https://esm.sh/pbf";
+      import { VectorTile } from "https://esm.sh/@mapbox/vector-tile";
 
       // Reactive state for tile requests
       const tileRequests = new Set();
       const debugPanelList = document.getElementById("tile-list");
+
+      // Expose loadTileData to global scope for onclick handlers
+      window.loadTileData = async (url) => {
+        try {
+          console.log("Fetching tile:", url);
+          
+          // 1. Extract Z/X/Y
+          const match = url.match(/\/(\d+)\/(\d+)\/(\d+)\.pbf/);
+          if (!match) {
+            console.error("Could not parse tile coordinates from URL");
+            return;
+          }
+          const [_, z, x, y] = match.map(Number);
+
+          // 2. Fetch with force-cache to leverage browser cache
+          const response = await fetch(url, { cache: "force-cache" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const buffer = await response.arrayBuffer();
+
+          // 3. Parse
+          const tile = new VectorTile(new Pbf(buffer));
+          const features = [];
+
+          // 4. Iterate Layers
+          for (const layerName in tile.layers) {
+            const layer = tile.layers[layerName];
+            for (let i = 0; i < layer.length; i++) {
+              const feature = layer.feature(i);
+              // 5. Convert to GeoJSON
+              const geojson = feature.toGeoJSON(x, y, z);
+              // Add properties for styling/debugging
+              geojson.properties = { 
+                ...geojson.properties, 
+                _layer: layerName,
+                _tile: `${z}/${x}/${y}`
+              };
+              features.push(geojson);
+            }
+          }
+
+          console.log(`Parsed ${features.length} features from tile`);
+
+          // 6. Load into Waymark
+          const fc = { type: "FeatureCollection", features };
+          // We need to access the instance. Since it's created in the module scope, 
+          // we can assign it to window or use a closure if we restructure.
+          // For now, let's assume 'window.waymarkInstance' is available.
+          if (window.waymarkInstance) {
+            window.waymarkInstance.loadGeoJSON(fc);
+            alert(`Loaded ${features.length} features from tile ${z}/${x}/${y}`);
+          } else {
+            console.error("Waymark instance not found on window.waymarkInstance");
+          }
+
+        } catch (e) {
+          console.error("Error loading tile data:", e);
+          alert("Error loading tile data. Check console.");
+        }
+      };
 
       function updateDebugPanel() {
         if (tileRequests.size === 0) {
@@ -74,9 +135,12 @@
               const match = url.match(/\/(\d+)\/(\d+)\/(\d+)\.pbf/);
               const label = match ? `Tile ${match[1]}/${match[2]}/${match[3]}` : url.split('/').pop();
               
-              return `<div style="margin-bottom: 6px; word-break: break-all; border-bottom: 1px solid #eee; padding-bottom: 6px;">
-                <div style="font-weight: bold; color: #333;">${label}</div>
-                <a href="${url}" target="_blank" style="text-decoration: none; color: #0066cc; font-size: 10px; display: block; margin-top: 2px;">${url}</a>
+              return `<div style="margin-bottom: 6px; word-break: break-all; border-bottom: 1px solid #eee; padding-bottom: 6px; display: flex; align-items: flex-start; justify-content: space-between;">
+                <div style="flex-grow: 1; margin-right: 10px;">
+                  <div style="font-weight: bold; color: #333;">${label}</div>
+                  <a href="${url}" target="_blank" style="text-decoration: none; color: #0066cc; font-size: 10px; display: block; margin-top: 2px;">${url}</a>
+                </div>
+                <button onclick="loadTileData('${url}')" style="font-size: 10px; padding: 2px 6px; cursor: pointer;">Load</button>
               </div>`;
             }
           )
@@ -108,8 +172,11 @@
       // Demo data
       const instance = await loadWaymark(
         config, // Pass our config with the hook
-        "./../../assets/data/waymark/devData.json" // Use devData directly
+        "../../assets/data/waymark/devData.json" // Use devData directly
       );
+      
+      // Expose instance globally for the onclick handler
+      window.waymarkInstance = instance;
 
       console.log("Waymark instance loaded:", instance);
     </script>
