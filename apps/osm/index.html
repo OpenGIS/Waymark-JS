@@ -48,6 +48,16 @@
       "
     >
       <h3 style="margin-top: 0">Tile Debugger</h3>
+      <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 8px;">
+        <input id="view-filter-toggle" type="checkbox" checked />
+        <span>Only show tiles in view</span>
+      </label>
+      <div id="filters" style="margin-bottom: 10px;">
+        <div style="font-weight: bold; margin-bottom: 4px;">Geometry Filters</div>
+        <div id="geom-filters" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;"></div>
+        <div style="font-weight: bold; margin-bottom: 4px;">Layer Filters</div>
+        <div id="layer-filters" style="display: flex; flex-direction: column; gap: 4px;">No layers seen yet.</div>
+      </div>
       <div id="tile-list">Waiting for tiles...</div>
     </div>
 
@@ -59,8 +69,165 @@
       import { VectorTile } from "https://esm.sh/@mapbox/vector-tile";
 
       // Reactive state for tile requests
-      const tileRequests = new Set();
+      const tileRequests = new Map();
       const debugPanelList = document.getElementById("tile-list");
+      const layerFiltersEl = document.getElementById("layer-filters");
+      const geomFiltersEl = document.getElementById("geom-filters");
+      const viewFilterToggle = document.getElementById("view-filter-toggle");
+
+      let filterToView = true;
+
+      const lon2tile = (lon, z) =>
+        Math.floor(((lon + 180) / 360) * Math.pow(2, z));
+      const lat2tile = (lat, z) => {
+        const rad = (lat * Math.PI) / 180;
+        return Math.floor(
+          ((1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2) *
+            Math.pow(2, z),
+        );
+      };
+
+      const geometryTypes = [
+        "Point",
+        "MultiPoint",
+        "LineString",
+        "MultiLineString",
+        "Polygon",
+        "MultiPolygon",
+      ];
+
+      const enabledGeometry = new Set(geometryTypes);
+      const availableLayers = new Set();
+      const enabledLayers = new Set();
+
+      function renderGeometryFilters() {
+        geomFiltersEl.innerHTML = "";
+        geometryTypes.forEach((type) => {
+          const wrapper = document.createElement("label");
+          wrapper.style.display = "inline-flex";
+          wrapper.style.alignItems = "center";
+          wrapper.style.gap = "4px";
+          wrapper.style.fontSize = "11px";
+
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.checked = enabledGeometry.has(type);
+          input.addEventListener("change", () => {
+            if (input.checked) {
+              enabledGeometry.add(type);
+            } else {
+              enabledGeometry.delete(type);
+            }
+          });
+
+          const label = document.createElement("span");
+          label.textContent = type;
+
+          wrapper.appendChild(input);
+          wrapper.appendChild(label);
+          geomFiltersEl.appendChild(wrapper);
+        });
+      }
+
+      function renderLayerFilters() {
+        if (availableLayers.size === 0) {
+          layerFiltersEl.textContent = "No layers seen yet.";
+          return;
+        }
+
+        layerFiltersEl.innerHTML = "";
+        Array.from(availableLayers)
+          .sort()
+          .forEach((layerName) => {
+            const wrapper = document.createElement("label");
+            wrapper.style.display = "flex";
+            wrapper.style.alignItems = "center";
+            wrapper.style.gap = "6px";
+            wrapper.style.fontSize = "11px";
+
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = enabledLayers.has(layerName);
+            input.addEventListener("change", () => {
+              if (input.checked) {
+                enabledLayers.add(layerName);
+              } else {
+                enabledLayers.delete(layerName);
+              }
+            });
+
+            const label = document.createElement("span");
+            label.textContent = layerName;
+
+            wrapper.appendChild(input);
+            wrapper.appendChild(label);
+            layerFiltersEl.appendChild(wrapper);
+          });
+      }
+
+      function ensureLayerKnown(layerName) {
+        if (!availableLayers.has(layerName)) {
+          availableLayers.add(layerName);
+          enabledLayers.add(layerName);
+          renderLayerFilters();
+        }
+      }
+
+      function geometryAllowed(geometry) {
+        if (!geometry || !geometry.type) return false;
+        if (!enabledGeometry.has(geometry.type)) return false;
+        if (geometry.coordinates === undefined || geometry.coordinates === null) return false;
+        // Basic emptiness guard to avoid invalid coords
+        const coords = geometry.coordinates;
+        if (Array.isArray(coords) && coords.length === 0) return false;
+        return true;
+      }
+
+      renderGeometryFilters();
+
+      viewFilterToggle.addEventListener("change", () => {
+        filterToView = viewFilterToggle.checked;
+        updateDebugPanel();
+      });
+
+      function parseTileCoords(url) {
+        const match = url.match(/\/(\d+)\/(\d+)\/(\d+)\.pbf/);
+        if (!match) return null;
+        return {
+          z: Number(match[1]),
+          x: Number(match[2]),
+          y: Number(match[3]),
+        };
+      }
+
+      function getVisibleTileBounds() {
+        const map = window.waymarkInstance?.store?.map?.value;
+        if (!map?.getBounds) return null;
+
+        const z = Math.floor(map.getZoom());
+        const bounds = map.getBounds();
+        const minX = lon2tile(bounds.getWest(), z);
+        const maxX = lon2tile(bounds.getEast(), z);
+        const minY = lat2tile(bounds.getNorth(), z);
+        const maxY = lat2tile(bounds.getSouth(), z);
+
+        return { z, minX, maxX, minY, maxY };
+      }
+
+      function tileInView(tile, bounds) {
+        if (!bounds) return true;
+        if (tile.z !== bounds.z) return false;
+
+        const tilesAtZoom = Math.pow(2, bounds.z);
+        const inX =
+          bounds.maxX >= bounds.minX
+            ? tile.x >= bounds.minX && tile.x <= bounds.maxX
+            : tile.x >= bounds.minX || tile.x <= bounds.maxX; // dateline wrap
+
+        const inY = tile.y >= bounds.minY && tile.y <= bounds.maxY;
+
+        return inX && inY && tile.x >= 0 && tile.x < tilesAtZoom;
+      }
 
       // Expose loadTileData to global scope for onclick handlers
       window.loadTileData = async (url) => {
@@ -87,6 +254,12 @@
           // 4. Iterate Layers
           for (const layerName in tile.layers) {
             const layer = tile.layers[layerName];
+            ensureLayerKnown(layerName);
+
+            if (!enabledLayers.has(layerName)) {
+              continue;
+            }
+
             for (let i = 0; i < layer.length; i++) {
               const feature = layer.feature(i);
               // 5. Convert to GeoJSON
@@ -97,7 +270,9 @@
                 _layer: layerName,
                 _tile: `${z}/${x}/${y}`
               };
-              features.push(geojson);
+              if (geometryAllowed(geojson.geometry)) {
+                features.push(geojson);
+              }
             }
           }
 
@@ -122,28 +297,33 @@
       };
 
       function updateDebugPanel() {
-        if (tileRequests.size === 0) {
-          debugPanelList.innerHTML = "No tiles loaded yet.";
+        const bounds = filterToView ? getVisibleTileBounds() : null;
+        const tiles = Array.from(tileRequests.values());
+        const filteredTiles = bounds
+          ? tiles.filter((t) => tileInView(t, bounds))
+          : tiles;
+
+        if (filteredTiles.length === 0) {
+          debugPanelList.innerHTML = bounds
+            ? "No tiles in current view."
+            : "No tiles loaded yet.";
           return;
         }
-        const listHtml = Array.from(tileRequests)
-          .reverse() // Show newest first
-          .map(
-            (url) => {
-              // Extract z/x/y from URL for cleaner display
-              // Matches pattern: .../z/x/y.pbf
-              const match = url.match(/\/(\d+)\/(\d+)\/(\d+)\.pbf/);
-              const label = match ? `Tile ${match[1]}/${match[2]}/${match[3]}` : url.split('/').pop();
-              
-              return `<div style="margin-bottom: 6px; word-break: break-all; border-bottom: 1px solid #eee; padding-bottom: 6px; display: flex; align-items: flex-start; justify-content: space-between;">
+
+        const listHtml = filteredTiles
+          .slice()
+          .reverse()
+          .map(({ url, z, x, y }) => {
+            const label = z !== undefined ? `Tile ${z}/${x}/${y}` : url.split("/").pop();
+
+            return `<div style="margin-bottom: 6px; word-break: break-all; border-bottom: 1px solid #eee; padding-bottom: 6px; display: flex; align-items: flex-start; justify-content: space-between;">
                 <div style="flex-grow: 1; margin-right: 10px;">
                   <div style="font-weight: bold; color: #333;">${label}</div>
                   <a href="${url}" target="_blank" style="text-decoration: none; color: #0066cc; font-size: 10px; display: block; margin-top: 2px;">${url}</a>
                 </div>
                 <button onclick="loadTileData('${url}')" style="font-size: 10px; padding: 2px 6px; cursor: pointer;">Load</button>
               </div>`;
-            }
-          )
+          })
           .join("");
         debugPanelList.innerHTML = listHtml;
       }
@@ -155,10 +335,11 @@
             transformRequest: (url, resourceType) => {
               // Filter for OpenFreeMap PBF tiles
               if (resourceType === "Tile" && url.includes("openfreemap") && url.endsWith(".pbf")) {
-                tileRequests.add(url);
+                const coords = parseTileCoords(url);
+                tileRequests.set(url, { url, ...coords });
                 // Keep list size manageable
                 if (tileRequests.size > 50) {
-                  const first = tileRequests.values().next().value;
+                  const first = tileRequests.keys().next().value;
                   tileRequests.delete(first);
                 }
                 requestAnimationFrame(updateDebugPanel);
@@ -177,6 +358,12 @@
       
       // Expose instance globally for the onclick handler
       window.waymarkInstance = instance;
+
+      const map = instance?.store?.map?.value;
+      if (map?.on) {
+        map.on("moveend", updateDebugPanel);
+        map.on("zoomend", updateDebugPanel);
+      }
 
       console.log("Waymark instance loaded:", instance);
     </script>
