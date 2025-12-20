@@ -211,7 +211,9 @@
           .replace(/'/g, "&#39;");
 
       function buildDescriptionTable(properties = {}) {
-        const entries = Object.entries(properties);
+        const entries = Object.entries(properties).filter(
+          ([key]) => key !== "name", // name is elevated to title
+        );
         if (!entries.length) return "";
         const rows = entries
           .map(
@@ -309,6 +311,10 @@
                 _layer: layerName,
                 _tile: `${z}/${x}/${y}`,
               };
+              // Promote name to title if present
+              if (!geojson.properties.title && geojson.properties.name) {
+                geojson.properties.title = geojson.properties.name;
+              }
               // Populate description with an HTML table of all properties
               geojson.properties.description = buildDescriptionTable(
                 geojson.properties,
