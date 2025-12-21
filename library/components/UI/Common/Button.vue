@@ -1,12 +1,6 @@
 <script setup>
 import { computed } from "vue";
-
-// Import all SVG icons from the ui folder
-const icons = import.meta.glob("@/assets/img/icons/*.svg", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
+import Icon from "./Icon.vue";
 
 const props = defineProps({
   icon: {
@@ -35,16 +29,6 @@ const props = defineProps({
   },
 });
 
-const getIconUrl = (iconString) => {
-  // Remove fa- or ion- prefix if present
-  const iconName = iconString.replace(/^(fa-|ion-)/, "");
-  // Find the matching icon path
-  const iconPath = Object.keys(icons).find((path) =>
-    path.endsWith(`/${iconName}.svg`),
-  );
-  return iconPath ? icons[iconPath] : null;
-};
-
 const buttonClass = computed(() => {
   let classes = ["button"];
 
@@ -72,30 +56,16 @@ const buttonClass = computed(() => {
 
   return classes.join(" ");
 });
-
-const iconStyle = () => {
-  let style = "";
-
-  if (props.rotate) {
-    style += `transform: rotate(${props.rotate}deg);`;
-  }
-
-  if (props.mirror) {
-    style += `transform: scaleX(-1);`;
-  }
-
-  return style;
-};
 </script>
 
 <template>
   <div :class="buttonClass" :aria-disabled="disabled">
-    <template v-if="icon" v-for="(iconString, index) in icon.split(' ')">
-      <img
-        v-if="getIconUrl(iconString)"
-        :src="getIconUrl(iconString)"
+    <template v-if="icon" v-for="(iconString, index) in icon.split(' ')" :key="index">
+      <Icon
+        :icon="iconString"
         class="icon-svg"
-        :style="iconStyle()"
+        :rotate="rotate"
+        :mirror="mirror"
       />
     </template>
     <span class="content">
