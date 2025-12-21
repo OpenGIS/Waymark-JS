@@ -66,6 +66,10 @@ export class Overlay {
     }
     this.layer = this.map.getLayer(this.id);
 
+    if (this instanceof ShapeOverlay) {
+      this.addStroke();
+    }
+
     this.addEvents();
   }
 
@@ -77,6 +81,11 @@ export class Overlay {
       if (this.marker) {
         this.marker.remove();
         this.marker = null;
+      }
+    }
+    if (this instanceof ShapeOverlay) {
+      if (this.map.getLayer(`${this.id}-stroke`)) {
+        this.map.removeLayer(`${this.id}-stroke`);
       }
     }
     if (this.map.getLayer(this.id)) {
@@ -410,7 +419,10 @@ export class LineOverlay extends Overlay {
 
     return coords.reduce(
       (b, coord) => b.extend({ lng: coord[0], lat: coord[1] }),
-      new LngLatBounds({ lng: coords[0][0], lat: coords[0][1] }, { lng: coords[0][0], lat: coords[0][1] }),
+      new LngLatBounds(
+        { lng: coords[0][0], lat: coords[0][1] },
+        { lng: coords[0][0], lat: coords[0][1] },
+      ),
     );
   }
 
@@ -508,12 +520,35 @@ export class ShapeOverlay extends Overlay {
     if (this.map.getLayer(this.id)) {
       this.map.setLayoutProperty(this.id, "visibility", "visible");
     }
+    if (this.map.getLayer(`${this.id}-stroke`)) {
+      this.map.setLayoutProperty(`${this.id}-stroke`, "visibility", "visible");
+    }
   }
 
   hide() {
     if (this.map.getLayer(this.id)) {
       this.map.setLayoutProperty(this.id, "visibility", "none");
     }
+    if (this.map.getLayer(`${this.id}-stroke`)) {
+      this.map.setLayoutProperty(`${this.id}-stroke`, "visibility", "none");
+    }
+  }
+
+  addStroke() {
+    this.map.addLayer({
+      id: `${this.id}-stroke`,
+      type: "line",
+      source: this.id,
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": this.type.data.shape_colour || "#000000",
+        "line-width": 1,
+        "line-opacity": 1,
+      },
+    });
   }
 
   addEvents() {
@@ -549,7 +584,10 @@ export class ShapeOverlay extends Overlay {
 
     return coords.reduce(
       (b, coord) => b.extend({ lng: coord[0], lat: coord[1] }),
-      new LngLatBounds({ lng: coords[0][0], lat: coords[0][1] }, { lng: coords[0][0], lat: coords[0][1] }),
+      new LngLatBounds(
+        { lng: coords[0][0], lat: coords[0][1] },
+        { lng: coords[0][0], lat: coords[0][1] },
+      ),
     );
   }
 
@@ -563,20 +601,17 @@ export class ShapeOverlay extends Overlay {
   }
 
   addHighlight() {
-    // Add highlight layer below this layer to mimic adding a border
-    this.map.addLayer(
-      {
-        id: `${this.id}-highlight`,
-        type: "line",
-        source: this.id,
-        layout: {},
-        paint: {
-          "line-color": waymarkPrimaryColour,
-          "line-width": 2,
-        },
+    // Add highlight layer above the stroke layer
+    this.map.addLayer({
+      id: `${this.id}-highlight`,
+      type: "line",
+      source: this.id,
+      layout: {},
+      paint: {
+        "line-color": waymarkPrimaryColour,
+        "line-width": 2,
       },
-      this.id,
-    );
+    });
   }
 
   removeHighlight() {
@@ -586,45 +621,45 @@ export class ShapeOverlay extends Overlay {
     }
   }
 
-    zoomIn() {
-      const bounds = this.getBounds();
-      const center = bounds.getCenter();
-      this.map.flyTo({
-        center: [center.lng, center.lat],
-        zoom: Math.max(this.map.getZoom(), 16),
-        ...flyToOptions,
-      });
-    }
-
-    getPolygonPositions() {
-      const geom = this.feature.geometry;
-      if (geom.type === "MultiPolygon") {
-        return geom.coordinates.reduce((acc, polygon) => {
-          polygon.forEach((ring) => acc.push(...ring));
-          return acc;
-        }, []);
-      }
-
-      return geom.coordinates
-        ? geom.coordinates.reduce((acc, ring) => acc.concat(ring), [])
-        : [];
-    }
-
-    flyTo() {
-      const bounds = this.getBounds();
-      this.map.fitBounds(bounds, flyToOptions);
-    }
-
-    inBounds(bounds) {
-      // Check if shape bounds and provided bounds overlap
-      const shapeBounds = this.getBounds();
-
-      // Manually check for overlap
-      return !(
-        shapeBounds.getNorth() < bounds.getSouth() ||
-        shapeBounds.getSouth() > bounds.getNorth() ||
-        shapeBounds.getEast() < bounds.getWest() ||
-        shapeBounds.getWest() > bounds.getEast()
-      );
-    }
+  zoomIn() {
+    const bounds = this.getBounds();
+    const center = bounds.getCenter();
+    this.map.flyTo({
+      center: [center.lng, center.lat],
+      zoom: Math.max(this.map.getZoom(), 16),
+      ...flyToOptions,
+    });
   }
+
+  getPolygonPositions() {
+    const geom = this.feature.geometry;
+    if (geom.type === "MultiPolygon") {
+      return geom.coordinates.reduce((acc, polygon) => {
+        polygon.forEach((ring) => acc.push(...ring));
+        return acc;
+      }, []);
+    }
+
+    return geom.coordinates
+      ? geom.coordinates.reduce((acc, ring) => acc.concat(ring), [])
+      : [];
+  }
+
+  flyTo() {
+    const bounds = this.getBounds();
+    this.map.fitBounds(bounds, flyToOptions);
+  }
+
+  inBounds(bounds) {
+    // Check if shape bounds and provided bounds overlap
+    const shapeBounds = this.getBounds();
+
+    // Manually check for overlap
+    return !(
+      shapeBounds.getNorth() < bounds.getSouth() ||
+      shapeBounds.getSouth() > bounds.getNorth() ||
+      shapeBounds.getEast() < bounds.getWest() ||
+      shapeBounds.getWest() > bounds.getEast()
+    );
+  }
+}

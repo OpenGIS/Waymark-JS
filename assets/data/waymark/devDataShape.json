@@ -41,7 +41,7 @@
       },
       "properties": {
         "title": "Nahwitti Lake",
-        "type": "blue",
+        "type": "water",
         "description": "The North North Island route takes you from Port Hardy to Cape Scott and back, covering some of the most remote and scenic areas of Vancouver Island. Be prepared for rough terrain and changing weather conditions."
       }
     },
@@ -195,7 +195,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 1 - Port Hardy to Alberni",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -482,7 +482,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 2 - Alberni to Port Renfrew",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -763,7 +763,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 3 - Renfrew to Cowichan Lake",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
@@ -1063,7 +1063,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 4 - Cowichan Lake to Duncan",
 
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
@@ -1427,7 +1427,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "green",
+        "type": "route",
         "title": "Section 5 - Duncan to Cape Scott",
         "image_large_url": "https:\/\/www.waymark.dev\/wp-content\/uploads\/2019\/07\/UNADJUSTEDNONRAW_thumb_15b3-1024x683.jpg",
         "direction": "default",
