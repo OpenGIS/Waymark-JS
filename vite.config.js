@@ -48,8 +48,8 @@ export default defineConfig({
     globals: true,
   },
 
-  server: {
-    open: "/index.html",
-    allowedHosts: ["joe-dev.local"],
-  },
+  // server: {
+  //   open: "/index.html",
+  //   allowedHosts: ["joe-dev.local"],
+  // },
 });
