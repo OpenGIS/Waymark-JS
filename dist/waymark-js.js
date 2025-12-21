@@ -26902,23 +26902,23 @@ const Vb = { class: "preview" }, Nb = {
   },
   setup(u) {
     const m = /* @__PURE__ */ Object.assign({
-      "/library/assets/img/icons/ui/angle-down.svg": Hb,
-      "/library/assets/img/icons/ui/angle-up.svg": Wb,
-      "/library/assets/img/icons/ui/chevron-down.svg": Xb,
-      "/library/assets/img/icons/ui/chevron-up.svg": Kb,
-      "/library/assets/img/icons/ui/close.svg": Yb,
-      "/library/assets/img/icons/ui/eye-slash.svg": Jb,
-      "/library/assets/img/icons/ui/eye.svg": Qb,
-      "/library/assets/img/icons/ui/home.svg": e1,
-      "/library/assets/img/icons/ui/info.svg": t1,
-      "/library/assets/img/icons/ui/location-arrow.svg": i1,
-      "/library/assets/img/icons/ui/map-marker.svg": r1,
-      "/library/assets/img/icons/ui/map.svg": n1,
-      "/library/assets/img/icons/ui/navicon.svg": s1,
-      "/library/assets/img/icons/ui/object-group.svg": o1,
-      "/library/assets/img/icons/ui/share-alt.svg": a1,
-      "/library/assets/img/icons/ui/square-o.svg": l1,
-      "/library/assets/img/icons/ui/undo.svg": c1
+      "/library/assets/img/icons/angle-down.svg": Hb,
+      "/library/assets/img/icons/angle-up.svg": Wb,
+      "/library/assets/img/icons/chevron-down.svg": Xb,
+      "/library/assets/img/icons/chevron-up.svg": Kb,
+      "/library/assets/img/icons/close.svg": Yb,
+      "/library/assets/img/icons/eye-slash.svg": Jb,
+      "/library/assets/img/icons/eye.svg": Qb,
+      "/library/assets/img/icons/home.svg": e1,
+      "/library/assets/img/icons/info.svg": t1,
+      "/library/assets/img/icons/location-arrow.svg": i1,
+      "/library/assets/img/icons/map-marker.svg": r1,
+      "/library/assets/img/icons/map.svg": n1,
+      "/library/assets/img/icons/navicon.svg": s1,
+      "/library/assets/img/icons/object-group.svg": o1,
+      "/library/assets/img/icons/share-alt.svg": a1,
+      "/library/assets/img/icons/square-o.svg": l1,
+      "/library/assets/img/icons/undo.svg": c1
     }), b = u, M = (T) => {
       const a = T.replace(/^(fa-|ion-)/, ""), $ = Object.keys(m).find(
         (ue) => ue.endsWith(`/${a}.svg`)

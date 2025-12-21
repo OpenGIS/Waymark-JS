@@ -2,7 +2,7 @@
 import { computed } from "vue";
 
 // Import all SVG icons from the ui folder
-const icons = import.meta.glob("@/assets/img/icons/ui/*.svg", {
+const icons = import.meta.glob("@/assets/img/icons/*.svg", {
   eager: true,
   as: "url",
 });
