@@ -627,5 +627,28 @@ describe("Instance", () => {
     expect(shapeLayer.paint["fill-color"]).toBe("#228B22");
     expect(shapeLayer.paint["fill-opacity"]).toBe(0.3);
     expect(shapeLayer.paint["fill-outline-color"]).toBe("#228B22");
+
+    const strokeLayer = map.layers.find(
+      (layer) => layer.id === "overlay-0-stroke",
+    );
+    expect(strokeLayer).toBeTruthy();
+    expect(strokeLayer.type).toBe("line");
+    expect(strokeLayer.paint["line-color"]).toBe("#228B22");
+    expect(strokeLayer.paint["line-width"]).toBe(1);
+
+    // Test highlight
+    overlays[0].addHighlight();
+    const highlightLayer = map.layers.find(
+      (layer) => layer.id === "overlay-0-highlight",
+    );
+    expect(highlightLayer).toBeTruthy();
+    // Should be after the stroke layer (which is after the fill layer)
+    const strokeIndex = map.layers.findIndex(
+      (l) => l.id === "overlay-0-stroke",
+    );
+    const highlightIndex = map.layers.findIndex(
+      (l) => l.id === "overlay-0-highlight",
+    );
+    expect(highlightIndex).toBeGreaterThan(strokeIndex);
   });
 });

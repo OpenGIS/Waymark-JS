@@ -32,8 +32,7 @@
         "marker_icon": "fa-camera-retro",
         "marker_colour": "#70af00",
         "icon_colour": "#ffffff",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Information",
@@ -43,8 +42,7 @@
         "marker_icon": "fa-fa",
         "marker_colour": "#fbfbfb",
         "icon_colour": "#0069a5",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Alert",
@@ -54,8 +52,7 @@
         "marker_icon": "fa-exclamation-circle",
         "marker_colour": "#da3d20",
         "icon_colour": "white",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Food",
@@ -65,8 +62,7 @@
         "marker_icon": "fa-cart-plus",
         "marker_colour": "#da3d20",
         "icon_colour": "#ffba00",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Beer",
@@ -76,8 +72,7 @@
         "marker_icon": "fa-beer",
         "marker_colour": "#fbfbfb",
         "icon_colour": "#754423",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Start",
@@ -87,8 +82,7 @@
         "marker_icon": "fa-flag",
         "marker_colour": "#70af00",
         "icon_colour": "white",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Finish",
@@ -98,8 +92,7 @@
         "marker_icon": "fa-flag-checkered",
         "marker_colour": "#a43233",
         "icon_colour": "white",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       },
       {
         "marker_title": "Camp",
@@ -109,8 +102,7 @@
         "marker_icon": "fa-home",
         "marker_colour": "#a43233",
         "icon_colour": "#ffffff",
-        "marker_display": "1",
-        "marker_submission": "1"
+        "marker_display": "1"
       }
     ],
     "line_types": [
@@ -119,8 +111,15 @@
         "line_colour": "#30d100",
         "line_weight": "3",
         "line_opacity": "0.7",
-        "line_display": "1",
-        "line_submission": "1"
+        "line_display": "1"
+      }
+    ],
+    "shape_types": [
+      {
+        "shape_title": "water",
+        "shape_colour": "#0000ff",
+        "shape_weight": "3",
+        "fill_opacity": "0.5"
       }
     ]
   }

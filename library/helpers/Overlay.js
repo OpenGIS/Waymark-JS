@@ -12,6 +12,9 @@ export function getFeatureType(feature = {}) {
     case "LineString":
     case "MultiLineString":
       return "line";
+    case "Polygon":
+    case "MultiPolygon":
+      return "shape";
     default:
       return "shape";
   }
