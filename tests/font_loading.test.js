@@ -111,13 +111,13 @@ describe("Font Loading", () => {
     expect(links.length).toBe(1);
   });
 
-  it("should load Font Awesome when instantiating a default MarkerType", () => {
-    // Default MarkerType uses fa-map-marker
+  it("should not load Font Awesome when instantiating a default MarkerType (now uses SVG)", () => {
+    // Default MarkerType uses SVG now
     new MarkerType();
 
     const link = document.head.querySelector(
       'link[href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"]'
     );
-    expect(link).toBeTruthy();
+    expect(link).toBeFalsy();
   });
 });

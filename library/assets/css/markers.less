@@ -62,6 +62,13 @@
     .waymark-icon-text {
       font-size: 8px;
     }
+    //SVG
+    .waymark-icon-svg {
+      svg {
+        width: 10px;
+        height: 10px;
+      }
+    }
   }
 
   //Medium
@@ -76,6 +83,13 @@
     .waymark-icon-text {
       font-size: 11px;
     }
+    //SVG
+    .waymark-icon-svg {
+      svg {
+        width: 11px;
+        height: 11px;
+      }
+    }
   }
 
   //Large
@@ -89,6 +103,13 @@
     //Text
     .waymark-icon-text {
       font-size: 14px;
+    }
+    //SVG
+    .waymark-icon-svg {
+      svg {
+        width: 18px;
+        height: 18px;
+      }
     }
   }
 
@@ -129,6 +150,14 @@
         Consolas,
         Lucida Console,
         monospace;
+    }
+
+    //SVG Only
+    &.waymark-icon-svg {
+      line-height: 0;
+      svg {
+        vertical-align: middle;
+      }
     }
   }
 }

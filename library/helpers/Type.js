@@ -89,6 +89,24 @@ export function getIconData(type = {}) {
 
       break;
 
+    //SVG
+    case "svg":
+      icon_class += " waymark-icon-svg";
+
+      // Add color to SVG
+      // We assume the SVG string is passed in marker_icon
+      // We'll wrap it in a div that applies the color
+      icon_data.html +=
+        '<div style="' +
+        icon_css +
+        '" class="' +
+        icon_class +
+        '">' +
+        type.data.marker_icon +
+        "</div>";
+
+      break;
+
     //Icon Name
     case "icon":
     default:
