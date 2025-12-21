@@ -2,6 +2,7 @@ import { mapOptions } from "@/helpers/MapLibre.js";
 import { featureTypes } from "@/helpers/Overlay.js";
 import { MarkerType, LineType, ShapeType } from "@/classes/Types.js";
 import { TileLayer } from "@/classes/TileLayer.js";
+import { loadFont } from "@/helpers/FontLoader.js";
 
 export class Config {
   constructor(config = {}) {
@@ -74,6 +75,15 @@ export class Config {
 
               if (!this.markerTypes.hasOwnProperty(typeKey)) {
                 this.markerTypes[typeKey] = type;
+              }
+
+              // Check for font usage
+              if (type.data.marker_icon) {
+                if (type.data.marker_icon.startsWith("fa-")) {
+                  loadFont("fontawesome");
+                } else if (type.data.marker_icon.startsWith("ion-")) {
+                  loadFont("ionicons");
+                }
               }
 
               break;

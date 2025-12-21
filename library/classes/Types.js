@@ -5,6 +5,7 @@ import {
   defaultShapeColour,
   makeKey,
 } from "@/helpers/Common.js";
+import { loadFont } from "@/helpers/FontLoader.js";
 
 export class Type {
   constructor(typeData) {
@@ -29,6 +30,15 @@ export class MarkerType extends Type {
 
     this.typeKey = makeKey(this.data.marker_title) || null;
     this.iconData = getIconData(this);
+
+    // Check for default font usage if no custom types were loaded that triggered it
+    if (this.data.marker_icon) {
+      if (this.data.marker_icon.startsWith("fa-")) {
+        loadFont("fontawesome");
+      } else if (this.data.marker_icon.startsWith("ion-")) {
+        loadFont("ionicons");
+      }
+    }
   }
 
   getTitle() {

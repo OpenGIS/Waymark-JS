@@ -29,7 +29,7 @@
         "marker_shape": "rectangle",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-camera-retro",
+        "marker_icon": "ion-camera",
         "marker_colour": "#70af00",
         "icon_colour": "#ffffff",
         "marker_display": "1"
@@ -39,7 +39,7 @@
         "marker_shape": "circle",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-fa",
+        "marker_icon": "ion-information-circled",
         "marker_colour": "#fbfbfb",
         "icon_colour": "#0069a5",
         "marker_display": "1"
@@ -49,7 +49,7 @@
         "marker_shape": "marker",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-exclamation-circle",
+        "marker_icon": "ion-alert-circled",
         "marker_colour": "#da3d20",
         "icon_colour": "white",
         "marker_display": "1"
@@ -59,7 +59,7 @@
         "marker_shape": "marker",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-cart-plus",
+        "marker_icon": "ion-ios-cart",
         "marker_colour": "#da3d20",
         "icon_colour": "#ffba00",
         "marker_display": "1"
@@ -69,7 +69,7 @@
         "marker_shape": "marker",
         "marker_size": "small",
         "icon_type": "icon",
-        "marker_icon": "fa-beer",
+        "marker_icon": "ion-beer",
         "marker_colour": "#fbfbfb",
         "icon_colour": "#754423",
         "marker_display": "1"
@@ -79,7 +79,7 @@
         "marker_shape": "marker",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-flag",
+        "marker_icon": "ion-flag",
         "marker_colour": "#70af00",
         "icon_colour": "white",
         "marker_display": "1"
@@ -89,7 +89,7 @@
         "marker_shape": "marker",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-flag-checkered",
+        "marker_icon": "ion-flag",
         "marker_colour": "#a43233",
         "icon_colour": "white",
         "marker_display": "1"
@@ -99,7 +99,7 @@
         "marker_shape": "marker",
         "marker_size": "medium",
         "icon_type": "icon",
-        "marker_icon": "fa-home",
+        "marker_icon": "ion-home",
         "marker_colour": "#a43233",
         "icon_colour": "#ffffff",
         "marker_display": "1"
