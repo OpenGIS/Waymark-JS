@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import Icon from "./Icon.vue";
+import Icon from "@/components/UI/Common/Icon.vue";
 
 const props = defineProps({
   icon: {
