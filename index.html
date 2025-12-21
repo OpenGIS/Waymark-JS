@@ -30,12 +30,12 @@
     <!-- Load Waymark JS -->
     <script type="module">
       // Helper loads Waymark JS for both dev & production
-      import { loadWaymark } from "./assets/js/dev.js";
+      import { loadWaymark } from "./assets/js/loadWaymark.js";
 
       // Demo data
       const instance = await loadWaymark(
         "./assets/data/waymark/devConfig.json",
-        "./assets/data/waymark/devData.json",
+        "./assets/data/waymark/devDataShape.json",
       );
 
       console.log("Waymark instance loaded:", instance);
