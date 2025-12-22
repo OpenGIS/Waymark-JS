@@ -187,19 +187,39 @@ tr.heading {
       }
 
       .button {
-        color: #eee;
+        color: inherit;
         background: transparent;
         text-shadow:
           0 0 1px #000,
           0 0 1px #000;
+        box-shadow: none;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 5px;
+          box-shadow: inset 0 0 0 1px currentColor;
+          opacity: 0.4;
+          pointer-events: none;
+        }
+
+        .count {
+          border-color: currentColor;
+        }
+
         &.active,
         &:hover {
           text-shadow: unset;
-          color: #000;
-          box-shadow: inset 0 0 0 1px #000;
+          color: inherit;
+          box-shadow: none;
 
-          .count {
-            border-color: #000;
+          &::after {
+            opacity: 1;
           }
         }
       }

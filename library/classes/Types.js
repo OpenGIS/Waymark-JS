@@ -5,6 +5,7 @@ import {
   defaultShapeColour,
   makeKey,
 } from "@/helpers/Common.js";
+import { loadFont } from "@/helpers/FontLoader.js";
 
 export class Type {
   constructor(typeData) {
@@ -19,8 +20,9 @@ export class MarkerType extends Type {
       marker_title: "Marker",
       marker_shape: "marker",
       marker_size: "large",
-      icon_type: "icon",
-      marker_icon: "fa-map-marker",
+      icon_type: "svg",
+      marker_icon:
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="fill: currentColor;"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>',
       marker_colour: defaultMarkerColour,
       icon_colour: "#ffffff",
       marker_display: "1",
@@ -29,6 +31,15 @@ export class MarkerType extends Type {
 
     this.typeKey = makeKey(this.data.marker_title) || null;
     this.iconData = getIconData(this);
+
+    // Check for default font usage if no custom types were loaded that triggered it
+    if (this.data.marker_icon) {
+      if (this.data.marker_icon.startsWith("fa-")) {
+        loadFont("fontawesome");
+      } else if (this.data.marker_icon.startsWith("ion-")) {
+        loadFont("ionicons");
+      }
+    }
   }
 
   getTitle() {

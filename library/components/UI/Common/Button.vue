@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import Icon from "@/components/UI/Common/Icon.vue";
 
 const props = defineProps({
   icon: {
@@ -28,23 +29,6 @@ const props = defineProps({
   },
 });
 
-const iconClass = (iconString) => {
-  let output = "";
-
-  switch (true) {
-    // Font Awesome icons
-    case iconString.startsWith("fa-"):
-      output += `fa ${iconString} `;
-      break;
-    // Ionic icons
-    case iconString.startsWith("ion-"):
-      output += `ion ${iconString} `;
-      break;
-  }
-
-  return output.trim();
-};
-
 const buttonClass = computed(() => {
   let classes = ["button"];
 
@@ -72,26 +56,17 @@ const buttonClass = computed(() => {
 
   return classes.join(" ");
 });
-
-const iconStyle = () => {
-  let style = "";
-
-  if (props.rotate) {
-    style += `transform: rotate(${props.rotate}deg);`;
-  }
-
-  if (props.mirror) {
-    style += `transform: scaleX(-1);`;
-  }
-
-  return style;
-};
 </script>
 
 <template>
   <div :class="buttonClass" :aria-disabled="disabled">
-    <template v-if="icon" v-for="(iconString, index) in icon.split(' ')">
-      <i :class="`${iconClass(iconString)}`" :style="iconStyle()" />
+    <template v-if="icon" v-for="(iconString, index) in icon.split(' ')" :key="index">
+      <Icon
+        :icon="iconString"
+        class="icon-svg"
+        :rotate="rotate"
+        :mirror="mirror"
+      />
     </template>
     <span class="content">
       <slot />
@@ -118,6 +93,11 @@ const iconStyle = () => {
     background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
     box-shadow: inset 0 0 0 1px #ccc;
     cursor: not-allowed;
+    pointer-events: none;
+    
+    .icon-svg {
+      opacity: 0.5;
+    }
   }
 
   &:hover,
@@ -129,9 +109,11 @@ const iconStyle = () => {
     text-shadow: unset;
   }
 
-  i {
-    min-width: inherit;
-    text-align: center;
+  .icon-svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    display: inline-block;
   }
 
   .count {
@@ -147,8 +129,9 @@ const iconStyle = () => {
     font-size: 12px;
     border-radius: 3px;
 
-    i {
-      font-size: 12px;
+    .icon-svg {
+      width: 12px;
+      height: 12px;
     }
   }
 
@@ -160,8 +143,9 @@ const iconStyle = () => {
     font-size: 18px;
     border-radius: 7px;
 
-    i {
-      font-size: 18px;
+    .icon-svg {
+      width: 18px;
+      height: 18px;
     }
   }
 }
