@@ -187,7 +187,7 @@ tr.heading {
       }
 
       .button {
-        color: #eee;
+        color: inherit;
         background: transparent;
         text-shadow:
           0 0 1px #000,
@@ -195,11 +195,11 @@ tr.heading {
         &.active,
         &:hover {
           text-shadow: unset;
-          color: #000;
-          box-shadow: inset 0 0 0 1px #000;
+          color: inherit;
+          box-shadow: inset 0 0 0 1px currentColor;
 
           .count {
-            border-color: #000;
+            border-color: currentColor;
           }
         }
       }
