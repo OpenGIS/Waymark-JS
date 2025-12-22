@@ -192,15 +192,17 @@ tr.heading {
         text-shadow:
           0 0 1px #000,
           0 0 1px #000;
+        box-shadow: inset 0 0 0 1px currentColor;
+
+        .count {
+          border-color: currentColor;
+        }
+
         &.active,
         &:hover {
           text-shadow: unset;
           color: inherit;
           box-shadow: inset 0 0 0 1px currentColor;
-
-          .count {
-            border-color: currentColor;
-          }
         }
       }
     }
