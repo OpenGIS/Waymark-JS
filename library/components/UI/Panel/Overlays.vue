@@ -3,8 +3,10 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { layerFilters, overlaysByType, activeFeatureType, filteredOverlays } =
-	storeToRefs(useInstanceStore());
+const { overlaysByType, filteredOverlays } = storeToRefs(useInstanceStore());
+
+import { useUI } from "@/composables/useUI.js";
+const { activeFeatureType, setActiveFeatureType, layerFilters } = useUI();
 
 import Active from "@/components/UI/Panel/Overlays/Active.vue";
 import Type from "@/components/UI/Panel/Overlays/Type.vue";
@@ -44,7 +46,7 @@ const shapeCount = computed(() => {
 						v-if="markerCount"
 						class="marker"
 						icon="fa-map-marker"
-						@click="activeFeatureType = 'marker'"
+						@click="setActiveFeatureType('marker')"
 						:active="activeFeatureType === 'marker'"
 					>
 						<span class="count" v-html="markerCount"></span>
@@ -55,7 +57,7 @@ const shapeCount = computed(() => {
 						v-if="lineCount"
 						class="line"
 						icon="fa-share-alt"
-						@click="activeFeatureType = 'line'"
+						@click="setActiveFeatureType('line')"
 						:active="activeFeatureType === 'line'"
 					>
 						<span class="count" v-html="lineCount"></span>
@@ -66,7 +68,7 @@ const shapeCount = computed(() => {
 						v-if="shapeCount"
 						class="shape"
 						icon="fa-square-o"
-						@click="activeFeatureType = 'shape'"
+						@click="setActiveFeatureType('shape')"
 						:active="activeFeatureType === 'shape'"
 					>
 						<span class="count" v-html="shapeCount"></span>

@@ -1,11 +1,11 @@
 import { computed, ref, shallowRef } from "vue";
 import { defineStore } from "pinia";
-import { Config } from "@/classes/Config.js";
+import { useConfig } from "@/composables/useConfig.js";
 import { LngLatBounds } from "maplibre-gl";
 
 export const useInstanceStore = defineStore("instance", () => {
 	// State
-	const config = shallowRef(null);
+	const { config } = useConfig();
 	const container = shallowRef(null);
 	const map = shallowRef(null);
 
@@ -38,8 +38,12 @@ export const useInstanceStore = defineStore("instance", () => {
 
 	// Actions
 	const init = (initConfig = {}) => {
-		// Parse config & set defaults
-		config.value = new Config(initConfig);
+		useConfig().init(initConfig);
+
+		// Debug?
+		if (config.value.getMapOption("debug_mode")) {
+			activePanelKey.value = "debug";
+		}
 	};
 
 	// Computed

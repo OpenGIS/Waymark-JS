@@ -18,11 +18,13 @@ import { ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
+import { useConfig } from "@/composables/useConfig.js";
 // import { TileLayer } from "@/classes/TileLayer.js";
 
 // import Button from "@/components/UI/Common/Button.vue";
 
-const { config, view, map } = storeToRefs(useInstanceStore());
+const { view, map } = storeToRefs(useInstanceStore());
+const { config } = useConfig();
 
 const tileLayers = ref([]);
 
@@ -30,8 +32,6 @@ const tileLayers = ref([]);
 tileLayers.value = config.value.getTileLayers().slice().reverse();
 
 //config.value.getTileLayers();
-
-console.log("tileLayers", tileLayers.value);
 </script>
 
 <template>

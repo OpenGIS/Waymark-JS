@@ -3,7 +3,10 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { config } = storeToRefs(useInstanceStore());
+// const { config } = storeToRefs(useInstanceStore());
+
+import { useConfig } from "@/composables/useConfig.js";
+const { config } = useConfig();
 
 import { useMap } from "@/composables/useMap.js";
 const { init } = useMap();

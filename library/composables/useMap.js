@@ -21,11 +21,14 @@ import {
 
 // Import instanceStore
 import { useInstanceStore } from "@/stores/instanceStore.js";
+import { useConfig } from "@/composables/useConfig.js";
+import { useUI } from "@/composables/useUI.js";
 
 export function useMap() {
 	// Get the state from the instance store
+	const { config } = useConfig();
+	const { setActivePanel, closePanel } = useUI();
 	const {
-		config,
 		map,
 		mapReady,
 		overlays,
@@ -111,8 +114,7 @@ export function useMap() {
 					setActiveOverlay();
 				} else {
 					// Close Panel
-					panelOpen.value = false;
-					activePanelKey.value = null;
+					closePanel();
 				}
 			}
 		});
@@ -234,8 +236,6 @@ export function useMap() {
 				return;
 			}
 
-			console.log("Adding GeoJSON to Map", geoJSON);
-
 			// Overlays
 			geoJSON.features.forEach((feature) => {
 				// Determine Feature Type
@@ -277,8 +277,6 @@ export function useMap() {
 					});
 				}
 			});
-
-			console.log("Overlays added to map", overlaysBounds.value);
 
 			// If there is not an initial view
 			if (!config.value.getInitialView()) {
@@ -342,8 +340,7 @@ export function useMap() {
 		// Go to Overlays Panel
 		activeNavKey.value = "";
 		activeFeatureType.value = overlay.featureType;
-		activePanelKey.value = "overlays";
-		panelOpen.value = true;
+		setActivePanel("overlays");
 
 		// Make active
 		activeOverlay.value = overlay;
@@ -383,8 +380,6 @@ export function useMap() {
 		const newBearing =
 			direction === "cw" ? currentBearing + degrees : currentBearing - degrees;
 
-		console.log("Rotating map to bearing", newBearing);
-
 		map.value.rotateTo(newBearing, rotateOptions);
 	};
 
@@ -395,8 +390,6 @@ export function useMap() {
 
 		// Constrain pitch to 0-60
 		newPitch = Math.max(0, Math.min(60, newPitch));
-
-		console.log("Pitching map to", newPitch);
 
 		map.value.easeTo(
 			{
