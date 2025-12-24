@@ -387,6 +387,7 @@
       // Configuration with transformRequest hook
       const config = {
         map_options: {
+          debug_mode: true,
           maplibre_options: {
             transformRequest: (url, resourceType) => {
               // Filter for OpenFreeMap PBF tiles
