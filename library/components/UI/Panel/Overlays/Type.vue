@@ -5,7 +5,10 @@ import { storeToRefs } from "pinia";
 import { Type } from "@/classes/Types.js";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
-const { map, filteredOverlays, config } = storeToRefs(useInstanceStore());
+import { useConfig } from "@/composables/useConfig.js";
+
+const { map, filteredOverlays } = storeToRefs(useInstanceStore());
+const { config } = useConfig();
 
 import { visibleIcon, expandedIcon } from "@/helpers/Common.js";
 

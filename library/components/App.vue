@@ -4,8 +4,11 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useInstanceStore } from "@/stores/instanceStore.js";
+import { useConfig } from "@/composables/useConfig.js";
+
 const instanceStore = useInstanceStore();
-const { mapReady, config, container, panelOpen, activeOverlay } =
+const { config } = useConfig();
+const { mapReady, container, panelOpen, activeOverlay } =
 	storeToRefs(instanceStore);
 
 import "@/assets/css/index.less";

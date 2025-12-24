@@ -5,8 +5,14 @@ import { storeToRefs } from "pinia";
 import { useInstanceStore } from "@/stores/instanceStore.js";
 
 export function useUI() {
-	const { panelOpen, activePanelKey, activeNavKey, overlays } =
-		storeToRefs(useInstanceStore());
+	const {
+		panelOpen,
+		activePanelKey,
+		activeNavKey,
+		overlays,
+		activeFeatureType,
+		layerFilters,
+	} = storeToRefs(useInstanceStore());
 
 	const mapHasOverlays = computed(() => {
 		return overlays.value.length > 0;
@@ -76,6 +82,13 @@ export function useUI() {
 		return activeNavKey.value === navKey;
 	};
 
+	/*
+		Feature Type
+	*/
+	const setActiveFeatureType = (type) => {
+		activeFeatureType.value = type;
+	};
+
 	return {
 		isActivePanel,
 		openPanel,
@@ -88,5 +101,8 @@ export function useUI() {
 		showNav,
 		closeNav,
 		isActiveNav,
+		activeFeatureType,
+		setActiveFeatureType,
+		layerFilters,
 	};
 }

@@ -1,5 +1,6 @@
 {
   "map_options": {
+    "debug_mode": "1",
     "tile_layers": [
       {
         "layer_name": "Open Street Map",

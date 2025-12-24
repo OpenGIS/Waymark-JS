@@ -21,7 +21,11 @@ const { resetView, rotateMap, toggle3D, pointNorth, pitchMap } = useMap();
 import Overlays from "@/components/UI/Panel/Overlays.vue";
 import Info from "@/components/UI/Panel/Info.vue";
 import Basemaps from "@/components/UI/Panel/Basemaps.vue";
+import Debug from "@/components/UI/Panel/Debug.vue";
 import Button from "@/components/UI/Common/Button.vue";
+
+import { useConfig } from "@/composables/useConfig.js";
+const { config } = useConfig();
 
 const northIconAngle = computed(() => {
 	const offsetToNorth = 315;
@@ -54,6 +58,16 @@ const northIconAngle = computed(() => {
 					icon="fa-map"
 					@click="openPanel('basemaps')"
 					:active="isActivePanel('basemaps')"
+				/>
+			</div>
+
+			<!-- Debug -->
+			<div class="nav-item nav-debug" v-if="config.getMapOption('debug_mode')">
+				<Button
+					size="large"
+					icon="fa-bug"
+					@click="openPanel('debug')"
+					:active="isActivePanel('debug')"
 				/>
 			</div>
 
@@ -151,6 +165,8 @@ const northIconAngle = computed(() => {
 			<Info v-if="showPanel('info')" />
 
 			<Basemaps v-if="showPanel('basemaps')" />
+
+			<Debug v-if="showPanel('debug')" />
 		</div>
 		<!-- END Panel Content -->
 	</div>
