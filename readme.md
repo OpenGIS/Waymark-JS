@@ -1,9 +1,5 @@
 # Waymark JS
 
-> [!TIP]
-> Version 2 Alpha available [here](https://github.com/OpenGIS/Waymark-JS/tree/two)!
-> Please note that Version 2 is currently in Pre-Release and may contain bugs or incomplete features. It is not recommended for production use at this time.
-
 Create, share and edit _meaningful_ Maps.
 
 Waymark JS is a JavaScript library for sharing geographical information. It is designed to be easy to use, intuitive and suitable for a wide range of applications.
