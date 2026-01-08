@@ -270,6 +270,7 @@ function Waymark_Map() {
 		Waymark.setup_map();
 		Waymark.handle_resize();
 		Waymark.init_done();
+		Waymark.load_done();
 	};
 
 	//Thanks! https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key

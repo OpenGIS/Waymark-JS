@@ -33,9 +33,7 @@
   </head>
   <body>
     <div id="waymark-map" class="waymark-map"></div>
-    <textarea id="waymark-data">
-{"type":"FeatureCollection","features":[{"geometry":{"type":"Point","coordinates":[-85.038,49.4595]},"type":"Feature","properties":{"type":"food"}},{"type":"Feature","properties":{"type":"red"},"geometry":{"type":"LineString","coordinates":[[-85.039556,49.460306],[-85.039556,49.459566],[-85.038247,49.459538],[-85.03844,49.458492],[-85.037131,49.45866]]}},{"type":"Feature","properties":{"type":"green"},"geometry":{"type":"Polygon","coordinates":[[[-85.035393,49.458785],[-85.035393,49.458492],[-85.03608,49.458437],[-85.036723,49.458213],[-85.036723,49.457809],[-85.035629,49.458004],[-85.034771,49.458409],[-85.034878,49.458743],[-85.035071,49.458855],[-85.035393,49.458785]]]}}]}</textarea
-    >
+    <textarea id="waymark-data"></textarea>
 
     <script>
       // Set body height to be 100% of the viewport
@@ -43,210 +41,25 @@
 
       let waymark_instance = window.Waymark_Map_Factory.editor();
 
-      waymark_instance.init({
-        map_options: {
-          // tile_layers: [
-          //   {
-          //     layer_name: "Open Street Map",
-          //     layer_url:
-          //       "https:\/\/{s}.tile.openstreetmap.org\/{z}\/{x}\/{y}.png?r=1",
-          //     layer_attribution:
-          //       '\u00a9 <a href="https:\/\/www.openstreetmap.org\/copyright">OpenStreetMap<\/a> contributors',
-          //     layer_max_zoom: "18",
-          //   },
-          //   {
-          //     layer_name: "Cycle",
-          //     layer_url:
-          //       "https:\/\/tile.thunderforest.com\/cycle\/{z}\/{x}\/{y}.png?apikey=4550655437ba47fda736e7898339c95f",
-          //     layer_attribution:
-          //       'Data \u00a9 <a href="https:\/\/www.openstreetmap.org\/copyright">OSM<\/a>',
-          //     layer_max_zoom: "18",
-          //   },
-          // ],
-          // marker_types: [
-          //   {
-          //     marker_title: "Photo",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "text",
-          //     marker_icon: "\ud83d\uddbc",
-          //     marker_colour: "#fbfbfb",
-          //     icon_colour: "#475260",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Information",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-information-circled",
-          //     marker_colour: "#fbfbfb",
-          //     icon_colour: "#0069a5",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Alert",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-android-alert",
-          //     marker_colour: "#da3d20",
-          //     icon_colour: "white",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Trail Access",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-android-bicycle",
-          //     marker_colour: "#70af00",
-          //     icon_colour: "white",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Food",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-pizza",
-          //     marker_colour: "#da3d20",
-          //     icon_colour: "#ffba00",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Water",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-waterdrop",
-          //     marker_colour: "#2aabe1",
-          //     icon_colour: "#fff",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Shelter",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-home",
-          //     marker_colour: "#72820d",
-          //     icon_colour: "white",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Beer",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-beer",
-          //     marker_colour: "#fbfbfb",
-          //     icon_colour: "#754423",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Start",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-power",
-          //     marker_colour: "#70af00",
-          //     icon_colour: "white",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          //   {
-          //     marker_title: "Finish",
-          //     marker_shape: "marker",
-          //     marker_size: "large",
-          //     icon_type: "icon",
-          //     marker_icon: "ion-power",
-          //     marker_colour: "#a43233",
-          //     icon_colour: "white",
-          //     marker_display: "1",
-          //     marker_submission: "1",
-          //   },
-          // ],
-          // line_types: [
-          //   {
-          //     line_title: "Red",
-          //     line_colour: "#d84848",
-          //     line_weight: "3",
-          //     line_opacity: "0.7",
-          //     line_display: "1",
-          //     line_submission: "1",
-          //   },
-          //   {
-          //     line_title: "Green",
-          //     line_colour: "#3cbc47",
-          //     line_weight: "3",
-          //     line_opacity: "0.7",
-          //     line_display: "1",
-          //     line_submission: "1",
-          //   },
-          //   {
-          //     line_title: "Blue",
-          //     line_colour: "#487bd9",
-          //     line_weight: "3",
-          //     line_opacity: "0.7",
-          //     line_display: "1",
-          //     line_submission: "1",
-          //   },
-          // ],
-          // shape_types: [
-          //   {
-          //     shape_title: "Red",
-          //     shape_colour: "green",
-          //     fill_opacity: "0.5",
-          //     shape_display: "1",
-          //     shape_submission: "1",
-          //   },
-          //   {
-          //     shape_title: "Green",
-          //     shape_colour: "#3cbc47",
-          //     fill_opacity: "0.5",
-          //     shape_display: "1",
-          //     shape_submission: "1",
-          //   },
-          //   {
-          //     shape_title: "Blue",
-          //     shape_colour: "#487bd9",
-          //     fill_opacity: "0.5",
-          //     shape_display: "1",
-          //     shape_submission: "1",
-          //   },
-          // ],
-          show_scale: "1",
-          debug_mode: true,
-        },
-        language: {
-          sleep_wake_message: "Fart to wake!",
-        },
-        viewer_options: {
-          show_gallery: "0",
-          show_filter: "1",
-          show_cluster: "0",
-          show_elevation: false,
-          cluster_radius: "40",
-          cluster_threshold: "10",
-          elevation_units: "metric",
-          elevation_initial: "1",
-          sleep_delay_seconds: "3600",
-          sleep_do_message: "1",
-          // sleep_wake_message: "Click to Interact with Map",
-        },
-        editor_options: { confirm_delete: "0" },
-      });
+      const _configUrl = "docs/public/examples/assets/config/route.json";
+      const _dataUrl = "docs/public/examples/assets/geo/route.geojson";
 
-      waymark_instance.load_json(JSON.parse(jQuery("#waymark-data").val()));
+      Promise.all([
+        fetch(_configUrl).then((r) => r.json()),
+        fetch(_dataUrl).then((r) => r.json()),
+      ])
+        .then(([cfg, geo]) => {
+          const base = {
+            language: { sleep_wake_message: "Fart to wake!" },
+            editor_options: { confirm_delete: "0" },
+          };
+          const initConfig = Object.assign({}, base, cfg);
+          waymark_instance.init(initConfig);
+          waymark_instance.load_json(geo);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     </script>
   </body>
 </html>

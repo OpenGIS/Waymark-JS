@@ -2226,4 +2226,3 @@
         return new Waymark_L.Control.Elevation(options);
     };
 });
-//# sourceMappingURL=leaflet-elevation.js.map

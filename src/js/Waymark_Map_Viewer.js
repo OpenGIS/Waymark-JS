@@ -520,7 +520,7 @@ function Waymark_Map_Viewer() {
 
 		//Create gallery
 		Waymark.gallery = jQuery("<div />")
-			.attr("id", Waymark.config.gallery_div_id)
+			.attr("id", Waymark.config.viewer_options.gallery_div_id)
 			.css("width", Waymark.config.map_options.map_width)
 			.addClass("waymark-gallery-container")
 			.html("");
