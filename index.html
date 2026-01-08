@@ -18,28 +18,17 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        display: flex;
-      }
-      #waymark-data,
-      #waymark-map {
-      }
-      #waymark-map {
-        flex: 2;
-      }
-      #waymark-data {
-        flex: 1;
       }
     </style>
   </head>
   <body>
     <div id="waymark-map" class="waymark-map"></div>
-    <textarea id="waymark-data"></textarea>
 
     <script>
       // Set body height to be 100% of the viewport
       jQuery("body").height($(window).height());
 
-      let waymark_instance = window.Waymark_Map_Factory.editor();
+      let waymark_instance = window.Waymark_Map_Factory.viewer();
 
       const _configUrl = "docs/public/examples/assets/config/route.json";
       const _dataUrl = "docs/public/examples/assets/geo/route.geojson";
@@ -49,12 +38,7 @@
         fetch(_dataUrl).then((r) => r.json()),
       ])
         .then(([cfg, geo]) => {
-          const base = {
-            language: { sleep_wake_message: "Fart to wake!" },
-            editor_options: { confirm_delete: "0" },
-          };
-          const initConfig = Object.assign({}, base, cfg);
-          waymark_instance.init(initConfig);
+          waymark_instance.init(cfg);
           waymark_instance.load_json(geo);
         })
         .catch((err) => {

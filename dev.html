@@ -84,12 +84,7 @@
         fetch(_dataUrl).then((r) => r.json()),
       ])
         .then(([cfg, geo]) => {
-          const base = {
-            language: { sleep_wake_message: "Fart to wake!" },
-            editor_options: { confirm_delete: "0" },
-          };
-          const initConfig = Object.assign({}, base, cfg);
-          waymark_instance.init(initConfig);
+          waymark_instance.init(cfg);
           waymark_instance.load_json(geo);
         })
         .catch((err) => {
