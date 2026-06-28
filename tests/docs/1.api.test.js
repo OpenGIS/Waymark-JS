@@ -19,6 +19,28 @@ vi.mock("maplibre-gl", () => {
     return structuredClone(EMPTY_STYLE);
   };
 
+  const MockLngLatBounds = vi.fn(function (sw, ne) {
+    this._sw = sw ?? null;
+    this._ne = ne ?? null;
+  });
+  MockLngLatBounds.prototype.extend = vi.fn(function (point) {
+    if (this._sw === null) {
+      this._sw = [point[0], point[1]];
+      this._ne = [point[0], point[1]];
+      return this;
+    }
+
+    this._sw = [
+      Math.min(this._sw[0], point[0]),
+      Math.min(this._sw[1], point[1]),
+    ];
+    this._ne = [
+      Math.max(this._ne[0], point[0]),
+      Math.max(this._ne[1], point[1]),
+    ];
+    return this;
+  });
+
   const MockMap = vi.fn(function (options) {
     this._options = options;
     this._style = normaliseStyle(options.style);
@@ -128,8 +150,13 @@ vi.mock("maplibre-gl", () => {
     this.getZoom = vi.fn(() => this._view.zoom);
     this.getBearing = vi.fn(() => this._view.bearing);
     this.getPitch = vi.fn(() => this._view.pitch);
+    this.fitBounds = vi.fn();
   });
-  return { Map: MockMap, setWorkerUrl: vi.fn() };
+  return {
+    Map: MockMap,
+    LngLatBounds: MockLngLatBounds,
+    setWorkerUrl: vi.fn(),
+  };
 });
 
 vi.mock("maplibre-gl/dist/maplibre-gl.css", () => ({}));
@@ -152,7 +179,7 @@ import {
   WAYMARK_MAP_ERROR_EVENT,
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
 } from "../../src/runtime/createInstanceEvents.js";
-import { Map } from "maplibre-gl";
+import { LngLatBounds, Map } from "maplibre-gl";
 
 function getLastMapInstance() {
   return Map.mock.instances.at(-1);
@@ -3402,6 +3429,187 @@ describe("1. API", () => {
         "waymark-map-geojson-layer-0-line",
         "poi-label",
       ]);
+    });
+
+    it("fits map bounds when addLayer fitBounds defaults to true", () => {
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: {
+            basemaps: {
+              vector: [
+                {
+                  styleURL: {
+                    version: 8,
+                    sources: {},
+                    layers: [
+                      {
+                        id: "background",
+                        type: "background",
+                      },
+                      {
+                        id: "poi-label",
+                        type: "symbol",
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const map = getLastMapInstance();
+
+      instance.data.addLayer({
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [0, 0],
+                  [1, 1],
+                ],
+              },
+              properties: {},
+            },
+          ],
+        },
+      });
+
+      map.fire("load", { source: "test" });
+
+      expect(map.fitBounds).toHaveBeenCalledTimes(1);
+      expect(map.fitBounds).toHaveBeenCalledWith(expect.any(LngLatBounds), {
+        padding: 20,
+      });
+
+      const bounds = map.fitBounds.mock.calls[0][0];
+      expect(bounds._sw).toEqual([0, 0]);
+      expect(bounds._ne).toEqual([1, 1]);
+    });
+
+    it("skips bounds fitting when fitBounds is false", () => {
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: {
+            basemaps: {
+              vector: [
+                {
+                  styleURL: {
+                    version: 8,
+                    sources: {},
+                    layers: [
+                      {
+                        id: "background",
+                        type: "background",
+                      },
+                      {
+                        id: "poi-label",
+                        type: "symbol",
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const map = getLastMapInstance();
+
+      instance.data.addLayer(
+        {
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [0, 0],
+                    [1, 1],
+                  ],
+                },
+                properties: {},
+              },
+            ],
+          },
+        },
+        { fitBounds: false },
+      );
+
+      map.fire("load", { source: "test" });
+
+      expect(map.fitBounds).not.toHaveBeenCalled();
+    });
+
+    it("fits map bounds when fitBounds is explicitly true", () => {
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: {
+            basemaps: {
+              vector: [
+                {
+                  styleURL: {
+                    version: 8,
+                    sources: {},
+                    layers: [
+                      {
+                        id: "background",
+                        type: "background",
+                      },
+                      {
+                        id: "poi-label",
+                        type: "symbol",
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const map = getLastMapInstance();
+
+      instance.data.addLayer(
+        {
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [0, 0],
+                    [1, 1],
+                  ],
+                },
+                properties: {},
+              },
+            ],
+          },
+        },
+        { fitBounds: true },
+      );
+
+      map.fire("load", { source: "test" });
+
+      expect(map.fitBounds).toHaveBeenCalledTimes(1);
+      expect(map.fitBounds).toHaveBeenCalledWith(expect.any(LngLatBounds), {
+        padding: 20,
+      });
     });
   });
 });

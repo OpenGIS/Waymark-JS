@@ -6,8 +6,8 @@ const instanceDocuments = ref([]);
 
 onMounted(async () => {
   const responses = await Promise.all([
-    fetch("/documents/instances/waymarkDemo1.json"),
-    fetch("/documents/instances/waymarkDemo2.json"),
+    fetch("/documents/instances/route.json"),
+    fetch("/documents/instances/stonehenge.json"),
   ]);
 
   instanceDocuments.value = await Promise.all(responses.map((r) => r.json()));

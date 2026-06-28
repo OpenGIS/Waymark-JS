@@ -97,14 +97,14 @@ Shell event history includes lifecycle, module, forwarded map events, and canoni
 
 ## Naming glossary
 
-- **Instance**: the public object returned by `createInstance(...)` (`id`, `toJSON()`, `data.addLayer()`, `ui.setMode()`, `destroy()`, `on()`, `off()`, `once()`).
+- **Instance**: the public object returned by `createInstance(...)` (`id`, `toJSON()`, [`data.addLayer(layer, options?)`](docs/6.data.md), `ui.setMode()`, `destroy()`, `on()`, `off()`, `once()`).
 - **Runtime core**: internal lifecycle object assembled by `src/runtime/createInstanceCore.js` and tracked in `src/runtime/runtimeRegistry.js`.
 - **InstanceDocument**: canonical serialisable plain object returned by `instance.toJSON()`.
 - **GeoJSON**: the map data format; canonical InstanceDocument data shape is `data.layers[]`, where each layer is `{ type: "geojson", data: object }`.
 
 Data-layer semantics:
 
-- Multiple GeoJSON layers are supported via `data.layers` and runtime `instance.data.addLayer({ data: geojson })`.
+- Multiple GeoJSON layers are supported via `data.layers` and runtime `instance.data.addLayer(layer, options?)` — see [`docs/6.data.md`](docs/6.data.md).
 - Layer input is strict minimal GeoJSON: `FeatureCollection` (`features[]`), `Feature` (`geometry` key), or a supported geometry object (`Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, `GeometryCollection` with `geometries[]`).
 - Essential geometry semantics are validated at the boundary (finite lon/lat positions, `LineString` minimum 2 positions, closed `LinearRing`, valid polygon/multi-member structures, recursive `GeometryCollection`).
 - Invalid `instance.data.addLayer(...)` emits `waymark:data.layer.error` and then throws.

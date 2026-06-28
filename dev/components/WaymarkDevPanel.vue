@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useWaymarkInstance } from "../composables/useWaymarkInstance.js";
 
 const props = defineProps({
@@ -10,12 +10,62 @@ const props = defineProps({
 });
 
 const mapId = computed(() => props.instanceDocument.config.id);
-const selectId = computed(() => `${mapId.value}-mode-select`);
-const labelText = computed(() => `#${mapId.value} ui.mode`);
+const selectId = computed(() => {
+  if (mapId.value === "map") {
+    return "dev-instance-mode";
+  }
 
-const { uiMode, setMode } = useWaymarkInstance({
+  if (mapId.value === "map-two") {
+    return "dev-instance-mode-two";
+  }
+
+  return `${mapId.value}-mode-select`;
+});
+const labelText = computed(() => `#${mapId.value} ui.mode`);
+const uploadInputId = computed(() => `${mapId.value}-geojson-upload`);
+
+const fileInput = ref(null);
+
+const { instance, uiMode, setMode } = useWaymarkInstance({
   instanceDocument: props.instanceDocument,
 });
+
+function triggerUpload() {
+  fileInput.value?.click();
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files?.[0];
+
+  if (!file || !instance.value) {
+    event.target.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = (loadEvent) => {
+    try {
+      const parsedGeoJSON = JSON.parse(loadEvent.target.result);
+
+      instance.value.data.addLayer(
+        { data: parsedGeoJSON },
+        { fitBounds: true },
+      );
+    } catch (error) {
+      console.error("[waymark:dev] Failed to parse uploaded GeoJSON", error);
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  reader.onerror = () => {
+    console.error("[waymark:dev] Failed to read uploaded GeoJSON file");
+    event.target.value = "";
+  };
+
+  reader.readAsText(file);
+}
 </script>
 
 <template>
@@ -30,6 +80,16 @@ const { uiMode, setMode } = useWaymarkInstance({
         <option value="view">view</option>
         <option value="debug">debug</option>
       </select>
+      <input
+        :id="uploadInputId"
+        ref="fileInput"
+        type="file"
+        accept=".geojson,.json,application/geo+json,application/json"
+        aria-label="Upload GeoJSON"
+        class="waymark-dev-panel-upload-input"
+        @change="handleFileUpload"
+      />
+      <button type="button" @click="triggerUpload">Upload GeoJSON</button>
     </div>
     <div :id="mapId" class="waymark-dev-panel-map"></div>
   </div>
@@ -46,6 +106,13 @@ const { uiMode, setMode } = useWaymarkInstance({
   padding: 0.25rem 0.5rem;
   background: #f8f9fb;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.waymark-dev-panel-upload-input {
+  display: none;
 }
 
 .waymark-dev-panel-map {

@@ -24,22 +24,6 @@ const DEV_INSTANCE_CONTAINER_EVENTS = [
   WAYMARK_UI_MODE_CHANGED_EVENT,
 ];
 
-let routeGeoJSONPromise = null;
-
-function fetchRouteGeoJSON() {
-  if (!routeGeoJSONPromise) {
-    routeGeoJSONPromise = fetch("/route.json").then((response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch /route.json (${response.status})`);
-      }
-
-      return response.json();
-    });
-  }
-
-  return routeGeoJSONPromise;
-}
-
 export function useWaymarkInstance({ instanceDocument }) {
   const instance = ref(null);
   const uiMode = ref(instanceDocument.config?.ui?.mode ?? "view");
@@ -60,25 +44,24 @@ export function useWaymarkInstance({ instanceDocument }) {
     return doc.state.ui?.mode ?? doc.config.ui.mode;
   }
 
-  onMounted(async () => {
+  onMounted(() => {
     instance.value = createInstance(instanceDocument);
     uiMode.value = getCurrentMode();
 
+    if (!window.waymarkInstances) {
+      window.waymarkInstances = {};
+    }
+    window.waymarkInstances[mapId] = instance.value;
+
     attachEventLogging();
-
-    // try {
-    //   const geojson = await fetchRouteGeoJSON();
-
-    //   instance.value.data.addLayer({ data: geojson });
-    // } catch (error) {
-    //   console.error("[waymark:dev] Failed to load route GeoJSON", error);
-    // }
   });
 
   onUnmounted(() => {
     if (instance.value) {
       instance.value.destroy();
     }
+
+    delete window.waymarkInstances?.[mapId];
   });
 
   function setMode(mode) {

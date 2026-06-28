@@ -1878,5 +1878,269 @@ test.describe("1. API", () => {
         "waymark-map-geojson-style-reload-test-geojson-layer-0-line",
       ]);
     });
+
+    test("fits map bounds when addLayer fitBounds defaults to true", async ({
+      page,
+    }) => {
+      const result = await page.evaluate(() => {
+        window.waymarkFixture.createContainer("map-fitbounds-default");
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map-fitbounds-default",
+            map: {
+              options: {
+                center: [0, 0],
+                zoom: 2,
+              },
+              basemaps: {
+                vector: [
+                  {
+                    styleURL: { version: 8, sources: {}, layers: [] },
+                  },
+                ],
+              },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+
+        instance.data.addLayer({
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [10, 10],
+                    [11, 11],
+                  ],
+                },
+                properties: {},
+              },
+            ],
+          },
+        });
+
+        return new Promise((resolve) => {
+          let settled = false;
+          const settle = (value) => {
+            if (settled) {
+              return;
+            }
+            settled = true;
+            resolve(value);
+          };
+
+          const startedAt = Date.now();
+          const check = () => {
+            const hasLayer = Boolean(
+              map.getLayer(
+                "waymark-map-fitbounds-default-geojson-layer-0-line",
+              ),
+            );
+
+            if (!hasLayer && Date.now() - startedAt < 5000) {
+              setTimeout(check, 50);
+              return;
+            }
+
+            const onMoveEnd = () => {
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            };
+
+            map.once("moveend", onMoveEnd);
+
+            setTimeout(() => {
+              map.off("moveend", onMoveEnd);
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            }, 1500);
+          };
+
+          check();
+        });
+      });
+
+      expect(result.center[0]).toBeCloseTo(10.5, 2);
+      expect(result.center[1]).toBeCloseTo(10.5, 2);
+      expect(result.zoom).toBeGreaterThan(2);
+    });
+
+    test("skips bounds fitting when fitBounds is false", async ({ page }) => {
+      const result = await page.evaluate(() => {
+        window.waymarkFixture.createContainer("map-fitbounds-false");
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map-fitbounds-false",
+            map: {
+              options: {
+                center: [0, 0],
+                zoom: 2,
+              },
+              basemaps: {
+                vector: [
+                  {
+                    styleURL: { version: 8, sources: {}, layers: [] },
+                  },
+                ],
+              },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+
+        instance.data.addLayer(
+          {
+            data: {
+              type: "FeatureCollection",
+              features: [
+                {
+                  type: "Feature",
+                  geometry: {
+                    type: "LineString",
+                    coordinates: [
+                      [10, 10],
+                      [11, 11],
+                    ],
+                  },
+                  properties: {},
+                },
+              ],
+            },
+          },
+          { fitBounds: false },
+        );
+
+        return new Promise((resolve) => {
+          const startedAt = Date.now();
+          const check = () => {
+            const hasLayer = Boolean(
+              map.getLayer("waymark-map-fitbounds-false-geojson-layer-0-line"),
+            );
+
+            if (!hasLayer && Date.now() - startedAt < 5000) {
+              setTimeout(check, 50);
+              return;
+            }
+
+            resolve({
+              center: [map.getCenter().lng, map.getCenter().lat],
+              zoom: map.getZoom(),
+            });
+          };
+
+          check();
+        });
+      });
+
+      expect(result.center[0]).toBeCloseTo(0, 2);
+      expect(result.center[1]).toBeCloseTo(0, 2);
+      expect(result.zoom).toBeCloseTo(2, 1);
+    });
+
+    test("fits map bounds when fitBounds is explicitly true", async ({
+      page,
+    }) => {
+      const result = await page.evaluate(() => {
+        window.waymarkFixture.createContainer("map-fitbounds-true");
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map-fitbounds-true",
+            map: {
+              options: {
+                center: [0, 0],
+                zoom: 2,
+              },
+              basemaps: {
+                vector: [
+                  {
+                    styleURL: { version: 8, sources: {}, layers: [] },
+                  },
+                ],
+              },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+
+        instance.data.addLayer(
+          {
+            data: {
+              type: "FeatureCollection",
+              features: [
+                {
+                  type: "Feature",
+                  geometry: {
+                    type: "LineString",
+                    coordinates: [
+                      [10, 10],
+                      [11, 11],
+                    ],
+                  },
+                  properties: {},
+                },
+              ],
+            },
+          },
+          { fitBounds: true },
+        );
+
+        return new Promise((resolve) => {
+          let settled = false;
+          const settle = (value) => {
+            if (settled) {
+              return;
+            }
+            settled = true;
+            resolve(value);
+          };
+
+          const startedAt = Date.now();
+          const check = () => {
+            const hasLayer = Boolean(
+              map.getLayer("waymark-map-fitbounds-true-geojson-layer-0-line"),
+            );
+
+            if (!hasLayer && Date.now() - startedAt < 5000) {
+              setTimeout(check, 50);
+              return;
+            }
+
+            const onMoveEnd = () => {
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            };
+
+            map.once("moveend", onMoveEnd);
+
+            setTimeout(() => {
+              map.off("moveend", onMoveEnd);
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            }, 1500);
+          };
+
+          check();
+        });
+      });
+
+      expect(result.center[0]).toBeCloseTo(10.5, 2);
+      expect(result.center[1]).toBeCloseTo(10.5, 2);
+      expect(result.zoom).toBeGreaterThan(2);
+    });
   });
 });

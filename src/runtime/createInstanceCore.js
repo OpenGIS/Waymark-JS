@@ -71,7 +71,7 @@ import {
  * @typedef {object} WaymarkInstancePublicApi
  * @property {string} id
  * @property {() => WaymarkInstanceDocument} toJSON
- * @property {{ addLayer: (layer: { type?: 'geojson', data: object }) => void }} data
+ * @property {{ addLayer: (layer: { type?: 'geojson', data: object }, options?: { fitBounds?: boolean }) => void }} data
  * @property {{ setMode: (mode: 'view' | 'debug') => void }} ui
  * @property {() => void} destroy
  * @property {(type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void} on
@@ -89,7 +89,7 @@ import {
  * @property {WaymarkInstancePublicApi} publicApi
  * @property {{ container: HTMLElement, emit: (type: string, detail: import('./createInstanceEvents.js').WaymarkInstanceLifecycleEventDetail | import('./createInstanceEvents.js').WaymarkInstanceMapEventDetail | import('./createInstanceEvents.js').WaymarkInstanceModuleEventDetail | import('./createInstanceEvents.js').WaymarkBasemapsChangedEventDetail | import('./createInstanceEvents.js').WaymarkStateChangedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerAddedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerMountedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerErrorEventDetail) => void, on: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void, off: (type: string, handler: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void, once: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void }} events
  * @property {{ toJSON: () => WaymarkInstanceDocument }} instanceDocument
- * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void } }} modules
+ * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }, options?: { fitBounds?: boolean }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void } }} modules
  * @property {{ basemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, setActiveVectorBasemap: (basemapId: string) => void }, ui: { toggleDebugOutputPanel: () => void, toggleBasemapsPanel: () => void } }} commands
  * @property {{ phase: 'ready' | 'destroyed', destroy: () => void }} lifecycle
  */
@@ -475,8 +475,9 @@ function setCoreMode(core, mode, source = "core:lifecycle") {
 /**
  * @param {WaymarkInstanceCore} core
  * @param {unknown} layer
+ * @param {{ fitBounds?: boolean }} [options]
  */
-function addCoreDataLayer(core, layer) {
+function addCoreDataLayer(core, layer, options) {
   if (core.lifecycle.phase === "destroyed") {
     return;
   }
@@ -500,7 +501,7 @@ function addCoreDataLayer(core, layer) {
   }
 
   try {
-    core.modules.geoJSON.addLayer(normalisedLayer);
+    core.modules.geoJSON.addLayer(normalisedLayer, options);
 
     if (core.modules.appShell) {
       core.modules.appShell.refresh();
@@ -1068,7 +1069,7 @@ export function createInstanceCore(instanceDocument) {
     id: containerId,
     toJSON: () => core.instanceDocument.toJSON(),
     data: {
-      addLayer: (layer) => addCoreDataLayer(core, layer),
+      addLayer: (layer, options) => addCoreDataLayer(core, layer, options),
     },
     ui: {
       setMode: (mode) => setCoreMode(core, mode, "public:ui.setMode"),

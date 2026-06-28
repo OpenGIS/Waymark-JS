@@ -49,18 +49,20 @@ test.describe("2. Development smoke", () => {
     ).toHaveCount(1);
 
     const basemapConfig = await page.evaluate(() => ({
-      map: window.waymarkInstance?.toJSON().config.map.basemaps,
-      mapTwo: window.waymarkInstanceTwo?.toJSON().config.map.basemaps,
+      map: window.waymarkInstances?.map?.toJSON().config.map.basemaps,
+      mapTwo:
+        window.waymarkInstances?.["map-two"]?.toJSON().config.map.basemaps,
       mapKeys: Object.keys(
-        window.waymarkInstance?.toJSON().config.map.basemaps,
+        window.waymarkInstances?.map?.toJSON().config.map.basemaps,
       ),
     }));
 
     await expect
       .poll(async () => {
         return page.evaluate(() => ({
-          map: window.waymarkInstance?.toJSON().data.layers.length,
-          mapTwo: window.waymarkInstanceTwo?.toJSON().data.layers.length,
+          map: window.waymarkInstances?.map?.toJSON().data.layers.length,
+          mapTwo:
+            window.waymarkInstances?.["map-two"]?.toJSON().data.layers.length,
         }));
       })
       .toEqual({
@@ -116,11 +118,11 @@ test.describe("2. Development smoke", () => {
 
     const modes = await page.evaluate(() => ({
       map:
-        window.waymarkInstance?.toJSON().state.ui?.mode ??
-        window.waymarkInstance?.toJSON().config.ui.mode,
+        window.waymarkInstances?.map?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.map?.toJSON().config.ui.mode,
       mapTwo:
-        window.waymarkInstanceTwo?.toJSON().state.ui?.mode ??
-        window.waymarkInstanceTwo?.toJSON().config.ui.mode,
+        window.waymarkInstances?.["map-two"]?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.["map-two"]?.toJSON().config.ui.mode,
     }));
 
     expect(modes).toEqual({
@@ -145,11 +147,11 @@ test.describe("2. Development smoke", () => {
 
     const afterMapDebug = await page.evaluate(() => ({
       map:
-        window.waymarkInstance?.toJSON().state.ui?.mode ??
-        window.waymarkInstance?.toJSON().config.ui.mode,
+        window.waymarkInstances?.map?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.map?.toJSON().config.ui.mode,
       mapTwo:
-        window.waymarkInstanceTwo?.toJSON().state.ui?.mode ??
-        window.waymarkInstanceTwo?.toJSON().config.ui.mode,
+        window.waymarkInstances?.["map-two"]?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.["map-two"]?.toJSON().config.ui.mode,
     }));
 
     expect(afterMapDebug).toEqual({
@@ -177,11 +179,11 @@ test.describe("2. Development smoke", () => {
 
     const afterMapTwoView = await page.evaluate(() => ({
       map:
-        window.waymarkInstance?.toJSON().state.ui?.mode ??
-        window.waymarkInstance?.toJSON().config.ui.mode,
+        window.waymarkInstances?.map?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.map?.toJSON().config.ui.mode,
       mapTwo:
-        window.waymarkInstanceTwo?.toJSON().state.ui?.mode ??
-        window.waymarkInstanceTwo?.toJSON().config.ui.mode,
+        window.waymarkInstances?.["map-two"]?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.["map-two"]?.toJSON().config.ui.mode,
     }));
 
     expect(afterMapTwoView).toEqual({
@@ -212,11 +214,11 @@ test.describe("2. Development smoke", () => {
 
     const afterMapView = await page.evaluate(() => ({
       map:
-        window.waymarkInstance?.toJSON().state.ui?.mode ??
-        window.waymarkInstance?.toJSON().config.ui.mode,
+        window.waymarkInstances?.map?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.map?.toJSON().config.ui.mode,
       mapTwo:
-        window.waymarkInstanceTwo?.toJSON().state.ui?.mode ??
-        window.waymarkInstanceTwo?.toJSON().config.ui.mode,
+        window.waymarkInstances?.["map-two"]?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.["map-two"]?.toJSON().config.ui.mode,
     }));
 
     expect(afterMapView).toEqual({
@@ -247,11 +249,11 @@ test.describe("2. Development smoke", () => {
 
     const finalModes = await page.evaluate(() => ({
       map:
-        window.waymarkInstance?.toJSON().state.ui?.mode ??
-        window.waymarkInstance?.toJSON().config.ui.mode,
+        window.waymarkInstances?.map?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.map?.toJSON().config.ui.mode,
       mapTwo:
-        window.waymarkInstanceTwo?.toJSON().state.ui?.mode ??
-        window.waymarkInstanceTwo?.toJSON().config.ui.mode,
+        window.waymarkInstances?.["map-two"]?.toJSON().state.ui?.mode ??
+        window.waymarkInstances?.["map-two"]?.toJSON().config.ui.mode,
     }));
 
     expect(finalModes).toEqual({
@@ -269,18 +271,22 @@ test.describe("2. Development smoke", () => {
   }) => {
     await page.goto("/");
 
-    const result = await page.evaluate(() => ({
-      hasFactory: typeof window.createWaymarkInstance === "function",
-      hasInstanceOne: typeof window.waymarkInstance?.ui?.setMode === "function",
-      hasInstanceTwo:
-        typeof window.waymarkInstanceTwo?.ui?.setMode === "function",
-    }));
-
-    expect(result).toEqual({
-      hasFactory: true,
-      hasInstanceOne: true,
-      hasInstanceTwo: true,
-    });
+    await expect
+      .poll(async () =>
+        page.evaluate(() => ({
+          hasFactory: typeof window.createWaymarkInstance === "function",
+          hasInstanceOne:
+            typeof window.waymarkInstances?.map?.ui?.setMode === "function",
+          hasInstanceTwo:
+            typeof window.waymarkInstances?.["map-two"]?.ui?.setMode ===
+            "function",
+        })),
+      )
+      .toEqual({
+        hasFactory: true,
+        hasInstanceOne: true,
+        hasInstanceTwo: true,
+      });
   });
 
   test("debug output toggle remains clickable above debug panel content", async ({
@@ -383,8 +389,8 @@ test.describe("2. Development smoke", () => {
       .poll(async () =>
         page.evaluate(
           () =>
-            window.waymarkInstance?.toJSON().state.map?.basemaps?.vector?.[0]
-              ?.title,
+            window.waymarkInstances?.map?.toJSON().state.map?.basemaps
+              ?.vector?.[0]?.title,
         ),
       )
       .toBe("OpenFreeMap Liberty");
@@ -404,8 +410,8 @@ test.describe("2. Development smoke", () => {
       .poll(async () =>
         page.evaluate(
           () =>
-            window.waymarkInstanceTwo?.toJSON().state.map?.basemaps?.raster?.[1]
-              ?.opacity,
+            window.waymarkInstances?.["map-two"]?.toJSON().state.map?.basemaps
+              ?.raster?.[1]?.opacity,
         ),
       )
       .toBe(0.8);
@@ -417,11 +423,68 @@ test.describe("2. Development smoke", () => {
     await expect
       .poll(async () =>
         page.evaluate(() =>
-          window.waymarkInstanceTwo
+          window.waymarkInstances?.["map-two"]
             ?.toJSON()
             .state.map?.basemaps?.raster?.map((basemap) => basemap.title),
         ),
       )
       .toEqual(["OpenTopoMap raster overlay", "OpenStreetMap raster"]);
+  });
+
+  test("dev GeoJSON upload adds a new data layer and fits bounds", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const uploadInput = page.locator("#map-geojson-upload");
+    await expect(uploadInput).toBeHidden();
+    await expect(
+      page.locator('button:has-text("Upload GeoJSON")').first(),
+    ).toBeVisible();
+
+    const geoJSON = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Point",
+            coordinates: [10.75, 59.95],
+          },
+        },
+      ],
+    };
+
+    await uploadInput.setInputFiles({
+      name: "oslo.geojson",
+      mimeType: "application/geo+json",
+      buffer: Buffer.from(JSON.stringify(geoJSON)),
+    });
+
+    await expect
+      .poll(async () =>
+        page.evaluate(
+          () => window.waymarkInstances?.map?.toJSON().data.layers.length,
+        ),
+      )
+      .toBe(2);
+
+    await expect
+      .poll(
+        async () =>
+          page.evaluate(() => {
+            const options =
+              window.waymarkInstances?.map?.toJSON().state.map?.options;
+
+            return options ?? null;
+          }),
+        { timeout: 30000 },
+      )
+      .toEqual(
+        expect.objectContaining({
+          center: [expect.closeTo(10.75, 6), expect.closeTo(59.95, 6)],
+        }),
+      );
   });
 });

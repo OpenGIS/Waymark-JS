@@ -1,3 +1,5 @@
+import { LngLatBounds } from "maplibre-gl";
+
 /**
  * @param {import('maplibre-gl').Map} map
  */
@@ -132,9 +134,194 @@ function collectGeometryFamilies(geoJSON) {
 }
 
 /**
+ * @param {unknown} position
+ * @returns {[number, number] | null}
+ */
+function readPosition(position) {
+  if (!Array.isArray(position) || position.length < 2) {
+    return null;
+  }
+
+  const [lng, lat] = position;
+
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) {
+    return null;
+  }
+
+  return [lng, lat];
+}
+
+/**
+ * @param {unknown} geometry
+ * @param {(lng: number, lat: number) => void} visitor
+ */
+function visitGeometryCoordinates(geometry, visitor) {
+  if (!geometry || typeof geometry !== "object") {
+    return;
+  }
+
+  const geometryType = geometry.type;
+
+  if (typeof geometryType !== "string") {
+    return;
+  }
+
+  if (geometryType === "GeometryCollection") {
+    const geometries = Array.isArray(geometry.geometries)
+      ? geometry.geometries
+      : [];
+
+    for (const nestedGeometry of geometries) {
+      visitGeometryCoordinates(nestedGeometry, visitor);
+    }
+
+    return;
+  }
+
+  const positions = geometry.coordinates;
+
+  if (!Array.isArray(positions)) {
+    return;
+  }
+
+  if (geometryType === "Point") {
+    const position = readPosition(positions);
+
+    if (position) {
+      visitor(position[0], position[1]);
+    }
+
+    return;
+  }
+
+  if (geometryType === "MultiPoint" || geometryType === "LineString") {
+    for (const candidate of positions) {
+      const position = readPosition(candidate);
+
+      if (position) {
+        visitor(position[0], position[1]);
+      }
+    }
+
+    return;
+  }
+
+  if (geometryType === "MultiLineString" || geometryType === "Polygon") {
+    for (const ring of positions) {
+      if (!Array.isArray(ring)) {
+        continue;
+      }
+
+      for (const candidate of ring) {
+        const position = readPosition(candidate);
+
+        if (position) {
+          visitor(position[0], position[1]);
+        }
+      }
+    }
+
+    return;
+  }
+
+  if (geometryType === "MultiPolygon") {
+    for (const polygon of positions) {
+      if (!Array.isArray(polygon)) {
+        continue;
+      }
+
+      for (const ring of polygon) {
+        if (!Array.isArray(ring)) {
+          continue;
+        }
+
+        for (const candidate of ring) {
+          const position = readPosition(candidate);
+
+          if (position) {
+            visitor(position[0], position[1]);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @param {unknown} geoJSON
+ * @param {(lng: number, lat: number) => void} visitor
+ */
+function visitGeoJSONCoordinates(geoJSON, visitor) {
+  if (!geoJSON || typeof geoJSON !== "object") {
+    return;
+  }
+
+  const geoJSONType = geoJSON.type;
+
+  if (typeof geoJSONType !== "string") {
+    return;
+  }
+
+  if (geoJSONType === "Feature") {
+    visitGeometryCoordinates(geoJSON.geometry, visitor);
+    return;
+  }
+
+  if (geoJSONType === "FeatureCollection") {
+    const features = Array.isArray(geoJSON.features) ? geoJSON.features : [];
+
+    for (const feature of features) {
+      if (!feature || typeof feature !== "object") {
+        continue;
+      }
+
+      visitGeometryCoordinates(feature.geometry, visitor);
+    }
+
+    return;
+  }
+
+  visitGeometryCoordinates(geoJSON, visitor);
+}
+
+/**
+ * @param {unknown} geoJSON
+ * @returns {import('maplibre-gl').LngLatBounds | null}
+ */
+function computeGeoJSONBounds(geoJSON) {
+  let sw = null;
+  let ne = null;
+
+  visitGeoJSONCoordinates(geoJSON, (lng, lat) => {
+    if (sw === null) {
+      sw = [lng, lat];
+      ne = [lng, lat];
+      return;
+    }
+
+    sw = [Math.min(sw[0], lng), Math.min(sw[1], lat)];
+    ne = [Math.max(ne[0], lng), Math.max(ne[1], lat)];
+  });
+
+  if (sw === null || ne === null) {
+    return null;
+  }
+
+  return new LngLatBounds(sw, ne);
+}
+
+/**
  * @param {unknown} data
  * @param {string} baseLayerId
  */
+function fitBoundsToGeoJSON(map, geoJSON) {
+  const bounds = computeGeoJSONBounds(geoJSON);
+
+  if (bounds) {
+    map.fitBounds(bounds, { padding: 20 });
+  }
+}
+
 function createRenderPlan(data, baseLayerId) {
   const discoveredFamilies = collectGeometryFamilies(data);
   const renderFamilies =
@@ -181,6 +368,8 @@ export function createGeoJSONModule(
     layerId: `waymark-${instanceToken}-geojson-layer-${index}`,
     type: layer.type,
     data: layer.data,
+    fitBounds: false,
+    hasFitBounds: false,
     renderPlan: createRenderPlan(
       layer.data,
       `waymark-${instanceToken}-geojson-layer-${index}`,
@@ -281,6 +470,11 @@ export function createGeoJSONModule(
           mountedLayerIds,
         });
       }
+
+      if (layerRecord.fitBounds && !layerRecord.hasFitBounds) {
+        fitBoundsToGeoJSON(map, layerRecord.data);
+        layerRecord.hasFitBounds = true;
+      }
     }
 
     hasMountedLayers = true;
@@ -291,7 +485,7 @@ export function createGeoJSONModule(
   return {
     map,
     layers: layerRecords,
-    addLayer(layer) {
+    addLayer(layer, options = {}) {
       const nextIndex = layerRecords.length;
       const layerRecord = {
         index: nextIndex,
@@ -299,6 +493,8 @@ export function createGeoJSONModule(
         layerId: `waymark-${instanceToken}-geojson-layer-${nextIndex}`,
         type: layer.type,
         data: layer.data,
+        fitBounds: options.fitBounds !== false,
+        hasFitBounds: false,
         renderPlan: createRenderPlan(
           layer.data,
           `waymark-${instanceToken}-geojson-layer-${nextIndex}`,

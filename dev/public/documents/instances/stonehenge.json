@@ -26,9 +26,30 @@
         ]
       },
       "options": {
-        "center": [-0.1276, 51.5074],
-        "zoom": 11
+        "center": [-1.8261632, 51.1788144],
+        "zoom": 16
       }
     }
+  },
+  "data": {
+    "layers": [
+      {
+        "data": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "geometry": {
+                "type": "Point",
+                "coordinates": [-1.8261632, 51.1788144]
+              },
+              "type": "Feature",
+              "properties": {
+                "title": "Stonehenge"
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 }

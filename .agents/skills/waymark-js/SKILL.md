@@ -8,6 +8,7 @@ description: Waymark JS reference. Use when working on source, docs, tests, or A
 Waymark JS is a small JavaScript map library built on [MapLibre GL](https://maplibre.org/). It exposes a simple `createInstance(...)` API, forwards map configuration through `config.map.options`, and gives direct access to the underlying MapLibre instance.
 
 **Key facts:**
+
 - Entry point: `import { createInstance } from './dist/waymark.js'`
 - Source: `src/` — built with Vite into `dist/`
 - Tests: `npm test` and `npm run test:browser` (workflow in `docs/2.development.md`)
@@ -287,7 +288,10 @@ const instance = createInstance({
   id: string,
   toJSON: () => InstanceDocument,
   data: {
-    addLayer: (layer: { type?: "geojson", data: object }) => void
+    addLayer: (
+      layer: { type?: "geojson", data: object },
+      options?: { fitBounds?: boolean }
+    ) => void
   },
   ui: {
     setMode: (mode: "view" | "debug") => void
@@ -542,7 +546,7 @@ Internal orchestration boundaries are documented in [`docs/3.instances.md`](3.in
 Waymark supports data layers from both:
 
 - initial document input (`instanceDocument.data.layers[]`)
-- runtime additions (`instance.data.addLayer(layer)`)
+- runtime additions (`instance.data.addLayer(layer, { fitBounds?: boolean })`)
 
 Canonical layer input shape:
 
@@ -605,7 +609,6 @@ GeoJSON source/layer IDs are instance-scoped to avoid collisions:
 - sublayer: `waymark-{id}-geojson-layer-{index}-{family}`
 
 For the full data contract (validation, serialisation, runtime mounting, and dev example usage), see [`docs/6.data.md`](6.data.md).
-
 
 ---
 
@@ -751,6 +754,10 @@ This gives a stable baseline for browser smoke coverage in `tests/browser/2.deve
 - the debug output toggle stays clickable while the debug modal is open
 - shared modal routing allows direct switch between debug and basemaps panels
 - two dev dropdowns exist: `#dev-instance-mode` (for `#map`) and `#dev-instance-mode-two` (for `#map-two`)
+- each panel exposes an "Upload GeoJSON" button that triggers a hidden file input (`#map-geojson-upload` for `#map` and `#map-two-geojson-upload` for `#map-two`)
+- selecting a file parses it as GeoJSON and calls `instance.data.addLayer({ data: parsedGeoJSON }, { fitBounds: true })`
+- `window.waymarkInstances` is exposed as a registry keyed by container ID (`window.waymarkInstances.map` and `window.waymarkInstances["map-two"]`) for manual console testing
+- browser smoke coverage includes GeoJSON upload behaviour at `tests/browser/2.development.test.js:431`
 
 The `useWaymarkInstance` composable wires each dropdown via `instance.ui.setMode(...)`. Browser smoke asserts independent mode switching in both UI and serialised InstanceDocument payloads:
 
@@ -857,7 +864,6 @@ Sync checklist:
 3. Run `npm run docs:sync`, `npm test`, and `npm run test:browser`.
 4. Ensure old filenames/headings are removed.
 
-
 ---
 
 # Instances
@@ -945,7 +951,6 @@ For module-level behaviour, update these docs alongside runtime changes:
 - `docs/4.map.md`
 - `docs/5.ui.md`
 
-
 ---
 
 # Map
@@ -986,6 +991,7 @@ State camera values override config camera defaults when both are provided.
 - Runtime basemap state is command-driven in core (`setRasterOpacity`, `reorderRasterBasemaps`, `setActiveVectorBasemap`) and then applied to map adapters.
 - Raster layers are mounted and reordered with top-first semantics (`raster[0]` is visually on top).
 - Data-layer runtime behaviour (normalisation, mixed-family render planning, mount order, style-reload remounting, and serialisation) follows the canonical contract in [`docs/6.data.md`](6.data.md).
+- Runtime `instance.data.addLayer(..., { fitBounds })` can compute the GeoJSON bounding box and call `map.fitBounds(bounds, { padding: 20 })` when `fitBounds` is `true`. See [`docs/6.data.md`](6.data.md) for option semantics.
 - Vector switching updates MapLibre style via `map.setStyle(...)` and keeps the selected vector as runtime index `vector[0]`.
 - Basemap mutations emit one aggregate `waymark:map.basemaps.changed` event containing `mutation`, `changed`, and full post-mutation `basemaps` snapshot.
 - `instance.toJSON().config` stays stable, while live basemap mutations are serialised into `state.map.basemaps` (including runtime mutation order/values).
@@ -1010,7 +1016,6 @@ For public config validation/defaults and event payload contracts, treat [`docs/
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 - [`docs/1.api.md#initial-geojson-overlay`](1.api.md#initial-geojson-overlay)
 - [`docs/6.data.md`](6.data.md)
-
 
 ---
 
@@ -1192,7 +1197,6 @@ Debug output demonstrates the same pattern:
 - [`docs/1.api.md#instance-event-api`](1.api.md#instance-event-api)
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 
-
 ---
 
 # Data
@@ -1232,8 +1236,10 @@ Validation is strict on essential geometry semantics (RFC7946-focused, non-topol
 Runtime additions are done through:
 
 ```js
-instance.data.addLayer(layer);
+instance.data.addLayer(layer, { fitBounds?: boolean });
 ```
+
+`fitBounds` defaults to `true`. When `true`, the map is fitted to the layer's bounding box with `padding: 20` after the GeoJSON sublayers are mounted. This option is runtime-only and is not persisted in `instance.toJSON()`.
 
 Runtime emits minimal data events:
 
@@ -1292,12 +1298,18 @@ GeoJSON source and layer IDs are instance-scoped and index-based to avoid collis
 
 ## Dev example reference
 
-The dev playground fetches `/route.json` and appends the same layer to both demo instances using the new API:
+The dev playground loads two initial InstanceDocuments from `/documents/instances/route.json` and `/documents/instances/stonehenge.json` into the two demo instances. Each dev panel exposes a mode selector and an "Upload GeoJSON" button. Selecting a file parses it as GeoJSON and calls:
 
 ```js
-const geojson = await fetch("/route.json").then((response) => response.json());
-waymarkInstance.data.addLayer({ data: geojson });
-waymarkInstanceTwo.data.addLayer({ data: geojson });
+instance.data.addLayer({ data: parsedGeoJSON }, { fitBounds: true });
+```
+
+The instances are also exposed as globals for manual console testing:
+
+```js
+window.waymarkInstances; // registry keyed by container ID
+window.waymarkInstances.map; // #map, ui.mode "view"
+window.waymarkInstances["map-two"]; // #map-two, ui.mode "debug"
 ```
 
 Implementation references:
@@ -1306,7 +1318,6 @@ Implementation references:
 - [`src/geojson/createGeoJSONModule.js`](../src/geojson/createGeoJSONModule.js)
 - [`src/runtime/createInstanceCore.js`](../src/runtime/createInstanceCore.js)
 - [`dev/composables/useWaymarkInstance.js`](../dev/composables/useWaymarkInstance.js)
-
 
 ---
 
@@ -1331,4 +1342,3 @@ These docs split consumer API from internals:
 - `docs/3.instances.md` defines runtime orchestration boundaries.
 - `docs/4.map.md` and `docs/5.ui.md` document module-level internals.
 - `docs/6.data.md` is the canonical data/GeoJSON reference used by API, map, and dev docs.
-
