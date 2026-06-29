@@ -60,13 +60,13 @@
           exaggeration: 1.5,
         });
 
-        // Softer hillshade so contour lines remain legible
+        // Subtle hillshade — restrained to match liberty-topo's subtlety; contour lines should remain legible
         map.addLayer({
           id: "hillshade-layer",
           type: "hillshade",
           source: "terrainSource",
           paint: {
-            "hillshade-exaggeration": 0.35,
+            "hillshade-exaggeration": 0.2,
           },
         });
 
@@ -89,7 +89,7 @@
                 0: [100, 500],
                 5: [50, 250],
                 10: [25, 100],
-                15: [10, 50],
+                15: [25, 100],
               },
               contourLayer: "contours",
               elevationKey: "ele",
@@ -101,7 +101,7 @@
           maxzoom: 15,
         });
 
-        // Regular contour lines — subtle warm grey, fade in gradually with zoom
+        // Regular contour lines — subtle warm grey, low opacity (matching liberty-topo restraint)
         map.addLayer({
           id: "contour-lines",
           type: "line",
@@ -110,31 +110,13 @@
           minzoom: 10,
           filter: ["==", ["get", "level"], 0],
           paint: {
-            "line-color": "hsl(35, 5%, 55%)",
-            "line-opacity": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              10,
-              0,
-              14,
-              0.2,
-              18,
-              0.35,
-            ],
-            "line-width": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              10,
-              0.3,
-              18,
-              0.8,
-            ],
+            "line-color": "rgb(126, 124, 121)",
+            "line-opacity": 0.25,
+            "line-width": 0.5,
           },
         });
 
-        // Index contour lines (every Nth) — slightly darker, wider, higher opacity
+        // Index contour lines (every Nth) — slightly wider, but still restrained (matching liberty-topo)
         map.addLayer({
           id: "contour-lines-index",
           type: "line",
@@ -143,31 +125,13 @@
           minzoom: 10,
           filter: [">", ["get", "level"], 0],
           paint: {
-            "line-color": "hsl(35, 5%, 45%)",
-            "line-opacity": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              10,
-              0,
-              14,
-              0.3,
-              18,
-              0.5,
-            ],
-            "line-width": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              10,
-              0.5,
-              18,
-              1.5,
-            ],
+            "line-color": "rgb(124, 122, 121)",
+            "line-opacity": 0.1,
+            "line-width": 1.0,
           },
         });
 
-        // Contour elevation labels — only on index lines, map-aligned, subtle
+        // Contour elevation labels — only on index lines, map-aligned, small and restrained (matching liberty-topo)
         map.addLayer({
           id: "contour-labels",
           type: "symbol",
@@ -179,19 +143,19 @@
             "symbol-placement": "line",
             "symbol-avoid-edges": true,
             "text-rotation-alignment": "map",
-            "text-size": ["interpolate", ["linear"], ["zoom"], 12, 9, 18, 13],
+            "text-size": ["interpolate", ["linear"], ["zoom"], 11, 6, 18, 10],
             "text-field": [
               "concat",
               ["number-format", ["get", "ele"], {}],
               "m",
             ],
             "text-font": ["Noto Sans Regular"],
-            "text-padding": 10,
+            "text-padding": 0,
           },
           paint: {
-            "text-color": "hsl(35, 5%, 40%)",
-            "text-halo-color": "hsla(0, 0%, 100%, 0.7)",
-            "text-halo-width": 1.5,
+            "text-color": "#5c5c5c",
+            "text-halo-color": "rgba(255, 255, 255, 0.85)",
+            "text-halo-width": 1.25,
           },
         });
 
@@ -245,6 +209,29 @@
           },
           "highway-name-path",
         );
+
+        // === Path/track highlighting — override liberty's white dashed paths to redish brown for better visibility ===
+        if (map.getLayer("road_path_pedestrian")) {
+          map.setPaintProperty("road_path_pedestrian", "line-color", "#9d4d26");
+        }
+
+        // Tunnel paths
+        if (map.getLayer("tunnel_path_pedestrian")) {
+          map.setPaintProperty(
+            "tunnel_path_pedestrian",
+            "line-color",
+            "#9d4d26",
+          );
+        }
+
+        // Bridge paths
+        if (map.getLayer("bridge_path_pedestrian")) {
+          map.setPaintProperty(
+            "bridge_path_pedestrian",
+            "line-color",
+            "#9d4d26",
+          );
+        }
       });
     </script>
   </body>
