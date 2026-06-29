@@ -1,127 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MapLibre Contour Lines Demo</title>
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/maplibre-contour@0.2.0/dist/maplibre-contour.umd.js"></script>
-  <style>
-    body { margin: 0; font-family: sans-serif; }
-    #map { width: 100vw; height: 100vh; }
-  </style>
-</head>
-<body>
-  <div id="map"></div>
-  <script>
-    const map = new maplibregl.Map({
-      container: 'map',
-      style: 'https://demotiles.maplibre.org/style.json',
-      center: [-121.5, 38.5],
-      zoom: 10,
-      pitch: 60,
-      bearing: 20,
-    });
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MapLibre Contour Lines Demo</title>
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/maplibre-contour@latest/dist/index.min.js"></script>
+    <link rel="icon" href="data:," />
+    <style>
+      body {
+        margin: 0;
+      }
+      #map {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      const TERRARIUM_URL =
+        "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
 
-    map.on('style.load', () => {
-      // Add terrain source
-      map.addSource('terrainSource', {
-        type: 'raster-dem',
-        tiles: [
-          'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
-        ],
-        encoding: 'terrarium',
+      const terrainSource = {
+        type: "raster-dem",
+        tiles: [TERRARIUM_URL],
+        encoding: "terrarium",
         tileSize: 256,
         maxzoom: 14,
+      };
+
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/bright",
+        //mtb_scale example:
+        //center: [10.52302507, 55.0952585],
+        //mtb:scale:imba example:
+        center: [-125.022417, 49.607406],
+        zoom: 15,
+        pitch: 0,
+        bearing: 0,
       });
 
-      map.setTerrain({
-        source: 'terrainSource',
-        exaggeration: 1.5,
-      });
-
-      // Add hillshade
-      map.addSource('hillshadeSource', {
-        type: 'raster-dem',
-        tiles: [
-          'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
-        ],
-        encoding: 'terrarium',
-        tileSize: 256,
-        maxzoom: 14,
-      });
-
-      map.addLayer({
-        id: 'hillshade-layer',
-        type: 'hillshade',
-        source: 'hillshadeSource',
-        paint: {
-          'hillshade-shadow-color': '#333333',
-        },
-      });
-
-      // Add contour lines using maplibre-contour
-      const demSource = new maplibreContour.DemSource({
-        url: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
-        encoding: 'terrarium',
-        maxzoom: 13,
-        worker: true,
-        cacheSize: 100,
-        timeoutMs: 10000,
-      });
-      demSource.setupMaplibre(maplibregl);
-
-      map.addSource('contour-source', {
-        type: 'vector',
-        minzoom: 12,
-        tiles: [
-          demSource.contourProtocolUrl({
-            thresholds: {
-              0: [100, 500],
-              5: [50, 250],
-              10: [25, 100],
-              15: [10, 50],
+      map.on("style.load", () => {
+        // MTB trail highlighting (openfreemap/openmaptiles mtb_scale)
+        // Placed before highway-name-path so it renders above road paint but below labels
+        map.addLayer(
+          {
+            id: "mtb_scale-casing",
+            type: "line",
+            source: "openmaptiles",
+            "source-layer": "transportation",
+            filter: [
+              "all",
+              ["==", "$type", "LineString"],
+              ["!=", "brunnel", "tunnel"],
+              ["has", "mtb_scale"],
+            ],
+            layout: {
+              "line-cap": "round",
+              "line-join": "round",
             },
-            contourLayer: 'contours',
-            elevationKey: 'ele',
-            levelKey: 'level',
-            extent: 4096,
-            buffer: 1,
-          }),
-        ],
-        maxzoom: 15,
-      });
+            paint: {
+              "line-color": [
+                "match",
+                ["get", "mtb_scale"],
+                "1",
+                "blue",
+                "2",
+                "red",
+                "black",
+              ],
+              "line-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                13,
+                0,
+                16,
+                1,
+              ],
+              "line-width": [
+                "interpolate",
+                ["exponential", 1.2],
+                ["zoom"],
+                12,
+                0.5,
+                16,
+                3,
+              ],
+            },
+          },
+          "highway-name-path",
+        );
 
-      map.addLayer({
-        id: 'contour-lines',
-        type: 'line',
-        source: 'contour-source',
-        'source-layer': 'contours',
-        paint: {
-          'line-color': 'rgba(0,0,0, 0.5)',
-          'line-width': ['match', ['get', 'level'], 1, 2, 1],
-        },
+        // map.addSource("terrainSource", terrainSource);
+        // map.setTerrain({
+        //   source: "terrainSource",
+        //   exaggeration: 1.5,
+        // });
+        // map.addLayer({
+        //   id: "hillshade-layer",
+        //   type: "hillshade",
+        //   source: "terrainSource",
+        //   // paint: {
+        //   //   "hillshade-shadow-color": "#333333",
+        //   // },
+        //   paint: {
+        //     "raster-contrast": 0,
+        //     "raster-fade-duration": 300,
+        //     "raster-opacity": {
+        //       base: 0.5,
+        //       stops: [
+        //         [3, 0],
+        //         [5, 0.15],
+        //         [12, 0.15],
+        //       ],
+        //     },
+        //   },
+        // });
+        // const demSource = new mlcontour.DemSource({
+        //   url: TERRARIUM_URL,
+        //   encoding: "terrarium",
+        //   maxzoom: 13,
+        //   worker: true,
+        //   cacheSize: 100,
+        //   timeoutMs: 10000,
+        // });
+        // demSource.setupMaplibre(maplibregl);
+        // map.addSource("contour-source", {
+        //   type: "vector",
+        //   minzoom: 10,
+        //   tiles: [
+        //     demSource.contourProtocolUrl({
+        //       thresholds: {
+        //         0: [100, 500],
+        //         5: [50, 250],
+        //         10: [25, 100],
+        //         15: [10, 50],
+        //       },
+        //       contourLayer: "contours",
+        //       elevationKey: "ele",
+        //       levelKey: "level",
+        //       extent: 4096,
+        //       buffer: 1,
+        //     }),
+        //   ],
+        //   maxzoom: 15,
+        // });
+        // map.addLayer({
+        //   id: "contour-lines",
+        //   type: "line",
+        //   source: "contour-source",
+        //   "source-layer": "contours",
+        //   paint: {
+        //     "line-color": "rgba(0,0,0, 0.5)",
+        //     "line-width": ["match", ["get", "level"], 1, 2, 1],
+        //   },
+        // });
+        // map.addLayer({
+        //   id: "contour-labels",
+        //   type: "symbol",
+        //   source: "contour-source",
+        //   "source-layer": "contours",
+        //   filter: [">", ["get", "level"], 0],
+        //   layout: {
+        //     "symbol-placement": "line",
+        //     "text-size": 10,
+        //     "text-field": [
+        //       "concat",
+        //       ["number-format", ["get", "ele"], {}],
+        //       "m",
+        //     ],
+        //     "text-font": ["Noto Sans Bold"],
+        //   },
+        //   paint: {
+        //     "text-halo-color": "white",
+        //     "text-halo-width": 1,
+        //   },
+        // });
       });
-
-      map.addLayer({
-        id: 'contour-labels',
-        type: 'symbol',
-        source: 'contour-source',
-        'source-layer': 'contours',
-        filter: ['>', ['get', 'level'], 0],
-        layout: {
-          'symbol-placement': 'line',
-          'text-size': 10,
-          'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
-          'text-font': ['Noto Sans Bold'],
-        },
-        paint: {
-          'text-halo-color': 'white',
-          'text-halo-width': 1,
-        },
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
