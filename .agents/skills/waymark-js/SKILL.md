@@ -8,7 +8,6 @@ description: Waymark JS reference. Use when working on source, docs, tests, or A
 Waymark JS is a small JavaScript map library built on [MapLibre GL](https://maplibre.org/). It exposes a simple `createInstance(...)` API, forwards map configuration through `config.map.options`, and gives direct access to the underlying MapLibre instance.
 
 **Key facts:**
-
 - Entry point: `import { createInstance } from './dist/waymark.js'`
 - Source: `src/` — built with Vite into `dist/`
 - Tests: `npm test` and `npm run test:browser` (workflow in `docs/2.development.md`)
@@ -610,6 +609,7 @@ GeoJSON source/layer IDs are instance-scoped to avoid collisions:
 
 For the full data contract (validation, serialisation, runtime mounting, and dev example usage), see [`docs/6.data.md`](6.data.md).
 
+
 ---
 
 # Development
@@ -864,6 +864,7 @@ Sync checklist:
 3. Run `npm run docs:sync`, `npm test`, and `npm run test:browser`.
 4. Ensure old filenames/headings are removed.
 
+
 ---
 
 # Instances
@@ -951,6 +952,7 @@ For module-level behaviour, update these docs alongside runtime changes:
 - `docs/4.map.md`
 - `docs/5.ui.md`
 
+
 ---
 
 # Map
@@ -1016,6 +1018,7 @@ For public config validation/defaults and event payload contracts, treat [`docs/
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 - [`docs/1.api.md#initial-geojson-overlay`](1.api.md#initial-geojson-overlay)
 - [`docs/6.data.md`](6.data.md)
+
 
 ---
 
@@ -1197,6 +1200,7 @@ Debug output demonstrates the same pattern:
 - [`docs/1.api.md#instance-event-api`](1.api.md#instance-event-api)
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 
+
 ---
 
 # Data
@@ -1319,6 +1323,7 @@ Implementation references:
 - [`src/runtime/createInstanceCore.js`](../src/runtime/createInstanceCore.js)
 - [`dev/composables/useWaymarkInstance.js`](../dev/composables/useWaymarkInstance.js)
 
+
 ---
 
 # Documentation Index
@@ -1342,3 +1347,4 @@ These docs split consumer API from internals:
 - `docs/3.instances.md` defines runtime orchestration boundaries.
 - `docs/4.map.md` and `docs/5.ui.md` document module-level internals.
 - `docs/6.data.md` is the canonical data/GeoJSON reference used by API, map, and dev docs.
+
