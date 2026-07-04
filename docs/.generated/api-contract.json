@@ -1,8 +1,6 @@
 {
   "signature": "createInstance(instanceDocument?)",
   "defaults": {
-    "center": [0, 0],
-    "zoom": 2,
     "attributionControl": false,
     "defaultBasemapVectorStyleURL": "https://tiles.openfreemap.org/styles/bright"
   },

@@ -170,8 +170,6 @@ Waymark resolves config with a deep merge:
 
 <!-- api-contract:defaults:start -->
 
-- `map.options.center`: `[0, 0]`
-- `map.options.zoom`: `2`
 - `map.options.attributionControl`: `false`
 - `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://tiles.openfreemap.org/styles/bright`
 <!-- api-contract:defaults:end -->

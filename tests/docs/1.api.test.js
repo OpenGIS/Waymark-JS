@@ -155,6 +155,7 @@ vi.mock("maplibre-gl", () => {
     this.getBearing = vi.fn(() => this._view.bearing);
     this.getPitch = vi.fn(() => this._view.pitch);
     this.fitBounds = vi.fn();
+    this.setProjection = vi.fn();
   });
   return {
     Map: MockMap,
@@ -596,7 +597,7 @@ describe("1. API", () => {
   });
 
   describe("Config defaults and merge behaviour", () => {
-    it("uses documented defaults for camera and attributionControl", () => {
+    it("uses documented defaults for attributionControl", () => {
       createInstance({
         config: {
           id: "map",
@@ -605,8 +606,6 @@ describe("1. API", () => {
 
       expect(Map).toHaveBeenCalledWith(
         expect.objectContaining({
-          center: defaultConfig.map.options.center,
-          zoom: defaultConfig.map.options.zoom,
           attributionControl: defaultConfig.map.options.attributionControl,
         }),
       );
@@ -615,10 +614,6 @@ describe("1. API", () => {
     it("resolves defaults from canonical config defaults", () => {
       const resolved = resolveConfig({});
 
-      expect(resolved.map.options.center).toEqual(
-        defaultConfig.map.options.center,
-      );
-      expect(resolved.map.options.zoom).toBe(defaultConfig.map.options.zoom);
       expect(resolved.map.options.attributionControl).toBe(
         defaultConfig.map.options.attributionControl,
       );
@@ -681,7 +676,6 @@ describe("1. API", () => {
         },
       });
 
-      expect(resolved.map.options.zoom).toBe(2);
       expect(resolved.map.options.camera.padding.top).toBe(24);
     });
 

@@ -35,8 +35,6 @@ function renderList(items) {
 const expectedBlocks = {
   signature: `\`${contract.signature}\``,
   defaults: [
-    `- \`map.options.center\`: \`[${contract.defaults.center.join(", ")}]\``,
-    `- \`map.options.zoom\`: \`${contract.defaults.zoom}\``,
     `- \`map.options.attributionControl\`: \`${contract.defaults.attributionControl}\``,
     `- \`map.basemaps.vector[0].styleURL\` (resolved as config baseline only when no basemap entries exist): \`${contract.defaults.defaultBasemapVectorStyleURL}\``,
   ].join("\n"),

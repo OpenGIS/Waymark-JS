@@ -16,9 +16,15 @@ const EMPTY_STYLE = {
 export function createMap(containerId, config) {
   const activeVectorBasemap = getActiveVectorBasemap(config.map.basemaps);
 
-  return new Map({
+  const map = new Map({
     ...config.map.options,
     style: activeVectorBasemap?.styleURL ?? EMPTY_STYLE,
     container: containerId,
   });
+
+  map.on("style.load", () => {
+    map.setProjection({ type: "globe" });
+  });
+
+  return map;
 }

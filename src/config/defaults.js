@@ -4,8 +4,6 @@
  * @type {{
  *   map: {
  *     options: {
- *       center: [number, number],
- *       zoom: number,
  *       attributionControl: boolean,
  *     },
  *     basemaps: {
@@ -20,8 +18,6 @@
 export const defaultConfig = {
   map: {
     options: {
-      center: [0, 0],
-      zoom: 2,
       attributionControl: false,
     },
     basemaps: {
@@ -43,24 +39,6 @@ export const defaultConfig = {
 export const defaultBasemapVector = {
   title: "OpenFreeMap Bright",
   styleURL: "https://tiles.openfreemap.org/styles/bright",
-};
-
-/**
- * @type {{
- *   center: [number, number],
- *   zoom: number,
- *   bearing: number,
- *   pitch: number,
- * }}
- */
-export const defaultCameraOptions = {
-  center: [
-    defaultConfig.map.options.center[0],
-    defaultConfig.map.options.center[1],
-  ],
-  zoom: defaultConfig.map.options.zoom,
-  bearing: 0,
-  pitch: 0,
 };
 
 /**

@@ -175,9 +175,7 @@ test.describe("1. API", () => {
   });
 
   test.describe("Config defaults and merge behaviour", () => {
-    test("applies defaults and preserves unspecified values", async ({
-      page,
-    }) => {
+    test("does not inject camera defaults into config", async ({ page }) => {
       const result = await page.evaluate(() => {
         const instance = window.waymarkFixture.createInstance({
           config: {
@@ -195,13 +193,19 @@ test.describe("1. API", () => {
         });
 
         return {
-          zoom: instance.toJSON().config.map.options.zoom,
-          center: instance.toJSON().config.map.options.center,
+          hasCenter: Object.hasOwn(
+            instance.toJSON().config.map.options,
+            "center",
+          ),
+          hasZoom: Object.hasOwn(instance.toJSON().config.map.options, "zoom"),
+          attributionControl:
+            instance.toJSON().config.map.options.attributionControl,
         };
       });
 
-      expect(result.zoom).toBe(2);
-      expect(result.center).toEqual([0, 0]);
+      expect(result.hasCenter).toBe(false);
+      expect(result.hasZoom).toBe(false);
+      expect(result.attributionControl).toBe(false);
     });
 
     test("injects OpenFreeMap default only when no basemaps are provided", async ({

@@ -1,5 +1,4 @@
 import { resolveConfig } from "../config/resolveConfig.js";
-import { defaultCameraOptions } from "../config/defaults.js";
 import { createGeoJSONModule } from "../geojson/createGeoJSONModule.js";
 import { createMap } from "../map/createMap.js";
 import { createRasterBasemapModule } from "../map/createRasterBasemapModule.js";
@@ -721,16 +720,27 @@ function createMapBasemapStateDelta(core, runtimeStateSnapshot) {
 
 /**
  * @param {WaymarkResolvedConfig} resolvedConfig
+ * @param {WaymarkMapCameraOptions} initialCameraState
  */
-function createBaselineMapOptions(resolvedConfig) {
+function createBaselineMapOptions(resolvedConfig, initialCameraState) {
   const overrides = toMapCameraOverrides(resolvedConfig.map.options);
 
   return {
-    ...defaultCameraOptions,
-    ...overrides,
     center: Array.isArray(overrides.center)
       ? [overrides.center[0], overrides.center[1]]
-      : cloneCenter(defaultCameraOptions.center),
+      : cloneCenter(initialCameraState.center),
+    zoom:
+      typeof overrides.zoom === "number"
+        ? overrides.zoom
+        : initialCameraState.zoom,
+    bearing:
+      typeof overrides.bearing === "number"
+        ? overrides.bearing
+        : initialCameraState.bearing,
+    pitch:
+      typeof overrides.pitch === "number"
+        ? overrides.pitch
+        : initialCameraState.pitch,
   };
 }
 
@@ -858,11 +868,11 @@ export function createInstanceCore(instanceDocument) {
   const { id: _containerIdFromConfig, ...configOverrides } =
     instanceDocument.config;
   const resolvedConfig = resolveConfig(configOverrides);
-  const baselineMapOptions = createBaselineMapOptions(resolvedConfig);
   const initialMapOptions = {
     ...resolvedConfig.map.options,
     ...toMapCameraOverrides(instanceDocument.state.map?.options),
   };
+
   const initialBasemapConfig = createInitialBasemapConfig(
     resolvedConfig,
     instanceDocument,
@@ -912,6 +922,10 @@ export function createInstanceCore(instanceDocument) {
     },
   );
   const initialMapCameraState = readMapCameraState(map);
+  const baselineMapOptions = createBaselineMapOptions(
+    resolvedConfig,
+    initialMapCameraState,
+  );
   const runtimeState = createInstanceState({
     id: containerId,
     events,
