@@ -15,6 +15,7 @@ import { deleteCoreById, getCoreById, setCoreById } from "./runtimeRegistry.js";
 import {
   createInstanceEvents,
   forwardMapEventsToInstanceContainer,
+  WAYMARK_ALL_EVENTS,
   WAYMARK_INSTANCE_CREATED_EVENT,
   WAYMARK_INSTANCE_DESTROYED_EVENT,
   WAYMARK_INSTANCE_RECREATED_EVENT,
@@ -73,6 +74,7 @@ import {
  * @property {() => WaymarkInstanceDocument} toJSON
  * @property {{ addLayer: (layer: { type?: 'geojson', data: object }, options?: { fitBounds?: boolean }) => void }} data
  * @property {{ setMode: (mode: 'view' | 'debug') => void }} ui
+ * @property {{ setEnabled: (enabled: boolean) => void }} debug
  * @property {() => void} destroy
  * @property {(type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void} on
  * @property {(type: string, handler: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void} off
@@ -85,11 +87,11 @@ import {
  * @property {WaymarkMap} map
  * @property {WaymarkResolvedConfig} config
  * @property {ReturnType<typeof createInstanceState>} runtimeState
- * @property {{ map: { options: WaymarkMapCameraOptions, basemaps: { vector: import('../document/instanceDocument.js').WaymarkVectorBasemap[], raster: import('../document/instanceDocument.js').WaymarkRasterBasemap[] } }, ui: { mode: 'view' | 'debug' } }} baseline
+ * @property {{ map: { options: WaymarkMapCameraOptions, basemaps: { vector: import('../document/instanceDocument.js').WaymarkVectorBasemap[], raster: import('../document/instanceDocument.js').WaymarkRasterBasemap[] } }, ui: { mode: 'view' | 'debug' }, debug: boolean }} baseline
  * @property {WaymarkInstancePublicApi} publicApi
  * @property {{ container: HTMLElement, emit: (type: string, detail: import('./createInstanceEvents.js').WaymarkInstanceLifecycleEventDetail | import('./createInstanceEvents.js').WaymarkInstanceMapEventDetail | import('./createInstanceEvents.js').WaymarkInstanceModuleEventDetail | import('./createInstanceEvents.js').WaymarkBasemapsChangedEventDetail | import('./createInstanceEvents.js').WaymarkStateChangedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerAddedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerMountedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerErrorEventDetail) => void, on: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void, off: (type: string, handler: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void, once: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void }} events
  * @property {{ toJSON: () => WaymarkInstanceDocument }} instanceDocument
- * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }, options?: { fitBounds?: boolean }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void } }} modules
+ * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }, options?: { fitBounds?: boolean }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, debug: { destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void } }} modules
  * @property {{ basemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, setActiveVectorBasemap: (basemapId: string) => void }, ui: { toggleDebugOutputPanel: () => void, toggleBasemapsPanel: () => void } }} commands
  * @property {{ phase: 'ready' | 'destroyed', destroy: () => void }} lifecycle
  */
@@ -765,6 +767,7 @@ function destroyCore(core) {
 
   core.modules.geoJSON.destroy();
   core.modules.rasterBasemaps.destroy();
+  core.modules.debug.destroy();
   core.modules.mapEvents.destroy();
   core.modules.stateSync.destroy();
   core.modules.basemapStateSync.destroy();
@@ -777,6 +780,61 @@ function destroyCore(core) {
 
   core.map.remove();
   deleteCoreById(core.id);
+}
+
+/**
+ * @param {WaymarkInstanceCore} core
+ * @param {boolean} initialEnabled
+ */
+function createDebugModule(core, initialEnabled) {
+  /** @type {Array<{ eventType: string, handler: (event: CustomEvent) => void }>} */
+  const handlers = [];
+
+  function enable() {
+    if (handlers.length > 0) {
+      return;
+    }
+
+    for (const eventType of WAYMARK_ALL_EVENTS) {
+      const handler = (/** @type {CustomEvent} */ event) => {
+        console.log(`[waymark:debug] ${core.id} ${event.type}`);
+      };
+
+      core.events.on(eventType, handler);
+      handlers.push({ eventType, handler });
+    }
+  }
+
+  function disable() {
+    for (const { eventType, handler } of handlers) {
+      core.events.off(eventType, handler);
+    }
+
+    handlers.length = 0;
+  }
+
+  if (initialEnabled) {
+    enable();
+  }
+
+  const unsubscribe = core.runtimeState.subscribe((detail) => {
+    if (detail.scope !== "debug") {
+      return;
+    }
+
+    if (detail.next) {
+      enable();
+    } else {
+      disable();
+    }
+  });
+
+  return {
+    destroy() {
+      disable();
+      unsubscribe();
+    },
+  };
 }
 
 /**
@@ -816,6 +874,7 @@ export function createInstanceCore(instanceDocument) {
   const initialMode = normaliseMode(
     instanceDocument.state.ui?.mode ?? resolvedConfig.ui.mode,
   );
+  const initialDebug = instanceDocument.state.debug ?? resolvedConfig.debug;
 
   const events = createInstanceEvents(containerId);
   const map = createMap(containerId, {
@@ -874,6 +933,7 @@ export function createInstanceCore(instanceDocument) {
               }
             : null,
       },
+      debug: initialDebug,
     },
   });
   const appShell = createAppShell(containerId, {
@@ -911,6 +971,7 @@ export function createInstanceCore(instanceDocument) {
       ui: {
         mode: resolvedConfig.ui.mode,
       },
+      debug: resolvedConfig.debug,
     },
     publicApi: null,
     events,
@@ -919,6 +980,9 @@ export function createInstanceCore(instanceDocument) {
       appShell,
       geoJSON: geoJSONModule,
       rasterBasemaps: rasterBasemapModule,
+      debug: {
+        destroy() {},
+      },
       mapEvents: {
         destroy() {},
       },
@@ -954,6 +1018,7 @@ export function createInstanceCore(instanceDocument) {
     core,
     map: core.map,
   });
+  core.modules.debug = createDebugModule(core, initialDebug);
   core.modules.mapEvents = forwardMapEventsToInstanceContainer({
     id: containerId,
     map: core.map,
@@ -1029,6 +1094,7 @@ export function createInstanceCore(instanceDocument) {
           ui: {
             mode: core.baseline.ui.mode,
           },
+          debug: core.baseline.debug,
         },
         state: {
           ...(() => {
@@ -1048,6 +1114,11 @@ export function createInstanceCore(instanceDocument) {
                 ui: {
                   mode: runtimeStateSnapshot.ui.mode,
                 },
+              }
+            : {}),
+          ...(runtimeStateSnapshot.debug !== core.baseline.debug
+            ? {
+                debug: runtimeStateSnapshot.debug,
               }
             : {}),
         },
@@ -1073,6 +1144,15 @@ export function createInstanceCore(instanceDocument) {
     },
     ui: {
       setMode: (mode) => setCoreMode(core, mode, "public:ui.setMode"),
+    },
+    debug: {
+      setEnabled: (enabled) => {
+        core.runtimeState.dispatch(
+          "debug.set",
+          { enabled },
+          "public:debug.setEnabled",
+        );
+      },
     },
     destroy: () => core.lifecycle.destroy(),
     on: (type, handler, options) => {

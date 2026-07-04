@@ -487,4 +487,59 @@ test.describe("2. Development smoke", () => {
         }),
       );
   });
+
+  test("debug checkboxes toggle console logging with [waymark:debug] prefix", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    // Checkboxes exist for both instances
+    await expect(page.locator("#map-debug")).toBeVisible();
+    await expect(page.locator("#map-two-debug")).toBeVisible();
+
+    // Both start unchecked (debug disabled by default)
+    await expect(page.locator("#map-debug")).not.toBeChecked();
+    await expect(page.locator("#map-two-debug")).not.toBeChecked();
+
+    // Collect console messages
+    const debugMessages = [];
+
+    page.on("console", (msg) => {
+      if (msg.text().includes("[waymark:debug]")) {
+        debugMessages.push(msg.text());
+      }
+    });
+
+    // Enable debug on #map
+    await page.locator("#map-debug").check();
+    await expect(page.locator("#map-debug")).toBeChecked();
+
+    // Trigger an event by clicking the basemaps toggle
+    await page.locator('#map [data-waymark-control="basemaps-toggle"]').click();
+
+    // Wait for console messages to propagate
+    await expect.poll(() => debugMessages.length).toBeGreaterThanOrEqual(1);
+
+    // All messages should reference the correct instance ID
+    for (const msg of debugMessages) {
+      expect(msg).toMatch(/^\[waymark:debug\] map /);
+    }
+
+    // Enable debug on #map-two and verify it also logs
+    await page.locator("#map-two-debug").check();
+    await expect(page.locator("#map-two-debug")).toBeChecked();
+
+    const mapTwoCountBefore = debugMessages.filter((m) =>
+      m.includes("map-two"),
+    ).length;
+
+    // Click basemaps toggle on #map-two to trigger events
+    await page
+      .locator('#map-two [data-waymark-control="basemaps-toggle"]')
+      .click();
+
+    await expect
+      .poll(() => debugMessages.filter((m) => m.includes("map-two")).length)
+      .toBeGreaterThan(mapTwoCountBefore);
+  });
 });

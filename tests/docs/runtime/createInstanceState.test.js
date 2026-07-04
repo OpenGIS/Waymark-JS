@@ -42,6 +42,7 @@ describe("Runtime state module", () => {
         activePanel: null,
         panelContext: null,
       },
+      debug: false,
     });
   });
 

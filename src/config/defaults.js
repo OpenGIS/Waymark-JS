@@ -14,6 +14,7 @@
  *     },
  *   },
  *   ui: { mode: 'view' },
+ *   debug: false,
  * }}
  */
 export const defaultConfig = {
@@ -31,6 +32,7 @@ export const defaultConfig = {
   ui: {
     mode: "view",
   },
+  debug: false,
 };
 
 /**

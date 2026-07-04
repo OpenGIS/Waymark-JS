@@ -5,12 +5,14 @@ import { deepMerge } from "../utils/deepMerge.js";
  * @typedef {object} WaymarkConfig
  * @property {{ options?: object, basemaps?: { vector?: object[], raster?: object[] } }} [map]
  * @property {{ mode?: unknown }} [ui]
+ * @property {unknown} [debug]
  */
 
 /**
  * @typedef {object} WaymarkResolvedConfig
  * @property {{ options: object, basemaps: { vector: object[], raster: object[] } }} map
  * @property {{ mode: 'view' | 'debug' }} ui
+ * @property {boolean} debug
  */
 
 /**
@@ -18,6 +20,14 @@ import { deepMerge } from "../utils/deepMerge.js";
  */
 function normaliseUIMode(mode) {
   return mode === "debug" || mode === "view" ? mode : "view";
+}
+
+/**
+ * @param {unknown} debug
+ * @returns {boolean}
+ */
+function normaliseDebug(debug) {
+  return debug === true;
 }
 
 /**
@@ -52,5 +62,6 @@ export function resolveConfig(config = {}) {
       ...resolvedUI,
       mode: normaliseUIMode(resolvedUI.mode),
     },
+    debug: normaliseDebug(resolved.debug),
   };
 }

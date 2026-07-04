@@ -29,6 +29,7 @@
  * @property {string} [id]
  * @property {{ options: Record<string, unknown>, basemaps?: Partial<WaymarkBasemapConfig> }} map
  * @property {{ mode: 'view' | 'debug' }} ui
+ * @property {boolean} [debug]
  */
 
 /**
@@ -54,7 +55,7 @@
 /**
  * @typedef {object} WaymarkInstanceDocument
  * @property {WaymarkInstanceDocumentConfig} config
- * @property {{ map?: WaymarkInstanceDocumentStateMap, ui?: { mode?: 'view' | 'debug' } }} state
+ * @property {{ map?: WaymarkInstanceDocumentStateMap, ui?: { mode?: 'view' | 'debug' }, debug?: boolean }} state
  * @property {{ layers: WaymarkInstanceDocumentDataLayer[] }} data
  */
 
@@ -762,6 +763,7 @@ export function normaliseInstanceDocument(instanceDocument) {
       ui: {
         mode: normaliseMode(rawConfigUI.mode),
       },
+      debug: rawConfig.debug === true,
     },
     state: {
       ...(() => {
@@ -776,6 +778,11 @@ export function normaliseInstanceDocument(instanceDocument) {
             ui: {
               mode: normaliseMode(rawStateUI.mode),
             },
+          }
+        : {}),
+      ...(rawState.debug !== undefined
+        ? {
+            debug: rawState.debug === true,
           }
         : {}),
     },
@@ -852,12 +859,20 @@ export function validateInstanceDocument(instanceDocument) {
       }
     });
 
+  const hasValidConfigDebug =
+    config.debug === undefined || typeof config.debug === "boolean";
+
+  const hasValidStateDebug =
+    state.debug === undefined || typeof state.debug === "boolean";
+
   return (
     typeof config.ui?.mode === "string" &&
     isPlainObject(config.map?.options) &&
     hasValidBasemaps &&
+    hasValidConfigDebug &&
     hasValidStateMap &&
     hasValidStateUI &&
+    hasValidStateDebug &&
     hasValidDataLayers
   );
 }

@@ -22,6 +22,7 @@ export const WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT =
   "waymark:state.map.camera.changed";
 export const WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT =
   "waymark:state.map.basemaps.changed";
+export const WAYMARK_STATE_DEBUG_CHANGED_EVENT = "waymark:state.debug.changed";
 
 export const FORWARDED_MAP_EVENTS = [
   ["load", WAYMARK_MAP_LOAD_EVENT],
@@ -30,6 +31,33 @@ export const FORWARDED_MAP_EVENTS = [
   ["rotateend", WAYMARK_MAP_ROTATEEND_EVENT],
   ["pitchend", WAYMARK_MAP_PITCHEND_EVENT],
   ["error", WAYMARK_MAP_ERROR_EVENT],
+];
+
+/**
+ * Complete list of all Waymark event types.
+ * Used by the debug module to subscribe to every event for console logging.
+ */
+export const WAYMARK_ALL_EVENTS = [
+  WAYMARK_INSTANCE_CREATED_EVENT,
+  WAYMARK_INSTANCE_RECREATED_EVENT,
+  WAYMARK_INSTANCE_DESTROYED_EVENT,
+  WAYMARK_MAP_LOAD_EVENT,
+  WAYMARK_MAP_MOVEEND_EVENT,
+  WAYMARK_MAP_ZOOMEND_EVENT,
+  WAYMARK_MAP_ROTATEEND_EVENT,
+  WAYMARK_MAP_PITCHEND_EVENT,
+  WAYMARK_MAP_ERROR_EVENT,
+  WAYMARK_DATA_LAYER_ADDED_EVENT,
+  WAYMARK_DATA_LAYER_MOUNTED_EVENT,
+  WAYMARK_DATA_LAYER_ERROR_EVENT,
+  WAYMARK_UI_MODE_CHANGED_EVENT,
+  WAYMARK_MAP_BASEMAPS_CHANGED_EVENT,
+  WAYMARK_STATE_CHANGED_EVENT,
+  WAYMARK_STATE_UI_MODE_CHANGED_EVENT,
+  WAYMARK_STATE_UI_PANEL_CHANGED_EVENT,
+  WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
+  WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT,
+  WAYMARK_STATE_DEBUG_CHANGED_EVENT,
 ];
 
 /**
@@ -133,6 +161,7 @@ export const FORWARDED_MAP_EVENTS = [
  *       activePanel: string | null,
  *       panelContext: unknown,
  *     },
+ *     debug: boolean,
  *   },
  * }} WaymarkStateChangedEventDetail
  */

@@ -1,6 +1,7 @@
 import { normaliseMode } from "../../document/instanceDocument.js";
 import {
   WAYMARK_STATE_CHANGED_EVENT,
+  WAYMARK_STATE_DEBUG_CHANGED_EVENT,
   WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT,
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
   WAYMARK_STATE_UI_MODE_CHANGED_EVENT,
@@ -30,6 +31,7 @@ import {
  *     activePanel: string | null,
  *     panelContext: unknown,
  *   },
+ *   debug: boolean,
  * }} WaymarkInstanceRuntimeState
  */
 
@@ -51,6 +53,7 @@ const DEFAULT_STATE = {
     activePanel: null,
     panelContext: null,
   },
+  debug: false,
 };
 
 /**
@@ -401,6 +404,23 @@ function resolveMutation(state, command, payload) {
               .map((vectorBasemap) => vectorBasemap.basemapId),
           },
         },
+      };
+    }
+    case "debug.set": {
+      const previous = state.debug;
+      const next = payload?.enabled === true;
+
+      if (previous === next) {
+        return null;
+      }
+
+      state.debug = next;
+
+      return {
+        scope: "debug",
+        eventType: WAYMARK_STATE_DEBUG_CHANGED_EVENT,
+        previous,
+        next,
       };
     }
     default:

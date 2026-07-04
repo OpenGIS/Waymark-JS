@@ -89,7 +89,8 @@ Canonical v1 shape:
         }>
       }
     },
-    ui?: { mode?: "view" | "debug" }
+    ui?: { mode?: "view" | "debug" },
+    debug?: boolean
   },
   state: {
     map: {
@@ -120,7 +121,8 @@ Canonical v1 shape:
     },
     ui: {
       mode?: "view" | "debug"
-    }
+    },
+    debug?: boolean
   },
   data: {
     layers: Array<{
@@ -174,6 +176,7 @@ Waymark resolves config with a deep merge:
 - `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://tiles.openfreemap.org/styles/bright`
 <!-- api-contract:defaults:end -->
 
+- `debug`: `false`
 - `ui.mode`: `"view"` (invalid values fall back to `"view"`)
 
 Accepted `ui.mode` values:
@@ -182,6 +185,24 @@ Accepted `ui.mode` values:
 - `"debug"`: renders a debug control in the shell; the control toggles debug outputs.
 
 Any other value is normalised to `"view"`.
+
+### Debug logging
+
+When `config.debug` is `true`, Waymark logs every emitted Waymark event to the browser console with a `[waymark:debug]` prefix:
+
+```js
+[waymark:debug] map waymark:map.load
+[waymark:debug] map waymark:state.changed
+```
+
+Debug can be controlled at runtime via the public API:
+
+```js
+instance.debug.setEnabled(true); // start console logging
+instance.debug.setEnabled(false); // stop console logging
+```
+
+`config.debug` is a baseline toggle. Runtime changes are serialised as `state.debug` delta when they diverge from the config baseline.
 
 ## UI shell mode rendering
 
@@ -294,6 +315,9 @@ const instance = createInstance({
   },
   ui: {
     setMode: (mode: "view" | "debug") => void
+  },
+  debug: {
+    setEnabled: (enabled: boolean) => void
   },
   destroy: () => void,
   on: (type, handler, options?) => void,
@@ -437,6 +461,7 @@ Basemaps changed payload shape (`waymark:map.basemaps.changed`):
 Canonical runtime state events:
 
 - `waymark:state.changed`
+- `waymark:state.debug.changed`
 - `waymark:state.ui.mode.changed`
 - `waymark:state.ui.panel.changed`
 - `waymark:state.map.camera.changed`
@@ -472,7 +497,8 @@ State event payload shape:
       mode: "view" | "debug",
       activePanel: string | null,
       panelContext: unknown
-    }
+    },
+    debug: boolean
   }
 }
 ```
@@ -494,7 +520,8 @@ State event payload shape:
     },
     ui: {
       mode: "view" | "debug"
-    }
+    },
+    debug: boolean
   },
   state: {
     map: {
@@ -509,7 +536,8 @@ State event payload shape:
         vector?: object[]
       }
     },
-    ui?: { mode?: "view" | "debug" }
+    ui?: { mode?: "view" | "debug" },
+    debug?: boolean
   },
   data: {
     layers: Array<{
@@ -525,6 +553,7 @@ State event payload shape:
 - `state.map.options` appears only when camera values diverge from config baseline.
 - `state.map.basemaps` appears only when basemaps are mutated at runtime.
 - `state.ui.mode` appears only when runtime mode diverges from config baseline.
+- `state.debug` appears only when runtime debug state diverges from config baseline.
 
 Camera sync observes low-frequency map end events (`load`, `moveend`, `zoomend`, `rotateend`, `pitchend`) and dispatches state commands. State events emit only when camera values change.
 

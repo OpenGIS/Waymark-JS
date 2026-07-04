@@ -23,12 +23,14 @@ const selectId = computed(() => {
 });
 const labelText = computed(() => `#${mapId.value} ui.mode`);
 const uploadInputId = computed(() => `${mapId.value}-geojson-upload`);
+const debugCheckboxId = computed(() => `${mapId.value}-debug`);
 
 const fileInput = ref(null);
 
-const { instance, uiMode, setMode } = useWaymarkInstance({
-  instanceDocument: props.instanceDocument,
-});
+const { instance, uiMode, setMode, debugEnabled, setDebug } =
+  useWaymarkInstance({
+    instanceDocument: props.instanceDocument,
+  });
 
 function triggerUpload() {
   fileInput.value?.click();
@@ -80,6 +82,15 @@ function handleFileUpload(event) {
         <option value="view">view</option>
         <option value="debug">debug</option>
       </select>
+      <label :for="debugCheckboxId">
+        <input
+          :id="debugCheckboxId"
+          type="checkbox"
+          :checked="debugEnabled"
+          @change="setDebug($event.target.checked)"
+        />
+        debug logging
+      </label>
       <input
         :id="uploadInputId"
         ref="fileInput"
