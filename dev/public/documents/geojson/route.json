@@ -92,60 +92,6 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [-127.49117, 50.703954],
-          [-127.491177, 50.703963],
-          [-127.491188, 50.70396]
-        ]
-      }
-    },
-    {
-      "geometry": { "type": "Point", "coordinates": [-128.013468, 50.656086] },
-      "type": "Feature",
-      "properties": { "type": "photo" }
-    },
-    {
-      "geometry": { "type": "Point", "coordinates": [-128.425455, 50.782008] },
-      "type": "Feature",
-      "properties": {
-        "title": "Cape Scott Lighthouse",
-        "type": "photo",
-        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
-        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
-        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg"
-      }
-    },
-    {
-      "geometry": { "type": "Point", "coordinates": [-128.36134, 50.783908] },
-      "type": "Feature",
-      "properties": {
-        "type": "photo",
-        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg",
-        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg",
-        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg"
-      }
-    },
-    {
-      "geometry": { "type": "Point", "coordinates": [-127.844853, 50.702166] },
-      "type": "Feature",
-      "properties": {
-        "title": "Nahwitti Lake",
-        "type": "photo",
-        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg",
-        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg",
-        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg"
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "type": "green",
-        "title": "Port Hardy to Cape Scott",
-        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_15b3.jpg",
-        "direction": "default"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
           [-127.490044, 50.722499, 6.1692],
           [-127.48996, 50.722377, 7.1844],
           [-127.490616, 50.722354, 9.3592],
@@ -940,7 +886,58 @@
           [-127.951752, 50.686218, 286.983958],
           [-127.951829, 50.686107, 287.5676],
           [-127.951844, 50.686092, 288.1616],
-          [-127.951844, 50.685955, 287.1752],
+          [-127.951844, 50.685955, 287.1752]
+        ]
+      }
+    },
+    {
+      "geometry": { "type": "Point", "coordinates": [-128.013468, 50.656086] },
+      "type": "Feature",
+      "properties": { "type": "photo" }
+    },
+    {
+      "geometry": { "type": "Point", "coordinates": [-128.425455, 50.782008] },
+      "type": "Feature",
+      "properties": {
+        "title": "Cape Scott Lighthouse",
+        "type": "photo",
+        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
+        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg",
+        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/BF4ECCB4-10AD-4B31-80B2-FED86215FB85_1_105_c.jpeg"
+      }
+    },
+    {
+      "geometry": { "type": "Point", "coordinates": [-128.36134, 50.783908] },
+      "type": "Feature",
+      "properties": {
+        "type": "photo",
+        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg",
+        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg",
+        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/A2301CA1-5C06-4FB3-A85D-304682727C30_1_105_c.jpeg"
+      }
+    },
+    {
+      "geometry": { "type": "Point", "coordinates": [-127.844853, 50.702166] },
+      "type": "Feature",
+      "properties": {
+        "title": "Nahwitti Lake",
+        "type": "photo",
+        "image_thumbnail_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg",
+        "image_medium_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg",
+        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_16e9.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "green",
+        "title": "Port Hardy to Cape Scott",
+        "image_large_url": "https://www.ogis.org/waymark-js/assets/img/UNADJUSTEDNONRAW_thumb_15b3.jpg",
+        "direction": "default"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
           [-127.951714, 50.685741, 279.712877],
           [-127.951676, 50.685554, 277.323671],
           [-127.95176, 50.68534, 277.243584],
