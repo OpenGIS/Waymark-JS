@@ -2,7 +2,8 @@
 import { ref, onMounted } from "vue";
 import WaymarkDevPanel from "./components/WaymarkDevPanel.vue";
 
-const instanceDocuments = ref([]);
+const routeLayers = ref([]);
+const stonehengeDoc = ref(null);
 
 onMounted(async () => {
   const [markersResponse, track1Response, track2Response, stonehengeResponse] =
@@ -16,31 +17,25 @@ onMounted(async () => {
   const markersData = await markersResponse.json();
   const track1Data = await track1Response.json();
   const track2Data = await track2Response.json();
-  const stonehengeDoc = await stonehengeResponse.json();
+  const stonehengeData = await stonehengeResponse.json();
 
-  // First instance: empty config (debug enabled) + 3 GeoJSON data layers
-  const routeInstance = {
-    config: { id: "map", debug: true },
-    data: {
-      layers: [
-        { data: markersData },
-        { data: track1Data },
-        { data: track2Data },
-      ],
-    },
-  };
-
-  instanceDocuments.value = [routeInstance, stonehengeDoc];
+  // First instance: boot with minimal debug config, add layers at runtime
+  routeLayers.value = [
+    { data: track1Data },
+    { data: track2Data },
+    { data: markersData },
+  ];
+  stonehengeDoc.value = stonehengeData;
 });
 </script>
 
 <template>
   <div class="dev-app">
     <WaymarkDevPanel
-      v-for="doc in instanceDocuments"
-      :key="doc.config.id"
-      :instance-document="doc"
+      :instance-document="{ config: { id: 'map', debug: true } }"
+      :initial-layers="routeLayers"
     />
+    <WaymarkDevPanel v-if="stonehengeDoc" :instance-document="stonehengeDoc" />
   </div>
 </template>
 

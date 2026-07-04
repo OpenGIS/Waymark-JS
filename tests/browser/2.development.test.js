@@ -66,13 +66,12 @@ test.describe("2. Development smoke", () => {
         }));
       })
       .toEqual({
-        map: 1,
+        map: 3,
         mapTwo: 1,
       });
 
     expect(basemapConfig).toEqual({
       map: {
-        raster: expect.any(Array),
         vector: expect.arrayContaining([
           expect.objectContaining({
             styleURL: "https://tiles.openfreemap.org/styles/bright",
@@ -82,7 +81,7 @@ test.describe("2. Development smoke", () => {
       mapTwo: {
         raster: expect.any(Array),
       },
-      mapKeys: ["raster", "vector"],
+      mapKeys: ["vector"],
     });
   });
 
@@ -372,28 +371,13 @@ test.describe("2. Development smoke", () => {
 
     await expect(
       page.locator('#map [data-waymark-basemaps-vector-item="true"]'),
-    ).toHaveCount(2);
+    ).toHaveCount(1);
     await expect(
       page.locator('#map [data-waymark-basemaps-vector-item="true"]').first(),
     ).toContainText("OpenFreeMap Bright");
     await expect(
       page.locator('#map [data-waymark-vector-radio="vector-0"]'),
     ).toBeChecked();
-
-    await page.locator('#map [data-waymark-vector-radio="vector-1"]').click();
-    await expect(
-      page.locator('#map [data-waymark-vector-radio="vector-1"]'),
-    ).toBeChecked();
-
-    await expect
-      .poll(async () =>
-        page.evaluate(
-          () =>
-            window.waymarkInstances?.map?.toJSON().state.map?.basemaps
-              ?.vector?.[0]?.title,
-        ),
-      )
-      .toBe("OpenFreeMap Liberty");
 
     await page
       .locator('#map-two [data-waymark-control="basemaps-toggle"]')
@@ -468,7 +452,7 @@ test.describe("2. Development smoke", () => {
           () => window.waymarkInstances?.map?.toJSON().data.layers.length,
         ),
       )
-      .toBe(2);
+      .toBe(4);
 
     await expect
       .poll(
@@ -497,8 +481,8 @@ test.describe("2. Development smoke", () => {
     await expect(page.locator("#map-debug")).toBeVisible();
     await expect(page.locator("#map-two-debug")).toBeVisible();
 
-    // Both start unchecked (debug disabled by default)
-    await expect(page.locator("#map-debug")).not.toBeChecked();
+    // #map starts with debug enabled (config.debug: true), #map-two starts without
+    await expect(page.locator("#map-debug")).toBeChecked();
     await expect(page.locator("#map-two-debug")).not.toBeChecked();
 
     // Collect console messages

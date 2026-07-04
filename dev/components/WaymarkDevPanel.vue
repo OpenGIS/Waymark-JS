@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useWaymarkInstance } from "../composables/useWaymarkInstance.js";
 
 const props = defineProps({
@@ -7,7 +7,35 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  initialLayers: {
+    type: Array,
+    default: () => [],
+  },
 });
+
+const { instance, uiMode, setMode, debugEnabled, setDebug } =
+  useWaymarkInstance({
+    instanceDocument: props.instanceDocument,
+  });
+
+// Add initial layers via runtime API after instance is created
+// Uses addLayer() so layers are mounted individually with fitBounds support
+let layersAdded = false;
+
+watch(
+  () => [instance.value, props.initialLayers],
+  ([inst, layers]) => {
+    if (inst && layers.length > 0 && !layersAdded) {
+      layersAdded = true;
+
+      layers.forEach((layer, index) => {
+        const isLast = index === layers.length - 1;
+        inst.data.addLayer(layer, { fitBounds: isLast });
+      });
+    }
+  },
+  { immediate: true },
+);
 
 const mapId = computed(() => props.instanceDocument.config.id);
 const selectId = computed(() => {
@@ -26,11 +54,6 @@ const uploadInputId = computed(() => `${mapId.value}-geojson-upload`);
 const debugCheckboxId = computed(() => `${mapId.value}-debug`);
 
 const fileInput = ref(null);
-
-const { instance, uiMode, setMode, debugEnabled, setDebug } =
-  useWaymarkInstance({
-    instanceDocument: props.instanceDocument,
-  });
 
 function triggerUpload() {
   fileInput.value?.click();
