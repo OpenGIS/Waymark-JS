@@ -143,6 +143,10 @@ vi.mock("maplibre-gl", () => {
     });
     this.loaded = vi.fn(() => this._loaded);
     this.getStyle = vi.fn(() => this._style);
+    this.getSource = vi.fn((id) => this._style.sources[id]);
+    this.getLayer = vi.fn((id) =>
+      this._style.layers.find((layer) => layer.id === id),
+    );
     this.getCenter = vi.fn(() => ({
       lng: this._view.center[0],
       lat: this._view.center[1],
@@ -175,6 +179,7 @@ import {
 import {
   WAYMARK_DATA_LAYER_ADDED_EVENT,
   WAYMARK_DATA_LAYER_ERROR_EVENT,
+  WAYMARK_DATA_LAYER_MOUNTED_EVENT,
   WAYMARK_MAP_BASEMAPS_CHANGED_EVENT,
   WAYMARK_MAP_ERROR_EVENT,
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
@@ -3610,6 +3615,211 @@ describe("1. API", () => {
       expect(map.fitBounds).toHaveBeenCalledWith(expect.any(LngLatBounds), {
         padding: 20,
       });
+    });
+
+    it("mounts all layers when multiple are added synchronously on a loaded map", () => {
+      const style = {
+        version: 8,
+        sources: {},
+        layers: [
+          { id: "background", type: "background" },
+          { id: "poi-label", type: "symbol" },
+        ],
+      };
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: { basemaps: { vector: [{ styleURL: style }] } },
+        },
+      });
+      const map = getLastMapInstance();
+      map._loaded = true;
+
+      const mountedEvents = [];
+      instance.on(WAYMARK_DATA_LAYER_MOUNTED_EVENT, (event) => {
+        mountedEvents.push(event.detail);
+      });
+
+      const layer = { type: "FeatureCollection", features: [] };
+      instance.data.addLayer({ data: layer });
+      instance.data.addLayer({ data: layer });
+      instance.data.addLayer({ data: layer });
+
+      expect(mountedEvents).toHaveLength(3);
+      expect(mountedEvents[0].layerIndex).toBe(0);
+      expect(mountedEvents[1].layerIndex).toBe(1);
+      expect(mountedEvents[2].layerIndex).toBe(2);
+      expect(
+        map
+          .getStyle()
+          .layers.filter((l) => l.id.startsWith("waymark-map-geojson")),
+      ).toHaveLength(3);
+    });
+
+    it("mounts layer via deferred load handler when map is not yet loaded", () => {
+      const instance = createInstance({
+        config: { id: "map" },
+      });
+      const map = getLastMapInstance();
+
+      instance.data.addLayer({
+        data: { type: "FeatureCollection", features: [] },
+      });
+
+      const mountedEvents = [];
+      instance.on(WAYMARK_DATA_LAYER_MOUNTED_EVENT, (event) => {
+        mountedEvents.push(event.detail);
+      });
+
+      map.fire("load", { source: "test" });
+
+      expect(mountedEvents).toHaveLength(1);
+      expect(mountedEvents[0].layerIndex).toBe(0);
+    });
+
+    it("mounts subsequently added layers immediately after deferred mount", () => {
+      const instance = createInstance({
+        config: { id: "map" },
+      });
+      const map = getLastMapInstance();
+
+      instance.data.addLayer({
+        data: { type: "FeatureCollection", features: [] },
+      });
+
+      map.fire("load", { source: "test" });
+
+      const mountedEvents = [];
+      instance.on(WAYMARK_DATA_LAYER_MOUNTED_EVENT, (event) => {
+        mountedEvents.push(event.detail);
+      });
+
+      instance.data.addLayer({
+        data: { type: "FeatureCollection", features: [] },
+      });
+      instance.data.addLayer({
+        data: { type: "FeatureCollection", features: [] },
+      });
+
+      expect(mountedEvents).toHaveLength(2);
+      expect(mountedEvents[0].layerIndex).toBe(1);
+      expect(mountedEvents[1].layerIndex).toBe(2);
+    });
+
+    it("reports mounted event with correct families for multi-geometry layers on loaded map", () => {
+      const style = {
+        version: 8,
+        sources: {},
+        layers: [
+          { id: "background", type: "background" },
+          { id: "poi-label", type: "symbol" },
+        ],
+      };
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: { basemaps: { vector: [{ styleURL: style }] } },
+        },
+      });
+      const map = getLastMapInstance();
+      map._loaded = true;
+
+      const mountedEvents = [];
+      instance.on(WAYMARK_DATA_LAYER_MOUNTED_EVENT, (event) => {
+        mountedEvents.push(event.detail);
+      });
+
+      instance.data.addLayer({
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: { type: "Point", coordinates: [0, 0] },
+              properties: {},
+            },
+            {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [0, 0],
+                  [1, 1],
+                ],
+              },
+              properties: {},
+            },
+          ],
+        },
+      });
+
+      expect(mountedEvents).toHaveLength(1);
+      expect(mountedEvents[0].layerIndex).toBe(0);
+      expect(mountedEvents[0].mountedFamilies).toEqual(["point", "line"]);
+      expect(mountedEvents[0].mountedLayerIds).toEqual([
+        "waymark-map-geojson-layer-0-point",
+        "waymark-map-geojson-layer-0-line",
+      ]);
+    });
+
+    it("fits map bounds on direct mount without requiring a load event", () => {
+      const style = {
+        version: 8,
+        sources: {},
+        layers: [
+          { id: "background", type: "background" },
+          { id: "poi-label", type: "symbol" },
+        ],
+      };
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: { basemaps: { vector: [{ styleURL: style }] } },
+        },
+      });
+      const map = getLastMapInstance();
+      map._loaded = true;
+
+      instance.data.addLayer({
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [0, 0],
+                  [1, 1],
+                ],
+              },
+              properties: {},
+            },
+          ],
+        },
+      });
+
+      expect(map.fitBounds).toHaveBeenCalledTimes(1);
+      expect(map.fitBounds).toHaveBeenCalledWith(expect.any(LngLatBounds), {
+        padding: 20,
+      });
+    });
+
+    it("cleans up GeoJSON event handlers on destroy", () => {
+      const instance = createInstance({
+        config: { id: "map" },
+      });
+      const map = getLastMapInstance();
+
+      instance.data.addLayer({
+        data: { type: "FeatureCollection", features: [] },
+      });
+
+      instance.destroy();
+
+      // Verify map.off was called for both events the GeoJSON module registered on
+      expect(map.off).toHaveBeenCalledWith("load", expect.any(Function));
+      expect(map.off).toHaveBeenCalledWith("style.load", expect.any(Function));
     });
   });
 });

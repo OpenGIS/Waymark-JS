@@ -377,6 +377,7 @@ export function createGeoJSONModule(
   }));
 
   let hasMountedLayers = false;
+  let isMapLoaded = false;
   let attachedLoadHandler = null;
   let attachedStyleLoadHandler = null;
 
@@ -389,10 +390,21 @@ export function createGeoJSONModule(
       return;
     }
 
-    if (typeof map.loaded === "function" && map.loaded()) {
+    // `map.loaded()` can return false even after the `load` event has fired
+    // — adding a GeoJSON source starts async worker processing, which keeps
+    // `style.loaded()` false until the worker finishes. If we gate mounting
+    // on `map.loaded()`, subsequent addLayer calls hit a false negative and
+    // try to register a `load` handler that will never fire again.
+    //
+    // Solution: once the map has ever reported loaded (or the `load` event
+    // fires), remember that fact via `isMapLoaded` and skip the `map.loaded()`
+    // check on subsequent calls.
+    if (isMapLoaded || (typeof map.loaded === "function" && map.loaded())) {
+      isMapLoaded = true;
       mountGeoJSONLayers();
     } else if (!attachedLoadHandler) {
       attachedLoadHandler = () => {
+        isMapLoaded = true;
         mountGeoJSONLayers();
         attachedLoadHandler = null;
       };
