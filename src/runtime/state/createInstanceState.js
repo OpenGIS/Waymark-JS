@@ -6,6 +6,8 @@ import {
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
   WAYMARK_STATE_UI_MODE_CHANGED_EVENT,
   WAYMARK_STATE_UI_PANEL_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT,
 } from "../createInstanceEvents.js";
 
 /**
@@ -32,6 +34,7 @@ import {
  *     panelContext: unknown,
  *   },
  *   debug: boolean,
+ *   types: Record<string, { visible: boolean }>,
  * }} WaymarkInstanceRuntimeState
  */
 
@@ -54,6 +57,7 @@ const DEFAULT_STATE = {
     panelContext: null,
   },
   debug: false,
+  types: {},
 };
 
 /**
@@ -404,6 +408,52 @@ function resolveMutation(state, command, payload) {
               .map((vectorBasemap) => vectorBasemap.basemapId),
           },
         },
+      };
+    }
+    case "types.visibility.set": {
+      const typeKey =
+        typeof payload?.typeKey === "string" ? payload.typeKey : null;
+      const visible = payload?.visible === true;
+
+      if (!typeKey) {
+        return null;
+      }
+
+      const previous = state.types[typeKey]?.visible ?? true;
+
+      if (previous === visible) {
+        return null;
+      }
+
+      if (visible) {
+        // Only serialise non-default (hidden) state
+        delete state.types[typeKey];
+      } else {
+        state.types[typeKey] = { visible: false };
+      }
+
+      return {
+        scope: "types.visibility",
+        eventType: WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT,
+        previous,
+        next: visible,
+        meta: { typeKey },
+      };
+    }
+    case "types.visibility.reset": {
+      const previous = { ...state.types };
+
+      if (Object.keys(previous).length === 0) {
+        return null;
+      }
+
+      state.types = {};
+
+      return {
+        scope: "types.visibility",
+        eventType: WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT,
+        previous,
+        next: true,
       };
     }
     case "debug.set": {

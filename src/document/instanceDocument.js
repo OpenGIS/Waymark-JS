@@ -25,11 +25,26 @@
  */
 
 /**
+ * @typedef {object} WaymarkPaintByFamily
+ * @property {Record<string, unknown>} [point]
+ * @property {Record<string, unknown>} [line]
+ * @property {Record<string, unknown>} [polygon]
+ */
+
+/**
+ * @typedef {object} WaymarkTypeDefinition
+ * @property {string} [title]
+ * @property {WaymarkPaintByFamily} paint
+ */
+
+/**
  * @typedef {object} WaymarkInstanceDocumentConfig
  * @property {string} [id]
  * @property {{ options: Record<string, unknown>, basemaps?: Partial<WaymarkBasemapConfig> }} map
- * @property {{ mode: 'view' | 'debug' }} ui
+ * @property {({ mode: 'view' | 'debug' })} ui
  * @property {boolean} [debug]
+ * @property {WaymarkPaintByFamily} [paint]
+ * @property {Record<string, WaymarkTypeDefinition>} [types]
  */
 
 /**
@@ -50,12 +65,13 @@
  * @typedef {object} WaymarkInstanceDocumentDataLayer
  * @property {'geojson'} type
  * @property {object} data
+ * @property {WaymarkPaintByFamily} [paint]
  */
 
 /**
  * @typedef {object} WaymarkInstanceDocument
  * @property {WaymarkInstanceDocumentConfig} config
- * @property {{ map?: WaymarkInstanceDocumentStateMap, ui?: { mode?: 'view' | 'debug' }, debug?: boolean }} state
+ * @property {{ map?: WaymarkInstanceDocumentStateMap, ui?: { mode?: 'view' | 'debug' }, debug?: boolean, types?: Record<string, { visible?: boolean }> }} state
  * @property {{ layers: WaymarkInstanceDocumentDataLayer[] }} data
  */
 
@@ -63,6 +79,10 @@
  * @param {unknown} value
  * @returns {value is Record<string, unknown>}
  */
+import { isValidTypeKey } from "../utils/typeUtils.js";
+
+const PAINT_FAMILY_KEYS = new Set(["point", "line", "polygon"]);
+
 function isPlainObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return false;
@@ -696,7 +716,7 @@ export function normaliseDataLayer(layer, index = 0) {
   const path = `data.layers[${index}]`;
   expectPlainObject(layer, path);
 
-  const allowedKeys = new Set(["type", "data"]);
+  const allowedKeys = new Set(["type", "data", "paint"]);
   for (const key of Object.keys(layer)) {
     if (!allowedKeys.has(key)) {
       throw new Error(`Invalid ${path}.${key}: unexpected key for data layer.`);
@@ -718,9 +738,12 @@ export function normaliseDataLayer(layer, index = 0) {
   const serialisableData = toSerializableValue(layer.data);
   validateGeoJSONDataShape(serialisableData, `${path}.data`);
 
+  const normalisedPaint = normalisePaint(layer.paint, `${path}.paint`);
+
   return {
     type: "geojson",
     data: serialisableData,
+    ...(normalisedPaint !== undefined ? { paint: normalisedPaint } : {}),
   };
 }
 
@@ -753,6 +776,10 @@ export function normaliseInstanceDocument(instanceDocument) {
   const rawState = isPlainObject(root.state) ? root.state : {};
   const rawStateUI = isPlainObject(rawState.ui) ? rawState.ui : {};
   const rawData = isPlainObject(root.data) ? root.data : {};
+
+  const normalisedPaint = normalisePaint(rawConfig.paint, "config.paint");
+  const normalisedTypes = normaliseTypes(rawConfig.types, "config.types");
+  const normalisedStateTypes = normaliseStateTypes(rawState.types);
 
   const normalised = {
     config: {
@@ -791,6 +818,18 @@ export function normaliseInstanceDocument(instanceDocument) {
     },
   };
 
+  if (normalisedPaint !== undefined) {
+    normalised.config.paint = normalisedPaint;
+  }
+
+  if (normalisedTypes !== undefined) {
+    normalised.config.types = normalisedTypes;
+  }
+
+  if (normalisedStateTypes !== undefined) {
+    normalised.state.types = normalisedStateTypes;
+  }
+
   if (typeof rawConfig.id === "string" && rawConfig.id.length > 0) {
     normalised.config.id = rawConfig.id;
   }
@@ -800,6 +839,157 @@ export function normaliseInstanceDocument(instanceDocument) {
   }
 
   return normalised;
+}
+
+/**
+ * Normalise a paint block (per-family paint properties).
+ * Paint is an optional object with family keys (point, line, polygon),
+ * each containing MapLibre paint properties.
+ *
+ * @param {unknown} paint
+ * @param {string} path
+ * @returns {WaymarkPaintByFamily | undefined}
+ */
+function normalisePaint(paint, path) {
+  if (paint === undefined) {
+    return undefined;
+  }
+
+  expectPlainObject(paint, path);
+
+  for (const key of Object.keys(paint)) {
+    if (!PAINT_FAMILY_KEYS.has(key)) {
+      throw new Error(
+        `Invalid ${path}.${key}: expected a paint family key (point, line, or polygon).`,
+      );
+    }
+
+    if (paint[key] !== undefined && !isPlainObject(paint[key])) {
+      throw new Error(
+        `Invalid ${path}.${key}: expected a plain object with paint properties.`,
+      );
+    }
+  }
+
+  return paint;
+}
+
+/**
+ * Normalise config.types definitions.
+ *
+ * @param {unknown} types
+ * @param {string} path
+ * @returns {Record<string, WaymarkTypeDefinition> | undefined}
+ */
+function normaliseTypes(types, path) {
+  if (types === undefined) {
+    return undefined;
+  }
+
+  expectPlainObject(types, path);
+
+  /** @type {Record<string, WaymarkTypeDefinition>} */
+  const normalised = {};
+
+  for (const [typeKey, typeDef] of Object.entries(types)) {
+    const typePath = `${path}.${typeKey}`;
+
+    if (!isValidTypeKey(typeKey)) {
+      throw new Error(
+        `Invalid ${typePath}: type key "${typeKey}" is invalid. Must be 1-64 characters, lowercase a-z, digits 0-9, and hyphens only (no leading/trailing hyphens).`,
+      );
+    }
+
+    expectPlainObject(typeDef, typePath);
+
+    const allowedKeys = new Set(["title", "paint"]);
+    for (const key of Object.keys(typeDef)) {
+      if (!allowedKeys.has(key)) {
+        throw new Error(
+          `Invalid ${typePath}.${key}: unexpected key for type definition.`,
+        );
+      }
+    }
+
+    if (typeDef.title !== undefined) {
+      if (typeof typeDef.title !== "string" || typeDef.title.length === 0) {
+        throw new Error(
+          `Invalid ${typePath}.title: expected a non-empty string.`,
+        );
+      }
+    }
+
+    if (!isPlainObject(typeDef.paint)) {
+      throw new Error(
+        `Invalid ${typePath}.paint: expected a plain object with family paint keys.`,
+      );
+    }
+
+    const normalisedPaint = normalisePaint(typeDef.paint, `${typePath}.paint`);
+
+    if (!normalisedPaint) {
+      throw new Error(
+        `Invalid ${typePath}.paint: expected at least one family paint definition.`,
+      );
+    }
+
+    const hasValidFamilies = Object.keys(normalisedPaint).some((key) =>
+      PAINT_FAMILY_KEYS.has(key),
+    );
+
+    if (!hasValidFamilies) {
+      throw new Error(
+        `Invalid ${typePath}.paint: expected at least one family key (point, line, or polygon).`,
+      );
+    }
+
+    normalised[typeKey] = {
+      ...(typeDef.title !== undefined ? { title: typeDef.title } : {}),
+      paint: normalisedPaint,
+    };
+  }
+
+  return Object.keys(normalised).length > 0 ? normalised : undefined;
+}
+
+/**
+ * @param {unknown} stateTypes
+ * @returns {Record<string, { visible?: boolean }> | undefined}
+ */
+function normaliseStateTypes(stateTypes) {
+  if (stateTypes === undefined) {
+    return undefined;
+  }
+
+  if (!isPlainObject(stateTypes)) {
+    return undefined;
+  }
+
+  /** @type {Record<string, { visible?: boolean }>} */
+  const normalised = {};
+
+  for (const [typeKey, typeState] of Object.entries(stateTypes)) {
+    if (!isValidTypeKey(typeKey)) {
+      continue;
+    }
+
+    if (!isPlainObject(typeState)) {
+      continue;
+    }
+
+    const visible =
+      typeState.visible === undefined || typeState.visible === true
+        ? undefined
+        : typeState.visible === false
+          ? false
+          : undefined;
+
+    if (visible !== undefined) {
+      normalised[typeKey] = { visible };
+    }
+  }
+
+  return Object.keys(normalised).length > 0 ? normalised : undefined;
 }
 
 /**
@@ -845,10 +1035,16 @@ export function validateInstanceDocument(instanceDocument) {
         !isPlainObject(layer) ||
         !Object.hasOwn(layer, "type") ||
         !Object.hasOwn(layer, "data") ||
-        Object.keys(layer).length !== 2 ||
         layer.type !== "geojson"
       ) {
         return false;
+      }
+
+      const allowedLayerKeys = new Set(["type", "data", "paint"]);
+      for (const key of Object.keys(layer)) {
+        if (!allowedLayerKeys.has(key)) {
+          return false;
+        }
       }
 
       try {
@@ -865,14 +1061,26 @@ export function validateInstanceDocument(instanceDocument) {
   const hasValidStateDebug =
     state.debug === undefined || typeof state.debug === "boolean";
 
+  const hasValidConfigPaint =
+    config.paint === undefined || isPlainObject(config.paint);
+
+  const hasValidConfigTypes =
+    config.types === undefined || isPlainObject(config.types);
+
+  const hasValidStateTypes =
+    state.types === undefined || isPlainObject(state.types);
+
   return (
     typeof config.ui?.mode === "string" &&
     isPlainObject(config.map?.options) &&
     hasValidBasemaps &&
     hasValidConfigDebug &&
+    hasValidConfigPaint &&
+    hasValidConfigTypes &&
     hasValidStateMap &&
     hasValidStateUI &&
     hasValidStateDebug &&
+    hasValidStateTypes &&
     hasValidDataLayers
   );
 }

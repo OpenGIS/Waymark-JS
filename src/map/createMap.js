@@ -24,6 +24,25 @@ export function createMap(containerId, config) {
 
   map.on("style.load", () => {
     map.setProjection({ type: "globe" });
+
+    // map.setSky({
+    //   "atmosphere-blend": [
+    //     "interpolate",
+    //     ["linear"],
+    //     ["zoom"],
+    //     0,
+    //     1,
+    //     5,
+    //     1,
+    //     7,
+    //     0,
+    //   ],
+    // });
+
+    // map.setLight({
+    //   anchor: "map",
+    //   position: [1.5, 90, 80],
+    // });
   });
 
   return map;

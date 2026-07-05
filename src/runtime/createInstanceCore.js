@@ -9,6 +9,7 @@ import {
   normaliseMode,
   serialiseInstanceDocument,
 } from "../document/instanceDocument.js";
+import { isValidTypeKey } from "../utils/typeUtils.js";
 import { createInstanceState } from "./state/createInstanceState.js";
 import { deleteCoreById, getCoreById, setCoreById } from "./runtimeRegistry.js";
 import {
@@ -23,6 +24,8 @@ import {
   WAYMARK_DATA_LAYER_ERROR_EVENT,
   WAYMARK_MAP_BASEMAPS_CHANGED_EVENT,
   WAYMARK_UI_MODE_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT,
 } from "./createInstanceEvents.js";
 
 /**
@@ -74,6 +77,12 @@ import {
  * @property {{ addLayer: (layer: { type?: 'geojson', data: object }, options?: { fitBounds?: boolean }) => void }} data
  * @property {{ setMode: (mode: 'view' | 'debug') => void }} ui
  * @property {{ setEnabled: (enabled: boolean) => void }} debug
+ * @property {{
+ *   setVisibility: (typeKey: string, visible: boolean) => { previous: boolean, next: boolean },
+ *   getVisibility: (typeKey: string) => boolean,
+ *   getAll: () => Record<string, { title: string, visible: boolean }>,
+ *   resetVisibility: () => void
+ * }} types
  * @property {() => void} destroy
  * @property {(type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void} on
  * @property {(type: string, handler: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void} off
@@ -906,19 +915,41 @@ export function createInstanceCore(instanceDocument) {
     containerId,
     initialRuntimeBasemaps.raster,
   );
+  const configTypes = instanceDocument.config.types ?? null;
+  const configPaint = instanceDocument.config.paint ?? null;
+  const stateTypes = instanceDocument.state.types ?? null;
+
   const geoJSONModule = createGeoJSONModule(
     map,
     containerId,
     instanceDocument.data.layers,
     {
-      onLayerMounted: ({ layerIndex, mountedFamilies, mountedLayerIds }) => {
+      onLayerMounted: ({
+        layerIndex,
+        mountedFamilies,
+        mountedLayerIds,
+        mountedTypes,
+      }) => {
         events.emit(WAYMARK_DATA_LAYER_MOUNTED_EVENT, {
           id: containerId,
           layerIndex,
           mountedFamilies,
           mountedLayerIds,
+          mountedTypes,
         });
+
+        // Replay type visibility after mount (handles style reload)
+        if (mountedTypes.length > 0 && stateTypes) {
+          for (const typeKey of mountedTypes) {
+            const typeState = stateTypes[typeKey];
+            if (typeState && typeState.visible === false) {
+              geoJSONModule.setTypeVisibility(typeKey, false);
+            }
+          }
+        }
       },
+      types: configTypes ?? undefined,
+      instancePaint: configPaint ?? undefined,
     },
   );
   const initialMapCameraState = readMapCameraState(map);
@@ -948,6 +979,9 @@ export function createInstanceCore(instanceDocument) {
             : null,
       },
       debug: initialDebug,
+      ...(stateTypes && Object.keys(stateTypes).length > 0
+        ? { types: structuredClone(stateTypes) }
+        : {}),
     },
   });
   const appShell = createAppShell(containerId, {
@@ -986,6 +1020,7 @@ export function createInstanceCore(instanceDocument) {
         mode: resolvedConfig.ui.mode,
       },
       debug: resolvedConfig.debug,
+      types: configTypes ? structuredClone(configTypes) : null,
     },
     publicApi: null,
     events,
@@ -1075,6 +1110,76 @@ export function createInstanceCore(instanceDocument) {
   core.commands.ui.toggleBasemapsPanel = () => {
     toggleCoreBasemapsPanel(core);
   };
+  core.commands.types = {
+    setVisibility(typeKey, visible) {
+      if (core.lifecycle.phase === "destroyed") {
+        return null;
+      }
+
+      if (!configTypes || !configTypes[typeKey]) {
+        return null;
+      }
+
+      const before =
+        core.runtimeState.getSnapshot().types[typeKey]?.visible ?? true;
+
+      const changed = core.runtimeState.dispatch(
+        "types.visibility.set",
+        { typeKey, visible },
+        "runtime:types.setVisibility",
+      );
+
+      if (changed) {
+        // Apply to map sublayers
+        core.modules.geoJSON.setTypeVisibility(typeKey, visible);
+      }
+
+      return { previous: before, next: visible };
+    },
+    resetVisibility() {
+      if (core.lifecycle.phase === "destroyed") {
+        return;
+      }
+
+      const snapshot = core.runtimeState.getSnapshot();
+      const hiddenTypes = Object.keys(snapshot.types);
+
+      if (hiddenTypes.length === 0) {
+        return;
+      }
+
+      core.runtimeState.dispatch(
+        "types.visibility.reset",
+        {},
+        "runtime:types.resetVisibility",
+      );
+
+      // Show all hidden types
+      for (const typeKey of hiddenTypes) {
+        core.modules.geoJSON.setTypeVisibility(typeKey, true);
+      }
+    },
+  };
+
+  // Subscribe to type visibility state changes to apply to map
+  runtimeState.subscribe((detail) => {
+    if (detail.scope !== "types.visibility") {
+      return;
+    }
+
+    if (core.lifecycle.phase === "destroyed") {
+      return;
+    }
+
+    if (detail.command === "types.visibility.set") {
+      const typeKey = detail.meta?.typeKey;
+      if (typeof typeKey === "string") {
+        core.modules.geoJSON.setTypeVisibility(typeKey, detail.next);
+      }
+    } else if (detail.command === "types.visibility.reset") {
+      // All types are now visible — handled in the command above
+    }
+  });
 
   core.instanceDocument = {
     toJSON: () => {
@@ -1088,59 +1193,87 @@ export function createInstanceCore(instanceDocument) {
         runtimeStateSnapshot,
       );
 
-      return serialiseInstanceDocument({
-        config: {
-          id: core.id,
-          map: {
-            options: {
-              ...core.config.map.options,
-            },
-            ...(() => {
-              const serialisedBasemaps = serialiseBasemapsForConfig(
-                core.baseline.map.basemaps,
-              );
-
-              return Object.keys(serialisedBasemaps).length > 0
-                ? { basemaps: serialisedBasemaps }
-                : {};
-            })(),
+      const serialisedConfig = {
+        id: core.id,
+        map: {
+          options: {
+            ...core.config.map.options,
           },
-          ui: {
-            mode: core.baseline.ui.mode,
-          },
-          debug: core.baseline.debug,
-        },
-        state: {
           ...(() => {
-            const mapState = {
-              ...(Object.keys(mapOptionsDelta).length > 0
-                ? { options: mapOptionsDelta }
-                : {}),
-              ...(Object.keys(basemapDelta).length > 0
-                ? { basemaps: basemapDelta }
-                : {}),
+            const serialisedBasemaps = serialiseBasemapsForConfig(
+              core.baseline.map.basemaps,
+            );
+
+            return Object.keys(serialisedBasemaps).length > 0
+              ? { basemaps: serialisedBasemaps }
+              : {};
+          })(),
+        },
+        ui: {
+          mode: core.baseline.ui.mode,
+        },
+        debug: core.baseline.debug,
+      };
+
+      // Include config.paint if defined
+      if (core.config.paint) {
+        serialisedConfig.paint = core.config.paint;
+      }
+
+      // Include config.types if defined
+      if (core.config.types) {
+        serialisedConfig.types = core.config.types;
+      }
+
+      const serialisedState = {
+        ...(() => {
+          const mapState = {
+            ...(Object.keys(mapOptionsDelta).length > 0
+              ? { options: mapOptionsDelta }
+              : {}),
+            ...(Object.keys(basemapDelta).length > 0
+              ? { basemaps: basemapDelta }
+              : {}),
+          };
+
+          return Object.keys(mapState).length > 0 ? { map: mapState } : {};
+        })(),
+        ...(runtimeStateSnapshot.ui.mode !== core.baseline.ui.mode
+          ? {
+              ui: {
+                mode: runtimeStateSnapshot.ui.mode,
+              },
+            }
+          : {}),
+        ...(runtimeStateSnapshot.debug !== core.baseline.debug
+          ? {
+              debug: runtimeStateSnapshot.debug,
+            }
+          : {}),
+      };
+
+      // Include state.types delta (only non-visible types)
+      const typesDelta = runtimeStateSnapshot.types;
+      if (typesDelta && Object.keys(typesDelta).length > 0) {
+        serialisedState.types = structuredClone(typesDelta);
+      }
+
+      return serialiseInstanceDocument({
+        config: serialisedConfig,
+        state: serialisedState,
+        data: {
+          layers: core.modules.geoJSON.layers.map((layer) => {
+            const serialisedLayer = {
+              type: layer.type,
+              data: layer.data,
             };
 
-            return Object.keys(mapState).length > 0 ? { map: mapState } : {};
-          })(),
-          ...(runtimeStateSnapshot.ui.mode !== core.baseline.ui.mode
-            ? {
-                ui: {
-                  mode: runtimeStateSnapshot.ui.mode,
-                },
-              }
-            : {}),
-          ...(runtimeStateSnapshot.debug !== core.baseline.debug
-            ? {
-                debug: runtimeStateSnapshot.debug,
-              }
-            : {}),
-        },
-        data: {
-          layers: core.modules.geoJSON.layers.map((layer) => ({
-            type: layer.type,
-            data: layer.data,
-          })),
+            if (layer.paint) {
+              serialisedLayer.paint = structuredClone(layer.paint);
+            }
+
+            return serialisedLayer;
+          }),
         },
       });
     },
@@ -1166,6 +1299,41 @@ export function createInstanceCore(instanceDocument) {
           { enabled },
           "public:debug.setEnabled",
         );
+      },
+    },
+    types: {
+      setVisibility: (typeKey, visible) => {
+        return core.commands.types.setVisibility(typeKey, visible);
+      },
+      getVisibility: (typeKey) => {
+        if (!isValidTypeKey(typeKey)) {
+          return true;
+        }
+
+        const snapshot = core.runtimeState.getSnapshot();
+        const typeState = snapshot.types[typeKey];
+        return typeState ? typeState.visible !== false : true;
+      },
+      getAll: () => {
+        const snapshot = core.runtimeState.getSnapshot();
+        const result = {};
+
+        if (core.baseline.types) {
+          for (const [typeKey, typeDef] of Object.entries(
+            core.baseline.types,
+          )) {
+            const typeState = snapshot.types[typeKey];
+            result[typeKey] = {
+              title: typeDef.title || typeKey,
+              visible: typeState ? typeState.visible !== false : true,
+            };
+          }
+        }
+
+        return result;
+      },
+      resetVisibility: () => {
+        core.commands.types.resetVisibility();
       },
     },
     destroy: () => core.lifecycle.destroy(),

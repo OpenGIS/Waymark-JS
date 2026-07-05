@@ -12,6 +12,8 @@
  *     },
  *   },
  *   ui: { mode: 'view' },
+ *   paint: { point?: object, line?: object, polygon?: object },
+ *   types: Record<string, { title?: string, paint: object }> | undefined,
  *   debug: false,
  * }}
  */
@@ -28,6 +30,8 @@ export const defaultConfig = {
   ui: {
     mode: "view",
   },
+  paint: undefined,
+  types: undefined,
   debug: false,
 };
 

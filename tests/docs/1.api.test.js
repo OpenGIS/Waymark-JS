@@ -3026,42 +3026,42 @@ describe("1. API", () => {
       expect(layersById["waymark-map-geojson-layer-0-point"]).toEqual({
         type: "circle",
         paint: {
-          "circle-color": "#2563eb",
+          "circle-color": "#e6194b",
           "circle-radius": 5,
         },
       });
       expect(layersById["waymark-map-geojson-layer-1-point"]).toEqual({
         type: "circle",
         paint: {
-          "circle-color": "#2563eb",
+          "circle-color": "#3cb44b",
           "circle-radius": 5,
         },
       });
       expect(layersById["waymark-map-geojson-layer-2-line"]).toEqual({
         type: "line",
         paint: {
-          "line-color": "#2563eb",
+          "line-color": "#ffe119",
           "line-width": 3,
         },
       });
       expect(layersById["waymark-map-geojson-layer-3-line"]).toEqual({
         type: "line",
         paint: {
-          "line-color": "#2563eb",
+          "line-color": "#4363d8",
           "line-width": 3,
         },
       });
       expect(layersById["waymark-map-geojson-layer-4-polygon"]).toEqual({
         type: "fill",
         paint: {
-          "fill-color": "#2563eb",
+          "fill-color": "#f58231",
           "fill-opacity": 0.35,
         },
       });
       expect(layersById["waymark-map-geojson-layer-5-polygon"]).toEqual({
         type: "fill",
         paint: {
-          "fill-color": "#2563eb",
+          "fill-color": "#911eb4",
           "fill-opacity": 0.35,
         },
       });
@@ -3243,6 +3243,7 @@ describe("1. API", () => {
             "waymark-map-geojson-layer-0-point",
             "waymark-map-geojson-layer-0-line",
           ],
+          mountedTypes: [],
         },
       ]);
     });

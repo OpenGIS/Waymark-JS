@@ -90,6 +90,29 @@ Canonical v1 shape:
       }
     },
     ui?: { mode?: "view" | "debug" },
+    paint?: {
+      circle?: {
+        "circle-color"?: string,
+        "circle-radius"?: number,
+        "circle-opacity"?: number
+      },
+      line?: {
+        "line-color"?: string,
+        "line-width"?: number,
+        "line-opacity"?: number
+      },
+      fill?: {
+        "fill-color"?: string,
+        "fill-opacity"?: number
+      }
+    },
+    types?: Record<string, {
+      paint?: {
+        circle?: object,
+        line?: object,
+        fill?: object
+      }
+    }>,
     debug?: boolean
   },
   state: {
@@ -119,6 +142,7 @@ Canonical v1 shape:
         }>
       }
     },
+    types?: Record<string, { visibility?: "visible" | "none" }>,
     ui: {
       mode?: "view" | "debug"
     },
@@ -127,7 +151,12 @@ Canonical v1 shape:
   data: {
     layers: Array<{
       type?: "geojson",
-      data: object
+      data: object,
+      paint?: {
+        circle?: object,
+        line?: object,
+        fill?: object
+      }
     }>
   }
 }
@@ -174,6 +203,8 @@ Waymark resolves config with a deep merge:
 - `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://tiles.openfreemap.org/styles/bright`
 <!-- api-contract:defaults:end -->
 
+- `paint`: `{}` (no instance-wide paint overrides)
+- `types`: `{}` (no type-based rendering)
 - `debug`: `false`
 - `ui.mode`: `"view"` (invalid values fall back to `"view"`)
 
@@ -307,12 +338,18 @@ const instance = createInstance({
   toJSON: () => InstanceDocument,
   data: {
     addLayer: (
-      layer: { type?: "geojson", data: object },
+      layer: { type?: "geojson", data: object, paint?: object },
       options?: { fitBounds?: boolean }
     ) => void
   },
   ui: {
     setMode: (mode: "view" | "debug") => void
+  },
+  types: {
+    setVisibility: (typeKey: string, visibility: "visible" | "none") => void,
+    getVisibility: (typeKey: string) => "visible" | "none" | null,
+    getAll: () => Record<string, { paint?: object, visibility?: "visible" | "none" }>,
+    resetVisibility: () => void
   },
   debug: {
     setEnabled: (enabled: boolean) => void
@@ -405,7 +442,8 @@ Data-layer mounted payload shape (`waymark:data.layer.mounted`):
   id: string,
   layerIndex: number,
   mountedFamilies: Array<"point" | "line" | "polygon">,
-  mountedLayerIds: string[]
+  mountedLayerIds: string[],
+  mountedTypes: string[]
 }
 ```
 
@@ -464,6 +502,8 @@ Canonical runtime state events:
 - `waymark:state.ui.panel.changed`
 - `waymark:state.map.camera.changed`
 - `waymark:state.map.basemaps.changed`
+- `waymark:state.types.changed`
+- `waymark:state.types.visibility.changed`
 
 No-op runtime dispatches emit no state events.
 
@@ -491,6 +531,7 @@ State event payload shape:
         raster: unknown[]
       }
     },
+    types: Record<string, { visibility?: "visible" | "none" }>,
     ui: {
       mode: "view" | "debug",
       activePanel: string | null,
@@ -516,6 +557,18 @@ State event payload shape:
         vector?: object[]
       }
     },
+    paint?: {
+      circle?: object,
+      line?: object,
+      fill?: object
+    },
+    types?: Record<string, {
+      paint?: {
+        circle?: object,
+        line?: object,
+        fill?: object
+      }
+    }>,
     ui: {
       mode: "view" | "debug"
     },
@@ -534,13 +587,19 @@ State event payload shape:
         vector?: object[]
       }
     },
+    types?: Record<string, { visibility?: "visible" | "none" }>,
     ui?: { mode?: "view" | "debug" },
     debug?: boolean
   },
   data: {
     layers: Array<{
       type: "geojson",
-      data: object
+      data: object,
+      paint?: {
+        circle?: object,
+        line?: object,
+        fill?: object
+      }
     }>
   }
 }
@@ -550,6 +609,7 @@ State event payload shape:
 
 - `state.map.options` appears only when camera values diverge from config baseline.
 - `state.map.basemaps` appears only when basemaps are mutated at runtime.
+- `state.types` appears only when type visibility diverges from default (`"visible"`).
 - `state.ui.mode` appears only when runtime mode diverges from config baseline.
 - `state.debug` appears only when runtime debug state diverges from config baseline.
 
@@ -599,10 +659,121 @@ Invalid runtime additions throw after emitting `waymark:data.layer.error`.
   - `LineString` and `MultiLineString` → `line`
   - `Polygon` and `MultiPolygon` → `fill`
 - A single logical data layer may mount multiple MapLibre sublayers when the GeoJSON contains mixed families.
-- Default family paint is stable and minimal:
-  - circle: `circle-color: #2563eb`, `circle-radius: 5`
-  - line: `line-color: #2563eb`, `line-width: 3`
-  - fill: `fill-color: #2563eb`, `fill-opacity: 0.35`
+- Each data layer is assigned a colour from a 20-colour pool, cycling per-layer index. Pool colours are used as the default when no `config.paint`, `layer.paint`, or config.types-based paint is provided.
+- Each sublayer may also participate in type-based rendering when `config.types` are defined and GeoJSON features include a `waymarkType` property. See [Paint & Types](#paint--types) for the full merge semantics.
+
+### Paint & Types
+
+Waymark supports per-layer paint overrides and type-based visual rendering through `config.paint`, per-layer `paint`, and `config.types`.
+
+#### `config.paint` (instance-wide paint defaults)
+
+`config.paint` provides instance-wide paint overrides scoped by geometry family:
+
+```js
+{
+  paint: {
+    circle?: {
+      "circle-color"?: string,
+      "circle-radius"?: number,
+      "circle-opacity"?: number
+    },
+    line?: {
+      "line-color"?: string,
+      "line-width"?: number,
+      "line-opacity"?: number
+    },
+    fill?: {
+      "fill-color"?: string,
+      "fill-opacity"?: number
+    }
+  }
+}
+```
+
+Values in `config.paint` override the pool-assigned colour but sit below per-layer and per-type paint in the merge hierarchy.
+
+#### Per-layer `paint`
+
+Each data layer can supply its own family-scoped paint:
+
+```js
+{
+  data: { ... },
+  paint: {
+    circle?: { "circle-color"?: string, ... },
+    line?: { "line-color"?: string, ... },
+    fill?: { "fill-color"?: string, ... }
+  }
+}
+```
+
+Per-layer paint overrides both the pool colour and `config.paint` for that layer's sublayers.
+
+#### `config.types` (type-based rendering)
+
+`config.types` enables data-driven visual rendering keyed by feature property values. When types are defined, features with a matching `waymarkType` property get dedicated sublayers with type-specific paint:
+
+```js
+{
+  types: {
+    "<typeKey>": {
+      paint?: {
+        circle?: { "circle-color"?: string, ... },
+        line?: { "line-color"?: string, ... },
+        fill?: { "fill-color"?: string, ... }
+      }
+    }
+  }
+}
+```
+
+Type keys must be non-empty and match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`. For each defined type, Waymark creates per-family sublayers filtered by `["==", ["get", "waymarkType"], "<typeKey>"]`.
+
+When types are defined, the render plan for each data layer produces:
+
+1. An **untyped fallback** sublayer per geometry family, filtered to features without `waymarkType`, using pool colour merged with `config.paint` and `layer.paint`.
+2. A **per-type sublayer** for each type that provides a matching family-scoped paint, filtered by `waymarkType` key, using pool colour merged with `config.paint` and `type.paint`.
+
+Type paint sits at the top of the merge hierarchy — it overrides pool colour, `config.paint`, and `layers[].paint` for typed sublayers.
+
+#### Paint merge order (highest to lowest priority)
+
+1. Type paint (`config.types[typeKey].paint[family]`)
+2. Layer paint (`layer.paint[family]`)
+3. Instance paint (`config.paint[family]`)
+4. Pool colour + family defaults (radius, width, opacity)
+
+#### `instance.types` runtime API
+
+```
+instance.types.setVisibility(typeKey, "visible" | "none")
+instance.types.getVisibility(typeKey)  → "visible" | "none" | null
+instance.types.getAll()                → Record of type keys with paint and visibility
+instance.types.resetVisibility()
+```
+
+- `setVisibility` hides or shows typed sublayers by updating `waymarkType`-based filters to use `["none"]` or `["!=", ["get", "waymarkType"], typeKey]` for visibility.
+- `getVisibility` returns the current visibility state for a type key.
+- `getAll` returns the full type definition map including paint and current visibility.
+- `resetVisibility` restores all types to visible.
+
+Type visibility produces `waymark:state.types.changed` and `waymark:state.types.visibility.changed` state events.
+
+#### Paint serialisation
+
+- `config.paint` and `config.types` are serialised in `toJSON().config` as authored.
+- `state.types` appears in `toJSON() only when type visibility diverges from default (any type set to `"none"`)`. It contains only the visibility delta:
+
+```js
+{
+  types: {
+    "<typeKey>": { visibility: "none" }
+  }
+}
+```
+
+- Per-layer `paint` is serialised alongside each layer in `toJSON().data.layers[].paint`.
 
 ```js
 createInstance({
@@ -1239,11 +1410,12 @@ Debug output demonstrates the same pattern:
 Waymark uses this canonical input shape for each entry in `data.layers` and for `instance.data.addLayer(...)`:
 
 ```js
-{ type?: "geojson", data: <GeoJSON> }
+{ type?: "geojson", data: <GeoJSON>, paint?: { ... } }
 ```
 
 - `type` defaults to `"geojson"`.
 - Only `geojson` is currently supported.
+- `paint` is optional family-scoped paint overrides for this layer. See [Paint & Types](#paint--types) below.
 - Unknown keys on a layer are rejected.
 
 `data` must satisfy one of these minimal GeoJSON shapes:
@@ -1343,11 +1515,129 @@ window.waymarkInstances.map; // #map, ui.mode "view"
 window.waymarkInstances["map-two"]; // #map-two, ui.mode "debug"
 ```
 
+## Paint & Types
+
+Waymark supports per-layer paint overrides and type-based visual rendering. Each geometry family has a default colour key:
+
+- `circle` → `circle-color`
+- `line` → `line-color`
+- `fill` → `fill-color`
+
+Each data layer is assigned a colour from a 20-entry pool, cycling by layer index. These pool colours are the baseline when no other paint source provides a colour value.
+
+### Paint merge order (highest to lowest)
+
+1. Type paint (`config.types[typeKey].paint[family]`)
+2. Layer paint (`layer.paint[family]`)
+3. Instance paint (`config.paint[family]`)
+4. Pool colour + family defaults (`circle-radius: 5`, `line-width: 3`, `fill-opacity: 0.35`)
+
+### Type-based rendering
+
+When `config.types` is defined, each data layer's render plan splits into:
+
+1. **Untyped fallback** — features without `waymarkType` property, using pool + `config.paint` + `layer.paint`.
+2. **Per-type sublayers** — one per defined type with a matching family-scoped paint, filtered by `waymarkType` feature property.
+
+Type visibility can be controlled at runtime via `instance.types.setVisibility(key, "visible" | "none")`.
+
+The `waymarkType` feature property is used as a string match against `config.types` keys. Type keys must match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`.
+
+### `paint` key per data layer
+
+```js
+{
+  data: { type: "FeatureCollection", features: [...] },
+  paint: {
+    circle: { "circle-color": "#ff0000", "circle-radius": 8 },
+    line: { "line-color": "#00ff00", "line-width": 2 },
+    fill: { "fill-color": "#0000ff", "fill-opacity": 0.2 }
+  }
+}
+```
+
+`paint` is serialised alongside the layer in `toJSON().data.layers[]`.
+
+### `config.types` example
+
+```js
+createInstance({
+  config: {
+    id: "map",
+    types: {
+      road: {
+        paint: {
+          line: { "line-color": "#e6194b", "line-width": 4 },
+        },
+      },
+      park: {
+        paint: {
+          fill: { "fill-color": "#3cb44b", "fill-opacity": 0.5 },
+        },
+      },
+    },
+  },
+  data: {
+    layers: [
+      {
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: { waymarkType: "road" },
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [0, 0],
+                  [1, 1],
+                ],
+              },
+            },
+            {
+              type: "Feature",
+              properties: { waymarkType: "park" },
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [0, 0],
+                    [1, 0],
+                    [1, 1],
+                    [0, 1],
+                    [0, 0],
+                  ],
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+```
+
+### `waymark:data.layer.mounted` extended payload
+
+When types are involved, the mounted event includes the resolved type keys:
+
+```js
+{
+  id: string,
+  layerIndex: number,
+  mountedFamilies: ["point", "line", "polygon"],
+  mountedLayerIds: ["waymark-map-geojson-layer-0-point", "..."],
+  mountedTypes: ["road", "park"]
+}
+```
+
 Implementation references:
 
 - [`src/document/instanceDocument.js`](../src/document/instanceDocument.js)
 - [`src/geojson/createGeoJSONModule.js`](../src/geojson/createGeoJSONModule.js)
 - [`src/runtime/createInstanceCore.js`](../src/runtime/createInstanceCore.js)
+- [`src/utils/typeUtils.js`](../src/utils/typeUtils.js)
 - [`dev/composables/useWaymarkInstance.js`](../dev/composables/useWaymarkInstance.js)
 
 

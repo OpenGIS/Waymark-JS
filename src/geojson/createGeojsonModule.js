@@ -14,7 +14,6 @@ const FAMILY_TYPES = {
     geometryTypes: new Set(["Point", "MultiPoint"]),
     layerType: "circle",
     paint: {
-      "circle-color": "#2563eb",
       "circle-radius": 5,
     },
   },
@@ -22,7 +21,6 @@ const FAMILY_TYPES = {
     geometryTypes: new Set(["LineString", "MultiLineString"]),
     layerType: "line",
     paint: {
-      "line-color": "#2563eb",
       "line-width": 3,
     },
   },
@@ -30,13 +28,41 @@ const FAMILY_TYPES = {
     geometryTypes: new Set(["Polygon", "MultiPolygon"]),
     layerType: "fill",
     paint: {
-      "fill-color": "#2563eb",
       "fill-opacity": 0.35,
     },
   },
 };
 
 const FAMILY_INSERT_ORDER = ["point", "line", "polygon"];
+
+const FAMILY_COLOUR_KEYS = {
+  point: "circle-color",
+  line: "line-color",
+  polygon: "fill-color",
+};
+
+const COLOUR_POOL = [
+  "#e6194b",
+  "#3cb44b",
+  "#ffe119",
+  "#4363d8",
+  "#f58231",
+  "#911eb4",
+  "#42d4f4",
+  "#f032e6",
+  "#bfef45",
+  "#fabed4",
+  "#469990",
+  "#dcbeff",
+  "#9a6324",
+  "#fffac8",
+  "#800000",
+  "#aaffc3",
+  "#808000",
+  "#ffd8b1",
+  "#000075",
+  "#a9a9a9",
+];
 
 /**
  * @param {string} geometryType
@@ -322,33 +348,238 @@ function fitBoundsToGeoJSON(map, geoJSON) {
   }
 }
 
-function createRenderPlan(data, baseLayerId) {
+/**
+ * Resolve paint properties for a single (family, sublayer) pair.
+ *
+ * @param {'point'|'line'|'polygon'} family
+ * @param {number} layerIndex — data layer index for colour pool selection
+ * @param {object|null} instancePaint — from config.paint (family-keyed, or null)
+ * @param {object|null} layerPaint — from data.layers[].paint (family-keyed, or null)
+ * @param {object|null} typePaint — pre-scoped to family by caller (flat paint props, or null)
+ * @returns {object} — fully resolved MapLibre paint properties
+ */
+function resolvePaint(
+  family,
+  layerIndex,
+  instancePaint,
+  layerPaint,
+  typePaint,
+) {
+  const paint = {
+    // 1. Start with FAMILY_TYPES non-colour defaults (width, radius, opacity)
+    ...FAMILY_TYPES[family].paint,
+    // 2. Assign colour from pool by layer index
+    [FAMILY_COLOUR_KEYS[family]]: COLOUR_POOL[layerIndex % COLOUR_POOL.length],
+    // 3. Merge in config.paint (instance-wide overrides, scoped to family)
+    ...(instancePaint?.[family] || {}),
+  };
+
+  if (typePaint) {
+    // 4a. Typed sublayer: typePaint is already family-scoped by caller
+    Object.assign(paint, typePaint);
+  } else {
+    // 4b. Untyped sublayer: layerPaint is family-keyed — scope to current family
+    Object.assign(paint, layerPaint?.[family] || {});
+  }
+
+  return paint;
+}
+
+/**
+ * Check if any features matching the given filter have waymarkPaint.
+ *
+ * @param {object} geoJSON
+ * @param {Array | null} filter — MapLibre filter expression or null
+ * @returns {boolean}
+ */
+function hasFeaturesWithWaymarkPaint(geoJSON, filter) {
+  if (!geoJSON || typeof geoJSON !== "object") {
+    return false;
+  }
+
+  let features = [];
+
+  if (geoJSON.type === "FeatureCollection" && Array.isArray(geoJSON.features)) {
+    features = geoJSON.features;
+  } else if (geoJSON.type === "Feature") {
+    features = [geoJSON];
+  }
+
+  for (const feature of features) {
+    if (!feature || typeof feature !== "object") {
+      continue;
+    }
+
+    const waymarkPaint = feature.properties?.waymarkPaint;
+
+    if (waymarkPaint === undefined || waymarkPaint === null) {
+      continue;
+    }
+
+    // If there's no filter, this feature matches
+    if (!filter) {
+      return true;
+    }
+
+    // Simple filter evaluation: ["!", ["has", "waymarkType"]]
+    // and ["==", ["get", "waymarkType"], typeKey]
+    if (Array.isArray(filter) && filter.length >= 2) {
+      const operator = filter[0];
+
+      if (operator === "!") {
+        // ["!", ["has", "waymarkType"]]
+        const innerExpr = filter[1];
+        if (
+          Array.isArray(innerExpr) &&
+          innerExpr[0] === "has" &&
+          innerExpr[1] === "waymarkType"
+        ) {
+          // Match features that do NOT have waymarkType
+          if (
+            feature.properties?.waymarkType === undefined ||
+            feature.properties?.waymarkType === null
+          ) {
+            return true;
+          }
+        }
+      } else if (operator === "==") {
+        // ["==", ["get", "waymarkType"], typeKey]
+        const getExpr = filter[1];
+        const expectedValue = filter[2];
+
+        if (
+          Array.isArray(getExpr) &&
+          getExpr[0] === "get" &&
+          getExpr[1] === "waymarkType"
+        ) {
+          if (feature.properties?.waymarkType === expectedValue) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Wrap paint properties in coalesce expressions for waymarkPaint support.
+ *
+ * @param {object} paint — resolved paint properties
+ * @returns {object} — paint properties wrapped in expressions
+ */
+function wrapPaintWithExpressions(paint) {
+  const wrapped = {};
+
+  for (const [key, value] of Object.entries(paint)) {
+    wrapped[key] = [
+      "coalesce",
+      ["get", key, ["get", "waymarkPaint", ["properties"]]],
+      value,
+    ];
+  }
+
+  return wrapped;
+}
+
+/**
+ * @param {object} data — GeoJSON data for a single layer
+ * @param {string} baseLayerId
+ * @param {number} layerIndex
+ * @param {Record<string, { paint: object }> | null} [types]
+ * @param {object | null} [instancePaint]
+ * @param {object | null} [layerPaint]
+ * @returns {Array<{
+ *   family: 'point' | 'line' | 'polygon',
+ *   layerId: string,
+ *   type: string,
+ *   paint: object,
+ *   filter: Array | null,
+ *   hasWaymarkPaint: boolean,
+ * }>}
+ */
+function createRenderPlan(
+  data,
+  baseLayerId,
+  layerIndex,
+  types,
+  instancePaint,
+  layerPaint,
+) {
   const discoveredFamilies = collectGeometryFamilies(data);
   const renderFamilies =
     discoveredFamilies.size > 0
       ? FAMILY_INSERT_ORDER.filter((family) => discoveredFamilies.has(family))
       : ["line"];
 
-  return renderFamilies.map((family) => ({
-    family,
-    layerId: `${baseLayerId}-${family}`,
-    type: FAMILY_TYPES[family].layerType,
-    paint: {
-      ...FAMILY_TYPES[family].paint,
-    },
-  }));
+  const hasTypes = types && Object.keys(types).length > 0;
+
+  if (!hasTypes) {
+    // Original behaviour — no type awareness needed
+    return renderFamilies.map((family) => ({
+      family,
+      layerId: `${baseLayerId}-${family}`,
+      type: FAMILY_TYPES[family].layerType,
+      paint: resolvePaint(family, layerIndex, instancePaint, layerPaint, null),
+      filter: null,
+      hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, null),
+    }));
+  }
+
+  // Types defined — untyped fallback + per-type sublayers
+  const entries = [];
+
+  for (const family of renderFamilies) {
+    // Untyped fallback
+    entries.push({
+      family,
+      layerId: `${baseLayerId}-${family}`,
+      type: FAMILY_TYPES[family].layerType,
+      paint: resolvePaint(family, layerIndex, instancePaint, layerPaint, null),
+      filter: ["!", ["has", "waymarkType"]],
+      hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, [
+        "!",
+        ["has", "waymarkType"],
+      ]),
+    });
+
+    // Per-type sublayers (in config.types key order)
+    for (const [typeKey, typeDef] of Object.entries(types)) {
+      const typePaint = typeDef.paint?.[family];
+      if (!typePaint) continue; // type doesn't cover this family
+
+      entries.push({
+        family,
+        layerId: `${baseLayerId}-${family}-type-${typeKey}`,
+        type: FAMILY_TYPES[family].layerType,
+        paint: resolvePaint(family, layerIndex, instancePaint, null, typePaint),
+        filter: ["==", ["get", "waymarkType"], typeKey],
+        hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, [
+          "==",
+          ["get", "waymarkType"],
+          typeKey,
+        ]),
+      });
+    }
+  }
+
+  return entries;
 }
 
 /**
  * @param {import('maplibre-gl').Map} map
  * @param {string} instanceId
- * @param {{ type: 'geojson', data: object }[]} [layers]
+ * @param {{ type: 'geojson', data: object, paint?: object }[]} [layers]
  * @param {{
  *   onLayerMounted?: (event: {
  *     layerIndex: number,
  *     mountedFamilies: Array<'point' | 'line' | 'polygon'>,
  *     mountedLayerIds: string[],
+ *     mountedTypes: string[],
  *   }) => void,
+ *   types?: Record<string, { title?: string, paint: object }>,
+ *   instancePaint?: { point?: object, line?: object, polygon?: object } | null,
  * }} [options]
  */
 export function createGeoJSONModule(
@@ -361,6 +592,8 @@ export function createGeoJSONModule(
     typeof options.onLayerMounted === "function"
       ? options.onLayerMounted
       : null;
+  const types = options.types ?? null;
+  const instancePaint = options.instancePaint ?? null;
   const instanceToken = String(instanceId).replace(/[^a-zA-Z0-9_-]/g, "-");
   const layerRecords = layers.map((layer, index) => ({
     index,
@@ -368,13 +601,23 @@ export function createGeoJSONModule(
     layerId: `waymark-${instanceToken}-geojson-layer-${index}`,
     type: layer.type,
     data: layer.data,
+    paint: layer.paint ?? null,
     fitBounds: false,
     hasFitBounds: false,
-    renderPlan: createRenderPlan(
-      layer.data,
-      `waymark-${instanceToken}-geojson-layer-${index}`,
-    ),
+    renderPlan: null,
   }));
+
+  // Build render plans for all records after assignment
+  for (const layerRecord of layerRecords) {
+    layerRecord.renderPlan = createRenderPlan(
+      layerRecord.data,
+      layerRecord.layerId,
+      layerRecord.index,
+      types,
+      instancePaint,
+      layerRecord.paint,
+    );
+  }
 
   let hasMountedLayers = false;
   let isMapLoaded = false;
@@ -446,6 +689,7 @@ export function createGeoJSONModule(
 
       const mountedFamilies = [];
       const mountedLayerIds = [];
+      const mountedTypes = [];
 
       let logicalLayerBottomId = beforeLayerId;
 
@@ -456,18 +700,32 @@ export function createGeoJSONModule(
             : false;
 
         if (!hasLayer) {
-          map.addLayer(
-            {
-              id: renderLayer.layerId,
-              type: renderLayer.type,
-              paint: renderLayer.paint,
-              source: layerRecord.sourceId,
-            },
-            logicalLayerBottomId,
-          );
+          const paint = renderLayer.hasWaymarkPaint
+            ? wrapPaintWithExpressions(renderLayer.paint)
+            : renderLayer.paint;
+
+          /** @type {import('maplibre-gl').LayerSpecification} */
+          const layerSpec = {
+            id: renderLayer.layerId,
+            type: renderLayer.type,
+            paint,
+            source: layerRecord.sourceId,
+          };
+
+          if (renderLayer.filter) {
+            layerSpec.filter = renderLayer.filter;
+          }
+
+          map.addLayer(layerSpec, logicalLayerBottomId);
 
           mountedFamilies.push(renderLayer.family);
           mountedLayerIds.push(renderLayer.layerId);
+
+          // Extract typeKey from layerId for typed sublayers
+          const typeKeyMatch = renderLayer.layerId.match(/-type-([a-z0-9-]+)$/);
+          if (typeKeyMatch) {
+            mountedTypes.push(typeKeyMatch[1]);
+          }
         }
 
         logicalLayerBottomId = renderLayer.layerId;
@@ -480,6 +738,7 @@ export function createGeoJSONModule(
           layerIndex: layerRecord.index,
           mountedFamilies,
           mountedLayerIds,
+          mountedTypes,
         });
       }
 
@@ -494,22 +753,84 @@ export function createGeoJSONModule(
 
   ensureMountHandlers();
 
+  /**
+   * Collect all typed sublayer IDs across all layer records.
+   * @returns {string[]}
+   */
+  function collectAllTypeLayerIds() {
+    const ids = [];
+
+    for (const layerRecord of layerRecords) {
+      for (const renderLayer of layerRecord.renderPlan) {
+        const match = renderLayer.layerId.match(/-type-([a-z0-9-]+)$/);
+        if (match) {
+          ids.push(renderLayer.layerId);
+        }
+      }
+    }
+
+    return ids;
+  }
+
   return {
     map,
     layers: layerRecords,
+    /**
+     * Set visibility for all sublayers matching a given type key.
+     * @param {string} typeKey
+     * @param {boolean} visible
+     */
+    setTypeVisibility(typeKey, visible) {
+      const visibility = visible ? "visible" : "none";
+
+      for (const layerRecord of layerRecords) {
+        for (const renderLayer of layerRecord.renderPlan) {
+          const typeKeyMatch = renderLayer.layerId.match(/-type-([a-z0-9-]+)$/);
+          if (typeKeyMatch && typeKeyMatch[1] === typeKey) {
+            if (
+              typeof map.getLayer === "function" &&
+              map.getLayer(renderLayer.layerId)
+            ) {
+              try {
+                map.setLayoutProperty(
+                  renderLayer.layerId,
+                  "visibility",
+                  visibility,
+                );
+              } catch {
+                // Layer may not exist yet; ignore
+              }
+            }
+          }
+        }
+      }
+    },
+    /**
+     * Get all typed sublayer IDs.
+     * @returns {string[]}
+     */
+    getTypeLayerIds() {
+      return collectAllTypeLayerIds();
+    },
     addLayer(layer, options = {}) {
       const nextIndex = layerRecords.length;
+      const baseLayerId = `waymark-${instanceToken}-geojson-layer-${nextIndex}`;
       const layerRecord = {
         index: nextIndex,
         sourceId: `waymark-${instanceToken}-geojson-source-${nextIndex}`,
-        layerId: `waymark-${instanceToken}-geojson-layer-${nextIndex}`,
+        layerId: baseLayerId,
         type: layer.type,
         data: layer.data,
+        paint: layer.paint ?? null,
         fitBounds: options.fitBounds !== false,
         hasFitBounds: false,
         renderPlan: createRenderPlan(
           layer.data,
-          `waymark-${instanceToken}-geojson-layer-${nextIndex}`,
+          baseLayerId,
+          nextIndex,
+          types,
+          instancePaint,
+          layer.paint ?? null,
         ),
       };
 

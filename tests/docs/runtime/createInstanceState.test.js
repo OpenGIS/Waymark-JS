@@ -37,6 +37,7 @@ describe("Runtime state module", () => {
           raster: [],
         },
       },
+      types: {},
       ui: {
         mode: "view",
         activePanel: null,

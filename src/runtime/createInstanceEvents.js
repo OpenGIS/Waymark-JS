@@ -23,6 +23,9 @@ export const WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT =
 export const WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT =
   "waymark:state.map.basemaps.changed";
 export const WAYMARK_STATE_DEBUG_CHANGED_EVENT = "waymark:state.debug.changed";
+export const WAYMARK_STATE_TYPES_CHANGED_EVENT = "waymark:state.types.changed";
+export const WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT =
+  "waymark:state.types.visibility.changed";
 
 export const FORWARDED_MAP_EVENTS = [
   ["load", WAYMARK_MAP_LOAD_EVENT],
@@ -58,6 +61,8 @@ export const WAYMARK_ALL_EVENTS = [
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
   WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT,
   WAYMARK_STATE_DEBUG_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_CHANGED_EVENT,
+  WAYMARK_STATE_TYPES_VISIBILITY_CHANGED_EVENT,
 ];
 
 /**
@@ -141,6 +146,7 @@ export const WAYMARK_ALL_EVENTS = [
  *       opacity?: Record<string, number>,
  *       orderedBasemapIds?: string[],
  *     },
+ *     typeKey?: string,
  *   },
  *   source: string,
  *   snapshot: {
@@ -162,6 +168,7 @@ export const WAYMARK_ALL_EVENTS = [
  *       panelContext: unknown,
  *     },
  *     debug: boolean,
+ *     types: Record<string, { visible: boolean }>,
  *   },
  * }} WaymarkStateChangedEventDetail
  */
