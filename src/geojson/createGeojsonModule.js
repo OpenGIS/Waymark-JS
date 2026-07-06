@@ -333,7 +333,17 @@ function computeGeoJSONBounds(geoJSON) {
     return null;
   }
 
-  return new LngLatBounds(sw, ne);
+  const bounds = new LngLatBounds(sw, ne);
+
+  // MapLibre fitBounds fails with zero-area bounds (single-point data).
+  // Expand the bounds by a small buffer (~0.01°) when sw and ne coincide.
+  if (sw[0] === ne[0] && sw[1] === ne[1]) {
+    const buffer = 0.01;
+    bounds.extend([sw[0] - buffer, sw[1] - buffer]);
+    bounds.extend([ne[0] + buffer, ne[1] + buffer]);
+  }
+
+  return bounds;
 }
 
 /**

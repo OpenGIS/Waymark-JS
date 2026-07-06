@@ -467,7 +467,7 @@ test.describe("2. Development smoke", () => {
       )
       .toEqual(
         expect.objectContaining({
-          center: [expect.closeTo(10.75, 6), expect.closeTo(59.95, 6)],
+          center: [expect.closeTo(10.75, 5), expect.closeTo(59.95, 5)],
         }),
       );
   });

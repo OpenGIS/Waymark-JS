@@ -1620,6 +1620,7 @@ test.describe("1. API", () => {
             "waymark-map-geojson-mounted-event-geojson-layer-0-point",
             "waymark-map-geojson-mounted-event-geojson-layer-0-line",
           ],
+          mountedTypes: [],
         },
       ]);
     });

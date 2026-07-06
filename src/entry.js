@@ -14,6 +14,9 @@ setWorkerUrl(workerURL);
  */
 export function createInstance(instanceDocument) {
   const normalisedDocument = normaliseInstanceDocument(instanceDocument);
-  const { publicApi } = createInstanceCore(normalisedDocument);
+  // Deep-clone to strip any proxy wrappers (e.g. Vue reactivity) that
+  // would cause structuredClone to fail downstream in createInstanceCore.
+  const clean = JSON.parse(JSON.stringify(normalisedDocument));
+  const { publicApi } = createInstanceCore(clean);
   return publicApi;
 }
