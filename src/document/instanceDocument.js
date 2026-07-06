@@ -81,7 +81,7 @@
  */
 import { isValidTypeKey } from "../utils/typeUtils.js";
 
-const PAINT_FAMILY_KEYS = new Set(["point", "line", "polygon"]);
+const PAINT_FAMILY_KEYS = new Set(["circle", "line", "fill"]);
 
 function isPlainObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -860,7 +860,7 @@ function normalisePaint(paint, path) {
   for (const key of Object.keys(paint)) {
     if (!PAINT_FAMILY_KEYS.has(key)) {
       throw new Error(
-        `Invalid ${path}.${key}: expected a paint family key (point, line, or polygon).`,
+        `Invalid ${path}.${key}: expected a paint family key (circle, line, or fill).`,
       );
     }
 

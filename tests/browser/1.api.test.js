@@ -1377,21 +1377,21 @@ test.describe("1. API", () => {
         return new Promise((resolve) => {
           const map = window.waymarkFixture.getRuntimeMap(instance.id);
           const expectedLayerIds = [
-            "waymark-map-geojson-family-test-geojson-layer-2-polygon",
+            "waymark-map-geojson-family-test-geojson-layer-2-fill",
             "waymark-map-geojson-family-test-geojson-layer-1-line",
-            "waymark-map-geojson-family-test-geojson-layer-0-point",
+            "waymark-map-geojson-family-test-geojson-layer-0-circle",
           ];
           const startedAt = Date.now();
 
           const check = () => {
             const layer0 = map.getLayer(
-              "waymark-map-geojson-family-test-geojson-layer-0-point",
+              "waymark-map-geojson-family-test-geojson-layer-0-circle",
             );
             const layer1 = map.getLayer(
               "waymark-map-geojson-family-test-geojson-layer-1-line",
             );
             const layer2 = map.getLayer(
-              "waymark-map-geojson-family-test-geojson-layer-2-polygon",
+              "waymark-map-geojson-family-test-geojson-layer-2-fill",
             );
             const layerIds = (map.getStyle()?.layers ?? []).map(
               (layer) => layer.id,
@@ -1422,9 +1422,9 @@ test.describe("1. API", () => {
 
       expect(result.layerTypes).toEqual(["circle", "line", "fill"]);
       expect(result.layerIds).toEqual([
-        "waymark-map-geojson-family-test-geojson-layer-2-polygon",
+        "waymark-map-geojson-family-test-geojson-layer-2-fill",
         "waymark-map-geojson-family-test-geojson-layer-1-line",
-        "waymark-map-geojson-family-test-geojson-layer-0-point",
+        "waymark-map-geojson-family-test-geojson-layer-0-circle",
       ]);
     });
 
@@ -1501,9 +1501,9 @@ test.describe("1. API", () => {
         return new Promise((resolve) => {
           const map = window.waymarkFixture.getRuntimeMap(instance.id);
           const expected = [
-            "waymark-map-geojson-mixed-family-test-geojson-layer-0-polygon",
+            "waymark-map-geojson-mixed-family-test-geojson-layer-0-fill",
             "waymark-map-geojson-mixed-family-test-geojson-layer-0-line",
-            "waymark-map-geojson-mixed-family-test-geojson-layer-0-point",
+            "waymark-map-geojson-mixed-family-test-geojson-layer-0-circle",
           ];
           const startedAt = Date.now();
 
@@ -1533,9 +1533,9 @@ test.describe("1. API", () => {
 
       expect(result.layerTypes).toEqual(["fill", "line", "circle"]);
       expect(result.layerIds).toEqual([
-        "waymark-map-geojson-mixed-family-test-geojson-layer-0-polygon",
+        "waymark-map-geojson-mixed-family-test-geojson-layer-0-fill",
         "waymark-map-geojson-mixed-family-test-geojson-layer-0-line",
-        "waymark-map-geojson-mixed-family-test-geojson-layer-0-point",
+        "waymark-map-geojson-mixed-family-test-geojson-layer-0-circle",
       ]);
     });
 
@@ -1615,9 +1615,9 @@ test.describe("1. API", () => {
         {
           id: "map-geojson-mounted-event",
           layerIndex: 0,
-          mountedFamilies: ["point", "line"],
+          mountedFamilies: ["circle", "line"],
           mountedLayerIds: [
-            "waymark-map-geojson-mounted-event-geojson-layer-0-point",
+            "waymark-map-geojson-mounted-event-geojson-layer-0-circle",
             "waymark-map-geojson-mounted-event-geojson-layer-0-line",
           ],
           mountedTypes: [],

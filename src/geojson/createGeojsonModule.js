@@ -11,7 +11,7 @@ function findFirstSymbolLayerId(map) {
 }
 
 const FAMILY_TYPES = {
-  point: {
+  circle: {
     geometryTypes: new Set(["Point", "MultiPoint"]),
     layerType: "circle",
     paint: {
@@ -25,7 +25,7 @@ const FAMILY_TYPES = {
       "line-width": 3,
     },
   },
-  polygon: {
+  fill: {
     geometryTypes: new Set(["Polygon", "MultiPolygon"]),
     layerType: "fill",
     paint: {
@@ -34,12 +34,12 @@ const FAMILY_TYPES = {
   },
 };
 
-const FAMILY_INSERT_ORDER = ["point", "line", "polygon"];
+const FAMILY_INSERT_ORDER = ["circle", "line", "fill"];
 
 const FAMILY_COLOUR_KEYS = {
-  point: "circle-color",
+  circle: "circle-color",
   line: "line-color",
-  polygon: "fill-color",
+  fill: "fill-color",
 };
 
 const COLOUR_POOL = [
@@ -67,19 +67,19 @@ const COLOUR_POOL = [
 
 /**
  * @param {string} geometryType
- * @returns {'point' | 'line' | 'polygon' | null}
+ * @returns {'circle' | 'line' | 'fill' | null}
  */
 function geometryTypeToFamily(geometryType) {
-  if (FAMILY_TYPES.point.geometryTypes.has(geometryType)) {
-    return "point";
+  if (FAMILY_TYPES.circle.geometryTypes.has(geometryType)) {
+    return "circle";
   }
 
   if (FAMILY_TYPES.line.geometryTypes.has(geometryType)) {
     return "line";
   }
 
-  if (FAMILY_TYPES.polygon.geometryTypes.has(geometryType)) {
-    return "polygon";
+  if (FAMILY_TYPES.fill.geometryTypes.has(geometryType)) {
+    return "fill";
   }
 
   return null;
@@ -87,7 +87,7 @@ function geometryTypeToFamily(geometryType) {
 
 /**
  * @param {unknown} geometry
- * @param {Set<'point' | 'line' | 'polygon'>} families
+ * @param {Set<'circle' | 'line' | 'fill'>} families
  */
 function collectGeometryFamiliesFromGeometry(geometry, families) {
   if (!geometry || typeof geometry !== "object") {
@@ -121,7 +121,7 @@ function collectGeometryFamiliesFromGeometry(geometry, families) {
 
 /**
  * @param {unknown} geoJSON
- * @returns {Set<'point' | 'line' | 'polygon'>}
+ * @returns {Set<'circle' | 'line' | 'fill'>}
  */
 function collectGeometryFamilies(geoJSON) {
   const families = new Set();
@@ -362,7 +362,7 @@ function fitBoundsToGeoJSON(map, geoJSON) {
 /**
  * Resolve paint properties for a single (family, sublayer) pair.
  *
- * @param {'point'|'line'|'polygon'} family
+ * @param {'circle'|'line'|'fill'} family
  * @param {number} layerIndex — data layer index for colour pool selection
  * @param {object|null} instancePaint — from config.paint (family-keyed, or null)
  * @param {object|null} layerPaint — from data.layers[].paint (family-keyed, or null)
@@ -502,7 +502,7 @@ function wrapPaintWithExpressions(paint) {
  * @param {object | null} [instancePaint]
  * @param {object | null} [layerPaint]
  * @returns {Array<{
- *   family: 'point' | 'line' | 'polygon',
+ *   family: 'circle' | 'line' | 'fill',
  *   layerId: string,
  *   type: string,
  *   paint: object,
@@ -585,12 +585,12 @@ function createRenderPlan(
  * @param {{
  *   onLayerMounted?: (event: {
  *     layerIndex: number,
- *     mountedFamilies: Array<'point' | 'line' | 'polygon'>,
+ *     mountedFamilies: Array<'circle' | 'line' | 'fill'>,
  *     mountedLayerIds: string[],
  *     mountedTypes: string[],
  *   }) => void,
  *   types?: Record<string, { title?: string, paint: object }>,
- *   instancePaint?: { point?: object, line?: object, polygon?: object } | null,
+ *   instancePaint?: { circle?: object, line?: object, fill?: object } | null,
  * }} [options]
  */
 export function createGeoJSONModule(
