@@ -1,4 +1,5 @@
 import { LngLatBounds } from "maplibre-gl";
+import { createFeaturePropertiesModule } from "./createFeaturePropertiesModule.js";
 
 /**
  * @param {import('maplibre-gl').Map} map
@@ -629,6 +630,8 @@ export function createGeoJSONModule(
     );
   }
 
+  const featureProperties = createFeaturePropertiesModule(map);
+
   let hasMountedLayers = false;
   let isMapLoaded = false;
   let attachedLoadHandler = null;
@@ -667,6 +670,7 @@ export function createGeoJSONModule(
     if (!attachedStyleLoadHandler) {
       attachedStyleLoadHandler = () => {
         hasMountedLayers = false;
+        featureProperties.reset();
         mountGeoJSONLayers();
       };
       map.on("style.load", attachedStyleLoadHandler);
@@ -728,6 +732,8 @@ export function createGeoJSONModule(
 
           map.addLayer(layerSpec, logicalLayerBottomId);
 
+          featureProperties.observeLayer(renderLayer.layerId);
+
           mountedFamilies.push(renderLayer.family);
           mountedLayerIds.push(renderLayer.layerId);
 
@@ -785,6 +791,7 @@ export function createGeoJSONModule(
   return {
     map,
     layers: layerRecords,
+    featureProperties,
     /**
      * Set visibility for all sublayers matching a given type key.
      * @param {string} typeKey
@@ -854,6 +861,8 @@ export function createGeoJSONModule(
       return layerRecord;
     },
     destroy() {
+      featureProperties.destroy();
+
       if (attachedLoadHandler) {
         map.off("load", attachedLoadHandler);
         attachedLoadHandler = null;

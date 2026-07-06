@@ -1288,6 +1288,20 @@ export function createInstanceCore(instanceDocument) {
     toJSON: () => core.instanceDocument.toJSON(),
     data: {
       addLayer: (layer, options) => addCoreDataLayer(core, layer, options),
+      featureProperties: {
+        setEnabled: (enabled) => {
+          core.modules.geoJSON.featureProperties.setEnabled(enabled);
+        },
+        addWhitelistKeys: (keys) => {
+          core.modules.geoJSON.featureProperties.addWhitelistKeys(keys);
+        },
+        getWhitelist: () => {
+          return core.modules.geoJSON.featureProperties.getWhitelist();
+        },
+        isEnabled: () => {
+          return core.modules.geoJSON.featureProperties.isEnabled();
+        },
+      },
     },
     ui: {
       setMode: (mode) => setCoreMode(core, mode, "public:ui.setMode"),

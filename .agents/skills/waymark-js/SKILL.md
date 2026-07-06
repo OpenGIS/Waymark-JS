@@ -201,6 +201,7 @@ Waymark resolves config with a deep merge:
 
 - `map.options.attributionControl`: `false`
 - `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://tiles.openfreemap.org/styles/bright`
+
 <!-- api-contract:defaults:end -->
 
 - `paint`: `{}` (no instance-wide paint overrides)
@@ -340,7 +341,13 @@ const instance = createInstance({
     addLayer: (
       layer: { type?: "geojson", data: object, paint?: object },
       options?: { fitBounds?: boolean }
-    ) => void
+    ) => void,
+    featureProperties: {
+      setEnabled: (enabled: boolean) => void,
+      addWhitelistKeys: (keys: string[]) => void,
+      getWhitelist: () => string[],
+      isEnabled: () => boolean,
+    }
   },
   ui: {
     setMode: (mode: "view" | "debug") => void
@@ -388,6 +395,7 @@ Lifecycle events:
 - `waymark:instance.created`
 - `waymark:instance.recreated`
 - `waymark:instance.destroyed`
+
 <!-- api-contract:lifecycle-events:end -->
 
 Forwarded map events:
@@ -400,6 +408,7 @@ Forwarded map events:
 - `waymark:map.rotateend`
 - `waymark:map.pitchend`
 - `waymark:map.error`
+
 <!-- api-contract:forwarded-map-events:end -->
 
 Forwarded map event payload shape:
@@ -433,6 +442,7 @@ Data-layer runtime events:
 - `waymark:data.layer.added`
 - `waymark:data.layer.mounted`
 - `waymark:data.layer.error`
+
 <!-- api-contract:data-layer-events:end -->
 
 Data-layer mounted payload shape (`waymark:data.layer.mounted`):
@@ -1632,10 +1642,50 @@ When types are involved, the mounted event includes the resolved type keys:
 }
 ```
 
+## Feature properties popup
+
+Data layer features with whitelisted properties show a MapLibre popup on click.
+
+### Default whitelist
+
+By default the following GeoJSON `properties` keys are displayed when a feature is clicked:
+
+- `name`
+- `title`
+- `description`
+
+Only primitive values (string, number, boolean) are surfaced — objects and arrays are ignored. The popup renders an HTML table with keys in bold and their values in a scrollable container.
+
+The cursor changes to `pointer` when hovering over a feature that has any whitelisted properties. Clicking a feature without whitelisted properties does nothing.
+
+### Public API
+
+Configure via `instance.data.featureProperties`:
+
+```js
+// Enable or disable popups (default: true)
+instance.data.featureProperties.setEnabled(false);
+
+// Extend the whitelist with additional property keys
+instance.data.featureProperties.addWhitelistKeys(["elevation", "speed"]);
+
+// Read current state
+instance.data.featureProperties.getWhitelist(); // ["name", "title", "description", "elevation", "speed"]
+instance.data.featureProperties.isEnabled(); // false
+```
+
+### Event-driven popup behaviour
+
+- Popups are standard MapLibre popups with a close icon.
+- Shown on click at the clicked coordinates.
+- Removed automatically on next click or when `setEnabled(false)` is called.
+- Handlers are re-registered after style reloads (e.g. vector basemap switches).
+
 Implementation references:
 
 - [`src/document/instanceDocument.js`](../src/document/instanceDocument.js)
 - [`src/geojson/createGeoJSONModule.js`](../src/geojson/createGeoJSONModule.js)
+- [`src/geojson/createFeaturePropertiesModule.js`](../src/geojson/createFeaturePropertiesModule.js)
 - [`src/runtime/createInstanceCore.js`](../src/runtime/createInstanceCore.js)
 - [`src/utils/typeUtils.js`](../src/utils/typeUtils.js)
 - [`dev/composables/useWaymarkInstance.js`](../dev/composables/useWaymarkInstance.js)

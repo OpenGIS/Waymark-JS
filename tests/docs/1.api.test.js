@@ -156,6 +156,9 @@ vi.mock("maplibre-gl", () => {
     this.getPitch = vi.fn(() => this._view.pitch);
     this.fitBounds = vi.fn();
     this.setProjection = vi.fn();
+    this.getCanvas = vi.fn(() => ({
+      style: { cursor: "" },
+    }));
   });
   return {
     Map: MockMap,
@@ -2145,6 +2148,12 @@ describe("1. API", () => {
           toJSON: expect.any(Function),
           data: expect.objectContaining({
             addLayer: expect.any(Function),
+            featureProperties: expect.objectContaining({
+              setEnabled: expect.any(Function),
+              addWhitelistKeys: expect.any(Function),
+              getWhitelist: expect.any(Function),
+              isEnabled: expect.any(Function),
+            }),
           }),
           ui: expect.objectContaining({
             setMode: expect.any(Function),
