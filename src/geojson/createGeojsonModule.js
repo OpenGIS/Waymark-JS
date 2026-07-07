@@ -1,5 +1,6 @@
 import { LngLatBounds } from "maplibre-gl";
 import { createFeaturePropertiesModule } from "./createFeaturePropertiesModule.js";
+import { loadTypeIcons } from "./createIconImages.js";
 
 /**
  * @param {import('maplibre-gl').Map} map
@@ -535,6 +536,7 @@ function createRenderPlan(
       paint: resolvePaint(family, layerIndex, instancePaint, layerPaint, null),
       filter: null,
       hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, null),
+      priority: family === "circle" ? 1 : 0,
     }));
   }
 
@@ -553,10 +555,53 @@ function createRenderPlan(
         "!",
         ["has", "waymarkType"],
       ]),
+      priority: family === "circle" ? 1 : 0,
     });
 
     // Per-type sublayers (in config.types key order)
     for (const [typeKey, typeDef] of Object.entries(types)) {
+      // If this is a circle family and the type has an icon defined,
+      // create an invisible circle layer for click detection plus
+      // a symbol layer for the visual icon
+      if (family === "circle" && typeDef.icon) {
+        const fillColor = typeDef.paint?.circle?.["circle-color"];
+        if (fillColor) {
+          // Invisible hit circle for reliable click detection
+          // (MapLibre symbol hit areas are only the icon's non-transparent pixels)
+          entries.push({
+            family: "circle",
+            layerId: `${baseLayerId}-circle-hit-${typeKey}`,
+            type: "circle",
+            paint: {
+              "circle-color": fillColor,
+              "circle-radius": 14,
+              "circle-opacity": 0,
+            },
+            filter: ["==", ["get", "waymarkType"], typeKey],
+            hasWaymarkPaint: false,
+            priority: 2,
+          });
+
+          entries.push({
+            family: "symbol",
+            layerId: `${baseLayerId}-symbol-type-${typeKey}`,
+            type: "symbol",
+            paint: { "icon-opacity": 1 },
+            layout: {
+              "icon-image": typeKey,
+              "icon-size": 1.5,
+              "icon-allow-overlap": true,
+              "icon-ignore-placement": true,
+            },
+            filter: ["==", ["get", "waymarkType"], typeKey],
+            hasWaymarkPaint: false,
+            _skipObserve: true,
+            priority: 3,
+          });
+          continue;
+        }
+      }
+
       const typePaint = typeDef.paint?.[family];
       if (!typePaint) continue; // type doesn't cover this family
 
@@ -571,6 +616,7 @@ function createRenderPlan(
           ["get", "waymarkType"],
           typeKey,
         ]),
+        priority: family === "circle" ? 1 : 0,
       });
     }
   }
@@ -585,7 +631,7 @@ function createRenderPlan(
  * @param {{
  *   onLayerMounted?: (event: {
  *     layerIndex: number,
- *     mountedFamilies: Array<'circle' | 'line' | 'fill'>,
+ *     mountedFamilies: Array<'circle' | 'line' | 'fill' | 'symbol'>,
  *     mountedLayerIds: string[],
  *     mountedTypes: string[],
  *   }) => void,
@@ -633,6 +679,8 @@ export function createGeoJSONModule(
   const featureProperties = createFeaturePropertiesModule(map);
 
   let hasMountedLayers = false;
+  let isMounting = false;
+  let iconsLoaded = false;
   let isMapLoaded = false;
   let attachedLoadHandler = null;
   let attachedStyleLoadHandler = null;
@@ -677,9 +725,21 @@ export function createGeoJSONModule(
     }
   }
 
-  function mountGeoJSONLayers() {
-    if (hasMountedLayers) {
+  async function mountGeoJSONLayers() {
+    if (hasMountedLayers || isMounting) {
       return;
+    }
+
+    isMounting = true;
+
+    // Load type icons before mounting layers that may reference them
+    if (types && !iconsLoaded) {
+      try {
+        await loadTypeIcons(map, types);
+        iconsLoaded = true;
+      } catch (err) {
+        console.warn("[waymark] Failed to load type icons:", err);
+      }
     }
 
     let beforeLayerId = findFirstSymbolLayerId(map);
@@ -730,9 +790,18 @@ export function createGeoJSONModule(
             layerSpec.filter = renderLayer.filter;
           }
 
+          if (renderLayer.layout) {
+            layerSpec.layout = renderLayer.layout;
+          }
+
           map.addLayer(layerSpec, logicalLayerBottomId);
 
-          featureProperties.observeLayer(renderLayer.layerId);
+          if (!renderLayer._skipObserve) {
+            featureProperties.observeLayer(
+              renderLayer.layerId,
+              renderLayer.priority ?? 0,
+            );
+          }
 
           mountedFamilies.push(renderLayer.family);
           mountedLayerIds.push(renderLayer.layerId);
@@ -765,6 +834,7 @@ export function createGeoJSONModule(
     }
 
     hasMountedLayers = true;
+    isMounting = false;
   }
 
   ensureMountHandlers();

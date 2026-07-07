@@ -3,6 +3,22 @@ import { Popup } from "maplibre-gl";
 const DEFAULT_WHITELIST = ["name", "title", "description"];
 
 /**
+ * Extract [lng, lat] from a GeoJSON feature.
+ * @param {import('geojson').Feature} feature
+ * @returns {[number, number] | null}
+ */
+function getFeatureCoordinates(feature) {
+  if (!feature?.geometry) return null;
+  if (feature.geometry.type === "Point") {
+    const coords = feature.geometry.coordinates;
+    if (Array.isArray(coords) && coords.length >= 2) {
+      return [coords[0], coords[1]];
+    }
+  }
+  return null;
+}
+
+/**
  * @param {import('maplibre-gl').Map} map
  * @param {{ whitelist?: string[], enabled?: boolean }} [options]
  */
@@ -10,8 +26,8 @@ export function createFeaturePropertiesModule(map, options = {}) {
   const whitelist = new Set(options.whitelist ?? DEFAULT_WHITELIST);
   let enabled = options.enabled !== false;
 
-  /** @type {Set<string>} */
-  const observedLayerIds = new Set();
+  /** @type {Array<{ layerId: string, priority: number }>} */
+  const observedLayers = [];
 
   /** @type {import('maplibre-gl').Popup | null} */
   let activePopup = null;
@@ -24,7 +40,6 @@ export function createFeaturePropertiesModule(map, options = {}) {
     enabled = value;
     if (!enabled) {
       clearPopup();
-      // Reset cursor if feature properties are disabled
       map.getCanvas().style.cursor = "";
     }
   }
@@ -118,12 +133,31 @@ export function createFeaturePropertiesModule(map, options = {}) {
   }
 
   /**
-   * @param {import('maplibre-gl').MapLayerMouseEvent} event
+   * Query all observed layers at a point, sorted by priority (highest first).
+   * Returns the best matching feature or null.
+   * @param {import('maplibre-gl').PointLike} point
+   * @returns {import('geojson').Feature | null}
    */
-  function onLayerClick(event) {
+  function queryBestFeature(point) {
+    if (observedLayers.length === 0) return null;
+
+    // Sort by priority descending, then collect layer IDs in that order
+    const sorted = [...observedLayers].sort(
+      (a, b) => b.priority - a.priority,
+    );
+    const layerIds = sorted.map((l) => l.layerId);
+
+    const features = map.queryRenderedFeatures(point, { layers: layerIds });
+    return features?.[0] ?? null;
+  }
+
+  /**
+   * @param {import('maplibre-gl').MapMouseEvent} event
+   */
+  function onMapClick(event) {
     if (!enabled) return;
 
-    const feature = event.features?.[0];
+    const feature = queryBestFeature(event.point);
     if (!feature) return;
 
     const entries = filterWhitelistedProperties(feature.properties);
@@ -134,55 +168,82 @@ export function createFeaturePropertiesModule(map, options = {}) {
     const html = renderTable(entries);
     if (!html) return;
 
-    activePopup = new Popup().setLngLat(event.lngLat).setHTML(html).addTo(map);
+    const coords = getFeatureCoordinates(feature);
+    if (coords) {
+      const currentZoom = map.getZoom();
+      map.flyTo({
+        center: coords,
+        zoom: Math.min(currentZoom + 2, 18),
+      });
+    }
+
+    activePopup = new Popup()
+      .setLngLat(coords || event.lngLat)
+      .setHTML(html)
+      .addTo(map);
   }
 
   /**
-   * @param {import('maplibre-gl').MapLayerMouseEvent} event
+   * @param {import('maplibre-gl').MapMouseEvent} event
    */
-  function onLayerMouseMove(event) {
+  function onMapMouseMove(event) {
     if (!enabled) return;
 
-    const feature = event.features?.[0];
-    if (!feature) return;
-
-    map.getCanvas().style.cursor = hasWhitelistedProperties(feature.properties)
-      ? "pointer"
-      : "";
+    const feature = queryBestFeature(event.point);
+    map.getCanvas().style.cursor =
+      feature && hasWhitelistedProperties(feature.properties)
+        ? "pointer"
+        : "";
   }
 
   /**
-   * Register click and hover handlers on a MapLibre sublayer.
-   * Safe to call multiple times for the same layerId.
+   * Register a layer for click/hover interaction with a priority level.
+   *
+   * When multiple layers overlap at the cursor position, the layer with
+   * the highest priority wins. Priority values:
+   *   3 — icon symbol layers
+   *   2 — invisible hit circles behind icons
+   *   1 — regular circle layers (tracking points)
+   *   0 — line and fill layers
+   *
    * @param {string} layerId
+   * @param {number} [priority=0]
    */
-  function observeLayer(layerId) {
-    if (observedLayerIds.has(layerId)) return;
-    observedLayerIds.add(layerId);
-
-    map.on("click", layerId, onLayerClick);
-    map.on("mousemove", layerId, onLayerMouseMove);
+  function observeLayer(layerId, priority = 0) {
+    if (observedLayers.some((l) => l.layerId === layerId)) return;
+    observedLayers.push({ layerId, priority });
   }
 
   /**
    * Clear observed layer tracking (e.g. after a style reload).
-   * Does not try to unregister MapLibre handlers — they're already dead.
+   * MapLibre event handlers registered on the map (not per-layer) survive.
    */
   function reset() {
-    observedLayerIds.clear();
+    observedLayers.length = 0;
     clearPopup();
   }
 
+  /**
+   * Register map-level click/mousemove handlers if not already done.
+   */
+  let handlersAttached = false;
+  function ensureHandlers() {
+    if (handlersAttached) return;
+    handlersAttached = true;
+    map.on("click", onMapClick);
+    map.on("mousemove", onMapMouseMove);
+  }
+
+  // Wire up map-level handlers on creation
+  ensureHandlers();
+
   function destroy() {
     clearPopup();
-
-    for (const layerId of observedLayerIds) {
-      map.off("click", layerId, onLayerClick);
-      map.off("mousemove", layerId, onLayerMouseMove);
-    }
-
-    observedLayerIds.clear();
+    map.off("click", onMapClick);
+    map.off("mousemove", onMapMouseMove);
+    observedLayers.length = 0;
     map.getCanvas().style.cursor = "";
+    handlersAttached = false;
   }
 
   return {

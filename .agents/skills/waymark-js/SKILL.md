@@ -8,7 +8,6 @@ description: Waymark JS reference. Use when working on source, docs, tests, or A
 Waymark JS is a small JavaScript map library built on [MapLibre GL](https://maplibre.org/). It exposes a simple `createInstance(...)` API, forwards map configuration through `config.map.options`, and gives direct access to the underlying MapLibre instance.
 
 **Key facts:**
-
 - Entry point: `import { createInstance } from './dist/waymark.js'`
 - Source: `src/` — built with Vite into `dist/`
 - Tests: `npm test` and `npm run test:browser` (workflow in `docs/2.development.md`)
@@ -108,6 +107,7 @@ Canonical v1 shape:
       }
     },
     types?: Record<string, {
+      icon?: string,
       paint?: {
         circle?: object,
         line?: object,
@@ -452,7 +452,7 @@ Data-layer mounted payload shape (`waymark:data.layer.mounted`):
 {
   id: string,
   layerIndex: number,
-  mountedFamilies: Array<"point" | "line" | "polygon">,
+  mountedFamilies: Array<"circle" | "line" | "fill" | "symbol">,
   mountedLayerIds: string[],
   mountedTypes: string[]
 }
@@ -574,6 +574,7 @@ State event payload shape:
       fill?: object
     },
     types?: Record<string, {
+      icon?: string,
       paint?: {
         circle?: object,
         line?: object,
@@ -729,6 +730,7 @@ Per-layer paint overrides both the pool colour and `config.paint` for that layer
 {
   types: {
     "<typeKey>": {
+      icon?: string,
       paint?: {
         circle?: { "circle-color"?: string, ... },
         line?: { "line-color"?: string, ... },
@@ -741,16 +743,28 @@ Per-layer paint overrides both the pool colour and `config.paint` for that layer
 
 Type keys must be non-empty and match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`. For each defined type, Waymark creates per-family sublayers filtered by `["==", ["get", "waymarkType"], "<typeKey>"]`.
 
+##### `icon` property
+
+`config.types[typeKey].icon` (optional string) specifies an SVG symbol ID from the [@ogis/icons](https://www.npmjs.com/package/@ogis/icons) sprite set. When set alongside a `circle-color` in the type's paint, Waymark renders point features of that type as MapLibre `symbol` layers instead of `circle` layers. The icon is extracted from the sprite, rendered to a canvas with the type's `circle-color` as fill, and registered with the map.
+
+If the icon ID is not found in the sprite, or if no `circle-color` is provided, Waymark logs a warning and skips icon loading for that type. When `icon` is present but `circle-color` is missing, the type falls back to regular circle rendering (if a `circle` paint block exists) or is skipped.
+
+Icons are loaded once ahead of all data layers during initial mount and after style reloads. Each icon is registered with MapLibre using the type key as the image ID, referenced in the layer's `layout` as `"icon-image": "<typeKey>"`.
+
+##### Type rendering plan
+
 When types are defined, the render plan for each data layer produces:
 
 1. An **untyped fallback** sublayer per geometry family, filtered to features without `waymarkType`, using pool colour merged with `config.paint` and `layer.paint`.
-2. A **per-type sublayer** for each type that provides a matching family-scoped paint, filtered by `waymarkType` key, using pool colour merged with `config.paint` and `type.paint`.
+2. A **per-type sublayer** for each type that provides a matching family-scoped paint (or an icon), filtered by `waymarkType` key.
 
 Type paint sits at the top of the merge hierarchy — it overrides pool colour, `config.paint`, and `layers[].paint` for typed sublayers.
 
+When a type has an `icon` property, its point family becomes `"symbol"` instead of `"circle"`. The paint for symbol layers uses `icon-opacity` only; the fill colour is applied during icon rendering, not as a MapLibre paint property.
+
 #### Paint merge order (highest to lowest priority)
 
-1. Type paint (`config.types[typeKey].paint[family]`)
+1. Type paint (`config.types[typeKey].paint[family]`) — or icon-derived fill colour for symbol layers
 2. Layer paint (`layer.paint[family]`)
 3. Instance paint (`config.paint[family]`)
 4. Pool colour + family defaults (radius, width, opacity)
@@ -817,6 +831,7 @@ GeoJSON source/layer IDs are instance-scoped to avoid collisions:
 - sublayer: `waymark-{id}-geojson-layer-{index}-{family}`
 
 For the full data contract (validation, serialisation, runtime mounting, and dev example usage), see [`docs/6.data.md`](6.data.md).
+
 
 ---
 
@@ -1072,6 +1087,7 @@ Sync checklist:
 3. Run `npm run docs:sync`, `npm test`, and `npm run test:browser`.
 4. Ensure old filenames/headings are removed.
 
+
 ---
 
 # Instances
@@ -1159,6 +1175,7 @@ For module-level behaviour, update these docs alongside runtime changes:
 - `docs/4.map.md`
 - `docs/5.ui.md`
 
+
 ---
 
 # Map
@@ -1224,6 +1241,7 @@ For public config validation/defaults and event payload contracts, treat [`docs/
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 - [`docs/1.api.md#initial-geojson-overlay`](1.api.md#initial-geojson-overlay)
 - [`docs/6.data.md`](6.data.md)
+
 
 ---
 
@@ -1405,6 +1423,7 @@ Debug output demonstrates the same pattern:
 - [`docs/1.api.md#instance-event-api`](1.api.md#instance-event-api)
 - [`docs/1.api.md#instancedocument-shape`](1.api.md#instancedocument-shape)
 
+
 ---
 
 # Data
@@ -1545,6 +1564,8 @@ When `config.types` is defined, each data layer's render plan splits into:
 1. **Untyped fallback** — features without `waymarkType` property, using pool + `config.paint` + `layer.paint`.
 2. **Per-type sublayers** — one per defined type with a matching family-scoped paint, filtered by `waymarkType` feature property.
 
+When a type has an `icon` property (see [API docs](1.api.md#paint--types)), its point family renders as MapLibre `symbol` layers instead of `circle` layers, using the named icon from @ogis/icons with the type's `circle-color` as fill. The `mountedFamilies` payload includes `"symbol"` for such layers.
+
 Type visibility can be controlled at runtime via `instance.types.setVisibility(key, "visible" | "none")`.
 
 The `waymarkType` feature property is used as a string match against `config.types` keys. Type keys must match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`.
@@ -1632,7 +1653,7 @@ When types are involved, the mounted event includes the resolved type keys:
 {
   id: string,
   layerIndex: number,
-  mountedFamilies: ["point", "line", "polygon"],
+  mountedFamilies: ["circle", "line", "fill", "symbol"],
   mountedLayerIds: ["waymark-map-geojson-layer-0-point", "..."],
   mountedTypes: ["road", "park"]
 }
@@ -1686,6 +1707,7 @@ Implementation references:
 - [`src/utils/typeUtils.js`](../src/utils/typeUtils.js)
 - [`dev/composables/useWaymarkInstance.js`](../dev/composables/useWaymarkInstance.js)
 
+
 ---
 
 # Documentation Index
@@ -1709,3 +1731,4 @@ These docs split consumer API from internals:
 - `docs/3.instances.md` defines runtime orchestration boundaries.
 - `docs/4.map.md` and `docs/5.ui.md` document module-level internals.
 - `docs/6.data.md` is the canonical data/GeoJSON reference used by API, map, and dev docs.
+

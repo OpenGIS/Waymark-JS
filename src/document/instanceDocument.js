@@ -902,7 +902,7 @@ function normaliseTypes(types, path) {
 
     expectPlainObject(typeDef, typePath);
 
-    const allowedKeys = new Set(["title", "paint"]);
+    const allowedKeys = new Set(["title", "paint", "icon"]);
     for (const key of Object.keys(typeDef)) {
       if (!allowedKeys.has(key)) {
         throw new Error(
@@ -915,6 +915,14 @@ function normaliseTypes(types, path) {
       if (typeof typeDef.title !== "string" || typeDef.title.length === 0) {
         throw new Error(
           `Invalid ${typePath}.title: expected a non-empty string.`,
+        );
+      }
+    }
+
+    if (typeDef.icon !== undefined) {
+      if (typeof typeDef.icon !== "string" || typeDef.icon.length === 0) {
+        throw new Error(
+          `Invalid ${typePath}.icon: expected a non-empty string.`,
         );
       }
     }
@@ -945,6 +953,7 @@ function normaliseTypes(types, path) {
 
     normalised[typeKey] = {
       ...(typeDef.title !== undefined ? { title: typeDef.title } : {}),
+      ...(typeDef.icon !== undefined ? { icon: typeDef.icon } : {}),
       paint: normalisedPaint,
     };
   }

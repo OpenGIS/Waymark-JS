@@ -78,7 +78,7 @@ export const WAYMARK_ALL_EVENTS = [
  */
 
 /**
- * @typedef {{ id: string, layerIndex: number, mountedFamilies: Array<'circle' | 'line' | 'fill'>, mountedLayerIds: string[] }} WaymarkDataLayerMountedEventDetail
+ * @typedef {{ id: string, layerIndex: number, mountedFamilies: Array<'circle' | 'line' | 'fill' | 'symbol'>, mountedLayerIds: string[] }} WaymarkDataLayerMountedEventDetail
  */
 
 /**

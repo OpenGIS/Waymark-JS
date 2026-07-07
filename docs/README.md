@@ -1,6 +1,6 @@
 ---
-git_hash: "08111f41795f1ffa0acd922b15f54434cf5adc32"
-modified: "2026-06-27"
+git_hash: "32f1a9cc6d44b58923180d9a6f332aa12b7ad5c7"
+modified: "2026-07-06"
 ---
 
 # Documentation Index
