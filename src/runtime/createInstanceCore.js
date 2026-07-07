@@ -1301,6 +1301,9 @@ export function createInstanceCore(instanceDocument) {
         isEnabled: () => {
           return core.modules.geoJSON.featureProperties.isEnabled();
         },
+        showPopup: (feature) => {
+          core.modules.geoJSON.featureProperties.showPopup(feature);
+        },
       },
     },
     ui: {

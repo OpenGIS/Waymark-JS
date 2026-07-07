@@ -349,6 +349,7 @@ const instance = createInstance({
       addWhitelistKeys: (keys: string[]) => void,
       getWhitelist: () => string[],
       isEnabled: () => boolean,
+      showPopup: (feature: object) => void,
     }
   },
   ui: {
@@ -1694,6 +1695,9 @@ instance.data.featureProperties.addWhitelistKeys(["elevation", "speed"]);
 // Read current state
 instance.data.featureProperties.getWhitelist(); // ["name", "title", "description", "elevation", "speed"]
 instance.data.featureProperties.isEnabled(); // false
+
+// Programmatically show a popup for any feature, as if it were clicked
+instance.data.featureProperties.showPopup(feature);
 ```
 
 ### Event-driven popup behaviour

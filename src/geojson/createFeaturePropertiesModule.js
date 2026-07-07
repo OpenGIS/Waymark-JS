@@ -150,13 +150,14 @@ export function createFeaturePropertiesModule(map, options = {}) {
   }
 
   /**
-   * @param {import('maplibre-gl').MapMouseEvent} event
+   * Programmatically show a popup for a feature, as if it were clicked.
+   * Reuses the same whitelist filtering, flyTo zoom, and popup rendering
+   * as the click handler.
+   *
+   * @param {import('geojson').Feature} feature
    */
-  function onMapClick(event) {
+  function showPopup(feature) {
     if (!enabled) return;
-
-    const feature = queryBestFeature(event.point);
-    if (!feature) return;
 
     const entries = filterWhitelistedProperties(feature.properties);
     if (entries.length === 0) return;
@@ -176,9 +177,21 @@ export function createFeaturePropertiesModule(map, options = {}) {
     }
 
     activePopup = new Popup()
-      .setLngLat(coords || event.lngLat)
+      .setLngLat(coords || map.getCenter())
       .setHTML(html)
       .addTo(map);
+  }
+
+  /**
+   * @param {import('maplibre-gl').MapMouseEvent} event
+   */
+  function onMapClick(event) {
+    if (!enabled) return;
+
+    const feature = queryBestFeature(event.point);
+    if (!feature) return;
+
+    showPopup(feature);
   }
 
   /**
@@ -248,6 +261,7 @@ export function createFeaturePropertiesModule(map, options = {}) {
     isEnabled,
     addWhitelistKeys,
     getWhitelist,
+    showPopup,
     reset,
     destroy,
   };
