@@ -142,9 +142,7 @@ export function createFeaturePropertiesModule(map, options = {}) {
     if (observedLayers.length === 0) return null;
 
     // Sort by priority descending, then collect layer IDs in that order
-    const sorted = [...observedLayers].sort(
-      (a, b) => b.priority - a.priority,
-    );
+    const sorted = [...observedLayers].sort((a, b) => b.priority - a.priority);
     const layerIds = sorted.map((l) => l.layerId);
 
     const features = map.queryRenderedFeatures(point, { layers: layerIds });
@@ -191,9 +189,7 @@ export function createFeaturePropertiesModule(map, options = {}) {
 
     const feature = queryBestFeature(event.point);
     map.getCanvas().style.cursor =
-      feature && hasWhitelistedProperties(feature.properties)
-        ? "pointer"
-        : "";
+      feature && hasWhitelistedProperties(feature.properties) ? "pointer" : "";
   }
 
   /**

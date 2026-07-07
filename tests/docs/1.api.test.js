@@ -3029,7 +3029,9 @@ describe("1. API", () => {
         "waymark-map-geojson-layer-4-fill",
         "waymark-map-geojson-layer-3-line",
         "waymark-map-geojson-layer-2-line",
+        "waymark-map-geojson-layer-1-circle-hit",
         "waymark-map-geojson-layer-1-circle",
+        "waymark-map-geojson-layer-0-circle-hit",
         "waymark-map-geojson-layer-0-circle",
         "poi-label",
       ]);
@@ -3156,6 +3158,7 @@ describe("1. API", () => {
 
       expect(map.getStyle().layers.map((layer) => layer.id)).toEqual([
         "background",
+        "waymark-map-geojson-layer-0-circle-hit",
         "waymark-map-geojson-layer-0-fill",
         "waymark-map-geojson-layer-0-line",
         "waymark-map-geojson-layer-0-circle",
@@ -3247,10 +3250,11 @@ describe("1. API", () => {
         {
           id: "map",
           layerIndex: 0,
-          mountedFamilies: ["circle", "line"],
+          mountedFamilies: ["circle", "line", "circle"],
           mountedLayerIds: [
             "waymark-map-geojson-layer-0-circle",
             "waymark-map-geojson-layer-0-line",
+            "waymark-map-geojson-layer-0-circle-hit",
           ],
           mountedTypes: [],
         },
@@ -3759,10 +3763,15 @@ describe("1. API", () => {
 
       expect(mountedEvents).toHaveLength(1);
       expect(mountedEvents[0].layerIndex).toBe(0);
-      expect(mountedEvents[0].mountedFamilies).toEqual(["circle", "line"]);
+      expect(mountedEvents[0].mountedFamilies).toEqual([
+        "circle",
+        "line",
+        "circle",
+      ]);
       expect(mountedEvents[0].mountedLayerIds).toEqual([
         "waymark-map-geojson-layer-0-circle",
         "waymark-map-geojson-layer-0-line",
+        "waymark-map-geojson-layer-0-circle-hit",
       ]);
     });
 

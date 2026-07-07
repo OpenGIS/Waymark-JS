@@ -902,7 +902,7 @@ function normaliseTypes(types, path) {
 
     expectPlainObject(typeDef, typePath);
 
-    const allowedKeys = new Set(["title", "paint", "icon"]);
+    const allowedKeys = new Set(["title", "paint", "icon", "iconSize"]);
     for (const key of Object.keys(typeDef)) {
       if (!allowedKeys.has(key)) {
         throw new Error(
@@ -927,6 +927,14 @@ function normaliseTypes(types, path) {
       }
     }
 
+    if (typeDef.iconSize !== undefined) {
+      if (typeof typeDef.iconSize !== "number" || typeDef.iconSize <= 0) {
+        throw new Error(
+          `Invalid ${typePath}.iconSize: expected a positive number.`,
+        );
+      }
+    }
+
     if (!isPlainObject(typeDef.paint)) {
       throw new Error(
         `Invalid ${typePath}.paint: expected a plain object with family paint keys.`,
@@ -947,13 +955,14 @@ function normaliseTypes(types, path) {
 
     if (!hasValidFamilies) {
       throw new Error(
-        `Invalid ${typePath}.paint: expected at least one family key (point, line, or polygon).`,
+        `Invalid ${typePath}.paint: expected at least one family key (circle, line, or fill).`,
       );
     }
 
     normalised[typeKey] = {
       ...(typeDef.title !== undefined ? { title: typeDef.title } : {}),
       ...(typeDef.icon !== undefined ? { icon: typeDef.icon } : {}),
+      ...(typeDef.iconSize !== undefined ? { iconSize: typeDef.iconSize } : {}),
       paint: normalisedPaint,
     };
   }

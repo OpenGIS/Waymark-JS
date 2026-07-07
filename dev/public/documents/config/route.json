@@ -3,19 +3,19 @@
     "id": "map",
     "debug": true,
     "paint": {
-      "point": { "circle-radius": 6 },
+      "circle": { "circle-radius": 6 },
       "line": { "line-width": 3 }
     },
     "types": {
       "beer": {
-        "paint": { "point": { "circle-color": "#754423" } }
+        "paint": { "circle": { "circle-color": "#754423" } }
       },
       "food": {
-        "paint": { "point": { "circle-color": "#da3d20" } }
+        "paint": { "circle": { "circle-color": "#da3d20" } }
       },
       "alert": {
         "paint": {
-          "point": {
+          "circle": {
             "circle-color": "#da3d20",
             "circle-radius": 8,
             "circle-stroke-color": "#c0392b",
@@ -24,13 +24,13 @@
         }
       },
       "camp": {
-        "paint": { "point": { "circle-color": "#a43233" } }
+        "paint": { "circle": { "circle-color": "#a43233" } }
       },
       "photo": {
-        "paint": { "point": { "circle-color": "#70af00" } }
+        "paint": { "circle": { "circle-color": "#70af00" } }
       },
       "information": {
-        "paint": { "point": { "circle-color": "#0069a5" } }
+        "paint": { "circle": { "circle-color": "#0069a5" } }
       },
       "green": {
         "paint": { "line": { "line-color": "#27ae60", "line-width": 4 } }

@@ -12,7 +12,7 @@
  *     },
  *   },
  *   ui: { mode: 'view' },
- *   paint: { point?: object, line?: object, polygon?: object },
+ *   paint: { circle?: object, line?: object, fill?: object },
  *   types: Record<string, { title?: string, paint: object }> | undefined,
  *   debug: false,
  * }}

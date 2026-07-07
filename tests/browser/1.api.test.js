@@ -1058,6 +1058,7 @@ test.describe("1. API", () => {
           {
             title: defaultBasemapVector.title,
             styleURL: defaultBasemapVector.styleURL,
+            attributionHTML: defaultBasemapVector.attributionHTML,
           },
         ],
       });
@@ -1424,6 +1425,7 @@ test.describe("1. API", () => {
       expect(result.layerIds).toEqual([
         "waymark-map-geojson-family-test-geojson-layer-2-fill",
         "waymark-map-geojson-family-test-geojson-layer-1-line",
+        "waymark-map-geojson-family-test-geojson-layer-0-circle-hit",
         "waymark-map-geojson-family-test-geojson-layer-0-circle",
       ]);
     });
@@ -1533,6 +1535,7 @@ test.describe("1. API", () => {
 
       expect(result.layerTypes).toEqual(["fill", "line", "circle"]);
       expect(result.layerIds).toEqual([
+        "waymark-map-geojson-mixed-family-test-geojson-layer-0-circle-hit",
         "waymark-map-geojson-mixed-family-test-geojson-layer-0-fill",
         "waymark-map-geojson-mixed-family-test-geojson-layer-0-line",
         "waymark-map-geojson-mixed-family-test-geojson-layer-0-circle",
@@ -1615,10 +1618,11 @@ test.describe("1. API", () => {
         {
           id: "map-geojson-mounted-event",
           layerIndex: 0,
-          mountedFamilies: ["circle", "line"],
+          mountedFamilies: ["circle", "line", "circle"],
           mountedLayerIds: [
             "waymark-map-geojson-mounted-event-geojson-layer-0-circle",
             "waymark-map-geojson-mounted-event-geojson-layer-0-line",
+            "waymark-map-geojson-mounted-event-geojson-layer-0-circle-hit",
           ],
           mountedTypes: [],
         },

@@ -108,6 +108,7 @@ Canonical v1 shape:
     },
     types?: Record<string, {
       icon?: string,
+      iconSize?: number,
       paint?: {
         circle?: object,
         line?: object,
@@ -750,6 +751,10 @@ Type keys must be non-empty and match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`. For each def
 If the icon ID is not found in the sprite, or if no `circle-color` is provided, Waymark logs a warning and skips icon loading for that type. When `icon` is present but `circle-color` is missing, the type falls back to regular circle rendering (if a `circle` paint block exists) or is skipped.
 
 Icons are loaded once ahead of all data layers during initial mount and after style reloads. Each icon is registered with MapLibre using the type key as the image ID, referenced in the layer's `layout` as `"icon-image": "<typeKey>"`.
+
+##### `iconSize` property
+
+`config.types[typeKey].iconSize` (optional number) sets the icon scale for symbol layers when a type has an `icon` defined. Defaults to `1.5` when not provided. For example, `iconSize: 1` renders the icon at its native size.
 
 ##### Type rendering plan
 

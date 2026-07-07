@@ -527,9 +527,11 @@ function createRenderPlan(
 
   const hasTypes = types && Object.keys(types).length > 0;
 
+  let entries;
+
   if (!hasTypes) {
     // Original behaviour — no type awareness needed
-    return renderFamilies.map((family) => ({
+    entries = renderFamilies.map((family) => ({
       family,
       layerId: `${baseLayerId}-${family}`,
       type: FAMILY_TYPES[family].layerType,
@@ -538,88 +540,132 @@ function createRenderPlan(
       hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, null),
       priority: family === "circle" ? 1 : 0,
     }));
-  }
+  } else {
+    // Types defined — untyped fallback + per-type sublayers
+    entries = [];
 
-  // Types defined — untyped fallback + per-type sublayers
-  const entries = [];
-
-  for (const family of renderFamilies) {
-    // Untyped fallback
-    entries.push({
-      family,
-      layerId: `${baseLayerId}-${family}`,
-      type: FAMILY_TYPES[family].layerType,
-      paint: resolvePaint(family, layerIndex, instancePaint, layerPaint, null),
-      filter: ["!", ["has", "waymarkType"]],
-      hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, [
-        "!",
-        ["has", "waymarkType"],
-      ]),
-      priority: family === "circle" ? 1 : 0,
-    });
-
-    // Per-type sublayers (in config.types key order)
-    for (const [typeKey, typeDef] of Object.entries(types)) {
-      // If this is a circle family and the type has an icon defined,
-      // create an invisible circle layer for click detection plus
-      // a symbol layer for the visual icon
-      if (family === "circle" && typeDef.icon) {
-        const fillColor = typeDef.paint?.circle?.["circle-color"];
-        if (fillColor) {
-          // Invisible hit circle for reliable click detection
-          // (MapLibre symbol hit areas are only the icon's non-transparent pixels)
-          entries.push({
-            family: "circle",
-            layerId: `${baseLayerId}-circle-hit-${typeKey}`,
-            type: "circle",
-            paint: {
-              "circle-color": fillColor,
-              "circle-radius": 14,
-              "circle-opacity": 0,
-            },
-            filter: ["==", ["get", "waymarkType"], typeKey],
-            hasWaymarkPaint: false,
-            priority: 2,
-          });
-
-          entries.push({
-            family: "symbol",
-            layerId: `${baseLayerId}-symbol-type-${typeKey}`,
-            type: "symbol",
-            paint: { "icon-opacity": 1 },
-            layout: {
-              "icon-image": typeKey,
-              "icon-size": 1.5,
-              "icon-allow-overlap": true,
-              "icon-ignore-placement": true,
-            },
-            filter: ["==", ["get", "waymarkType"], typeKey],
-            hasWaymarkPaint: false,
-            _skipObserve: true,
-            priority: 3,
-          });
-          continue;
-        }
-      }
-
-      const typePaint = typeDef.paint?.[family];
-      if (!typePaint) continue; // type doesn't cover this family
-
+    for (const family of renderFamilies) {
+      // Untyped fallback
       entries.push({
         family,
-        layerId: `${baseLayerId}-${family}-type-${typeKey}`,
+        layerId: `${baseLayerId}-${family}`,
         type: FAMILY_TYPES[family].layerType,
-        paint: resolvePaint(family, layerIndex, instancePaint, null, typePaint),
-        filter: ["==", ["get", "waymarkType"], typeKey],
+        paint: resolvePaint(
+          family,
+          layerIndex,
+          instancePaint,
+          layerPaint,
+          null,
+        ),
+        filter: ["!", ["has", "waymarkType"]],
         hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, [
-          "==",
-          ["get", "waymarkType"],
-          typeKey,
+          "!",
+          ["has", "waymarkType"],
         ]),
         priority: family === "circle" ? 1 : 0,
       });
+
+      // Per-type sublayers (in config.types key order)
+      for (const [typeKey, typeDef] of Object.entries(types)) {
+        // If this is a circle family and the type has an icon defined,
+        // create an invisible circle layer for click detection plus
+        // a symbol layer for the visual icon
+        if (family === "circle" && typeDef.icon) {
+          const fillColor = typeDef.paint?.circle?.["circle-color"];
+          if (fillColor) {
+            // Invisible hit circle for reliable click detection
+            // (MapLibre symbol hit areas are only the icon's non-transparent pixels)
+            entries.push({
+              family: "circle",
+              layerId: `${baseLayerId}-circle-hit-${typeKey}`,
+              type: "circle",
+              paint: {
+                "circle-color": fillColor,
+                "circle-radius": 14,
+                "circle-opacity": 0,
+              },
+              filter: ["==", ["get", "waymarkType"], typeKey],
+              hasWaymarkPaint: false,
+              priority: 2,
+            });
+
+            entries.push({
+              family: "symbol",
+              layerId: `${baseLayerId}-symbol-type-${typeKey}`,
+              type: "symbol",
+              paint: { "icon-opacity": 1 },
+              layout: {
+                "icon-image": typeKey,
+                "icon-size": typeDef.iconSize ?? 1.5,
+                "icon-allow-overlap": true,
+                "icon-ignore-placement": true,
+              },
+              filter: ["==", ["get", "waymarkType"], typeKey],
+              hasWaymarkPaint: false,
+              _skipObserve: true,
+              priority: 3,
+            });
+            continue;
+          }
+        }
+
+        const typePaint = typeDef.paint?.[family];
+        if (!typePaint) continue; // type doesn't cover this family
+
+        entries.push({
+          family,
+          layerId: `${baseLayerId}-${family}-type-${typeKey}`,
+          type: FAMILY_TYPES[family].layerType,
+          paint: resolvePaint(
+            family,
+            layerIndex,
+            instancePaint,
+            null,
+            typePaint,
+          ),
+          filter: ["==", ["get", "waymarkType"], typeKey],
+          hasWaymarkPaint: hasFeaturesWithWaymarkPaint(data, [
+            "==",
+            ["get", "waymarkType"],
+            typeKey,
+          ]),
+          priority: family === "circle" ? 1 : 0,
+        });
+      }
     }
   }
+
+  // Post-process: add invisible hit circles for all circle layers
+  // to improve click targeting. Extends the existing hit-circle
+  // pattern (already used for icon types) to regular circle layers
+  // so all point features have a consistent large click target.
+  const hitEntries = [];
+
+  for (const entry of entries) {
+    if (
+      entry.family === "circle" &&
+      !entry._skipObserve &&
+      entry.paint["circle-opacity"] !== 0
+    ) {
+      entry._skipObserve = true;
+
+      hitEntries.push({
+        family: "circle",
+        layerId: `${entry.layerId}-hit`,
+        type: "circle",
+        paint: {
+          "circle-color": entry.paint["circle-color"] ?? "#000000",
+          "circle-radius": 14,
+          "circle-opacity": 0,
+        },
+        filter: entry.filter,
+        hasWaymarkPaint: false,
+        priority: 2,
+      });
+    }
+  }
+
+  entries.push(...hitEntries);
 
   return entries;
 }
@@ -705,7 +751,14 @@ export function createGeoJSONModule(
     // check on subsequent calls.
     if (isMapLoaded || (typeof map.loaded === "function" && map.loaded())) {
       isMapLoaded = true;
-      mountGeoJSONLayers();
+
+      // When no types icons need loading, mount synchronously so errors
+      // propagate to the caller (e.g. the try-catch in addCoreDataLayer).
+      if (types && !iconsLoaded) {
+        mountGeoJSONLayers();
+      } else {
+        mountLayersSync();
+      }
     } else if (!attachedLoadHandler) {
       attachedLoadHandler = () => {
         isMapLoaded = true;
@@ -725,21 +778,14 @@ export function createGeoJSONModule(
     }
   }
 
-  async function mountGeoJSONLayers() {
-    if (hasMountedLayers || isMounting) {
+  /**
+   * Synchronously mount GeoJSON sources and layers for all layer records.
+   * Throws on error from map.addSource / map.addLayer, propagating to the
+   * try-catch in addCoreDataLayer.
+   */
+  function mountLayersSync() {
+    if (hasMountedLayers) {
       return;
-    }
-
-    isMounting = true;
-
-    // Load type icons before mounting layers that may reference them
-    if (types && !iconsLoaded) {
-      try {
-        await loadTypeIcons(map, types);
-        iconsLoaded = true;
-      } catch (err) {
-        console.warn("[waymark] Failed to load type icons:", err);
-      }
     }
 
     let beforeLayerId = findFirstSymbolLayerId(map);
@@ -834,6 +880,26 @@ export function createGeoJSONModule(
     }
 
     hasMountedLayers = true;
+  }
+
+  async function mountGeoJSONLayers() {
+    if (hasMountedLayers || isMounting) {
+      return;
+    }
+
+    isMounting = true;
+
+    // Load type icons before mounting layers that may reference them
+    if (types && !iconsLoaded) {
+      try {
+        await loadTypeIcons(map, types);
+        iconsLoaded = true;
+      } catch (err) {
+        console.warn("[waymark] Failed to load type icons:", err);
+      }
+    }
+
+    mountLayersSync();
     isMounting = false;
   }
 
@@ -886,6 +952,19 @@ export function createGeoJSONModule(
                 );
               } catch {
                 // Layer may not exist yet; ignore
+              }
+
+              // Also toggle the corresponding hit circle if present
+              const hitLayerId = renderLayer.layerId + "-hit";
+              if (
+                typeof map.getLayer === "function" &&
+                map.getLayer(hitLayerId)
+              ) {
+                try {
+                  map.setLayoutProperty(hitLayerId, "visibility", visibility);
+                } catch {
+                  // Layer may not exist yet; ignore
+                }
               }
             }
           }
