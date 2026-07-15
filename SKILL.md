@@ -27,10 +27,11 @@ description: Consumer API reference for the Waymark JS map library. Use when bui
 ```
 
 ## Factory signature
+
 `createInstance(instanceDocument?)`
-| Parameter          | Type     | Required | Behaviour                                                                                                                          |
+| Parameter | Type | Required | Behaviour |
 | ------------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `instanceDocument` | `object` | No       | Canonical serialisable InstanceDocument with strict top-level keys: `config`, `state`, `data`. Unknown top-level keys are ignored. |
+| `instanceDocument` | `object` | No | Canonical serialisable InstanceDocument with strict top-level keys: `config`, `state`, `data`. Unknown top-level keys are ignored. |
 
 Waymark guarantees strict round-trip serialisation for canonical documents:
 
@@ -123,7 +124,7 @@ Canonical v1 shape:
         }>
       }
     },
-    types?: Record<string, { visibility?: "visible" | "none" }>,
+    types?: Record<string, { visible?: boolean }>,
     ui: {
       mode?: "view" | "debug"
     },
@@ -329,9 +330,9 @@ const instance = createInstance({
     setMode: (mode: "view" | "debug") => void
   },
   types: {
-    setVisibility: (typeKey: string, visibility: "visible" | "none") => void,
-    getVisibility: (typeKey: string) => "visible" | "none" | null,
-    getAll: () => Record<string, { paint?: object, visibility?: "visible" | "none" }>,
+    setVisibility: (typeKey: string, visible: boolean) => { previous: boolean, next: boolean } | null,
+    getVisibility: (typeKey: string) => boolean,
+    getAll: () => Record<string, { title: string, visible: boolean }>,
     resetVisibility: () => void
   },
   debug: {
@@ -365,17 +366,18 @@ Events are dispatched as `CustomEvent`s from the instance container.
 - Use `once(type, handler, options?)`
 
 Lifecycle events:
+
 - `waymark:instance.created`
 - `waymark:instance.recreated`
 - `waymark:instance.destroyed`
-Forwarded map events:
+  Forwarded map events:
 - `waymark:map.load`
 - `waymark:map.moveend`
 - `waymark:map.zoomend`
 - `waymark:map.rotateend`
 - `waymark:map.pitchend`
 - `waymark:map.error`
-Forwarded map event payload shape:
+  Forwarded map event payload shape:
 
 ```js
 {
@@ -400,10 +402,11 @@ Basemaps module event:
 - `waymark:map.basemaps.changed`
 
 Data-layer runtime events:
+
 - `waymark:data.layer.added`
 - `waymark:data.layer.mounted`
 - `waymark:data.layer.error`
-Data-layer mounted payload shape (`waymark:data.layer.mounted`):
+  Data-layer mounted payload shape (`waymark:data.layer.mounted`):
 
 ```js
 {
@@ -556,7 +559,7 @@ State event payload shape:
         vector?: object[]
       }
     },
-    types?: Record<string, { visibility?: "visible" | "none" }>,
+    types?: Record<string, { visible?: boolean }>,
     ui?: { mode?: "view" | "debug" },
     debug?: boolean
   },
@@ -698,7 +701,7 @@ Per-layer paint overrides both the pool colour and `config.paint` for that layer
 }
 ```
 
-Type keys must be non-empty and match `/[a-zA-Z_$][a-zA-Z0-9_$]*/`. For each defined type, Waymark creates per-family sublayers filtered by `["==", ["get", "waymarkType"], "<typeKey>"]`.
+Type keys must be non-empty and match `/^[a-z0-9]+(-[a-z0-9]+)*$/` (1-64 characters, lowercase a-z, digits 0-9, and hyphens only — no leading or trailing hyphens). For each defined type, Waymark creates per-family sublayers filtered by `["==", ["get", "waymarkType"], "<typeKey>"]`.
 
 ##### `icon` property
 
@@ -730,31 +733,53 @@ When a type has an `icon` property, its point family becomes `"symbol"` instead 
 3. Instance paint (`config.paint[family]`)
 4. Pool colour + family defaults (radius, width, opacity)
 
+##### Hit-circle layers
+
+All point features (circle-family and icon symbols) have companion invisible hit-circle layers that provide a consistent large click target. When a feature renders as a MapLibre `circle` or `symbol` layer, an invisible circle (radius 14, `circle-opacity: 0`) is mounted behind it with the same `waymarkType` filter.
+
+- **Symbol icons**: hit-circle ID is `{baseLayerId}-circle-hit-{typeKey}`
+- **Regular circles**: hit-circle ID is `{baseLayerId}-{family}-hit`
+
+These hit-circles are invisible to the user but detectable by `queryRenderedFeatures`, ensuring clicks near point features are captured reliably even when the visual marker or icon is small. The `featureProperties` module queries hit-circles at a higher priority than visible circle layers.
+
+##### Click priority
+
+When multiple layers overlap at the cursor position, the layer with the highest numeric priority wins when resolving the clicked feature:
+
+| Priority | Layer type                  |
+| -------- | --------------------------- |
+| 3        | Symbol icon layers          |
+| 2        | Invisible hit-circle layers |
+| 1        | Regular circle layers       |
+| 0        | Line and fill layers        |
+
+This ensures that invisible hit-circles (priority 2) are preferred over visible circle layers (priority 1), and symbol icon layers (priority 3) take precedence over both. The priority system is internal to the `featureProperties` module and not exposed in the public API.
+
 #### `instance.types` runtime API
 
 ```
-instance.types.setVisibility(typeKey, "visible" | "none")
-instance.types.getVisibility(typeKey)  → "visible" | "none" | null
-instance.types.getAll()                → Record of type keys with paint and visibility
+instance.types.setVisibility(typeKey, visible: boolean)  → { previous: boolean, next: boolean } | null
+instance.types.getVisibility(typeKey)                    → boolean
+instance.types.getAll()                                  → Record<string, { title: string, visible: boolean }>
 instance.types.resetVisibility()
 ```
 
-- `setVisibility` hides or shows typed sublayers by updating `waymarkType`-based filters to use `["none"]` or `["!=", ["get", "waymarkType"], typeKey]` for visibility.
-- `getVisibility` returns the current visibility state for a type key.
-- `getAll` returns the full type definition map including paint and current visibility.
-- `resetVisibility` restores all types to visible.
+- `setVisibility(boolean)` hides or shows typed sublayers by updating `waymarkType`-based filters to use `["none"]` or `["!=", ["get", "waymarkType"], typeKey]` for visibility. Returns `{ previous, next }` on success, `null` if destroyed or type key unknown.
+- `getVisibility` returns `true` (visible) or `false` (hidden). Returns `true` for unknown keys.
+- `getAll` returns the full type definition map including `title` and current `visible` boolean.
+- `resetVisibility` restores all types to visible (no return value).
 
 Type visibility produces `waymark:state.types.changed` and `waymark:state.types.visibility.changed` state events.
 
 #### Paint serialisation
 
 - `config.paint` and `config.types` are serialised in `toJSON().config` as authored.
-- `state.types` appears in `toJSON() only when type visibility diverges from default (any type set to `"none"`)`. It contains only the visibility delta:
+- `state.types` appears in `toJSON()` only when type visibility diverges from default (any type set to `false`). It contains only the visibility delta:
 
 ```js
 {
   types: {
-    "<typeKey>": { visibility: "none" }
+    "<typeKey>": { visible: false }
   }
 }
 ```
@@ -792,4 +817,3 @@ GeoJSON source/layer IDs are instance-scoped to avoid collisions:
 - sublayer: `waymark-{id}-geojson-layer-{index}-{family}`
 
 For the full data contract (validation, serialisation, runtime mounting, and dev example usage), see [`docs/6.data.md`](6.data.md).
-
