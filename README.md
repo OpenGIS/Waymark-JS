@@ -1,28 +1,37 @@
+---
+last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
+---
+
 # Waymark JS
 
-Waymark JS is a small JavaScript library for rendering interactive maps with [MapLibre GL](https://maplibre.org/).
+> Create, share and edit interactive maps. A JavaScript library for geographical information — powered by MapLibre GL.
 
-## Commands
+> [!WARNING]
+> **v4 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. APIs are unstable and subject to change.
+
+> [!NOTE]
+> No API keys required. OpenStreetMap and OpenFreeMap tiles included out of the box.
+
+## Overview
+
+Waymark JS is a browser library for rendering interactive maps with data layers. It stores geographic data as GeoJSON and supports raster and vector tile basemaps.
+
+v4 is a complete rewrite — from jQuery + Leaflet to a modern ES module built with [MapLibre GL](https://maplibre.org/), [Vue 3](https://vuejs.org/) and [Vite](https://vite.dev/).
+
+## Installation
 
 ```bash
-npm install
-npm run dev
-npm run docs:sync # also refreshes SKILL.md from docs/1.api.md (consumer API only)
-npm run format
-npm run format:check
-npm run docs:contract
-npm run docs:api-sync
-npm run docs:sync
-npm test
-npm run test:browser
+npm install waymark-js
 ```
 
-## Minimal usage
+## Quick start
 
 ```html
 <div id="map" style="height: 400px"></div>
+
 <script type="module">
-  import { createInstance } from "./dist/waymark.js";
+  import { createInstance } from "waymark-js";
+  import "waymark-js/waymark.css";
 
   const instance = createInstance({
     config: {
@@ -37,133 +46,114 @@ npm run test:browser
   });
 
   instance.on("waymark:map.load", () => {
-    console.log("Map ready");
-    console.log(instance.toJSON());
+    console.log("Map ready", instance.toJSON());
   });
-
-  // Tear down when no longer needed
-  // instance.destroy();
 </script>
 ```
 
-Serialisable `config.map.options` values are passed through to the MapLibre `new Map(options)` constructor, except `container` (always set by Waymark from `createInstance({ config: { id } })`) and `style` (managed via `config.map.basemaps`).
+## How it works
 
-Non-serialisable option values are dropped during normalisation to keep round-trip serialisation deterministic.
-
-`createInstance(instanceDocument?)` is JSON-first. `instance.toJSON()` is the only public serialisation API and returns the canonical serialisable InstanceDocument.
-
-## Runtime requirements
-
-Waymark JS instances are browser-focused and DOM-dependent.
-
-- Call `createInstance(...)` in a browser runtime where `document` exists.
-- The target container must exist in the DOM (or Waymark appends a generated container to `document.body` when no `config.id` is provided).
-- Instance events (`on`, `off`, `once`) use browser `CustomEvent`/`EventTarget` behaviour on the instance container.
-- Map rendering depends on browser canvas/WebGL support via MapLibre.
-
-For SSR frameworks, create instances client-side only (after the container exists).
-
-## Instance container events
-
-Each instance exposes a small container-centred event API:
-
-- `instance.on(type, handler, options?)`
-- `instance.off(type, handler, options?)`
-- `instance.once(type, handler, options?)`
-
-Handlers receive `CustomEvent`s dispatched from the instance container (`waymark:*`). Event families are:
-
-- Lifecycle: `waymark:instance.created`, `waymark:instance.recreated`, `waymark:instance.destroyed`
-- Forwarded map events: `waymark:map.load`, `waymark:map.moveend`, `waymark:map.zoomend`, `waymark:map.rotateend`, `waymark:map.pitchend`, `waymark:map.error`
-- Data-layer runtime events: `waymark:data.layer.added`, `waymark:data.layer.mounted`, `waymark:data.layer.error`
-
-See [`docs/1.api.md`](docs/1.api.md#instance-event-api) for payload shapes and usage notes.
-
-`instance.toJSON()` returns a canonical serialisable per-instance document from `src/document/instanceDocument.js`.
-
-- `config` is the stable resolved authored/default baseline.
-- `state` is runtime-state persistence delta only (omits unchanged branches).
-
-Runtime metadata is intentionally separate from `toJSON()` and not part of the public debug output.
-
-Waymark always mounts a Vue app shell (`src/ui/InstanceShell.vue`) in the map container. The shell content is mode-driven:
-
-- `view` (default): shell present, no mode content
-- `debug`: shell renders a debug control button that toggles a debug panel with **Instance document** and **Waymark events (last 25)** sections
-
-`config.ui.mode` is normalised to `view` when invalid.
-
-Shell event history includes lifecycle, module, forwarded map events, and canonical runtime state events (`waymark:state.changed`, `waymark:state.*`) with bounded sanitised summaries. Runtime instance tracking is handled separately by the internal runtime registry in `src/runtime/runtimeRegistry.js`.
-
-## Naming glossary
-
-- **Instance**: the public object returned by `createInstance(...)` (`id`, `toJSON()`, [`data.addLayer(layer, options?)`](docs/6.data.md), `ui.setMode()`, `destroy()`, `on()`, `off()`, `once()`).
-- **Runtime core**: internal lifecycle object assembled by `src/runtime/createInstanceCore.js` and tracked in `src/runtime/runtimeRegistry.js`.
-- **InstanceDocument**: canonical serialisable plain object returned by `instance.toJSON()`.
-- **GeoJSON**: the map data format; canonical InstanceDocument data shape is `data.layers[]`, where each layer is `{ type: "geojson", data: object }`.
-
-Data-layer semantics:
-
-- Multiple GeoJSON layers are supported via `data.layers` and runtime `instance.data.addLayer(layer, options?)` — see [`docs/6.data.md`](docs/6.data.md).
-- Layer input is strict minimal GeoJSON: `FeatureCollection` (`features[]`), `Feature` (`geometry` key), or a supported geometry object (`Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, `GeometryCollection` with `geometries[]`).
-- Essential geometry semantics are validated at the boundary (finite lon/lat positions, `LineString` minimum 2 positions, closed `LinearRing`, valid polygon/multi-member structures, recursive `GeometryCollection`).
-- Invalid `instance.data.addLayer(...)` emits `waymark:data.layer.error` and then throws.
-- Stack order is top-first: `layers[0]` is visually on top (within the data-layer stack).
-- Data layers are inserted after raster basemaps and before symbol layers.
-- Geometry families map to MapLibre layer types:
-  - `Point` / `MultiPoint` → `circle`
-  - `LineString` / `MultiLineString` → `line`
-  - `Polygon` / `MultiPolygon` → `fill`
-- One logical layer may mount multiple family sublayers for mixed-geometry FeatureCollections.
-
-Set basemaps with `map.basemaps.raster[]` and `map.basemaps.vector[]` (canonical readable order):
+Waymark uses a document-based architecture. Pass a serialisable **InstanceDocument** to `createInstance()` — the same shape returned by `instance.toJSON()`:
 
 ```js
-createInstance({
+const instance = createInstance({
   config: {
     id: "map",
     map: {
+      options: { center: [-0.1276, 51.5074], zoom: 10 },
       basemaps: {
         raster: [
           {
             tileURLTemplates: [
               "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ],
-            title: "OpenStreetMap raster",
-            attributionHTML:
-              '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
-            opacity: 0.75,
+            title: "OpenStreetMap",
           },
         ],
         vector: [
           {
-            styleURL: "https://example.com/style.json",
-            title: "Example vector style",
-            attributionHTML:
-              '<a href="https://example.com/tiles">© Example Maps</a>',
+            styleURL: "https://tiles.openfreemap.org/styles/bright",
+            title: "OpenFreeMap Bright",
           },
         ],
       },
     },
   },
+  data: {
+    layers: [
+      {
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: { title: "Hello" },
+              geometry: { type: "Point", coordinates: [-0.1276, 51.5074] },
+            },
+          ],
+        },
+      },
+    ],
+  },
 });
 ```
 
-## Documentation
+Serialisable `config.map.options` values are passed through to the MapLibre `Map` constructor, except `container` (always set by Waymark) and `style` (managed via basemaps).
 
-### Feature slices
+Calling `createInstance()` with the same `id` destroys the previous instance and creates a fresh one.
 
-Basemaps is the canonical cross-module slice for this codebase:
+### Key concepts
 
-- Public contract (config, events, serialisation): [`docs/1.api.md`](docs/1.api.md#map-options-pass-through)
-- Runtime mechanics (MapLibre wiring + mutation flow): [`docs/4.map.md`](docs/4.map.md#runtime-behaviour)
-- UI interaction flow (panel + controls): [`docs/5.ui.md`](docs/5.ui.md#basemaps-panel-composition)
-- Contributor sync checklist: [`docs/2.development.md`](docs/2.development.md#basemaps-cross-module-contract-checklist)
+- **Instance** — the object returned by `createInstance()`, with lifecycle, event, data, and UI methods.
+- **InstanceDocument** — the serialisable payload accepted as input and returned by `toJSON()`. Round-trip safe.
+- **Config** — the authored baseline. Remains stable across serialisation.
+- **State** — runtime delta only. Persisted when values diverge from config.
+- **Data layers** — GeoJSON in `data.layers[]`, added at init or via `instance.data.addLayer()`.
 
-- [API](docs/1.api.md)
-- [Development guide](docs/2.development.md)
-- [Instances internals](docs/3.instances.md)
-- [Map module internals](docs/4.map.md)
-- [UI module internals](docs/5.ui.md)
-- [Data and GeoJSON contract](docs/6.data.md)
+## Events
+
+Events are dispatched as `CustomEvent`s on the instance container. Use the standard `on`/`off`/`once` API:
+
+```js
+instance.on("waymark:map.load", handler);
+instance.once("waymark:instance.destroyed", handler);
+```
+
+Lifecycle: `waymark:instance.created`, `waymark:instance.recreated`, `waymark:instance.destroyed`
+
+Map: `waymark:map.load`, `waymark:map.moveend`, `waymark:map.zoomend`, `waymark:map.rotateend`, `waymark:map.pitchend`, `waymark:map.error`
+
+Data: `waymark:data.layer.added`, `waymark:data.layer.mounted`, `waymark:data.layer.error`
+
+State: `waymark:state.changed`, `waymark:state.*`
+
+See the [API reference](docs/1.api.md#instance-event-api) for payload shapes.
+
+## Runtime requirements
+
+- Browser runtime with DOM access (not SSR-safe)
+- The target container element must exist before calling `createInstance()`
+- If `config.id` is omitted, Waymark generates one and appends the container to `document.body`
+- Map rendering depends on browser canvas/WebGL support via MapLibre GL
+
+## Commands
+
+```bash
+npm install          # Install dependencies
+npm run dev          # Start dev server
+npm test             # Unit tests (Vitest)
+npm run test:browser # Browser tests (Playwright)
+npm run build        # Production bundle to dist/
+npm run format       # Format with Prettier
+npm run docs:sync    # Sync generated docs and SKILL.md
+```
+
+## Further Reading
+
+- [API reference](docs/1.api.md) — Full consumer API contract, config defaults, events, and serialisation
+- [Development guide](docs/2.development.md) — Contributor workflow, conventions, and testing
+- [Instances](docs/3.instances.md) — Internal lifecycle and serialisation semantics
+- [Map module](docs/4.map.md) — MapLibre wiring, basemaps, and state sync
+- [UI module](docs/5.ui.md) — Shell components, mode system, and debug panel
+- [Data & GeoJSON](docs/6.data.md) — Layer contract, validation, and runtime behaviour
 - [Docs index](docs/README.md)
