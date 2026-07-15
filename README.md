@@ -7,7 +7,7 @@ Waymark JS is a small JavaScript library for rendering interactive maps with [Ma
 ```bash
 npm install
 npm run dev
-npm run build # also refreshes .agents/skills/waymark-js/SKILL.md from docs/
+npm run docs:sync # also refreshes SKILL.md from docs/1.api.md (consumer API only)
 npm run format
 npm run format:check
 npm run docs:contract
