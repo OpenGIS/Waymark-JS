@@ -1,5 +1,5 @@
 ---
-last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
+last_commit: "46e124d4215fc21668b00d99c116f63a55c74008"
 ---
 
 # Waymark JS
@@ -7,7 +7,7 @@ last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
 > Create, share and edit _meaningful_ Maps.
 
 > [!WARNING]
-> **v2 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. APIs are unstable and subject to change.
+> **v2 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. Not yet published to npm. APIs are unstable and subject to change.
 
 > [!NOTE]
 > No API keys required. OpenStreetMap and OpenFreeMap tiles included out of the box.
@@ -20,9 +20,18 @@ v2 is a complete rewrite — from jQuery + Leaflet to a modern ES module built w
 
 ## Installation
 
+Clone, install, and build from source:
+
 ```bash
-npm install waymark-js
+git clone https://github.com/OpenGIS/Waymark-JS
+cd Waymark-JS
+npm install
+npm run build
 ```
+
+The library bundle is output to `dist/waymark.js` and styles to `dist/waymark.css`.
+
+Once v2 is stable, `npm install waymark-js` will be the standard installation.
 
 ## Quick start
 
@@ -30,8 +39,8 @@ npm install waymark-js
 <div id="map" style="height: 400px"></div>
 
 <script type="module">
-  import { createInstance } from "waymark-js";
-  import "waymark-js/waymark.css";
+  import { createInstance } from "./dist/waymark.js";
+  import "./dist/waymark.css";
 
   const instance = createInstance({
     config: {
@@ -142,11 +151,19 @@ See the [API reference](docs/1.api.md#instance-event-api) for payload shapes.
 npm install          # Install dependencies
 npm run dev          # Start dev server
 npm test             # Unit tests (Vitest)
+npm run test:ci      # Full CI gate (format → docs sync → unit tests → browser tests)
 npm run test:browser # Browser tests (Playwright)
 npm run build        # Production bundle to dist/
 npm run format       # Format with Prettier
 npm run docs:sync    # Sync generated docs and SKILL.md
 ```
+
+## CI/CD
+
+Two GitHub Actions workflows automate the release pipeline:
+
+- **CI** (`.github/workflows/ci.yml`) — validates every PR and push to `master` with the full `test:ci` gate.
+- **Release** (`.github/workflows/release.yml`) — when `package.json` version changes on `master`, creates a git tag and a GitHub Release with auto-generated release notes.
 
 ## Further Reading
 
