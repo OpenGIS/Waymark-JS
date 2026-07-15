@@ -1,6 +1,6 @@
 {
   "name": "waymark-js",
-  "version": "4.0.0",
+  "version": "2.0.0-a3",
   "type": "module",
   "module": "./dist/waymark.js",
   "exports": {

@@ -7,7 +7,7 @@ last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
 > Create, share and edit interactive maps. A JavaScript library for geographical information — powered by MapLibre GL.
 
 > [!WARNING]
-> **v4 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. APIs are unstable and subject to change.
+> **v2 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. APIs are unstable and subject to change.
 
 > [!NOTE]
 > No API keys required. OpenStreetMap and OpenFreeMap tiles included out of the box.
@@ -16,7 +16,7 @@ last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
 
 Waymark JS is a browser library for rendering interactive maps with data layers. It stores geographic data as GeoJSON and supports raster and vector tile basemaps.
 
-v4 is a complete rewrite — from jQuery + Leaflet to a modern ES module built with [MapLibre GL](https://maplibre.org/), [Vue 3](https://vuejs.org/) and [Vite](https://vite.dev/).
+v2 is a complete rewrite — from jQuery + Leaflet to a modern ES module built with [MapLibre GL](https://maplibre.org/), [Vue 3](https://vuejs.org/) and [Vite](https://vite.dev/).
 
 ## Installation
 
