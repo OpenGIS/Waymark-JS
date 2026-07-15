@@ -4,7 +4,7 @@ last_commit: "4dddba6be208e53c3d40b03c60c68ce0c0174eef"
 
 # Waymark JS
 
-> Create, share and edit interactive maps. A JavaScript library for geographical information — powered by MapLibre GL.
+> Create, share and edit _meaningful_ Maps.
 
 > [!WARNING]
 > **v2 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. APIs are unstable and subject to change.
