@@ -23,7 +23,7 @@ v2 is a complete rewrite — from jQuery + Leaflet to a modern ES module built w
 Clone, install, and build from source:
 
 ```bash
-git clone https://github.com/OpenGIS/Waymark-JS
+git clone --recurse-submodules https://github.com/OpenGIS/Waymark-JS
 cd Waymark-JS
 npm install
 npm run build

@@ -11,6 +11,7 @@
 
 import fs from "fs";
 import path from "path";
+import * as prettier from "prettier";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const API_DOC = path.join(ROOT, "docs", "1.api.md");
@@ -47,6 +48,9 @@ description: Consumer API reference for the Waymark JS map library. Use when bui
 ${apiContent}
 `;
 
+// Format with Prettier so the generated file passes format:check
+const formatted = await prettier.format(skill, { parser: "markdown" });
+
 fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
-fs.writeFileSync(OUTPUT, skill, "utf8");
+fs.writeFileSync(OUTPUT, formatted, "utf8");
 console.log(`Written: ${path.relative(ROOT, OUTPUT)}`);
