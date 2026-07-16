@@ -7,6 +7,7 @@ export default defineConfig({
   testDir: "tests/browser",
   use: {
     baseURL: browserTestServerURL,
+    screenshot: "only-on-failure",
   },
   webServer: {
     command: "npm run dev:browser-tests",

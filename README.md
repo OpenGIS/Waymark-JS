@@ -7,7 +7,7 @@ last_commit: "46e124d4215fc21668b00d99c116f63a55c74008"
 > Create, share and edit _meaningful_ Maps.
 
 > [!WARNING]
-> **v2 (Alpha)** — This is a ground-up rewrite from the Leaflet-based original. Not yet published to npm. APIs are unstable and subject to change.
+> **v2 (Alpha)** — This is a ground-up rewrite. APIs are unstable and subject to change.
 
 > [!NOTE]
 > No API keys required. OpenStreetMap and OpenFreeMap tiles included out of the box.
@@ -30,8 +30,6 @@ npm run build
 ```
 
 The library bundle is output to `dist/waymark.js` and styles to `dist/waymark.css`.
-
-Once v2 is stable, `npm install waymark-js` will be the standard installation.
 
 ## Quick start
 
@@ -164,6 +162,8 @@ Two GitHub Actions workflows automate the release pipeline:
 
 - **CI** (`.github/workflows/ci.yml`) — validates every PR and push to `master` with the full `test:ci` gate.
 - **Release** (`.github/workflows/release.yml`) — when `package.json` version changes on `master`, creates a git tag and a GitHub Release with auto-generated release notes.
+
+![Waymark JS — basemaps panel](tests/browser/screenshots/dev-basemaps-panel.png)
 
 ## Further Reading
 

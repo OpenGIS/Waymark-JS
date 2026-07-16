@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { screenshot } from "./helpers/screenshot.js";
 
 test.describe("2. Development smoke", () => {
   test("dev page creates both demo instances and canvases", async ({
@@ -83,6 +84,8 @@ test.describe("2. Development smoke", () => {
       },
       mapKeys: ["vector"],
     });
+
+    await screenshot(page, "dev-two-instances");
   });
 
   test("dev page dropdowns change instance modes independently", async ({
@@ -317,6 +320,8 @@ test.describe("2. Development smoke", () => {
     await expect(
       page.locator('#map-two [data-waymark-modal="true"]'),
     ).toHaveCount(1);
+
+    await screenshot(page, "dev-debug-panel");
   });
 
   test("shared modal routes between debug and basemaps content", async ({
@@ -413,6 +418,8 @@ test.describe("2. Development smoke", () => {
         ),
       )
       .toEqual(["OpenTopoMap raster overlay", "OpenStreetMap raster"]);
+
+    await screenshot(page, "dev-basemaps-panel");
   });
 
   test("dev GeoJSON upload adds a new data layer and fits bounds", async ({
@@ -470,6 +477,8 @@ test.describe("2. Development smoke", () => {
           center: [expect.closeTo(10.75, 5), expect.closeTo(59.95, 5)],
         }),
       );
+
+    await screenshot(page, "dev-geojson-uploaded");
   });
 
   test("debug checkboxes toggle console logging with [waymark:debug] prefix", async ({

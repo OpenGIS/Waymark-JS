@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { defaultBasemapVector } from "../../src/config/defaults.js";
+import { screenshot } from "./helpers/screenshot.js";
 
 const INLINE_STYLE = {
   version: 8,
@@ -2150,6 +2151,285 @@ test.describe("1. API", () => {
       expect(result.center[0]).toBeCloseTo(10.5, 2);
       expect(result.center[1]).toBeCloseTo(10.5, 2);
       expect(result.zoom).toBeGreaterThan(2);
+    });
+  });
+
+  test.describe("Screenshots", () => {
+    const apiDefaultVector = {
+      title: "OpenFreeMap Bright",
+      styleURL: "https://tiles.openfreemap.org/styles/bright",
+    };
+
+    test("api-quick-start — basic map with vector tiles", async ({ page }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: { vector: [vector] },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(page.locator("#map canvas")).toBeVisible();
+      await screenshot(page, "api-quick-start");
+    });
+
+    test("api-raster-stacked — raster on vector basemaps", async ({ page }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: {
+                vector: [vector],
+                raster: [
+                  {
+                    title: "OpenStreetMap",
+                    tileURLTemplates: [
+                      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(page.locator("#map canvas")).toBeVisible();
+      await screenshot(page, "api-raster-stacked");
+    });
+
+    test("api-view-mode — UI shell in view mode", async ({ page }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            ui: { mode: "view" },
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: { vector: [vector] },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(page.locator('#map [data-waymark-app="true"]')).toHaveCount(
+        1,
+      );
+      await expect(
+        page.locator('#map [data-waymark-debug-panel="true"]'),
+      ).toHaveCount(0);
+      await screenshot(page, "api-view-mode");
+    });
+
+    test("api-debug-mode — UI shell in debug mode", async ({ page }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            ui: { mode: "debug" },
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: { vector: [vector] },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(
+        page.locator('#map [data-waymark-debug-panel="true"]'),
+      ).toHaveCount(1);
+      await screenshot(page, "api-debug-mode");
+    });
+
+    test("api-geojson-families — circle, line, fill layers", async ({
+      page,
+    }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: { vector: [vector] },
+            },
+          },
+          data: {
+            layers: [
+              {
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "MultiPoint",
+                        coordinates: [
+                          [-0.1276, 51.5074],
+                          [-0.1576, 51.5174],
+                        ],
+                      },
+                      properties: {},
+                    },
+                  ],
+                },
+              },
+              {
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "MultiLineString",
+                        coordinates: [
+                          [
+                            [-0.15, 51.5],
+                            [-0.1, 51.52],
+                          ],
+                        ],
+                      },
+                      properties: {},
+                    },
+                  ],
+                },
+              },
+              {
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "MultiPolygon",
+                        coordinates: [
+                          [
+                            [
+                              [-0.14, 51.5],
+                              [-0.11, 51.5],
+                              [-0.11, 51.52],
+                              [-0.14, 51.52],
+                              [-0.14, 51.5],
+                            ],
+                          ],
+                        ],
+                      },
+                      properties: {},
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(page.locator("#map canvas")).toBeVisible();
+      await screenshot(page, "api-geojson-families");
+    });
+
+    test("api-geojson-mixed — mixed FeatureCollection", async ({ page }) => {
+      await page.goto("/browser-api.html");
+      await page.evaluate(async (vector) => {
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 10 },
+              basemaps: { vector: [vector] },
+            },
+          },
+          data: {
+            layers: [
+              {
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "Point",
+                        coordinates: [-0.1276, 51.5074],
+                      },
+                      properties: {},
+                    },
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "LineString",
+                        coordinates: [
+                          [-0.15, 51.5],
+                          [-0.1, 51.52],
+                        ],
+                      },
+                      properties: {},
+                    },
+                    {
+                      type: "Feature",
+                      geometry: {
+                        type: "Polygon",
+                        coordinates: [
+                          [
+                            [-0.14, 51.5],
+                            [-0.11, 51.5],
+                            [-0.11, 51.52],
+                            [-0.14, 51.52],
+                            [-0.14, 51.5],
+                          ],
+                        ],
+                      },
+                      properties: {},
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+      }, apiDefaultVector);
+
+      await expect(page.locator("#map canvas")).toBeVisible();
+      await screenshot(page, "api-geojson-mixed");
     });
   });
 });
