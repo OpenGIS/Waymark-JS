@@ -978,6 +978,30 @@ export function createGeoJSONModule(
     getTypeLayerIds() {
       return collectAllTypeLayerIds();
     },
+    /**
+     * Fit the map to encompass all currently loaded data layers.
+     * @param {{ padding?: number }} [options]
+     */
+    fitBoundsToAll(options = {}) {
+      const padding = options.padding ?? 20;
+      let combinedBounds = null;
+
+      for (const layerRecord of layerRecords) {
+        if (!layerRecord.data) continue;
+        const bounds = computeGeoJSONBounds(layerRecord.data);
+        if (!bounds) continue;
+
+        if (combinedBounds === null) {
+          combinedBounds = bounds;
+        } else {
+          combinedBounds.extend(bounds);
+        }
+      }
+
+      if (combinedBounds) {
+        map.fitBounds(combinedBounds, { padding });
+      }
+    },
     addLayer(layer, options = {}) {
       const nextIndex = layerRecords.length;
       const baseLayerId = `waymark-${instanceToken}-geojson-layer-${nextIndex}`;

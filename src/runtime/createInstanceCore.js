@@ -74,7 +74,7 @@ import {
  * @typedef {object} WaymarkInstancePublicApi
  * @property {string} id
  * @property {() => WaymarkInstanceDocument} toJSON
- * @property {{ addLayer: (layer: { type?: 'geojson', data: object }, options?: { fitBounds?: boolean }) => void }} data
+ * @property {{ addLayer: (layer: { type?: 'geojson', data: object }, options?: { fitBounds?: boolean }) => void, fitBounds: (options?: { padding?: number }) => void }} data
  * @property {{ setMode: (mode: 'view' | 'debug') => void }} ui
  * @property {{ setEnabled: (enabled: boolean) => void }} debug
  * @property {{
@@ -1288,6 +1288,8 @@ export function createInstanceCore(instanceDocument) {
     toJSON: () => core.instanceDocument.toJSON(),
     data: {
       addLayer: (layer, options) => addCoreDataLayer(core, layer, options),
+      fitBounds: (options) =>
+        core.modules.geoJSON.fitBoundsToAll(options),
       featureProperties: {
         setEnabled: (enabled) => {
           core.modules.geoJSON.featureProperties.setEnabled(enabled);

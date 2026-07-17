@@ -2152,6 +2152,133 @@ test.describe("1. API", () => {
       expect(result.center[1]).toBeCloseTo(10.5, 2);
       expect(result.zoom).toBeGreaterThan(2);
     });
+
+    test("instance.data.fitBounds fits to all loaded layers combined", async ({
+      page,
+    }) => {
+      const result = await page.evaluate(() => {
+        const container = window.waymarkFixture.createContainer(
+          "map-fitbounds-combined",
+        );
+        container.style.width = "800px";
+        container.style.height = "600px";
+
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map-fitbounds-combined",
+            map: {
+              options: {
+                center: [0, 0],
+                zoom: 2,
+              },
+              basemaps: {
+                vector: [
+                  {
+                    styleURL: { version: 8, sources: {}, layers: [] },
+                  },
+                ],
+              },
+            },
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+
+        // Add two layers in different geographic locations
+        instance.data.addLayer({
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [-10, -10],
+                },
+                properties: {},
+              },
+            ],
+          },
+        });
+
+        instance.data.addLayer({
+          data: {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [20, 20],
+                },
+                properties: {},
+              },
+            ],
+          },
+        });
+
+        return new Promise((resolve) => {
+          let settled = false;
+          const settle = (value) => {
+            if (settled) return;
+            settled = true;
+            resolve(value);
+          };
+
+          // Wait for both layers to mount, then call fitBounds
+          const startedAt = Date.now();
+          const check = () => {
+            const hasLayer1 = Boolean(
+              map.getLayer(
+                "waymark-map-fitbounds-combined-geojson-layer-0-circle",
+              ),
+            );
+            const hasLayer2 = Boolean(
+              map.getLayer(
+                "waymark-map-fitbounds-combined-geojson-layer-1-circle",
+              ),
+            );
+
+            if (
+              (!hasLayer1 || !hasLayer2) &&
+              Date.now() - startedAt < 5000
+            ) {
+              setTimeout(check, 50);
+              return;
+            }
+
+            // Both layers mounted — now call fitBounds
+            instance.data.fitBounds({ padding: 20 });
+
+            const onMoveEnd = () => {
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            };
+
+            map.once("moveend", onMoveEnd);
+
+            setTimeout(() => {
+              map.off("moveend", onMoveEnd);
+              settle({
+                center: [map.getCenter().lng, map.getCenter().lat],
+                zoom: map.getZoom(),
+              });
+            }, 1500);
+          };
+
+          check();
+        });
+      });
+
+      // Center should be roughly midway between [-10, -10] and [20, 20]
+      expect(result.center[0]).toBeCloseTo(5, 0);
+      expect(result.center[1]).toBeCloseTo(5, 0);
+      // Zoom should be lower (wider view) than the per-layer fitBounds test
+      // since we're encompassing a larger area
+      expect(result.zoom).toBeGreaterThan(1);
+    });
   });
 
   test.describe("Screenshots", () => {

@@ -318,6 +318,7 @@ const instance = createInstance({
       layer: { type?: "geojson", data: object, paint?: object },
       options?: { fitBounds?: boolean }
     ) => void,
+    fitBounds: (options?: { padding?: number }) => void,
     featureProperties: {
       setEnabled: (enabled: boolean) => void,
       addWhitelistKeys: (keys: string[]) => void,
@@ -621,6 +622,8 @@ Current support is `geojson` only. If `type` is omitted, Waymark defaults it to 
 - `waymark:data.layer.error` on failure (`stage` is `validation` or `runtime`)
 
 Invalid runtime additions throw after emitting `waymark:data.layer.error`.
+
+`instance.data.fitBounds({ padding?: number })` fits the map viewport to encompass all currently loaded data layers. It computes the combined bounding box from every layer's GeoJSON and calls `map.fitBounds()`. `padding` defaults to `20`.
 
 - Multiple GeoJSON layers are supported.
 - Data-layer stack order is top-first: `layers[0]` is visually on top.
