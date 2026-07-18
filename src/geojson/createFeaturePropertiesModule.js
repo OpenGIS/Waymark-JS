@@ -154,9 +154,14 @@ export function createFeaturePropertiesModule(map, options = {}) {
    * Reuses the same whitelist filtering, flyTo zoom, and popup rendering
    * as the click handler.
    *
+   * For Point features the popup appears at the feature's coordinates.
+   * For other geometries (lines, polygons) it uses the click coordinates
+   * if provided, falling back to the map centre.
+   *
    * @param {import('geojson').Feature} feature
+   * @param {import('maplibre-gl').LngLatLike} [clickLngLat] - click position from the map event
    */
-  function showPopup(feature) {
+  function showPopup(feature, clickLngLat) {
     if (!enabled) return;
 
     const entries = filterWhitelistedProperties(feature.properties);
@@ -168,6 +173,8 @@ export function createFeaturePropertiesModule(map, options = {}) {
     if (!html) return;
 
     const coords = getFeatureCoordinates(feature);
+    const popupCoords = coords || clickLngLat || map.getCenter();
+
     if (coords) {
       const currentZoom = map.getZoom();
       map.flyTo({
@@ -176,10 +183,7 @@ export function createFeaturePropertiesModule(map, options = {}) {
       });
     }
 
-    activePopup = new Popup()
-      .setLngLat(coords || map.getCenter())
-      .setHTML(html)
-      .addTo(map);
+    activePopup = new Popup().setLngLat(popupCoords).setHTML(html).addTo(map);
   }
 
   /**
@@ -191,7 +195,7 @@ export function createFeaturePropertiesModule(map, options = {}) {
     const feature = queryBestFeature(event.point);
     if (!feature) return;
 
-    showPopup(feature);
+    showPopup(feature, event.lngLat);
   }
 
   /**
