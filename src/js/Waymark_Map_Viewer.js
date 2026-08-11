@@ -233,7 +233,7 @@ function Waymark_Map_Viewer() {
 
 					//We have a title
 					if (title) {
-						ele = jQuery("<strong />").html(feature.properties.title);
+						ele = jQuery("<strong />").text(feature.properties.title);
 						//No description
 					} else {
 						ele = jQuery("<strong />").html("&nbsp;");
@@ -252,15 +252,16 @@ function Waymark_Map_Viewer() {
 
 				case "description":
 					var description = feature.properties.description;
+					var safe_desc = Waymark.sanitize_description(description);
 
 					//We have a description
 					if (description) {
 						//HTML
 						if (description.indexOf("<") === 0) {
-							ele = description;
+							ele = safe_desc;
 							//Plain text
 						} else {
-							ele = jQuery("<p />").html(description);
+							ele = jQuery("<p />").html(safe_desc);
 						}
 						//No description
 					} else {
@@ -271,9 +272,18 @@ function Waymark_Map_Viewer() {
 				case "image_large_url":
 					//We have an image
 					if (typeof feature.properties.image_large_url !== "undefined") {
+						//Validate the URL
+						if (!Waymark.is_safe_url(feature.properties.image_large_url)) {
+							list.addClass("waymark-no-image");
+							break;
+						}
+
 						//Use Medium if we have it
 						var thumb_url = feature.properties.image_large_url;
-						if (typeof feature.properties.image_medium_url !== "undefined") {
+						if (
+							typeof feature.properties.image_medium_url !== "undefined" &&
+							Waymark.is_safe_url(feature.properties.image_medium_url)
+						) {
 							var thumb_url = feature.properties.image_medium_url;
 						}
 
@@ -628,28 +638,31 @@ function Waymark_Map_Viewer() {
 					Waymark.map.getBounds().contains(image.marker.getLatLng()) &&
 					checkLayer.hasLayer(image.marker)
 				) {
-					in_bounds_count++;
+					//Only show images with valid URLs
+					if (Waymark.is_safe_url(image.image_thumbnail_url)) {
+						in_bounds_count++;
 
-					var div = jQuery("<div />")
-						.addClass("waymark-image")
+						var div = jQuery("<div />")
+							.addClass("waymark-image")
 
-						//When a gallery image is clicked
-						.on("click", { marker: image.marker }, function (e) {
-							var marker = e.data.marker;
+							//When a gallery image is clicked
+							.on("click", { marker: image.marker }, function (e) {
+								var marker = e.data.marker;
 
-							//Zoom in
-							Waymark.map.setView(marker.getLatLng(), 16);
+								//Zoom in
+								Waymark.map.setView(marker.getLatLng(), 16);
 
-							//Open popup at marker
-							marker.openPopup();
+								//Open popup at marker
+								marker.openPopup();
+							});
+
+						var img = jQuery("<img />").attr({
+							src: image.image_thumbnail_url,
 						});
+						div.append(img);
 
-					var img = jQuery("<img />").attr({
-						src: image.image_thumbnail_url,
-					});
-					div.append(img);
-
-					Waymark.gallery.append(div);
+						Waymark.gallery.append(div);
+					}
 				}
 			}
 

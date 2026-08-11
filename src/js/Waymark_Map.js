@@ -273,6 +273,44 @@ function Waymark_Map() {
 		Waymark.load_done();
 	};
 
+	//Sanitise user-authored description HTML (allowlist only)
+	this.sanitize_description = function (html) {
+		//DOMPurify is vendored into the concatenated bundle
+		if (typeof window.DOMPurify === "undefined") {
+			return html;
+		}
+
+		return window.DOMPurify.sanitize(html, {
+			ALLOWED_TAGS: [
+				"p",
+				"a",
+				"br",
+				"b",
+				"strong",
+				"em",
+				"i",
+				"u",
+				"ul",
+				"ol",
+				"li",
+				"div",
+				"span",
+				"blockquote",
+			],
+			ALLOWED_ATTR: ["class", "href", "target", "title"],
+		});
+	};
+
+	//Allow only http(s) URLs
+	this.is_safe_url = function (url) {
+		return /^https?:\/\//i.test(url);
+	};
+
+	//Convert plain text to a safe HTML string
+	this.escape_html = function (str) {
+		return jQuery("<span />").text(str).html();
+	};
+
 	//Thanks! https://stackoverflow.com/questions/2631001/test-for-existence-of-nested-javascript-object-key
 	this.get_property = function (obj, ...args) {
 		return args.reduce((obj, level) => obj && obj[level], obj);
@@ -1055,7 +1093,7 @@ function Waymark_Map() {
 
 		//Title
 		if (feature.properties.title) {
-			text += feature.properties.title;
+			text += Waymark.escape_html(feature.properties.title);
 		}
 
 		if (!text) {
@@ -1613,7 +1651,7 @@ function Waymark_Map() {
 				//Title
 				case "title":
 					content += feature.properties.title
-						? feature.properties.title
+						? Waymark.escape_html(feature.properties.title)
 						: "<em>Untitled " +
 							type_data[feature_type + "_title"] +
 							" " +
@@ -1625,15 +1663,16 @@ function Waymark_Map() {
 				//Description
 				case "description":
 					var description = feature.properties.description;
+					var safe_desc = Waymark.sanitize_description(description);
 
 					//We have a description
 					if (description) {
 						//HTML
 						if (description.indexOf("<") === 0) {
-							content += description;
+							content += safe_desc;
 							//Plain text
 						} else {
-							content += `<p>${description}</p>`;
+							content += `<p>${safe_desc}</p>`;
 						}
 					}
 
@@ -1646,8 +1685,8 @@ function Waymark_Map() {
 						break;
 					}
 
-					// Perform basic URL validation, must start with http:// or https://
-					if (!feature.properties.image_large_url.match(/^(https?:\/\/)/)) {
+					//Validate the URL
+					if (!Waymark.is_safe_url(feature.properties.image_large_url)) {
 						break;
 					}
 
@@ -1655,7 +1694,10 @@ function Waymark_Map() {
 					if (feature.properties.image_large_url) {
 						//Use Medium if we have it
 						var thumb_url = feature.properties.image_large_url;
-						if (feature.properties.image_medium_url) {
+						if (
+							feature.properties.image_medium_url &&
+							Waymark.is_safe_url(feature.properties.image_medium_url)
+						) {
 							thumb_url = feature.properties.image_medium_url;
 						}
 
