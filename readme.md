@@ -39,52 +39,55 @@ To use Waymark JS, you will need to include the following assets in your page. H
 
 The following example will display a Map on the page with a single Marker. Once the Marker is clicked, a popup will display with the Marker's title, image and description.
 
+> [!NOTE]
+> Popup content is sanitised for security: titles are rendered as plain text, descriptions are filtered through a safe HTML allowlist (scripts and event handlers stripped), and image URLs must use `http`/`https`.
+
 ```html
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8" />
+  <head>
+    <meta charset="utf-8" />
 
-        <!-- Stylesheet -->
-        <link
-            rel="stylesheet"
-            href="https://www.ogis.org/waymark-js/dist/latest/css/waymark-js.min.css"
-        />
+    <!-- Stylesheet -->
+    <link
+      rel="stylesheet"
+      href="https://www.ogis.org/waymark-js/dist/latest/css/waymark-js.min.css"
+    />
 
-        <!-- JS -->
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://www.ogis.org/waymark-js/dist/latest/js/waymark-js.min.js"></script>
-    </head>
-    <body>
-        <!-- Map Container -->
-        <div id="waymark-map"></div>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://www.ogis.org/waymark-js/dist/latest/js/waymark-js.min.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
 
-        <script>
-            // Create a Viewer Instance
-            const viewer = window.Waymark_Map_Factory.viewer();
+    <script>
+      // Create a Viewer Instance
+      const viewer = window.Waymark_Map_Factory.viewer();
 
-            viewer.init();
-            viewer.load_json({
-                type: "FeatureCollection",
-                features: [
-                    {
-                        type: "Feature",
-                        properties: {
-                            title: "The Scarlet Ibis",
-                            description:
-                                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
-                            image_large_url:
-                                "https://www.ogis.org/waymark-js/assets/img/pub.jpeg",
-                        },
-                        geometry: {
-                            type: "Point",
-                            coordinates: [-128.0094, 50.6539],
-                        },
-                    },
-                ],
-            });
-        </script>
-    </body>
+      viewer.init();
+      viewer.load_json({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              title: "The Scarlet Ibis",
+              description:
+                "Great pub, great food! Especially after a Long Ride 🚴🍔🍟🍺🍺💤",
+              image_large_url:
+                "https://www.ogis.org/waymark-js/assets/img/pub.jpeg",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [-128.0094, 50.6539],
+            },
+          },
+        ],
+      });
+    </script>
+  </body>
 </html>
 ```
 
@@ -95,37 +98,37 @@ The following example will display an empty Map Editor on the page, set to an in
 ```html
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8" />
+  <head>
+    <meta charset="utf-8" />
 
-        <!-- Stylesheet -->
-        <link
-            rel="stylesheet"
-            href="https://www.ogis.org/waymark-js/dist/latest/css/waymark-js.min.css"
-        />
+    <!-- Stylesheet -->
+    <link
+      rel="stylesheet"
+      href="https://www.ogis.org/waymark-js/dist/latest/css/waymark-js.min.css"
+    />
 
-        <!-- JS -->
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://www.ogis.org/waymark-js/dist/latest/js/waymark-js.min.js"></script>
-    </head>
-    <body>
-        <!-- Map Container -->
-        <div id="waymark-map"></div>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://www.ogis.org/waymark-js/dist/latest/js/waymark-js.min.js"></script>
+  </head>
+  <body>
+    <!-- Map Container -->
+    <div id="waymark-map"></div>
 
-        <!-- Map Data -->
-        <textarea id="waymark-data"></textarea>
+    <!-- Map Data -->
+    <textarea id="waymark-data"></textarea>
 
-        <script>
-            // Create the Editor
-            window.Waymark_Map_Factory.editor().init({
-                map_options: {
-                    // Initial location
-                    map_init_latlng: [50.6539, -128.0094],
-                    map_init_zoom: 14,
-                },
-            });
-        </script>
-    </body>
+    <script>
+      // Create the Editor
+      window.Waymark_Map_Factory.editor().init({
+        map_options: {
+          // Initial location
+          map_init_latlng: [50.6539, -128.0094],
+          map_init_zoom: 14,
+        },
+      });
+    </script>
+  </body>
 </html>
 ```
 

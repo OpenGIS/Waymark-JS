@@ -41,6 +41,9 @@ To keep tests and docs in sync:
    - Example: `## Map Options` in `2.map.md` -> `describe('Map Options', ...)` in `2.map.test.js`.
 3. **Concept Verification**: Tests will implement the code examples found in the docs and assert the expected outcome.
 
+> [!NOTE]
+> `tests/xss.test.js` is an exception to the 1:1 mirroring: it is a security regression suite covering the popup sanitisation helpers (`sanitize_description`, `escape_html`, `is_safe_url`) and is not mirrored from a doc page.
+
 ## Example Test Structure (`tests/docs/2.map.test.js`)
 
 ```javascript
