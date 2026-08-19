@@ -16,6 +16,8 @@ concurrency:
 
 jobs:
   build:
+    # Skip when the push is the release workflow's own version bump
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
