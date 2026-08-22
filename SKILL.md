@@ -179,7 +179,7 @@ Waymark resolves config with a deep merge:
 - Objects merge recursively
 - Arrays are replaced (not merged by index)
 - `map.options.attributionControl`: `false`
-- `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://tiles.openfreemap.org/styles/bright`
+- `map.basemaps.vector[0].styleURL` (resolved as config baseline only when no basemap entries exist): `https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json`
 - `paint`: `{}` (no instance-wide paint overrides)
 - `types`: `{}` (no type-based rendering)
 - `debug`: `false`
@@ -261,9 +261,10 @@ Basemap configuration is strict and separate from `map.options`:
 
 Runtime default behaviour:
 
-- OpenFreeMap vector is resolved as config baseline only when no vector or raster basemap entries are provided.
+- Open GIS Outdoors vector is resolved as config baseline only when no vector or raster basemap entries are provided.
 - If any basemap entry exists (including raster-only), no default vector is injected.
 - In raster-only setups, Waymark boots with an internal empty style object and then mounts raster basemap layers.
+- A vector basemap without an explicit `attributionHTML` falls back to the attribution declared by its `style.json` (aggregated from the style's source attributions) once the style loads. This runtime-injected attribution is shown in the basemaps panel but is omitted from `toJSON()` output — only explicitly authored `attributionHTML` values are serialised.
 
 Non-serialisable option values are deterministically dropped during normalisation (for example functions, symbols, class instances). This keeps `createInstance(x).toJSON()` stable and re-usable.
 
@@ -288,10 +289,13 @@ const instance = createInstance({
         ],
         vector: [
           {
+            styleURL:
+              "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
+            title: "Open GIS Outdoors",
+          },
+          {
             styleURL: "https://tiles.openfreemap.org/styles/bright",
             title: "OpenFreeMap Bright",
-            attributionHTML:
-              '<a href="https://openfreemap.org">© OpenFreeMap</a>',
           },
         ],
       },

@@ -10,7 +10,7 @@ last_commit: "46e124d4215fc21668b00d99c116f63a55c74008"
 > **v2 (Alpha)** — This is a ground-up rewrite. APIs are unstable and subject to change.
 
 > [!NOTE]
-> No API keys required. OpenStreetMap and OpenFreeMap tiles included out of the box.
+> No API keys required. OpenStreetMap and Open GIS Outdoors tiles included out of the box.
 
 ## Overview
 
@@ -78,6 +78,11 @@ const instance = createInstance({
           },
         ],
         vector: [
+          {
+            styleURL:
+              "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
+            title: "Open GIS Outdoors",
+          },
           {
             styleURL: "https://tiles.openfreemap.org/styles/bright",
             title: "OpenFreeMap Bright",

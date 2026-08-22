@@ -75,7 +75,8 @@ test.describe("2. Development smoke", () => {
       map: {
         vector: expect.arrayContaining([
           expect.objectContaining({
-            styleURL: "https://tiles.openfreemap.org/styles/bright",
+            styleURL:
+              "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
           }),
         ]),
       },
@@ -379,7 +380,7 @@ test.describe("2. Development smoke", () => {
     ).toHaveCount(1);
     await expect(
       page.locator('#map [data-waymark-basemaps-vector-item="true"]').first(),
-    ).toContainText("OpenFreeMap Bright");
+    ).toContainText("Open GIS Outdoors");
     await expect(
       page.locator('#map [data-waymark-vector-radio="vector-0"]'),
     ).toBeChecked();

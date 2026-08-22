@@ -189,6 +189,10 @@ import {
   WAYMARK_STATE_MAP_CAMERA_CHANGED_EVENT,
 } from "../../src/runtime/createInstanceEvents.js";
 import { LngLatBounds, Map } from "maplibre-gl";
+import {
+  computeStyleAttribution,
+  getLoadedStyleAttribution,
+} from "../../src/map/styleAttribution.js";
 
 function getLastMapInstance() {
   return Map.mock.instances.at(-1);
@@ -623,7 +627,7 @@ describe("1. API", () => {
       expect(resolved.ui.mode).toBe(defaultConfig.ui.mode);
     });
 
-    it("injects OpenFreeMap vector only when no basemap entries are configured", () => {
+    it("injects Open GIS Outdoors vector only when no basemap entries are configured", () => {
       createInstance({
         config: {
           id: "map",
@@ -785,6 +789,148 @@ describe("1. API", () => {
       ).toThrow(
         "Invalid config.map.basemaps.raster[0].tiles: unexpected key for raster basemap entry.",
       );
+    });
+  });
+
+  describe("Style attribution aggregation", () => {
+    it("aggregates source attributions with dedupe, length sort and substring removal", () => {
+      const style = {
+        version: 8,
+        sources: {
+          mapterhorn: { type: "vector", attribution: "© Mapterhorn" },
+          osm: { type: "vector", attribution: "© OpenStreetMap" },
+          osmContributors: {
+            type: "vector",
+            attribution: "© OpenStreetMap contributors",
+          },
+          duplicate: { type: "vector", attribution: "© Mapterhorn" },
+          empty: { type: "vector", attribution: "   " },
+        },
+        layers: [],
+      };
+
+      expect(computeStyleAttribution(style)).toBe(
+        "© Mapterhorn | © OpenStreetMap contributors",
+      );
+    });
+
+    it("returns null when no sources or no attributions are present", () => {
+      expect(computeStyleAttribution(undefined)).toBeNull();
+      expect(computeStyleAttribution({})).toBeNull();
+      expect(
+        computeStyleAttribution({ version: 8, sources: {}, layers: [] }),
+      ).toBeNull();
+      expect(
+        computeStyleAttribution({
+          version: 8,
+          sources: {
+            a: { type: "vector" },
+            b: { type: "vector", attribution: "" },
+          },
+          layers: [],
+        }),
+      ).toBeNull();
+    });
+
+    it("reads the loaded style attribution from a map instance", () => {
+      const map = {
+        getStyle: () => ({
+          version: 8,
+          sources: {
+            outdoors: { type: "vector", attribution: "© Mapterhorn" },
+          },
+          layers: [],
+        }),
+      };
+
+      expect(getLoadedStyleAttribution(map)).toBe("© Mapterhorn");
+    });
+
+    it("returns null when the map has no getStyle or no loaded style", () => {
+      expect(getLoadedStyleAttribution(null)).toBeNull();
+      expect(getLoadedStyleAttribution({})).toBeNull();
+      expect(getLoadedStyleAttribution({ getStyle: () => null })).toBeNull();
+    });
+  });
+
+  describe("Runtime style attribution injection", () => {
+    it("injects runtime style attribution into the snapshot but omits it from toJSON", () => {
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: {
+            basemaps: {
+              vector: [
+                {
+                  title: "Open GIS Outdoors",
+                  styleURL:
+                    "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const map = getLastMapInstance();
+      map.addSource("osm", {
+        type: "vector",
+        attribution: "© OpenStreetMap",
+      });
+      map.addSource("mapterhorn", {
+        type: "vector",
+        attribution: "© Mapterhorn",
+      });
+      map.fire("style.load", { type: "style.load" });
+
+      const core = getCoreById("map");
+      const snapshot = core.runtimeState.getSnapshot();
+
+      expect(snapshot.map.basemaps.vector[0].attributionHTML).toBe(
+        "© Mapterhorn | © OpenStreetMap",
+      );
+
+      expect(
+        instance.toJSON().config.map.basemaps.vector[0].attributionHTML,
+      ).toBeUndefined();
+      expect(instance.toJSON().state.map?.basemaps).toBeUndefined();
+    });
+
+    it("does not overwrite an explicitly authored attributionHTML on style load", () => {
+      const instance = createInstance({
+        config: {
+          id: "map",
+          map: {
+            basemaps: {
+              vector: [
+                {
+                  title: "OpenFreeMap Bright",
+                  styleURL: "https://tiles.openfreemap.org/styles/bright",
+                  attributionHTML:
+                    "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const map = getLastMapInstance();
+      map.addSource("osm", {
+        type: "vector",
+        attribution: "© OpenStreetMap",
+      });
+      map.fire("style.load", { type: "style.load" });
+
+      const core = getCoreById("map");
+      const snapshot = core.runtimeState.getSnapshot();
+
+      expect(snapshot.map.basemaps.vector[0].attributionHTML).toBe(
+        "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
+      );
+      expect(
+        instance.toJSON().config.map.basemaps.vector[0].attributionHTML,
+      ).toBe("<a href='https://openfreemap.org'>© OpenFreeMap</a>");
     });
   });
 
@@ -1018,14 +1164,13 @@ describe("1. API", () => {
             basemaps: {
               vector: [
                 {
-                  title: "OpenFreeMap Bright",
-                  styleURL: "https://tiles.openfreemap.org/styles/bright",
-                  attributionHTML:
-                    "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
+                  title: "Open GIS Outdoors",
+                  styleURL:
+                    "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
                 },
                 {
-                  title: "OpenFreeMap Liberty",
-                  styleURL: "https://tiles.openfreemap.org/styles/liberty",
+                  title: "OpenFreeMap Bright",
+                  styleURL: "https://tiles.openfreemap.org/styles/bright",
                   attributionHTML:
                     "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
                 },
@@ -1064,9 +1209,9 @@ describe("1. API", () => {
         '[data-waymark-basemaps-vector-item="true"] [class$="__attribution"]',
       );
 
-      expect(vectorItems[0]).toContain("OpenFreeMap Bright");
+      expect(vectorItems[0]).toContain("Open GIS Outdoors");
       expect(vectorItems[0]).toContain("Active");
-      expect(vectorItems[1]).toContain("OpenFreeMap Liberty");
+      expect(vectorItems[1]).toContain("OpenFreeMap Bright");
       expect(vectorItems[1]).toContain("Active");
       expect(vectorRadios).toHaveLength(2);
       expect(checkedVectorRadios).toHaveLength(1);
@@ -2573,10 +2718,9 @@ describe("1. API", () => {
       expect(instance.toJSON().config.map.basemaps).toEqual({
         vector: [
           {
-            title: "OpenFreeMap Bright",
-            styleURL: "https://tiles.openfreemap.org/styles/bright",
-            attributionHTML:
-              '&copy; <a href="https://www.openfreemap.org/">OpenFreeMap</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            title: "Open GIS Outdoors",
+            styleURL:
+              "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
           },
         ],
       });

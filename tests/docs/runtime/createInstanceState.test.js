@@ -321,4 +321,119 @@ describe("Runtime state module", () => {
       }),
     );
   });
+
+  it("sets attributionHTML on a vector basemap that lacks one", () => {
+    const events = createInstanceEvents("map");
+    const onBasemapsEvent = vi.fn();
+    events.on(WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT, onBasemapsEvent);
+
+    const state = createInstanceState({
+      id: "map",
+      events,
+      initialState: {
+        map: {
+          basemaps: {
+            vector: [
+              {
+                basemapId: "vector-0",
+                styleURL: "https://example.com/outdoors.json",
+                title: "Open GIS Outdoors",
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    expect(
+      state.dispatch("map.basemaps.vector.attribution.set", {
+        basemapId: "vector-0",
+        attributionHTML: "© Mapterhorn",
+      }),
+    ).toBe(true);
+
+    expect(state.getSnapshot().map.basemaps.vector[0]).toEqual(
+      expect.objectContaining({
+        basemapId: "vector-0",
+        attributionHTML: "© Mapterhorn",
+      }),
+    );
+
+    expect(onBasemapsEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: expect.objectContaining({
+          command: "map.basemaps.vector.attribution.set",
+          meta: expect.objectContaining({
+            mutation: "vector_attribution_set",
+          }),
+        }),
+      }),
+    );
+  });
+
+  it("returns null when the vector basemap already has a non-empty attributionHTML", () => {
+    const events = createInstanceEvents("map");
+
+    const state = createInstanceState({
+      id: "map",
+      events,
+      initialState: {
+        map: {
+          basemaps: {
+            vector: [
+              {
+                basemapId: "vector-0",
+                styleURL: "https://example.com/bright.json",
+                attributionHTML:
+                  "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    expect(
+      state.dispatch("map.basemaps.vector.attribution.set", {
+        basemapId: "vector-0",
+        attributionHTML: "© Mapterhorn",
+      }),
+    ).toBe(false);
+
+    expect(state.getSnapshot().map.basemaps.vector[0].attributionHTML).toBe(
+      "<a href='https://openfreemap.org'>© OpenFreeMap</a>",
+    );
+  });
+
+  it("returns null when the vector basemapId is not found", () => {
+    const events = createInstanceEvents("map");
+
+    const state = createInstanceState({
+      id: "map",
+      events,
+      initialState: {
+        map: {
+          basemaps: {
+            vector: [
+              {
+                basemapId: "vector-0",
+                styleURL: "https://example.com/outdoors.json",
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    expect(
+      state.dispatch("map.basemaps.vector.attribution.set", {
+        basemapId: "vector-missing",
+        attributionHTML: "© Mapterhorn",
+      }),
+    ).toBe(false);
+
+    expect(
+      state.getSnapshot().map.basemaps.vector[0].attributionHTML,
+    ).toBeUndefined();
+  });
 });

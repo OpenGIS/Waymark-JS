@@ -41,10 +41,9 @@ export const defaultConfig = {
  * @type {{ title: string, styleURL: string }}
  */
 export const defaultBasemapVector = {
-  title: "OpenFreeMap Bright",
-  styleURL: "https://tiles.openfreemap.org/styles/bright",
-  attributionHTML:
-    '&copy; <a href="https://www.openfreemap.org/">OpenFreeMap</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  title: "Open GIS Outdoors",
+  styleURL:
+    "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
 };
 
 /**

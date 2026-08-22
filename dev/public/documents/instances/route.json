@@ -34,14 +34,12 @@
         ],
         "vector": [
           {
-            "title": "OpenFreeMap Bright",
-            "styleURL": "https://tiles.openfreemap.org/styles/bright",
-            "attributionHTML": "<a href='https://openfreemap.org'>© OpenFreeMap</a>"
+            "title": "Open GIS Outdoors",
+            "styleURL": "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json"
           },
           {
-            "title": "OpenFreeMap Liberty",
-            "styleURL": "https://tiles.openfreemap.org/styles/liberty",
-            "attributionHTML": "<a href='https://openfreemap.org'>© OpenFreeMap</a>"
+            "title": "OpenFreeMap Bright",
+            "styleURL": "https://tiles.openfreemap.org/styles/bright"
           }
         ]
       },

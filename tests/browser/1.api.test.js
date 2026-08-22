@@ -209,7 +209,7 @@ test.describe("1. API", () => {
       expect(result.attributionControl).toBe(false);
     });
 
-    test("injects OpenFreeMap default only when no basemaps are provided", async ({
+    test("injects Open GIS Outdoors default only when no basemaps are provided", async ({
       page,
     }) => {
       const result = await page.evaluate(() => {
@@ -253,7 +253,7 @@ test.describe("1. API", () => {
       });
 
       expect(result.defaultVectorStyleURL).toBe(
-        "https://tiles.openfreemap.org/styles/bright",
+        "https://raw.githubusercontent.com/OpenGIS/outdoors/refs/heads/master/style.json",
       );
       expect(result.rasterOnlyVectorCount).toBe(0);
     });
@@ -1059,7 +1059,6 @@ test.describe("1. API", () => {
           {
             title: defaultBasemapVector.title,
             styleURL: defaultBasemapVector.styleURL,
-            attributionHTML: defaultBasemapVector.attributionHTML,
           },
         ],
       });
@@ -1071,7 +1070,7 @@ test.describe("1. API", () => {
             ],
           },
         ],
-        vector: [{ styleURL: defaultBasemapVector.styleURL }],
+        vector: [{ styleURL: "https://tiles.openfreemap.org/styles/bright" }],
       });
       expect(result.explicitBasemapKeys).toEqual(["raster", "vector"]);
     });
@@ -2239,10 +2238,7 @@ test.describe("1. API", () => {
               ),
             );
 
-            if (
-              (!hasLayer1 || !hasLayer2) &&
-              Date.now() - startedAt < 5000
-            ) {
+            if ((!hasLayer1 || !hasLayer2) && Date.now() - startedAt < 5000) {
               setTimeout(check, 50);
               return;
             }

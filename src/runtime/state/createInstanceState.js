@@ -359,6 +359,57 @@ function resolveMutation(state, command, payload) {
         },
       };
     }
+    case "map.basemaps.vector.attribution.set": {
+      const basemapId =
+        typeof payload?.basemapId === "string" ? payload.basemapId : null;
+      const attributionHTML =
+        typeof payload?.attributionHTML === "string"
+          ? payload.attributionHTML
+          : null;
+
+      if (!basemapId || attributionHTML === null) {
+        return null;
+      }
+
+      const basemapIndex = state.map.basemaps.vector.findIndex(
+        (vectorBasemap) => vectorBasemap.basemapId === basemapId,
+      );
+
+      if (basemapIndex < 0) {
+        return null;
+      }
+
+      if (
+        typeof state.map.basemaps.vector[basemapIndex].attributionHTML ===
+          "string" &&
+        state.map.basemaps.vector[basemapIndex].attributionHTML.trim() !== ""
+      ) {
+        return null;
+      }
+
+      const previous = cloneValue(state.map.basemaps);
+      const next = normaliseBasemaps(state.map.basemaps);
+
+      next.vector[basemapIndex] = {
+        ...next.vector[basemapIndex],
+        attributionHTML,
+      };
+
+      state.map.basemaps = next;
+
+      return {
+        scope: "map.basemaps",
+        eventType: WAYMARK_STATE_MAP_BASEMAPS_CHANGED_EVENT,
+        previous,
+        next: cloneValue(next),
+        meta: {
+          mutation: "vector_attribution_set",
+          changed: {
+            basemapIds: [basemapId],
+          },
+        },
+      };
+    }
     case "map.basemaps.vector.active.set": {
       const basemapId =
         typeof payload?.basemapId === "string" ? payload.basemapId : null;

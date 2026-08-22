@@ -2,6 +2,7 @@ import { resolveConfig } from "../config/resolveConfig.js";
 import { createGeoJSONModule } from "../geojson/createGeoJSONModule.js";
 import { createMap } from "../map/createMap.js";
 import { createRasterBasemapModule } from "../map/createRasterBasemapModule.js";
+import { getLoadedStyleAttribution } from "../map/styleAttribution.js";
 import { createAppShell } from "../ui/createAppShell.js";
 import { PANEL_IDS } from "../ui/controls/internalControls.js";
 import {
@@ -99,7 +100,8 @@ import {
  * @property {WaymarkInstancePublicApi} publicApi
  * @property {{ container: HTMLElement, emit: (type: string, detail: import('./createInstanceEvents.js').WaymarkInstanceLifecycleEventDetail | import('./createInstanceEvents.js').WaymarkInstanceMapEventDetail | import('./createInstanceEvents.js').WaymarkInstanceModuleEventDetail | import('./createInstanceEvents.js').WaymarkBasemapsChangedEventDetail | import('./createInstanceEvents.js').WaymarkStateChangedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerAddedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerMountedEventDetail | import('./createInstanceEvents.js').WaymarkDataLayerErrorEventDetail) => void, on: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void, off: (type: string, handler: EventListenerOrEventListenerObject, options?: EventListenerOptions | boolean) => void, once: (type: string, handler: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | boolean) => void }} events
  * @property {{ toJSON: () => WaymarkInstanceDocument }} instanceDocument
- * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }, options?: { fitBounds?: boolean }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, debug: { destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void } }} modules
+ * @property {Set<string>} runtimeVectorAttributionIds
+ * @property {{ appShell: { app: import('vue').App, mountElement: HTMLElement, refresh: () => void, destroy: () => void } | null, geoJSON: { map: WaymarkMap, layers: { sourceId: string, layerId: string, type: 'geojson', data: object }[], addLayer: (layer: { type: 'geojson', data: object }, options?: { fitBounds?: boolean }) => { sourceId: string, layerId: string, type: 'geojson', data: object }, destroy: () => void }, rasterBasemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, destroy: () => void }, debug: { destroy: () => void }, mapEvents: { destroy: () => void }, stateSync: { destroy: () => void }, basemapStateSync: { destroy: () => void }, styleLoad: { destroy: () => void } }} modules
  * @property {{ basemaps: { setRasterOpacity: (basemapId: string, opacity: number) => void, reorderRasterBasemaps: (orderedBasemapIds: string[]) => void, setActiveVectorBasemap: (basemapId: string) => void }, ui: { toggleDebugOutputPanel: () => void, toggleBasemapsPanel: () => void } }} commands
  * @property {{ phase: 'ready' | 'destroyed', destroy: () => void }} lifecycle
  */
@@ -266,11 +268,21 @@ function serialiseRuntimeRasterBasemaps(rasterBasemaps) {
 
 /**
  * @param {WaymarkRuntimeVectorBasemap[]} vectorBasemaps
+ * @param {Set<string>} [injectedAttributionIds]
  */
-function serialiseRuntimeVectorBasemaps(vectorBasemaps) {
-  return vectorBasemaps.map(({ basemapId: _basemapId, ...vectorBasemap }) => ({
-    ...vectorBasemap,
-  }));
+function serialiseRuntimeVectorBasemaps(
+  vectorBasemaps,
+  injectedAttributionIds,
+) {
+  return vectorBasemaps.map(({ basemapId: _basemapId, ...vectorBasemap }) => {
+    if (injectedAttributionIds?.has(_basemapId)) {
+      delete vectorBasemap.attributionHTML;
+    }
+
+    return {
+      ...vectorBasemap,
+    };
+  });
 }
 
 /**
@@ -646,6 +658,65 @@ function createStateSyncModule(options) {
 }
 
 /**
+ * @param {{
+ *   core: WaymarkInstanceCore,
+ *   map: WaymarkMap,
+ * }} options
+ */
+function createStyleLoadAttributionModule(options) {
+  const { core, map } = options;
+
+  const handler = () => {
+    if (core.lifecycle.phase === "destroyed") {
+      return;
+    }
+
+    const activeVectorBasemap =
+      core.runtimeState.getSnapshot().map.basemaps.vector[0];
+
+    if (
+      !activeVectorBasemap ||
+      typeof activeVectorBasemap.basemapId !== "string"
+    ) {
+      return;
+    }
+
+    const { basemapId } = activeVectorBasemap;
+
+    if (
+      typeof activeVectorBasemap.attributionHTML === "string" &&
+      activeVectorBasemap.attributionHTML.trim() !== ""
+    ) {
+      return;
+    }
+
+    const attribution = getLoadedStyleAttribution(map);
+
+    if (typeof attribution !== "string" || attribution.trim() === "") {
+      return;
+    }
+
+    core.runtimeState.dispatch(
+      "map.basemaps.vector.attribution.set",
+      {
+        basemapId,
+        attributionHTML: attribution,
+      },
+      "runtime:map.style.load",
+    );
+    core.runtimeVectorAttributionIds.add(basemapId);
+  };
+
+  map.on("style.load", handler);
+
+  return {
+    destroy() {
+      map.off("style.load", handler);
+    },
+  };
+}
+
+/**
  * @param {import('../document/instanceDocument.js').WaymarkInstanceDocumentStateMapOptions | undefined} mapOptions
  */
 function toMapCameraOverrides(mapOptions) {
@@ -710,7 +781,10 @@ function createMapBasemapStateDelta(core, runtimeStateSnapshot) {
   const runtimeBasemaps = runtimeStateSnapshot.map.basemaps;
   const current = {
     raster: serialiseRuntimeRasterBasemaps(runtimeBasemaps.raster),
-    vector: serialiseRuntimeVectorBasemaps(runtimeBasemaps.vector),
+    vector: serialiseRuntimeVectorBasemaps(
+      runtimeBasemaps.vector,
+      core.runtimeVectorAttributionIds,
+    ),
   };
 
   const baseline = core.baseline.map.basemaps;
@@ -790,6 +864,7 @@ function destroyCore(core) {
   core.modules.mapEvents.destroy();
   core.modules.stateSync.destroy();
   core.modules.basemapStateSync.destroy();
+  core.modules.styleLoad.destroy();
 
   if (core.modules.appShell) {
     core.modules.appShell.destroy();
@@ -1025,6 +1100,7 @@ export function createInstanceCore(instanceDocument) {
     publicApi: null,
     events,
     instanceDocument: null,
+    runtimeVectorAttributionIds: new Set(),
     modules: {
       appShell,
       geoJSON: geoJSONModule,
@@ -1039,6 +1115,9 @@ export function createInstanceCore(instanceDocument) {
         destroy() {},
       },
       basemapStateSync: {
+        destroy() {},
+      },
+      styleLoad: {
         destroy() {},
       },
     },
@@ -1072,6 +1151,10 @@ export function createInstanceCore(instanceDocument) {
     id: containerId,
     map: core.map,
     events: core.events,
+  });
+  core.modules.styleLoad = createStyleLoadAttributionModule({
+    core,
+    map: core.map,
   });
   core.commands.basemaps.setRasterOpacity = (basemapId, opacity) => {
     dispatchBasemapCommand(
@@ -1288,8 +1371,7 @@ export function createInstanceCore(instanceDocument) {
     toJSON: () => core.instanceDocument.toJSON(),
     data: {
       addLayer: (layer, options) => addCoreDataLayer(core, layer, options),
-      fitBounds: (options) =>
-        core.modules.geoJSON.fitBoundsToAll(options),
+      fitBounds: (options) => core.modules.geoJSON.fitBoundsToAll(options),
       featureProperties: {
         setEnabled: (enabled) => {
           core.modules.geoJSON.featureProperties.setEnabled(enabled);
