@@ -1,6 +1,6 @@
 {
   "name": "waymark-js",
-  "version": "2.0.0-a4",
+  "version": "2.0.0-a5",
   "type": "module",
   "module": "./dist/waymark.js",
   "exports": {
@@ -25,6 +25,7 @@
     "docs:sync": "node scripts/skill-md.js && npm run docs:contract && npm run docs:api-sync",
     "test": "vitest run",
     "test:watch": "vitest",
+    "pretest:browser": "npm run build",
     "test:browser": "playwright test",
     "test:coverage": "vitest run --coverage",
     "test:ci": "npm run format:check && npm run docs:sync && npm test && npm run test:browser"
@@ -39,7 +40,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
-    "maplibre-gl": "^5.24.0",
+    "maplibre-gl": "^6.7.0",
     "vue": "^3.5.38"
   }
 }

@@ -183,7 +183,10 @@ export function createFeaturePropertiesModule(map, options = {}) {
       });
     }
 
-    activePopup = new Popup().setLngLat(popupCoords).setHTML(html).addTo(map);
+    activePopup = new Popup({ focusAfterOpen: false })
+      .setLngLat(popupCoords)
+      .setHTML(html)
+      .addTo(map);
   }
 
   /**

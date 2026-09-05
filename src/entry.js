@@ -1,10 +1,10 @@
 import { setWorkerUrl } from "maplibre-gl";
-import workerURL from "maplibre-gl/dist/maplibre-gl-csp-worker?url";
+import workerURL from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { createInstanceCore } from "./runtime/createInstanceCore.js";
 import { normaliseInstanceDocument } from "./document/instanceDocument.js";
 import "../@ogis/icons/dist/ogis-icons.css";
 
-setWorkerUrl(workerURL);
+setWorkerUrl(new URL(workerURL, import.meta.url).href);
 
 /**
  * Create a new Waymark instance.

@@ -29,7 +29,7 @@ npm install
 npm run build
 ```
 
-The library bundle is output to `dist/waymark.js` and styles to `dist/waymark.css`.
+The library build outputs exactly two files: `dist/waymark.js` and `dist/waymark.css`. The MapLibre GL worker is inlined into `dist/waymark.js` as a base64 data URL, so there is no separate worker asset to serve.
 
 ## Quick start
 
@@ -155,11 +155,13 @@ npm install          # Install dependencies
 npm run dev          # Start dev server
 npm test             # Unit tests (Vitest)
 npm run test:ci      # Full CI gate (format → docs sync → unit tests → browser tests)
-npm run test:browser # Browser tests (Playwright)
+npm run test:browser # Browser tests (Playwright; builds dist/ automatically via pretest:browser)
 npm run build        # Production bundle to dist/
 npm run format       # Format with Prettier
 npm run docs:sync    # Sync generated docs and SKILL.md
 ```
+
+`npm run test:browser` includes a built-bundle test that serves `dist/` via `vite preview` and verifies the map loads from the built bundle with the inlined worker (no dead-worker stall). It skips automatically when `dist/waymark.js` is missing — a fallback for direct `npx playwright test` runs, since `npm run test:browser` builds `dist/` automatically via the `pretest:browser` hook.
 
 ## CI/CD
 

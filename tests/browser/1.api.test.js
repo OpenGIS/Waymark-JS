@@ -2555,4 +2555,64 @@ test.describe("1. API", () => {
       await screenshot(page, "api-geojson-mixed");
     });
   });
+
+  test.describe("Popup focus behaviour", () => {
+    test("opening a feature popup does not steal focus or scroll the page", async ({
+      page,
+    }) => {
+      await page.evaluate(async () => {
+        const spacer = document.createElement("div");
+        spacer.style.height = "2000px";
+        document.getElementById("map").before(spacer);
+
+        const feature = {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [-0.1276, 51.5074] },
+          properties: { name: "Test" },
+        };
+
+        const instance = window.waymarkFixture.createInstance({
+          config: {
+            id: "map",
+            map: {
+              options: { center: [-0.1276, 51.5074], zoom: 12 },
+              basemaps: {
+                vector: [{ styleURL: { version: 8, sources: {}, layers: [] } }],
+              },
+            },
+          },
+          data: {
+            layers: [
+              { data: { type: "FeatureCollection", features: [feature] } },
+            ],
+          },
+        });
+
+        const map = window.waymarkFixture.getRuntimeMap(instance.id);
+        if (!map?.loaded()) {
+          await new Promise((resolve) => map.once("load", resolve));
+        }
+
+        instance.data.featureProperties.showPopup(feature);
+      });
+
+      const popup = page.locator(".maplibregl-popup");
+      await expect(popup).toBeVisible();
+      await expect(popup).toContainText("Test");
+
+      const focusState = await page.evaluate(() => ({
+        activeElementIsCloseButton: document.activeElement?.classList?.contains(
+          "maplibregl-popup-close-button",
+        ),
+        activeElementInsidePopup: Boolean(
+          document.activeElement?.closest?.(".maplibregl-popup"),
+        ),
+        scrollY: window.scrollY,
+      }));
+
+      expect(focusState.activeElementIsCloseButton).toBe(false);
+      expect(focusState.activeElementInsidePopup).toBe(false);
+      expect(focusState.scrollY).toBe(0);
+    });
+  });
 });
